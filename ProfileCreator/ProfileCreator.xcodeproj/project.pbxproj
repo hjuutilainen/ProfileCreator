@@ -7,18 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		536FC51E1C15EEDE00B1D7CF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC51D1C15EEDE00B1D7CF /* AppDelegate.m */; };
+		5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCController.m */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
-		536FC5231C15EEDE00B1D7CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5221C15EEDE00B1D7CF /* Assets.xcassets */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5341D3151C15EFB00014F5A7 /* PFCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCController.h; path = ProfileCreator/PFCController.h; sourceTree = "<group>"; };
+		5341D3161C15EFB00014F5A7 /* PFCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCController.m; path = ProfileCreator/PFCController.m; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		536FC51C1C15EEDE00B1D7CF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		536FC51D1C15EEDE00B1D7CF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		536FC5221C15EEDE00B1D7CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		536FC5271C15EEDE00B1D7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -34,10 +32,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5341D3181C15EFFB0014F5A7 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				536FC5201C15EEDE00B1D7CF /* main.m */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		5341D3191C15F00F0014F5A7 /* Property Lists */ = {
+			isa = PBXGroup;
+			children = (
+				536FC5271C15EEDE00B1D7CF /* Info.plist */,
+			);
+			name = "Property Lists";
+			sourceTree = "<group>";
+		};
 		536FC5101C15EEDE00B1D7CF = {
 			isa = PBXGroup;
 			children = (
 				536FC51B1C15EEDE00B1D7CF /* ProfileCreator */,
+				536FC51F1C15EEDE00B1D7CF /* Supporting Files */,
 				536FC51A1C15EEDE00B1D7CF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -53,12 +68,10 @@
 		536FC51B1C15EEDE00B1D7CF /* ProfileCreator */ = {
 			isa = PBXGroup;
 			children = (
-				536FC51C1C15EEDE00B1D7CF /* AppDelegate.h */,
-				536FC51D1C15EEDE00B1D7CF /* AppDelegate.m */,
-				536FC5221C15EEDE00B1D7CF /* Assets.xcassets */,
+				5341D3151C15EFB00014F5A7 /* PFCController.h */,
+				5341D3161C15EFB00014F5A7 /* PFCController.m */,
 				536FC5241C15EEDE00B1D7CF /* MainMenu.xib */,
-				536FC5271C15EEDE00B1D7CF /* Info.plist */,
-				536FC51F1C15EEDE00B1D7CF /* Supporting Files */,
+				5341D3181C15EFFB0014F5A7 /* SupportingFiles */,
 			);
 			path = ProfileCreator;
 			sourceTree = "<group>";
@@ -66,9 +79,10 @@
 		536FC51F1C15EEDE00B1D7CF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				536FC5201C15EEDE00B1D7CF /* main.m */,
+				5341D3191C15F00F0014F5A7 /* Property Lists */,
 			);
 			name = "Supporting Files";
+			path = ProfileCreator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -97,6 +111,7 @@
 		536FC5111C15EEDE00B1D7CF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = PFC;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Erik Berglund";
 				TargetAttributes = {
@@ -128,7 +143,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				536FC5231C15EEDE00B1D7CF /* Assets.xcassets in Resources */,
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,7 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
-				536FC51E1C15EEDE00B1D7CF /* AppDelegate.m in Sources */,
+				5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +295,7 @@
 				536FC52C1C15EEDE00B1D7CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
