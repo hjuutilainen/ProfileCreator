@@ -35,4 +35,20 @@
     [super windowDidLoad];
 } // windowDidLoad
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark NSTableView DataSource Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    if ( [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
+        return (NSInteger)[self->_tableViewMenuItemsEnabled count];
+    } else if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
+        return (NSInteger)[self->_tableViewSettingsItemsEnabled count];
+    } else {
+        return 0;
+    }
+} // numberOfRowsInTableView
+
 @end

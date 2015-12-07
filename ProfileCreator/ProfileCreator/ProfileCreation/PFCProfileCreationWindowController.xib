@@ -30,7 +30,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView identifier="TableViewMenu" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="50" rowSizeStyle="automatic" viewBased="YES" id="N2D-FV-fMu" userLabel="TableViewMenu">
-                                    <rect key="frame" x="0.0" y="0.0" width="188" height="402"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="188" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -141,6 +141,10 @@
                                             </prototypeCellViews>
                                         </tableColumn>
                                     </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-2" id="cOU-3V-Lci"/>
+                                        <outlet property="delegate" destination="-2" id="1c6-kK-KLF"/>
+                                    </connections>
                                 </tableView>
                             </subviews>
                             <animations/>
@@ -167,8 +171,8 @@
                             <rect key="frame" x="1" y="1" width="571" height="402"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="82" rowSizeStyle="automatic" viewBased="YES" id="wvQ-GT-Vci" userLabel="TableViewSettings">
-                                    <rect key="frame" x="0.0" y="0.0" width="571" height="402"/>
+                                <tableView identifier="TableViewSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="82" rowSizeStyle="automatic" viewBased="YES" id="wvQ-GT-Vci" userLabel="TableViewSettings">
+                                    <rect key="frame" x="0.0" y="0.0" width="570.5" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                     <size key="intercellSpacing" width="3" height="0.0"/>
@@ -277,12 +281,12 @@
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <tableCellView identifier="CellViewSettingsPadding" id="CWn-5g-6Rt" userLabel="CellViewSettingPadding">
-                                                    <rect key="frame" x="128" y="0.0" width="397.5" height="30"/>
+                                                    <rect key="frame" x="128" y="0.0" width="398" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <animations/>
                                                 </tableCellView>
                                                 <tableCellView identifier="CellViewSettingsTextField" id="P7W-vI-Nm7" customClass="CellViewSettingsTextField">
-                                                    <rect key="frame" x="128" y="30" width="397.5" height="82"/>
+                                                    <rect key="frame" x="128" y="30" width="398" height="82"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="jH2-p5-Xh6">
@@ -333,7 +337,7 @@
                                                     </connections>
                                                 </tableCellView>
                                                 <tableCellView identifier="CellViewSettingsPopUp" id="cjl-Kb-SsT" customClass="CellViewSettingsPopUp">
-                                                    <rect key="frame" x="128" y="112" width="397.5" height="82"/>
+                                                    <rect key="frame" x="128" y="112" width="398" height="82"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="hwL-ud-KPG">
@@ -384,7 +388,7 @@
                                                     </connections>
                                                 </tableCellView>
                                                 <tableCellView identifier="CellViewSettingsCheckbox" id="xel-ih-hZL" customClass="CellViewSettingsCheckbox">
-                                                    <rect key="frame" x="128" y="194" width="397.5" height="53"/>
+                                                    <rect key="frame" x="128" y="194" width="398" height="53"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="kNg-Nd-fHe">
@@ -435,6 +439,10 @@
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         </tableColumn>
                                     </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-2" id="ELS-eA-u6C"/>
+                                        <outlet property="delegate" destination="-2" id="skQ-MN-sk5"/>
+                                    </connections>
                                 </tableView>
                             </subviews>
                             <animations/>
