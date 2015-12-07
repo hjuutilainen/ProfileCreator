@@ -7,14 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */; };
+		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
 		5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCController.m */; };
+		5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */; };
+		5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsMenu.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.h; sourceTree = "<group>"; };
+		53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsMenu.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.m; sourceTree = "<group>"; };
+		53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettings.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettings.h; sourceTree = "<group>"; };
+		53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsSettings.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettings.m; sourceTree = "<group>"; };
 		5341D3151C15EFB00014F5A7 /* PFCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCController.h; path = ProfileCreator/PFCController.h; sourceTree = "<group>"; };
 		5341D3161C15EFB00014F5A7 /* PFCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCController.m; path = ProfileCreator/PFCController.m; sourceTree = "<group>"; };
+		5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileCreationWindowController.h; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.h; sourceTree = "<group>"; };
+		5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileCreationWindowController.m; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.m; sourceTree = "<group>"; };
+		5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileCreationWindowController.xib; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.xib; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -32,6 +43,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		53351E311C1601FF00A6FC08 /* PFCTableViewMenuCells */ = {
+			isa = PBXGroup;
+			children = (
+				53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */,
+				53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */,
+				53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */,
+				53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */,
+			);
+			name = PFCTableViewMenuCells;
+			sourceTree = "<group>";
+		};
 		5341D3181C15EFFB0014F5A7 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -48,10 +70,22 @@
 			name = "Property Lists";
 			sourceTree = "<group>";
 		};
+		5341D3221C15F2910014F5A7 /* ProfileCreation */ = {
+			isa = PBXGroup;
+			children = (
+				5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */,
+				5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */,
+				5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */,
+			);
+			name = ProfileCreation;
+			sourceTree = "<group>";
+		};
 		536FC5101C15EEDE00B1D7CF = {
 			isa = PBXGroup;
 			children = (
 				536FC51B1C15EEDE00B1D7CF /* ProfileCreator */,
+				5341D3221C15F2910014F5A7 /* ProfileCreation */,
+				53351E311C1601FF00A6FC08 /* PFCTableViewMenuCells */,
 				536FC51F1C15EEDE00B1D7CF /* Supporting Files */,
 				536FC51A1C15EEDE00B1D7CF /* Products */,
 			);
@@ -143,6 +177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */,
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,7 +189,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
+				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,
+				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
