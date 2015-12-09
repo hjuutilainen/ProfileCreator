@@ -11,7 +11,19 @@
 @implementation PFCTableViewCellsSettings
 @end
 
+@implementation CellViewSettingsPadding
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+@end
+
 @implementation CellViewSettingsTextField
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+@end
+
+@implementation CellViewSettingsTextFieldNoTitle
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
@@ -36,6 +48,12 @@
 @end
 
 @implementation CellViewSettingsMinOS
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+@end
+
+@implementation CellViewSettingsDatePickerNoTitle
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }

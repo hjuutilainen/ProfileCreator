@@ -7,16 +7,71 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		532B6C511C17289700297025 /* com.apple.general.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
+		532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
+		532B6C551C172D4700297025 /* com.apple.wifi.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */; };
+		532B6C561C172DC600297025 /* com.apple.wifi.managed.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */; };
+		532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
+		532B6C591C172E1300297025 /* com.apple.caldav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
+		532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
+		532B6C5F1C172F6400297025 /* com.apple.mail.managed.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
+		532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C601C172FD000297025 /* com.apple.ews.account.plist */; };
+		532B6C621C172FE100297025 /* com.apple.ews.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C601C172FD000297025 /* com.apple.ews.account.plist */; };
+		532B6C671C17311200297025 /* com.apple.font.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C661C17311200297025 /* com.apple.font.plist */; };
+		532B6C681C17311D00297025 /* com.apple.font.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C661C17311200297025 /* com.apple.font.plist */; };
+		532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
+		532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
+		532B6C701C17327900297025 /* com.apple.ldap.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */; };
+		532B6C711C17328800297025 /* com.apple.ldap.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */; };
+		532B6C761C1732F000297025 /* com.apple.vpn.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */; };
+		532B6C771C17330000297025 /* com.apple.vpn.managed.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */; };
 		53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */; };
 		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
 		5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCController.m */; };
 		5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */; };
 		5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */; };
+		5357C0731C1815EB0056B050 /* com.apple.airplay.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0721C1815EB0056B050 /* com.apple.airplay.plist */; };
+		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
+		5357C07A1C18182B0056B050 /* com.apple.airplay.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0721C1815EB0056B050 /* com.apple.airplay.plist */; };
+		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		532B6C521C172A2700297025 /* Copy Manifests */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Manifests;
+			dstSubfolderSpec = 7;
+			files = (
+				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
+				5357C07A1C18182B0056B050 /* com.apple.airplay.plist in Copy Manifests */,
+				532B6C771C17330000297025 /* com.apple.vpn.managed.plist in Copy Manifests */,
+				532B6C711C17328800297025 /* com.apple.ldap.account.plist in Copy Manifests */,
+				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */,
+				532B6C681C17311D00297025 /* com.apple.font.plist in Copy Manifests */,
+				532B6C621C172FE100297025 /* com.apple.ews.account.plist in Copy Manifests */,
+				532B6C5F1C172F6400297025 /* com.apple.mail.managed.plist in Copy Manifests */,
+				532B6C591C172E1300297025 /* com.apple.caldav.account.plist in Copy Manifests */,
+				532B6C561C172DC600297025 /* com.apple.wifi.managed.plist in Copy Manifests */,
+				532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */,
+			);
+			name = "Copy Manifests";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		532B6C501C17289700297025 /* com.apple.general.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.general.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.general.plist; sourceTree = "<group>"; };
+		532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.wifi.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.wifi.managed.plist; sourceTree = "<group>"; };
+		532B6C571C172E0300297025 /* com.apple.caldav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.caldav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.caldav.account.plist; sourceTree = "<group>"; };
+		532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mail.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.mail.managed.plist; sourceTree = "<group>"; };
+		532B6C601C172FD000297025 /* com.apple.ews.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ews.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ews.account.plist; sourceTree = "<group>"; };
+		532B6C661C17311200297025 /* com.apple.font.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.font.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.font.plist; sourceTree = "<group>"; };
+		532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.configurationprofile.identification.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.configurationprofile.identification.plist; sourceTree = "<group>"; };
+		532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ldap.account.plist; sourceTree = "<group>"; };
+		532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.vpn.managed.plist; sourceTree = "<group>"; };
 		53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsMenu.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.h; sourceTree = "<group>"; };
 		53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsMenu.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.m; sourceTree = "<group>"; };
 		53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettings.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettings.h; sourceTree = "<group>"; };
@@ -26,6 +81,8 @@
 		5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileCreationWindowController.h; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.h; sourceTree = "<group>"; };
 		5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileCreationWindowController.m; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.m; sourceTree = "<group>"; };
 		5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileCreationWindowController.xib; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.xib; sourceTree = "<group>"; };
+		5357C0721C1815EB0056B050 /* com.apple.airplay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airplay.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.airplay.plist; sourceTree = "<group>"; };
+		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.carddav.account.plist; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -43,7 +100,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		53351E311C1601FF00A6FC08 /* PFCTableViewMenuCells */ = {
+		532B6C4E1C17277100297025 /* ProfileManifest */ = {
+			isa = PBXGroup;
+			children = (
+				532B6C501C17289700297025 /* com.apple.general.plist */,
+				532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */,
+				5357C0721C1815EB0056B050 /* com.apple.airplay.plist */,
+				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
+				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
+				532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */,
+				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
+				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
+				532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */,
+				532B6C661C17311200297025 /* com.apple.font.plist */,
+				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */,
+			);
+			name = ProfileManifest;
+			sourceTree = "<group>";
+		};
+		53351E311C1601FF00A6FC08 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
 				53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */,
@@ -51,7 +126,7 @@
 				53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */,
 				53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */,
 			);
-			name = PFCTableViewMenuCells;
+			name = TableViewCells;
 			sourceTree = "<group>";
 		};
 		5341D3181C15EFFB0014F5A7 /* SupportingFiles */ = {
@@ -85,7 +160,8 @@
 			children = (
 				536FC51B1C15EEDE00B1D7CF /* ProfileCreator */,
 				5341D3221C15F2910014F5A7 /* ProfileCreation */,
-				53351E311C1601FF00A6FC08 /* PFCTableViewMenuCells */,
+				532B6C4E1C17277100297025 /* ProfileManifest */,
+				53351E311C1601FF00A6FC08 /* TableViewCells */,
 				536FC51F1C15EEDE00B1D7CF /* Supporting Files */,
 				536FC51A1C15EEDE00B1D7CF /* Products */,
 			);
@@ -129,6 +205,7 @@
 				536FC5151C15EEDE00B1D7CF /* Sources */,
 				536FC5161C15EEDE00B1D7CF /* Frameworks */,
 				536FC5171C15EEDE00B1D7CF /* Resources */,
+				532B6C521C172A2700297025 /* Copy Manifests */,
 			);
 			buildRules = (
 			);
@@ -177,8 +254,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
 				5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */,
+				5357C0731C1815EB0056B050 /* com.apple.airplay.plist in Resources */,
+				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
+				532B6C551C172D4700297025 /* com.apple.wifi.managed.plist in Resources */,
+				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,
+				532B6C761C1732F000297025 /* com.apple.vpn.managed.plist in Resources */,
+				532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */,
+				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
+				532B6C701C17327900297025 /* com.apple.ldap.account.plist in Resources */,
+				532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */,
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
+				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

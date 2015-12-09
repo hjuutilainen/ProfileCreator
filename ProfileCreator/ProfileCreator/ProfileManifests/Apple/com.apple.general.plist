@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Required</key>
+	<true/>
+	<key>Enabled</key>
+	<true/>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.general</string>
+	<key>Description</key>
+	<string>Mandatory</string>
+	<key>Title</key>
+	<string>General</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Name</string>
+			<key>Key</key>
+			<string>PayloadDisplayName</string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Display name of the profile (shown on the device)</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Description</string>
+			<key>Key</key>
+			<string>PayloadDescription</string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Brief description of the contents or purpose of the profile</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Organization</string>
+			<key>Key</key>
+			<string>PayloadOrganization</string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Name of the organization for the profile</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Security</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Controls when the profile can be removed</string>
+			<key>DefaultValue</key>
+			<string>Always</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Always</string>
+				<string>With Authorization</string>
+				<string>Never</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>With Authorization</key>
+				<array>
+					<dict>
+						<key>Title</key>
+						<string></string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Authorization Password</string>
+						<key>DefaultValue</key>
+						<string></string>
+						<key>CellType</key>
+						<string>TextFieldNoTitle</string>
+					</dict>
+				</array>
+			</dict>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Automatically Remove Profile</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Settings for automatic profile removal</string>
+			<key>DefaultValue</key>
+			<string>Never</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Never</string>
+				<string>On date</string>
+				<string>After interval</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>On date</key>
+				<array>
+					<dict>
+						<key>Title</key>
+						<string></string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Date</string>
+						<key>Description</key>
+						<string>Removal date</string>
+						<key>DefaultValue</key>
+						<string></string>
+						<key>CellType</key>
+						<string>DatePickerNoTitle</string>
+					</dict>
+				</array>
+			</dict>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+		</dict>
+	</array>
+</dict>
+</plist>

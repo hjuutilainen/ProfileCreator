@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.caldav.account</string>
+	<key>Description</key>
+	<string></string>
+	<key>Title</key>
+	<string>Calendar</string>
+	<key>ImagePath</key>
+	<string>/Applications/Calendar.app/Contents/Resources/App.icns</string>
+</dict>
+</plist>

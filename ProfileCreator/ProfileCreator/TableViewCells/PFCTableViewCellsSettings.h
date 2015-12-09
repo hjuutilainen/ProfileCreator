@@ -11,8 +11,16 @@
 @interface PFCTableViewCellsSettings : NSObject
 @end
 
+@interface CellViewSettingsPadding : NSTableCellView
+@end
+
 @interface CellViewSettingsTextField : NSTableCellView
 @property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextField;
+@end
+
+@interface CellViewSettingsTextFieldNoTitle : NSTableCellView
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
 @end
@@ -34,4 +42,9 @@
 
 @interface CellViewSettingsMinOS : NSTableCellView
 @property (weak) IBOutlet NSTextField *settingTextField;
+@end
+
+@interface CellViewSettingsDatePickerNoTitle : NSTableCellView
+@property (weak) IBOutlet NSDatePicker *settingDatePicker;
+@property (weak) IBOutlet NSTextField *settingDescription;
 @end
