@@ -33,6 +33,7 @@
         _advancedSettings = NO;
         _columnMenuEnabledHidden = YES;
         _columnSettingsEnabledHidden = YES;
+        _tableViewMenuSelectedRow = -1;
     }
     return self;
 } // init
@@ -214,6 +215,9 @@
             } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
                 CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
                 return [self populateCellViewDatePickerNoTitle:cellView settingDict:settingDict row:row];
+            } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
+                CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
+                return [self populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView settingDict:settingDict row:row];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -266,18 +270,23 @@
         NSString *cellType = profileDict[@"CellType"];
         if ( [cellType isEqualToString:@"Padding"] ) {
             return 30;
-        } else if ( [cellType isEqualToString:@"TextField"] ) {
-            return 82;
-        } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
+        } else if (
+                   [cellType isEqualToString:@"TextFieldNoTitle"] ) {
             return 62;
-        }else if ( [cellType isEqualToString:@"PopUpButton"] ) {
-            return 82;
-        } else if ( [cellType isEqualToString:@"Checkbox"] ) {
-            return 53;
-        } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
+        }else if (
+                  [cellType isEqualToString:@"TextField"] ||
+                  [cellType isEqualToString:@"PopUpButton"] ) {
+            return 81;
+        } else if (
+                   [cellType isEqualToString:@"Checkbox"] ) {
+            return 52;
+        } else if (
+                   [cellType isEqualToString:@"DatePickerNoTitle"] ||
+                   [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
             return 39;
         }
-    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
+    } else if (
+               [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
         return 44;
     }
     return 1;
@@ -358,7 +367,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setEnabled:![settingDict[@"Required"] boolValue]];
+    [[cellView settingEnabled] setHidden:[settingDict[@"Required"] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -528,6 +537,43 @@
     return cellView;
 } // populateCellViewCheckbox:settingDict:row
 
+- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
+    
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    
+    NSNumber *seconds = settingDict[@"Value"] ?: @0;
+    
+    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
+    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
+    NSUInteger unitFlags = NSCalendarUnitDay | NSCalendarUnitHour;
+    
+    NSDate *startDate = [NSDate date];
+    NSDate *endDate = [startDate dateByAddingTimeInterval:[seconds doubleValue]];
+    
+    NSDateComponents *components = [calendarUS components:unitFlags fromDate:startDate toDate:endDate options:0];
+    NSInteger days = [components day];
+    NSInteger hours = [components hour];
+    
+    // ---------------------------------------------------------------------
+    //  Days
+    // ---------------------------------------------------------------------
+    [[cellView settingDays] setStringValue:[@(days) stringValue] ?: @""];
+    [[cellView settingDays] setEnabled:enabled];
+    [[cellView settingDays] setTag:row];
+    [[cellView settingDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepperDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    // ---------------------------------------------------------------------
+    //  Hours
+    // ---------------------------------------------------------------------
+    [[cellView settingHours] setStringValue:[@(hours) stringValue] ?: @""];
+    [[cellView settingHours] setEnabled:enabled];
+    [[cellView settingHours] setTag:row];
+    [[cellView settingHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepperHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+
+    return cellView;
+} // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark CellView Actions
@@ -546,6 +592,14 @@
             NSMutableDictionary *cellDict = [[_tableViewMenuItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Enabled"] = @(state);
             [_tableViewMenuItemsEnabled replaceObjectAtIndex:(NSUInteger)[buttonTag integerValue] withObject:[cellDict copy]];
+        }
+    } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsEnabled class]] ) {
+        if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:[buttonTag integerValue] makeIfNecessary:NO] settingEnabled] ) {
+            BOOL state = [checkbox state];
+            NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
+            cellDict[@"Enabled"] = @(state);
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)[buttonTag integerValue] withObject:[cellDict copy]];
+            [_tableViewSettings reloadData];
         }
     } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsCheckbox class]] ) {
         if ( checkbox == [(CellViewSettingsCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
@@ -588,7 +642,7 @@
                 
                 NSDateComponents* components = [calendarUS components:flags fromDate:datePickerDate];
                 NSDate* date = [calendarUS dateFromComponents:components];
-
+                
                 NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
                 cellDict[@"Value"] = date;
                 [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
@@ -604,17 +658,35 @@
 } // datePickerSelection
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
-    unsigned int flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
     
+    // ---------------------------------------------------------------------
+    //  Set allowed date units to year, month and day
+    // ---------------------------------------------------------------------
+    unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+    
+    // ---------------------------------------------------------------------
+    //  Use calendar US
+    // ---------------------------------------------------------------------
     NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
     [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
     
-    NSDateComponents* components = [calendarUS components:flags fromDate:futureDate];
+    // ---------------------------------------------------------------------
+    //  Remove all components except the allowed date units
+    // ---------------------------------------------------------------------
+    NSDateComponents* components = [calendarUS components:allowedUnits fromDate:futureDate];
     NSDate* date = [calendarUS dateFromComponents:components];
-    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:flags fromDate:[NSDate date]]];
+    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
+    
+    // ---------------------------------------------------------------------
+    //  Calculate the date interval
+    // ---------------------------------------------------------------------
     NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
+    
+    // ---------------------------------------------------------------------
+    //  Create date formatter to create the date in spelled out string format
+    // ---------------------------------------------------------------------
     NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-    [dateComponentsFormatter setAllowedUnits:flags];
+    [dateComponentsFormatter setAllowedUnits:allowedUnits];
     [dateComponentsFormatter setMaximumUnitCount:3];
     [dateComponentsFormatter setUnitsStyle:NSDateComponentsFormatterUnitsStyleFull];
     [dateComponentsFormatter setCalendar:calendarUS];
@@ -677,6 +749,7 @@
                         if ( [valueDict count] != 0 ) {
                             row++;
                             NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
+                            
                             // ---------------------------------------------------------------------
                             //  Add sub key to table view below setting
                             // ---------------------------------------------------------------------
@@ -695,11 +768,15 @@
 - (NSArray *)settingsForMenuItem:(NSDictionary *)menuDict {
     NSMutableArray *combinedSettings = [[NSMutableArray alloc] init];
     if ( [menuDict count] != 0 ) {
-        NSArray *settings = menuDict[@"DomainKeys"];
-        for ( NSDictionary *setting in settings ) {
-            NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
-            combinedSettingDict[@"Enabled"] = @YES;
-            [combinedSettings addObject:[combinedSettingDict copy]];
+        if ( menuDict[@"SavedSettings"] != nil ) {
+            return menuDict[@"SavedSettings"];
+        } else {
+            NSArray *settings = menuDict[@"DomainKeys"];
+            for ( NSDictionary *setting in settings ) {
+                NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
+                combinedSettingDict[@"Enabled"] = @YES;
+                [combinedSettings addObject:[combinedSettingDict copy]];
+            }
         }
     }
     return [combinedSettings copy];
@@ -712,19 +789,33 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)tableViewMenu:(id) __unused sender {
-    NSInteger selectedRow = [_tableViewMenu selectedRow];
+    
+    // ---------------------------------------------------------------------
+    //  Save current settings in menu dict
+    // ---------------------------------------------------------------------
+    if ( 0 <= _tableViewMenuSelectedRow ) {
+        NSMutableDictionary *currentMenuDict = [[self->_tableViewMenuItemsEnabled objectAtIndex:self->_tableViewMenuSelectedRow] mutableCopy];
+        currentMenuDict[@"SavedSettings"] = [self->_tableViewSettingsItemsEnabled copy];
+        [_tableViewMenuItemsEnabled replaceObjectAtIndex:self->_tableViewMenuSelectedRow withObject:[currentMenuDict copy]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Set _tableViewMenuSelectedRow to new selection
+    // ---------------------------------------------------------------------
+    [self setTableViewMenuSelectedRow:[_tableViewMenu selectedRow]];
     
     [self->_tableViewSettings beginUpdates];
     [self->_tableViewSettingsItemsEnabled removeAllObjects];
     
-    if ( 0 <= selectedRow ) {
-        NSArray *settingsArray = [self settingsForMenuItem:_tableViewMenuItemsEnabled[selectedRow]];
+    if ( 0 <= _tableViewMenuSelectedRow ) {
+        NSArray *settingsArray = [self settingsForMenuItem:self->_tableViewMenuItemsEnabled[self->_tableViewMenuSelectedRow]];
         if ( [settingsArray count] != 0 ) {
             [self->_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
             [self->_tableViewSettingsItemsEnabled insertObject:@{ @"CellType" : @"Padding" } atIndex:0];
-            [_viewErrorReadingSettings setHidden:YES];
+            [self->_tableViewSettingsItemsEnabled addObject:@{ @"CellType" : @"Padding" }];
+            [self->_viewErrorReadingSettings setHidden:YES];
         } else {
-            [_viewErrorReadingSettings setHidden:NO];
+            [self->_viewErrorReadingSettings setHidden:NO];
         }
     }
     

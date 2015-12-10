@@ -48,3 +48,10 @@
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @end
+
+@interface CellViewSettingsTextFieldDaysHoursNoTitle : NSTableCellView
+@property (weak) IBOutlet NSTextField *settingDays;
+@property (weak) IBOutlet NSStepper *settingStepperDays;
+@property (weak) IBOutlet NSTextField *settingHours;
+@property (weak) IBOutlet NSStepper *settingStepperHours;
+@end

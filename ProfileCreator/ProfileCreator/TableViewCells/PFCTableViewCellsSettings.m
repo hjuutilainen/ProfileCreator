@@ -58,3 +58,10 @@
     [super drawRect:dirtyRect];
 }
 @end
+
+@implementation CellViewSettingsTextFieldDaysHoursNoTitle
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+@end
+

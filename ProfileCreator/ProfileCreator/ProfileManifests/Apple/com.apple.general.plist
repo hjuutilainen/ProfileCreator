@@ -80,8 +80,6 @@
 				<key>With Authorization</key>
 				<array>
 					<dict>
-						<key>Title</key>
-						<string></string>
 						<key>Key</key>
 						<string></string>
 						<key>Type</key>
@@ -120,8 +118,6 @@
 				<key>On date</key>
 				<array>
 					<dict>
-						<key>Title</key>
-						<string></string>
 						<key>Key</key>
 						<string></string>
 						<key>Type</key>
@@ -132,6 +128,21 @@
 						<string></string>
 						<key>CellType</key>
 						<string>DatePickerNoTitle</string>
+					</dict>
+				</array>
+				<key>After interval</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>DefaultValue</key>
+						<string></string>
+						<key>CellType</key>
+						<string>TextFieldDaysHoursNoTitle</string>
 					</dict>
 				</array>
 			</dict>

@@ -16,6 +16,7 @@
 
 @property (weak) IBOutlet NSTableView *tableViewMenu;
 - (IBAction)tableViewMenu:(id)sender;
+@property NSInteger tableViewMenuSelectedRow;
 @property NSMutableArray *tableViewMenuItemsEnabled;
 @property NSMutableArray *tableViewMenuItemsDisabled;
 @property BOOL columnMenuEnabledHidden;
@@ -29,5 +30,9 @@
 
 @property (weak) IBOutlet NSView *viewSettingsSuperView;
 @property (strong) IBOutlet NSView *viewErrorReadingSettings;
+
+// General
+@property NSNumber *stepperValueRemovalIntervalDays;
+@property NSNumber *stepperValueRemovalIntervalHours;
 
 @end
