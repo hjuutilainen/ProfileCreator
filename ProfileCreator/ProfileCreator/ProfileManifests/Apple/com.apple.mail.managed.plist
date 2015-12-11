@@ -7,10 +7,12 @@
 	<key>Domain</key>
 	<string>com.apple.mail.managed</string>
 	<key>Description</key>
-	<string></string>
+	<string>Not Configured</string>
 	<key>Title</key>
 	<string>Email</string>
-	<key>ImagePath</key>
+	<key>IconName</key>
+	<string>MenuIconMail.png</string>
+	<key>IconPath</key>
 	<string>/Applications/Mail.app/Contents/Resources/ApplicationIcon.icns</string>
 </dict>
 </plist>

@@ -7,10 +7,47 @@
 	<key>Domain</key>
 	<string>com.apple.font</string>
 	<key>Description</key>
-	<string></string>
+	<string>Not Configured</string>
 	<key>Title</key>
 	<string>Font</string>
-	<key>ImagePath</key>
+	<key>IconName</key>
+	<string>MenuIconFont.png</string>
+	<key>IconPath</key>
 	<string>/Applications/Font Book.app/Contents/Resources/appicon.icns</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Name</string>
+			<key>Key</key>
+			<string>Name</string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The user-visible name for the font</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Font</string>
+			<key>Key</key>
+			<string>Font</string>
+			<key>Type</key>
+			<string>Data</string>
+			<key>Description</key>
+			<string>Font file (.otf, .ttf, etc) for inclusion on device</string>
+			<key>CellType</key>
+			<string>File</string>
+			<key>FilePrompt</key>
+			<string>Add Font</string>
+			<key>ButtonTitle</key>
+			<string>Add Font...</string>
+			<key>AllowedFileTypes</key>
+			<array>
+				<string>public.font</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

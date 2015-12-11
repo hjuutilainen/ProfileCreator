@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>Multiple</string>
+	<key>Domains</key>
+	<array>
+		<string>com.apple.security.root</string>
+		<string>com.apple.security.pkcs1</string>
+		<string>com.apple.security.pem</string>
+		<string>com.apple.security.pkcs12</string>
+	</array>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Certificates</string>
+	<key>IconName</key>
+	<string>MenuIconCertificates.png</string>
+	<key>IconPath</key>
+	<string>/System/Library/Frameworks/SecurityInterface.framework/Versions/A/Resources/CertLargeRoot@2x.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Certificate Name</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Name or description of the certificate credential</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Certificate or Identity Data</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Data</string>
+			<key>Description</key>
+			<string>X.509 certificate (.cer, .p12, etc) for inclusion on device</string>
+			<key>CellType</key>
+			<string>File</string>
+			<key>FilePrompt</key>
+			<string>Add Certificate</string>
+			<key>ButtonTitle</key>
+			<string>Add Certificate...</string>
+			<key>AllowedFileTypes</key>
+			<array>
+				<string>public.x509-certificate</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Passphrase</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Passphrase used to secure the credentials</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+	</array>
+</dict>
+</plist>

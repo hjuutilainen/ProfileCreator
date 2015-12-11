@@ -7,10 +7,12 @@
 	<key>Domain</key>
 	<string>com.apple.carddav.account</string>
 	<key>Description</key>
-	<string></string>
+	<string>Not Configured</string>
 	<key>Title</key>
 	<string>Contacts</string>
-	<key>ImagePath</key>
+	<key>IconName</key>
+	<string>MenuIconContacts.png</string>
+	<key>IconPath</key>
 	<string>/Applications/Contacts.app/Contents/Resources/vCard.icns</string>
 </dict>
 </plist>

@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		532B6C511C17289700297025 /* com.apple.general.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
 		532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
-		532B6C551C172D4700297025 /* com.apple.wifi.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */; };
-		532B6C561C172DC600297025 /* com.apple.wifi.managed.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */; };
 		532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
 		532B6C591C172E1300297025 /* com.apple.caldav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
 		532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
@@ -21,10 +19,6 @@
 		532B6C681C17311D00297025 /* com.apple.font.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C661C17311200297025 /* com.apple.font.plist */; };
 		532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
 		532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
-		532B6C701C17327900297025 /* com.apple.ldap.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */; };
-		532B6C711C17328800297025 /* com.apple.ldap.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */; };
-		532B6C761C1732F000297025 /* com.apple.vpn.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */; };
-		532B6C771C17330000297025 /* com.apple.vpn.managed.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */; };
 		53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */; };
 		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
 		5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCController.m */; };
@@ -36,6 +30,25 @@
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
+		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
+		53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
+		53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */; };
+		53751FEB1C1B832D00FF3CB0 /* MenuIconExchange.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */; };
+		53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */; };
+		53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FEE1C1B834300FF3CB0 /* MenuIconCertificates.png */; };
+		53751FF11C1B848A00FF3CB0 /* MenuIconFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FF01C1B848A00FF3CB0 /* MenuIconFont.png */; };
+		53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FF21C1B849400FF3CB0 /* MenuIconVPN.png */; };
+		53751FF51C1B849E00FF3CB0 /* MenuIconMail.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FF41C1B849E00FF3CB0 /* MenuIconMail.png */; };
+		53751FF71C1B84AA00FF3CB0 /* MenuIconRestriction.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FF61C1B84AA00FF3CB0 /* MenuIconRestriction.png */; };
+		53751FF91C1B84B600FF3CB0 /* MenuIconGeneral.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FF81C1B84B600FF3CB0 /* MenuIconGeneral.png */; };
+		53751FFB1C1B84C400FF3CB0 /* MenuIconPasscode.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FFA1C1B84C300FF3CB0 /* MenuIconPasscode.png */; };
+		53751FFD1C1B864400FF3CB0 /* MenuIconContacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FFC1C1B864400FF3CB0 /* MenuIconContacts.png */; };
+		53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FFE1C1B865E00FF3CB0 /* MenuIconCalendar.png */; };
+		537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520001C1B869500FF3CB0 /* MenuIconNetwork.png */; };
+		537520031C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520021C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png */; };
+		537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520041C1B86B100FF3CB0 /* MenuIconXsan.png */; };
+		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
+		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,16 +58,14 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,
 				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
 				5357C07A1C18182B0056B050 /* com.apple.airplay.plist in Copy Manifests */,
-				532B6C771C17330000297025 /* com.apple.vpn.managed.plist in Copy Manifests */,
-				532B6C711C17328800297025 /* com.apple.ldap.account.plist in Copy Manifests */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */,
 				532B6C681C17311D00297025 /* com.apple.font.plist in Copy Manifests */,
 				532B6C621C172FE100297025 /* com.apple.ews.account.plist in Copy Manifests */,
 				532B6C5F1C172F6400297025 /* com.apple.mail.managed.plist in Copy Manifests */,
 				532B6C591C172E1300297025 /* com.apple.caldav.account.plist in Copy Manifests */,
-				532B6C561C172DC600297025 /* com.apple.wifi.managed.plist in Copy Manifests */,
 				532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */,
 			);
 			name = "Copy Manifests";
@@ -64,14 +75,11 @@
 
 /* Begin PBXFileReference section */
 		532B6C501C17289700297025 /* com.apple.general.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.general.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.general.plist; sourceTree = "<group>"; };
-		532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.wifi.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.wifi.managed.plist; sourceTree = "<group>"; };
 		532B6C571C172E0300297025 /* com.apple.caldav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.caldav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.caldav.account.plist; sourceTree = "<group>"; };
 		532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mail.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.mail.managed.plist; sourceTree = "<group>"; };
 		532B6C601C172FD000297025 /* com.apple.ews.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ews.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ews.account.plist; sourceTree = "<group>"; };
 		532B6C661C17311200297025 /* com.apple.font.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.font.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.font.plist; sourceTree = "<group>"; };
 		532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.configurationprofile.identification.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.configurationprofile.identification.plist; sourceTree = "<group>"; };
-		532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ldap.account.plist; sourceTree = "<group>"; };
-		532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.vpn.managed.plist; sourceTree = "<group>"; };
 		53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsMenu.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.h; sourceTree = "<group>"; };
 		53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsMenu.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsMenu.m; sourceTree = "<group>"; };
 		53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettings.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettings.h; sourceTree = "<group>"; };
@@ -87,6 +95,24 @@
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		536FC5271C15EEDE00B1D7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.certificate.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.security.certificate.plist; sourceTree = "<group>"; };
+		53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconAirPlay.png; sourceTree = "<group>"; };
+		53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconExchange.png; sourceTree = "<group>"; };
+		53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconIdentification.png; sourceTree = "<group>"; };
+		53751FEE1C1B834300FF3CB0 /* MenuIconCertificates.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCertificates.png; sourceTree = "<group>"; };
+		53751FF01C1B848A00FF3CB0 /* MenuIconFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconFont.png; sourceTree = "<group>"; };
+		53751FF21C1B849400FF3CB0 /* MenuIconVPN.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconVPN.png; sourceTree = "<group>"; };
+		53751FF41C1B849E00FF3CB0 /* MenuIconMail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconMail.png; sourceTree = "<group>"; };
+		53751FF61C1B84AA00FF3CB0 /* MenuIconRestriction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconRestriction.png; sourceTree = "<group>"; };
+		53751FF81C1B84B600FF3CB0 /* MenuIconGeneral.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconGeneral.png; sourceTree = "<group>"; };
+		53751FFA1C1B84C300FF3CB0 /* MenuIconPasscode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconPasscode.png; sourceTree = "<group>"; };
+		53751FFC1C1B864400FF3CB0 /* MenuIconContacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconContacts.png; sourceTree = "<group>"; };
+		53751FFE1C1B865E00FF3CB0 /* MenuIconCalendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCalendar.png; sourceTree = "<group>"; };
+		537520001C1B869500FF3CB0 /* MenuIconNetwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconNetwork.png; sourceTree = "<group>"; };
+		537520021C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSoftwareUpdate.png; sourceTree = "<group>"; };
+		537520041C1B86B100FF3CB0 /* MenuIconXsan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconXsan.png; sourceTree = "<group>"; };
+		537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCalendarSubscription.png; sourceTree = "<group>"; };
+		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconDock.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,14 +130,12 @@
 			isa = PBXGroup;
 			children = (
 				532B6C501C17289700297025 /* com.apple.general.plist */,
-				532B6C541C172D4700297025 /* com.apple.wifi.managed.plist */,
 				5357C0721C1815EB0056B050 /* com.apple.airplay.plist */,
+				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
 				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
-				532B6C6F1C17327900297025 /* com.apple.ldap.account.plist */,
 				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
 				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
-				532B6C751C1732F000297025 /* com.apple.vpn.managed.plist */,
 				532B6C661C17311200297025 /* com.apple.font.plist */,
 				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */,
 			);
@@ -189,10 +213,35 @@
 		536FC51F1C15EEDE00B1D7CF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				53751FE71C1B830B00FF3CB0 /* Graphics */,
 				5341D3191C15F00F0014F5A7 /* Property Lists */,
 			);
 			name = "Supporting Files";
 			path = ProfileCreator;
+			sourceTree = "<group>";
+		};
+		53751FE71C1B830B00FF3CB0 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */,
+				53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */,
+				53751FFA1C1B84C300FF3CB0 /* MenuIconPasscode.png */,
+				537520001C1B869500FF3CB0 /* MenuIconNetwork.png */,
+				53751FF81C1B84B600FF3CB0 /* MenuIconGeneral.png */,
+				537520041C1B86B100FF3CB0 /* MenuIconXsan.png */,
+				537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */,
+				537520081C1B86CC00FF3CB0 /* MenuIconDock.png */,
+				53751FF61C1B84AA00FF3CB0 /* MenuIconRestriction.png */,
+				53751FF01C1B848A00FF3CB0 /* MenuIconFont.png */,
+				53751FFE1C1B865E00FF3CB0 /* MenuIconCalendar.png */,
+				537520021C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png */,
+				53751FFC1C1B864400FF3CB0 /* MenuIconContacts.png */,
+				53751FF41C1B849E00FF3CB0 /* MenuIconMail.png */,
+				53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */,
+				53751FEE1C1B834300FF3CB0 /* MenuIconCertificates.png */,
+				53751FF21C1B849400FF3CB0 /* MenuIconVPN.png */,
+			);
+			name = Graphics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,17 +305,32 @@
 			files = (
 				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
 				5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */,
+				53751FF51C1B849E00FF3CB0 /* MenuIconMail.png in Resources */,
 				5357C0731C1815EB0056B050 /* com.apple.airplay.plist in Resources */,
+				53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */,
 				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
-				532B6C551C172D4700297025 /* com.apple.wifi.managed.plist in Resources */,
 				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,
-				532B6C761C1732F000297025 /* com.apple.vpn.managed.plist in Resources */,
+				53751FF91C1B84B600FF3CB0 /* MenuIconGeneral.png in Resources */,
+				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */,
+				537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */,
+				53751FFD1C1B864400FF3CB0 /* MenuIconContacts.png in Resources */,
+				53751FEB1C1B832D00FF3CB0 /* MenuIconExchange.png in Resources */,
+				53751FF71C1B84AA00FF3CB0 /* MenuIconRestriction.png in Resources */,
 				532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */,
+				53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */,
+				537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */,
+				537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */,
+				53751FF11C1B848A00FF3CB0 /* MenuIconFont.png in Resources */,
+				537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */,
 				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
-				532B6C701C17327900297025 /* com.apple.ldap.account.plist in Resources */,
+				53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */,
+				53751FFB1C1B84C400FF3CB0 /* MenuIconPasscode.png in Resources */,
 				532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */,
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
+				537520031C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png in Resources */,
+				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
 				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
+				53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

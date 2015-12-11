@@ -202,22 +202,28 @@
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else if ( [cellType isEqualToString:@"TextField"] ) {
                 CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
-                return [self populateCellViewTextField:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewTextField:cellView settingDict:settingDict row:row];
             } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
                 CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
-                return [self populateCellViewTextFieldNoTitle:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewTextFieldNoTitle:cellView settingDict:settingDict row:row];
             } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
                 CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
-                return [self populateCellViewPopUp:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewPopUp:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"Checkbox"] ) {
                 CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
-                return [self populateCellViewCheckbox:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewCheckbox:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
                 CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
-                return [self populateCellViewDatePickerNoTitle:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewDatePickerNoTitle:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
                 CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
-                return [self populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView settingDict:settingDict row:row];
+            } else if ( [cellType isEqualToString:@"TableView"] ) {
+                CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
+                return [cellView populateCellViewSettingsTableView:cellView settingDict:settingDict row:row];
+            } else if ( [cellType isEqualToString:@"File"] ) {
+                CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
+                return [cellView populateCellViewSettingsFile:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -228,7 +234,7 @@
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else {
                 CellViewSettingsEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsEnabled" owner:self];
-                return [self populateCellViewEnabled:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewEnabled:cellView settingDict:settingDict row:row sender:self];
             }
         }
     } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenu"] ) {
@@ -246,11 +252,11 @@
             NSString *cellType = menuDict[@"CellType"];
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
-                return [self populateCellViewMenu:cellView menuDict:menuDict row:row];
+                return [cellView populateCellViewMenu:cellView menuDict:menuDict row:row];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
-            return [self populateCellViewEnabled:cellView menuDict:menuDict row:row];
+            return [cellView populateCellViewEnabled:cellView menuDict:menuDict row:row sender:self];
         }
     }
     return nil;
@@ -284,295 +290,16 @@
                    [cellType isEqualToString:@"DatePickerNoTitle"] ||
                    [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
             return 39;
+        } else if ( [cellType isEqualToString:@"TableView"] ) {
+            return 250;
+        } else if ( [cellType isEqualToString:@"File"] ) {
+            return 192;
         }
-    } else if (
-               [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
+    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
         return 44;
     }
     return 1;
 } // tableView:heightOfRow
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Populate Menu CellViews
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row {
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setState:[menuDict[@"Enabled"] boolValue]];
-    
-    // ---------------------------------------------------------------------
-    //  Required
-    // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setHidden:[menuDict[@"Required"] boolValue]];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setAction:@selector(checkbox:)];
-    [[cellView menuCheckbox] setTarget:self];
-    [[cellView menuCheckbox] setTag:row];
-    
-    return cellView;
-} // populateCellViewEnabled:menuDict:row
-
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row {
-    
-    // ---------------------------------------------------------------------
-    //  Title
-    // ---------------------------------------------------------------------
-    [[cellView menuTitle] setStringValue:menuDict[@"Title"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView menuDescription] setStringValue:menuDict[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Icon
-    // ---------------------------------------------------------------------
-    NSImage *icon = [[NSBundle mainBundle] imageForResource:menuDict[@"Image"]];
-    if ( icon ) {
-        [[cellView menuIcon] setImage:icon];
-    } else {
-        NSURL *iconURL = [NSURL fileURLWithPath:menuDict[@"ImagePath"] ?: @""];
-        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-            NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-            if ( icon ) {
-                [[cellView menuIcon] setImage:icon];
-            }
-        }
-    }
-    
-    return cellView;
-} // populateCellViewMenu:menuDict:row
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Populate Settings CellViews
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setState:[settingDict[@"Enabled"] boolValue]];
-    
-    // ---------------------------------------------------------------------
-    //  Required
-    // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setHidden:[settingDict[@"Required"] boolValue]];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setAction:@selector(checkbox:)];
-    [[cellView settingEnabled] setTarget:self];
-    [[cellView settingEnabled] setTag:row];
-    
-    return cellView;
-} // populateCellViewEnabled:settingDict:row
-
-- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    BOOL enabled = [settingDict[@"Enabled"] boolValue];
-    
-    // ---------------------------------------------------------------------
-    //  Title
-    // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:settingDict[@"Title"] ?: @""];
-    if ( enabled ) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
-    } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingTextField] setStringValue:settingDict[@"Value"] ?: @""];
-    [[cellView settingTextField] setTag:row];
-    
-    return cellView;
-} // populateCellViewTextField:settingDict:row
-
-- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingTextField] setStringValue:settingDict[@"Value"] ?: @""];
-    [[cellView settingTextField] setTag:row];
-    
-    return cellView;
-} // populateCellViewTextField:settingDict:row
-
-- (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    BOOL enabled = [settingDict[@"Enabled"] boolValue];
-    
-    // ---------------------------------------------------------------------
-    //  Title
-    // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:settingDict[@"Title"] ?: @""];
-    if ( enabled ) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
-    } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingPopUpButton] addItemsWithTitles:settingDict[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: settingDict[@"DefaultValue"]];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingPopUpButton] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
-    [[cellView settingPopUpButton] setTarget:self];
-    [[cellView settingPopUpButton] setTag:row];
-    
-    return cellView;
-} // populateCellViewPopUp:settingDict:row
-
-- (CellViewSettingsCheckbox *)populateCellViewCheckbox:(CellViewSettingsCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    BOOL enabled = [settingDict[@"Enabled"] boolValue];
-    
-    // ---------------------------------------------------------------------
-    //  Title (Checkbox)
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:settingDict[@"Title"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
-    [[cellView settingCheckbox] setTarget:self];
-    [[cellView settingCheckbox] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
-    
-    return cellView;
-} // populateCellViewCheckbox:settingDict:row
-
-- (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    //BOOL enabled = [settingDict[@"Enabled"] boolValue];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingDatePicker] setDateValue:settingDict[@"Value"] ?: [NSDate date]];
-    [[cellView settingDatePicker] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Set minimum value selectable to tomorrow
-    // ---------------------------------------------------------------------
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
-    [offsetComponents setDay:1];
-    NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
-    [[cellView settingDatePicker] setMinDate:dateTomorrow];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    //[[cellView settingDatePicker] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingDatePicker] setAction:@selector(datePickerSelection:)];
-    [[cellView settingDatePicker] setTarget:self];
-    [[cellView settingDatePicker] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-    [[cellView settingDescription] setStringValue:[self dateIntervalFromNowToDate:datePickerDate] ?: @""];
-    
-    return cellView;
-} // populateCellViewCheckbox:settingDict:row
-
-- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
-    
-    BOOL enabled = [settingDict[@"Enabled"] boolValue];
-    
-    NSNumber *seconds = settingDict[@"Value"] ?: @0;
-    
-    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
-    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
-    NSUInteger unitFlags = NSCalendarUnitDay | NSCalendarUnitHour;
-    
-    NSDate *startDate = [NSDate date];
-    NSDate *endDate = [startDate dateByAddingTimeInterval:[seconds doubleValue]];
-    
-    NSDateComponents *components = [calendarUS components:unitFlags fromDate:startDate toDate:endDate options:0];
-    NSInteger days = [components day];
-    NSInteger hours = [components hour];
-    
-    // ---------------------------------------------------------------------
-    //  Days
-    // ---------------------------------------------------------------------
-    [[cellView settingDays] setStringValue:[@(days) stringValue] ?: @""];
-    [[cellView settingDays] setEnabled:enabled];
-    [[cellView settingDays] setTag:row];
-    [[cellView settingDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepperDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    // ---------------------------------------------------------------------
-    //  Hours
-    // ---------------------------------------------------------------------
-    [[cellView settingHours] setStringValue:[@(hours) stringValue] ?: @""];
-    [[cellView settingHours] setEnabled:enabled];
-    [[cellView settingHours] setTag:row];
-    [[cellView settingHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepperHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-
-    return cellView;
-} // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -617,45 +344,185 @@
     // ---------------------------------------------------------------------
     //  Make sure it's a settings date picker
     // ---------------------------------------------------------------------
-    if ( [[[datePicker superview] class] isSubclassOfClass:[CellViewSettingsDatePickerNoTitle class]] ) {
+    if ( ! [[[datePicker superview] class] isSubclassOfClass:[CellViewSettingsDatePickerNoTitle class]] ) {
+        NSLog(@"[ERROR] DatePicker: %@ superview class is: %@", datePicker, [[datePicker superview] class]);
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get date picker's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *datePickerTag = @([datePicker tag]);
+    if ( datePickerTag == nil ) {
+        NSLog(@"[ERROR] DatePicker: %@ tag is nil", datePicker);
+        return;
+    }
+    NSInteger row = [datePickerTag integerValue];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsDatePickerNoTitle date picker
+    // ---------------------------------------------------------------------
+    if ( datePicker == [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker] ) {
+        
+        unsigned int flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+        NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
         
         // ---------------------------------------------------------------------
-        //  Get date picker's row in the table view
+        //  Save selection
         // ---------------------------------------------------------------------
-        NSNumber *datePickerTag = @([datePicker tag]);
-        if ( datePickerTag != nil ) {
-            NSInteger row = [datePickerTag integerValue];
-            
-            // ---------------------------------------------------------------------
-            //  Another verification this is a CellViewSettingsDatePickerNoTitle date picker
-            // ---------------------------------------------------------------------
-            if ( datePicker == [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker] ) {
-                
-                unsigned int flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-                NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
-                [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
-                
-                // ---------------------------------------------------------------------
-                //  Save selection
-                // ---------------------------------------------------------------------
-                NSDate *datePickerDate = [datePicker dateValue];
-                
-                NSDateComponents* components = [calendarUS components:flags fromDate:datePickerDate];
-                NSDate* date = [calendarUS dateFromComponents:components];
-                
-                NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-                cellDict[@"Value"] = date;
-                [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
-                
-                // ---------------------------------------------------------------------
-                //  Update description with time interval from today to selected date
-                // ---------------------------------------------------------------------
-                NSTextField *description = [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDescription];
-                [description setStringValue:[self dateIntervalFromNowToDate:datePickerDate] ?: @""];
-            }
-        }
+        NSDate *datePickerDate = [datePicker dateValue];
+        
+        NSDateComponents* components = [calendarUS components:flags fromDate:datePickerDate];
+        NSDate* date = [calendarUS dateFromComponents:components];
+        
+        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+        cellDict[@"Value"] = date;
+        [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        
+        // ---------------------------------------------------------------------
+        //  Update description with time interval from today to selected date
+        // ---------------------------------------------------------------------
+        NSTextField *description = [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDescription];
+        [description setStringValue:[self dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
 } // datePickerSelection
+
+- (void)popUpButtonSelection:(NSPopUpButton *)popUpButton {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a settings popup button
+    // ---------------------------------------------------------------------
+    if ( ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUp class]] ) {
+        NSLog(@"[ERROR] PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get popup button's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *popUpButtonTag = @([popUpButton tag]);
+    if ( popUpButtonTag == nil ) {
+        NSLog(@"[ERROR] PopUpButton: %@ tag is nil", popUpButton);
+        return;
+    }
+    NSInteger row = [popUpButtonTag integerValue];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsPopUp popup button
+    // ---------------------------------------------------------------------
+    if ( popUpButton == [(CellViewSettingsPopUp *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ) {
+        
+        // ---------------------------------------------------------------------
+        //  Save selection
+        // ---------------------------------------------------------------------
+        NSString *selectedTitle = [popUpButton titleOfSelectedItem];
+        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+        cellDict[@"Value"] = selectedTitle;
+        [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        
+        // ---------------------------------------------------------------------
+        //  Handle sub keys
+        // ---------------------------------------------------------------------
+        NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
+        if ( [valueKeys count] != 0 ) {
+            
+            // ---------------------------------------------------------------------
+            //  Remove any previous sub keys
+            // ---------------------------------------------------------------------
+            if ( row < [_tableViewSettingsItemsEnabled count] ) {
+                NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
+                [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ( valueKeys[obj[@"ParentKey"]] != nil ) {
+                        [_tableViewSettingsItemsEnabled removeObjectAtIndex:idx];
+                    } else {
+                        *stop = YES;
+                    }
+                }];
+            }
+            
+            // ---------------------------------------------------------------------
+            //  Check if any sub keys exist for selected value
+            // ---------------------------------------------------------------------
+            NSArray *valueKeyArray = [valueKeys[selectedTitle] mutableCopy] ?: @[];
+            for ( NSDictionary *valueDict in valueKeyArray ) {
+                if ( [valueDict count] != 0 ) {
+                    row++;
+                    NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
+                    
+                    // ---------------------------------------------------------------------
+                    //  Add sub key to table view below setting
+                    // ---------------------------------------------------------------------
+                    mutableValueDict[@"ParentKey"] = selectedTitle;
+                    [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+                }
+            }
+        }
+        
+        [_tableViewSettings reloadData];
+    }
+} // popUpButtonSelection
+
+- (void)selectFile:(NSButton *)button {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a settings button
+    // ---------------------------------------------------------------------
+    if ( ! [[[button superview] class] isSubclassOfClass:[CellViewSettingsFile class]] ) {
+        NSLog(@"[ERROR] Button: %@ superview class is: %@", button, [[button superview] class]);
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get button's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *buttonTag = @([button tag]);
+    if ( buttonTag == nil ) {
+        NSLog(@"[ERROR] Button: %@ tag is nil", button);
+        return;
+    }
+    NSInteger row = [buttonTag integerValue];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsFile button
+    // ---------------------------------------------------------------------
+    if ( button == [(CellViewSettingsFile *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
+        
+        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+        
+        // --------------------------------------------------------------
+        //  Get open dialog settings from dict
+        // --------------------------------------------------------------
+        NSString *prompt = cellDict[@"FilePrompt"] ?: @"Select File";
+        NSArray *allowedFileTypes = @[];
+        if ( cellDict[@"AllowedFileTypes"] != nil && [cellDict[@"AllowedFileTypes"] isKindOfClass:[NSArray class]] ) {
+            allowedFileTypes = cellDict[@"AllowedFileTypes"] ?: @[];
+        }
+        
+        // --------------------------------------------------------------
+        //  Setup open dialog for current settings
+        // --------------------------------------------------------------
+        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+        [openPanel setTitle:prompt];
+        [openPanel setPrompt:@"Select"];
+        [openPanel setCanChooseFiles:YES];
+        [openPanel setCanChooseDirectories:NO];
+        [openPanel setCanCreateDirectories:NO];
+        [openPanel setAllowsMultipleSelection:NO];
+        
+        if ( [allowedFileTypes count] != 0 ) {
+            [openPanel setAllowedFileTypes:allowedFileTypes];
+        }
+        
+        if ( [openPanel runModal] == NSModalResponseOK ) {
+            NSArray *selectedURLs = [openPanel URLs];
+            NSURL *fileURL = [selectedURLs firstObject];
+            cellDict[@"FilePath"] = [fileURL path];
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+            [_tableViewSettings reloadData];
+        }
+    }
+} // selectFile
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
     
@@ -694,77 +561,6 @@
     return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
 } // dateIntervalFromNowToDate
 
-- (void)popUpButtonSelection:(NSPopUpButton *)popUpButton {
-    
-    // ---------------------------------------------------------------------
-    //  Make sure it's a settings popup button
-    // ---------------------------------------------------------------------
-    if ( [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUp class]] ) {
-        
-        // ---------------------------------------------------------------------
-        //  Get popup button's row in the table view
-        // ---------------------------------------------------------------------
-        NSNumber *popUpButtonTag = @([popUpButton tag]);
-        if ( popUpButtonTag != nil ) {
-            NSInteger row = [popUpButtonTag integerValue];
-            
-            // ---------------------------------------------------------------------
-            //  Another verification this is a CellViewSettingsPopUp popup button
-            // ---------------------------------------------------------------------
-            if ( popUpButton == [(CellViewSettingsPopUp *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ) {
-                
-                // ---------------------------------------------------------------------
-                //  Save selection
-                // ---------------------------------------------------------------------
-                NSString *selectedTitle = [popUpButton titleOfSelectedItem];
-                NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-                cellDict[@"Value"] = selectedTitle;
-                [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
-                
-                // ---------------------------------------------------------------------
-                //  Handle sub keys
-                // ---------------------------------------------------------------------
-                NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
-                if ( [valueKeys count] != 0 ) {
-                    
-                    // ---------------------------------------------------------------------
-                    //  Remove any previous sub keys
-                    // ---------------------------------------------------------------------
-                    if ( row < [_tableViewSettingsItemsEnabled count] ) {
-                        NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
-                        [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if ( valueKeys[obj[@"ParentKey"]] != nil ) {
-                                [_tableViewSettingsItemsEnabled removeObjectAtIndex:idx];
-                            } else {
-                                *stop = YES;
-                            }
-                        }];
-                    }
-                    
-                    // ---------------------------------------------------------------------
-                    //  Check if any sub keys exist for selected value
-                    // ---------------------------------------------------------------------
-                    NSArray *valueKeyArray = [valueKeys[selectedTitle] mutableCopy] ?: @[];
-                    for ( NSDictionary *valueDict in valueKeyArray ) {
-                        if ( [valueDict count] != 0 ) {
-                            row++;
-                            NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
-                            
-                            // ---------------------------------------------------------------------
-                            //  Add sub key to table view below setting
-                            // ---------------------------------------------------------------------
-                            mutableValueDict[@"ParentKey"] = selectedTitle;
-                            [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
-                        }
-                    }
-                }
-                
-                [_tableViewSettings reloadData];
-            }
-        }
-    }
-} // popUpButtonSelection
-
 - (NSArray *)settingsForMenuItem:(NSDictionary *)menuDict {
     NSMutableArray *combinedSettings = [[NSMutableArray alloc] init];
     if ( [menuDict count] != 0 ) {
@@ -776,6 +572,11 @@
                 NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
                 combinedSettingDict[@"Enabled"] = @YES;
                 [combinedSettings addObject:[combinedSettingDict copy]];
+            }
+            
+            if ( [combinedSettings count] != 0 ) {
+                [combinedSettings insertObject:@{ @"CellType" : @"Padding" } atIndex:0];
+                [combinedSettings addObject:@{ @"CellType" : @"Padding" }];
             }
         }
     }
@@ -811,8 +612,6 @@
         NSArray *settingsArray = [self settingsForMenuItem:self->_tableViewMenuItemsEnabled[self->_tableViewMenuSelectedRow]];
         if ( [settingsArray count] != 0 ) {
             [self->_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
-            [self->_tableViewSettingsItemsEnabled insertObject:@{ @"CellType" : @"Padding" } atIndex:0];
-            [self->_tableViewSettingsItemsEnabled addObject:@{ @"CellType" : @"Padding" }];
             [self->_viewErrorReadingSettings setHidden:YES];
         } else {
             [self->_viewErrorReadingSettings setHidden:NO];

@@ -7,9 +7,11 @@
 	<key>Domain</key>
 	<string>com.apple.configurationprofile.identification</string>
 	<key>Description</key>
-	<string></string>
+	<string>Not Configured</string>
 	<key>Title</key>
 	<string>Identification</string>
+	<key>IconName</key>
+	<string>MenuIconIdentification.png</string>
 	<key>DomainKeys</key>
 	<array>
 		<dict>

@@ -13,7 +13,6 @@
 @property BOOL advancedSettings;
 
 // TableView Menu
-
 @property (weak) IBOutlet NSTableView *tableViewMenu;
 - (IBAction)tableViewMenu:(id)sender;
 @property NSInteger tableViewMenuSelectedRow;
@@ -31,8 +30,16 @@
 @property (weak) IBOutlet NSView *viewSettingsSuperView;
 @property (strong) IBOutlet NSView *viewErrorReadingSettings;
 
-// General
-@property NSNumber *stepperValueRemovalIntervalDays;
-@property NSNumber *stepperValueRemovalIntervalHours;
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellView Actions
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+- (void)checkbox:(NSButton *)checkbox;
+- (void)datePickerSelection:(NSDatePicker *)datePicker;
+- (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
+- (void)selectFile:(NSButton *)button;
+
+- (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 
 @end

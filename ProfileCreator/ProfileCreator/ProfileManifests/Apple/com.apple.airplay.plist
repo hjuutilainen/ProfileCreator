@@ -7,10 +7,25 @@
 	<key>Domain</key>
 	<string>com.apple.airplay</string>
 	<key>Description</key>
-	<string></string>
+	<string>Not Configured</string>
 	<key>Title</key>
 	<string>AirPlay</string>
-	<key>ImagePath</key>
-	<string>/System/Library/CoreServices/Menu\ Extras/Volume.menu/Contents/Resources/Airplay.pdf</string>
+	<key>IconName</key>
+	<string>MenuIconAirPlay.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Known AirPlay Destinations</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Array</string>
+			<key>Description</key>
+			<string>Description</string>
+			<key>CellType</key>
+			<string>TableView</string>
+		</dict>
+	</array>
 </dict>
 </plist>

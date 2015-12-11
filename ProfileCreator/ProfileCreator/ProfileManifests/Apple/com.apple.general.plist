@@ -14,6 +14,8 @@
 	<string>Mandatory</string>
 	<key>Title</key>
 	<string>General</string>
+	<key>IconName</key>
+	<string>MenuIconGeneral.png</string>
 	<key>DomainKeys</key>
 	<array>
 		<dict>
