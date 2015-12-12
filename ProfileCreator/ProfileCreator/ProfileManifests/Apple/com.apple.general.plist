@@ -88,8 +88,6 @@
 						<string>String</string>
 						<key>Description</key>
 						<string>Authorization Password</string>
-						<key>DefaultValue</key>
-						<string></string>
 						<key>CellType</key>
 						<string>TextFieldNoTitle</string>
 					</dict>

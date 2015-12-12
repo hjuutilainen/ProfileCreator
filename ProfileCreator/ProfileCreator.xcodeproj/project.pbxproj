@@ -24,9 +24,7 @@
 		5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCController.m */; };
 		5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */; };
 		5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */; };
-		5357C0731C1815EB0056B050 /* com.apple.airplay.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0721C1815EB0056B050 /* com.apple.airplay.plist */; };
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
-		5357C07A1C18182B0056B050 /* com.apple.airplay.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0721C1815EB0056B050 /* com.apple.airplay.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
@@ -60,7 +58,6 @@
 			files = (
 				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,
 				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
-				5357C07A1C18182B0056B050 /* com.apple.airplay.plist in Copy Manifests */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */,
 				532B6C681C17311D00297025 /* com.apple.font.plist in Copy Manifests */,
 				532B6C621C172FE100297025 /* com.apple.ews.account.plist in Copy Manifests */,
@@ -89,7 +86,6 @@
 		5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileCreationWindowController.h; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.h; sourceTree = "<group>"; };
 		5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileCreationWindowController.m; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.m; sourceTree = "<group>"; };
 		5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileCreationWindowController.xib; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.xib; sourceTree = "<group>"; };
-		5357C0721C1815EB0056B050 /* com.apple.airplay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airplay.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.airplay.plist; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.carddav.account.plist; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -130,7 +126,6 @@
 			isa = PBXGroup;
 			children = (
 				532B6C501C17289700297025 /* com.apple.general.plist */,
-				5357C0721C1815EB0056B050 /* com.apple.airplay.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
 				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
@@ -306,7 +301,6 @@
 				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
 				5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */,
 				53751FF51C1B849E00FF3CB0 /* MenuIconMail.png in Resources */,
-				5357C0731C1815EB0056B050 /* com.apple.airplay.plist in Resources */,
 				53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */,
 				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
 				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,

@@ -900,6 +900,36 @@ Line 3</string>
                                                                 <outlet property="settingTitle" destination="e34-xH-OaC" id="QMe-Zb-Yu9"/>
                                                             </connections>
                                                         </tableCellView>
+                                                        <tableCellView identifier="CellViewSettingsSegmentedControl" wantsLayer="YES" id="V2g-zW-0l0" customClass="CellViewSettingsSegmentedControl">
+                                                            <rect key="frame" x="45" y="825" width="467" height="38"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <segmentedControl verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ef2-Zc-W3Z">
+                                                                    <rect key="frame" x="221" y="6" width="27" height="25"/>
+                                                                    <animations/>
+                                                                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="tIq-wD-NHB">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <segments>
+                                                                            <segment>
+                                                                                <nil key="label"/>
+                                                                            </segment>
+                                                                            <segment selected="YES" tag="1">
+                                                                                <nil key="label"/>
+                                                                            </segment>
+                                                                        </segments>
+                                                                    </segmentedCell>
+                                                                </segmentedControl>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstAttribute="bottom" secondItem="Ef2-Zc-W3Z" secondAttribute="bottom" constant="8" id="4WW-ZH-dPw"/>
+                                                                <constraint firstItem="Ef2-Zc-W3Z" firstAttribute="top" secondItem="V2g-zW-0l0" secondAttribute="top" constant="8" id="4ZS-PC-WTI"/>
+                                                                <constraint firstItem="Ef2-Zc-W3Z" firstAttribute="centerX" secondItem="V2g-zW-0l0" secondAttribute="centerX" id="SAT-zt-Szq"/>
+                                                            </constraints>
+                                                            <animations/>
+                                                            <connections>
+                                                                <outlet property="settingSegmentedControl" destination="Ef2-Zc-W3Z" id="7UG-In-ht1"/>
+                                                            </connections>
+                                                        </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
                                                 <tableColumn identifier="ColumnPadding" width="45" minWidth="45" maxWidth="45" id="EU9-Kt-q7o" userLabel="ColumnPadding">

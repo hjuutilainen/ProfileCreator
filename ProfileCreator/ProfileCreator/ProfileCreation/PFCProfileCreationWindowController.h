@@ -39,6 +39,7 @@
 - (void)datePickerSelection:(NSDatePicker *)datePicker;
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
 - (void)selectFile:(NSButton *)button;
+- (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 

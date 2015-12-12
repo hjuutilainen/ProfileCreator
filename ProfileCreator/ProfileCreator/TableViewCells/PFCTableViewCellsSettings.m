@@ -12,16 +12,28 @@
 @implementation PFCTableViewCellsSettings
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsPadding
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsPadding
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextField
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsTextField
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -67,12 +79,20 @@
     
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldNoTitle
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsTextFieldNoTitle
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
     
     // ---------------------------------------------------------------------
@@ -88,12 +108,20 @@
     
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsPopUp
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsPopUp
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -116,6 +144,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:settingDict[@"AvailableValues"] ?: @[]];
     [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: settingDict[@"DefaultValue"]];
     
@@ -135,10 +164,17 @@
 } // populateCellViewPopUp:settingDict:row
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsCheckbox
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsCheckbox *)populateCellViewCheckbox:(CellViewSettingsCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -172,12 +208,20 @@
     
     return cellView;
 } // populateCellViewCheckbox:settingDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsEnabled
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsEnabled
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
@@ -199,18 +243,31 @@
     
     return cellView;
 } // populateCellViewEnabled:settingDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsMinOS
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsMinOS
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsDatePickerNoTitle
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsDatePickerNoTitle
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     //BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -250,12 +307,20 @@
     
     return cellView;
 } // populateCellViewCheckbox:settingDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldDaysHoursNoTitle
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsTextFieldDaysHoursNoTitle
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -293,12 +358,20 @@
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
+
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTableView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @implementation CellViewSettingsTableView
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
+
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
@@ -322,6 +395,7 @@
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -440,5 +514,39 @@
     
     return cellView;
 } // populateCellViewSettingsFile:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsSegmentedControl
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsSegmentedControl
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------
+    //  Segmented Control Titles
+    // ---------------------------------------------------------------------
+    NSArray *availableSelections = settingDict[@"AvailableValues"] ?: @[];
+    [[cellView settingSegmentedControl] setSegmentCount:[availableSelections count]];
+    [availableSelections enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[cellView settingSegmentedControl] setLabel:obj forSegment:idx];
+    }];
+    
+    // ---------------------------------------------------------------------
+    //  Segmented Control Action
+    // ---------------------------------------------------------------------
+    [[cellView settingSegmentedControl] setAction:@selector(segmentedControl:)];
+    [[cellView settingSegmentedControl] setTarget:sender];
+    [[cellView settingSegmentedControl] setTag:row];
+    
+    return cellView;
+}
 
 @end

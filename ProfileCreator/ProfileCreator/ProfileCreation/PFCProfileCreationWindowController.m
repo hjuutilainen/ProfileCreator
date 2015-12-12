@@ -224,6 +224,9 @@
             } else if ( [cellType isEqualToString:@"File"] ) {
                 CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
                 return [cellView populateCellViewSettingsFile:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
+                CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
+                return [cellView populateCellViewSettingsSegmentedControl:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -294,6 +297,8 @@
             return 250;
         } else if ( [cellType isEqualToString:@"File"] ) {
             return 192;
+        } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
+            return 38;
         }
     } else if ( [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
         return 44;
@@ -310,30 +315,38 @@
 - (void)checkbox:(NSButton *)checkbox {
     NSNumber *buttonTag = @([checkbox tag]);
     if ( buttonTag == nil ) {
+        NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
         return;
     }
+    NSInteger row = [buttonTag integerValue];
     
     if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]] ) {
         if ( checkbox == [(CellViewMenuEnabled *)[_tableViewMenu viewAtColumn:[_tableViewMenu columnWithIdentifier:@"ColumnMenuEnabled"] row:[buttonTag integerValue] makeIfNecessary:NO] menuCheckbox] ) {
             BOOL state = [checkbox state];
             NSMutableDictionary *cellDict = [[_tableViewMenuItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Enabled"] = @(state);
-            [_tableViewMenuItemsEnabled replaceObjectAtIndex:(NSUInteger)[buttonTag integerValue] withObject:[cellDict copy]];
+            [_tableViewMenuItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
         }
     } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsEnabled class]] ) {
         if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:[buttonTag integerValue] makeIfNecessary:NO] settingEnabled] ) {
             BOOL state = [checkbox state];
             NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Enabled"] = @(state);
-            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)[buttonTag integerValue] withObject:[cellDict copy]];
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
             [_tableViewSettings reloadData];
         }
     } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsCheckbox class]] ) {
         if ( checkbox == [(CellViewSettingsCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
+            
             BOOL state = [checkbox state];
             NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Value"] = @(state);
-            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)[buttonTag integerValue] withObject:[cellDict copy]];
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+
+            // ---------------------------------------------------------------------
+            //  Add subkeys for selected state
+            // ---------------------------------------------------------------------
+            [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row];
             [_tableViewSettings reloadData];
         }
     }
@@ -422,43 +435,9 @@
         [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
         
         // ---------------------------------------------------------------------
-        //  Handle sub keys
+        //  Add subkeys for selected title
         // ---------------------------------------------------------------------
-        NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
-        if ( [valueKeys count] != 0 ) {
-            
-            // ---------------------------------------------------------------------
-            //  Remove any previous sub keys
-            // ---------------------------------------------------------------------
-            if ( row < [_tableViewSettingsItemsEnabled count] ) {
-                NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
-                [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ( valueKeys[obj[@"ParentKey"]] != nil ) {
-                        [_tableViewSettingsItemsEnabled removeObjectAtIndex:idx];
-                    } else {
-                        *stop = YES;
-                    }
-                }];
-            }
-            
-            // ---------------------------------------------------------------------
-            //  Check if any sub keys exist for selected value
-            // ---------------------------------------------------------------------
-            NSArray *valueKeyArray = [valueKeys[selectedTitle] mutableCopy] ?: @[];
-            for ( NSDictionary *valueDict in valueKeyArray ) {
-                if ( [valueDict count] != 0 ) {
-                    row++;
-                    NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
-                    
-                    // ---------------------------------------------------------------------
-                    //  Add sub key to table view below setting
-                    // ---------------------------------------------------------------------
-                    mutableValueDict[@"ParentKey"] = selectedTitle;
-                    [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
-                }
-            }
-        }
-        
+        [self updateSubKeysForDict:cellDict valueString:selectedTitle row:row];
         [_tableViewSettings reloadData];
     }
 } // popUpButtonSelection
@@ -514,15 +493,57 @@
             [openPanel setAllowedFileTypes:allowedFileTypes];
         }
         
-        if ( [openPanel runModal] == NSModalResponseOK ) {
-            NSArray *selectedURLs = [openPanel URLs];
-            NSURL *fileURL = [selectedURLs firstObject];
-            cellDict[@"FilePath"] = [fileURL path];
-            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
-            [_tableViewSettings reloadData];
-        }
+        [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+            if ( result == NSModalResponseOK ) {
+                NSArray *selectedURLs = [openPanel URLs];
+                NSURL *fileURL = [selectedURLs firstObject];
+                cellDict[@"FilePath"] = [fileURL path];
+                [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+                [_tableViewSettings reloadData];
+            }
+        }];
     }
 } // selectFile
+
+- (void)segmentedControl:(NSSegmentedControl *)segmentedControl {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a settings segmented control
+    // ---------------------------------------------------------------------
+    if ( ! [[[segmentedControl superview] class] isSubclassOfClass:[CellViewSettingsSegmentedControl class]] ) {
+        NSLog(@"[ERROR] SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get segmented control's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *segmentedControlTag = @([segmentedControl tag]);
+    if ( segmentedControlTag == nil ) {
+        NSLog(@"[ERROR] SegmentedControl: %@ tag is nil", segmentedControl);
+        return;
+    }
+    NSInteger row = [segmentedControlTag integerValue];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsSegmentedControl segmented control
+    // ---------------------------------------------------------------------
+    if ( segmentedControl == [(CellViewSettingsSegmentedControl *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingSegmentedControl] ) {
+        
+        NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
+        if ( [selectedSegment length] == 0 ) {
+            NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", segmentedControl);
+            return;
+        }
+        
+        // ---------------------------------------------------------------------
+        //  Add subkeys for selected segmented control
+        // ---------------------------------------------------------------------
+        [self updateSubKeysForDict:[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row];
+        [_tableViewSettings reloadData];
+    }
+    
+} // segmentedControl
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
     
@@ -582,6 +603,47 @@
     }
     return [combinedSettings copy];
 } // settingsForMenuItem
+
+- (void)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
+    
+    // ---------------------------------------------------------------------
+    //  Handle sub keys
+    // ---------------------------------------------------------------------
+    NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
+    if ( [valueKeys count] != 0 ) {
+        
+        // ---------------------------------------------------------------------
+        //  Remove any previous sub keys
+        // ---------------------------------------------------------------------
+        if ( row < [_tableViewSettingsItemsEnabled count] ) {
+            NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
+            [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ( valueKeys[obj[@"ParentKey"]] != nil ) {
+                    [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                } else {
+                    *stop = YES;
+                }
+            }];
+        }
+        
+        // ---------------------------------------------------------------------
+        //  Check if any sub keys exist for selected value
+        // ---------------------------------------------------------------------
+        NSArray *valueKeyArray = [valueKeys[valueString] mutableCopy] ?: @[];
+        for ( NSDictionary *valueDict in valueKeyArray ) {
+            if ( [valueDict count] != 0 ) {
+                row++;
+                NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
+                
+                // ---------------------------------------------------------------------
+                //  Add sub key to table view below setting
+                // ---------------------------------------------------------------------
+                mutableValueDict[@"ParentKey"] = valueString;
+                [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+            }
+        }
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

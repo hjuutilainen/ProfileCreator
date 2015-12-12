@@ -14,5 +14,347 @@
 	<string>MenuIconMail.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Mail.app/Contents/Resources/ApplicationIcon.icns</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Account Description</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The display name of the account (e.g. &quot;Company Mail Account&quot;)</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Account Type</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The protocol for accessing the account</string>
+			<key>DefaultValue</key>
+			<string>IMAP</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>IMAP</string>
+				<string>POP</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>IMAP</key>
+				<array>
+					<dict>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Path Prefix</string>
+						<key>CellType</key>
+						<string>TextFieldNoTitle</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>User Display Name</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The display name of the user (e.g. &quot;John Appleseed&quot;)</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Email Address</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The address of the account (e.g. &quot;john@example.com&quot;)</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Allow user to move messages from this account</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Messages can be moved out of this account into another</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Allow recent addresses to be synced</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Include this account in recent address syncing</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Use Only in Mail</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Send outgoing mail from this account only from Mail app</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable S/MIME</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Support S/MIME for this account</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ValueKeys</key>
+			<dict>
+				<key>True</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Signing Certificate</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Data</string>
+						<key>Description</key>
+						<string>Certificate used to sign messages sent from this account</string>
+						<key>DefaultValue</key>
+						<string>No applicable Certificate payload is configured</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>No applicable Certificate payload is configured</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Encryption Certificate</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Data</string>
+						<key>Description</key>
+						<string>Certificate used to decrypt messages sent to this account</string>
+						<key>DefaultValue</key>
+						<string>No applicable Certificate payload is configured</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>No applicable Certificate payload is configured</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Title</key>
+						<string>Enable per-message encryption switch</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>Description</key>
+						<string>Allow the user to choose whether to encrypt each message</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>CellType</key>
+			<string>SegmentedControl</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Incoming Mail</string>
+				<string>Outgoing Mail</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Incoming Mail</key>
+				<array>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Mail Server and Port</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Hostname or IP address, and port number for incoming mail</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>User Name</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The username used to connect to the server for incoming mail</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Authentication Type</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The authentication method for the incoming mail server</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>None</string>
+							<string>Password</string>
+							<string>MD5 Challenge-Response</string>
+							<string>NTLM</string>
+							<string>HTTP MD5 Digest</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Password</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the incoming mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>MD5 Challenge-Response</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the incoming mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>NTLM</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the incoming mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>HTTP MD5 Digest</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the incoming mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Use SSL</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Retrieve incoming mail through secure socket layer</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

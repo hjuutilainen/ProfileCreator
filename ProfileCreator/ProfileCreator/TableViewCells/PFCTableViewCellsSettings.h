@@ -140,3 +140,13 @@
 @property (weak) IBOutlet NSImageView *settingFileIcon;
 - (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsSegmentedControl
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsSegmentedControl : NSTableCellView
+@property (weak) IBOutlet NSSegmentedControl *settingSegmentedControl;
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
