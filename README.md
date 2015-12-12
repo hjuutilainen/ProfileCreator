@@ -1,3 +1,5 @@
+# NOTE - This application is still being developed, previews, documentation and further information will be available together with the first Alpha release.
+
 # ProfileCreator
 OS X Application to create configuration profiles.
 
