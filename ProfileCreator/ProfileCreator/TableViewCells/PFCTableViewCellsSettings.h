@@ -28,7 +28,7 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
-- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row;
+- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,9 +37,10 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextFieldNoTitle : NSTableCellView
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
-- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row;
+- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,13 +57,36 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsPopUpNoTitle
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsPopUpNoTitle : NSTableCellView
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
+- (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsCheckbox
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsCheckbox : NSTableCellView
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
-- (CellViewSettingsCheckbox *)populateCellViewCheckbox:(CellViewSettingsCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsCheckboxNoDescription
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsCheckboxNoDescription : NSTableCellView
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
+@property (weak) IBOutlet NSButton *settingCheckbox;
+- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,4 +173,17 @@
 @interface CellViewSettingsSegmentedControl : NSTableCellView
 @property (weak) IBOutlet NSSegmentedControl *settingSegmentedControl;
 - (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsHostPort
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTextFieldHostPort : NSTableCellView
+@property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextFieldHost;
+@property (weak) IBOutlet NSTextField *settingTextFieldPort;
+- (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end

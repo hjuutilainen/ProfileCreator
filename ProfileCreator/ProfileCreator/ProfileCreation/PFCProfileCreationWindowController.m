@@ -202,16 +202,16 @@
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else if ( [cellType isEqualToString:@"TextField"] ) {
                 CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
-                return [cellView populateCellViewTextField:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewTextField:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
                 CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
-                return [cellView populateCellViewTextFieldNoTitle:cellView settingDict:settingDict row:row];
+                return [cellView populateCellViewTextFieldNoTitle:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
                 CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
                 return [cellView populateCellViewPopUp:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"Checkbox"] ) {
                 CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
-                return [cellView populateCellViewCheckbox:cellView settingDict:settingDict row:row sender:self];
+                return [cellView populateCellViewSettingsCheckbox:cellView settingDict:settingDict row:row sender:self];
             } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
                 CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
                 return [cellView populateCellViewDatePickerNoTitle:cellView settingDict:settingDict row:row sender:self];
@@ -227,6 +227,15 @@
             } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
                 CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
                 return [cellView populateCellViewSettingsSegmentedControl:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
+                CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
+                return [cellView populateCellViewSettingsTextFieldHostPort:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
+                CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
+                return [cellView populateCellViewSettingsCheckboxNoDescription:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
+                CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
+                return [cellView populateCellViewSettingsPopUpNoTitle:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -265,6 +274,20 @@
     return nil;
 } // tableView:viewForTableColumn:row
 
+- (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
+    if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
+        if ( [_tableViewSettingsItemsEnabled count] <= 0 ) {
+            return;
+        }
+        NSDictionary *profileDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        if ( [profileDict[@"Enabled"] boolValue] ) {
+            [rowView setBackgroundColor:[NSColor clearColor]];
+        } else {
+            [rowView setBackgroundColor:[NSColor lightGrayColor]];
+        }
+    }
+} // tableView:didAddRowView:forRow
+
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
     if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
         
@@ -280,15 +303,19 @@
         if ( [cellType isEqualToString:@"Padding"] ) {
             return 30;
         } else if (
-                   [cellType isEqualToString:@"TextFieldNoTitle"] ) {
-            return 62;
-        }else if (
-                  [cellType isEqualToString:@"TextField"] ||
-                  [cellType isEqualToString:@"PopUpButton"] ) {
+                   [cellType isEqualToString:@"TextFieldNoTitle"] ||
+                   [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
+            return 54;
+        } else if (
+                   [cellType isEqualToString:@"TextField"] ||
+                   [cellType isEqualToString:@"TextFieldHostPort"] ||
+                   [cellType isEqualToString:@"PopUpButton"] ) {
             return 81;
         } else if (
                    [cellType isEqualToString:@"Checkbox"] ) {
             return 52;
+        } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
+            return 30;
         } else if (
                    [cellType isEqualToString:@"DatePickerNoTitle"] ||
                    [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
@@ -311,6 +338,38 @@
 #pragma mark CellView Actions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
+
+- (void)controlTextDidChange:(NSNotification *)sender {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a text field
+    // ---------------------------------------------------------------------
+    if ( ! [[[sender object] class] isSubclassOfClass:[NSTextField class]] ) {
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get text field's row in the table view
+    // ---------------------------------------------------------------------
+    NSTextField *textField = [sender object];
+    NSNumber *textFieldTag = @([textField tag]);
+    if ( textFieldTag == nil ) {
+        NSLog(@"[ERROR] TextField: %@ tag is nil", textFieldTag);
+        return;
+    }
+    NSInteger row = [textFieldTag integerValue];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsTextField text field
+    // ---------------------------------------------------------------------
+    if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
+        NSDictionary *userInfo = [sender userInfo];
+        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
+        cellDict[@"Value"] = inputText;
+        [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+    }
+}
 
 - (void)checkbox:(NSButton *)checkbox {
     NSNumber *buttonTag = @([checkbox tag]);
@@ -342,7 +401,21 @@
             NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Value"] = @(state);
             [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
-
+            
+            // ---------------------------------------------------------------------
+            //  Add subkeys for selected state
+            // ---------------------------------------------------------------------
+            [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row];
+            [_tableViewSettings reloadData];
+        }
+    } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsCheckboxNoDescription class]] ) {
+        if ( checkbox == [(CellViewSettingsCheckboxNoDescription *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
+            
+            BOOL state = [checkbox state];
+            NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
+            cellDict[@"Value"] = @(state);
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+            
             // ---------------------------------------------------------------------
             //  Add subkeys for selected state
             // ---------------------------------------------------------------------
@@ -406,7 +479,9 @@
     // ---------------------------------------------------------------------
     //  Make sure it's a settings popup button
     // ---------------------------------------------------------------------
-    if ( ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUp class]] ) {
+    if (
+        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUp class]] &&
+        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpNoTitle class]] ) {
         NSLog(@"[ERROR] PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
         return;
     }
@@ -424,7 +499,9 @@
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsPopUp popup button
     // ---------------------------------------------------------------------
-    if ( popUpButton == [(CellViewSettingsPopUp *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ) {
+    if (
+        popUpButton == [(CellViewSettingsPopUp *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
+        popUpButton == [(CellViewSettingsPopUpNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
         
         // ---------------------------------------------------------------------
         //  Save selection
@@ -596,8 +673,10 @@
             }
             
             if ( [combinedSettings count] != 0 ) {
-                [combinedSettings insertObject:@{ @"CellType" : @"Padding" } atIndex:0];
-                [combinedSettings addObject:@{ @"CellType" : @"Padding" }];
+                [combinedSettings insertObject:@{ @"CellType" : @"Padding",
+                                                  @"Enabled" : @YES } atIndex:0];
+                [combinedSettings addObject:@{ @"CellType" : @"Padding",
+                                               @"Enabled" : @YES }];
             }
         }
     }
@@ -617,10 +696,29 @@
         // ---------------------------------------------------------------------
         if ( row < [_tableViewSettingsItemsEnabled count] ) {
             NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
+            __block NSArray *parentKeyArray;
             [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                // ----------------------------------------------------------------------
+                //  Check if parent key exist in value keys (if it's added by the caller)
+                // ----------------------------------------------------------------------
                 if ( valueKeys[obj[@"ParentKey"]] != nil ) {
+                    
+                    parentKeyArray = valueKeys[obj[@"ParentKey"]];
                     [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
                 } else {
+                    
+                    // ----------------------------------------------------------------------------------------
+                    //  Check if parent key exist in parents value keys (if it's added by the caller's parent)
+                    // ----------------------------------------------------------------------------------------
+                    // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
+                    for ( NSDictionary *parentKeyDict in parentKeyArray ) {
+                        if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
+                            [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                            return;
+                        }
+                    }
+                    
                     *stop = YES;
                 }
             }];

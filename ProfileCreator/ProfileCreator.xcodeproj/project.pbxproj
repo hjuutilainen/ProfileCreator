@@ -26,6 +26,9 @@
 		5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */; };
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
+		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
+		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
+		5359E2D51C1CC65F00646980 /* com.apple.security.privacy.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
@@ -56,6 +59,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				5359E2D51C1CC65F00646980 /* com.apple.security.privacy.plist in Copy Manifests */,
 				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,
 				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */,
@@ -87,6 +91,8 @@
 		5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileCreationWindowController.m; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.m; sourceTree = "<group>"; };
 		5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileCreationWindowController.xib; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.xib; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.carddav.account.plist; sourceTree = "<group>"; };
+		5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.security.privacy.plist; sourceTree = "<group>"; };
+		5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSecurityPrivacy.png; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -127,12 +133,13 @@
 			children = (
 				532B6C501C17289700297025 /* com.apple.general.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
+				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
+				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
 				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
-				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
-				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
 				532B6C661C17311200297025 /* com.apple.font.plist */,
 				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */,
+				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */,
 			);
 			name = ProfileManifest;
 			sourceTree = "<group>";
@@ -226,6 +233,7 @@
 				537520041C1B86B100FF3CB0 /* MenuIconXsan.png */,
 				537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */,
 				537520081C1B86CC00FF3CB0 /* MenuIconDock.png */,
+				5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */,
 				53751FF61C1B84AA00FF3CB0 /* MenuIconRestriction.png */,
 				53751FF01C1B848A00FF3CB0 /* MenuIconFont.png */,
 				53751FFE1C1B865E00FF3CB0 /* MenuIconCalendar.png */,
@@ -299,11 +307,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
+				5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */,
 				5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */,
 				53751FF51C1B849E00FF3CB0 /* MenuIconMail.png in Resources */,
 				53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */,
 				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
 				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,
+				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */,
 				53751FF91C1B84B600FF3CB0 /* MenuIconGeneral.png in Resources */,
 				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */,
 				537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */,

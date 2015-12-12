@@ -225,7 +225,7 @@
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for incoming mail</string>
 						<key>CellType</key>
-						<string>TextField</string>
+						<string>TextFieldHostPort</string>
 					</dict>
 					<dict>
 						<key>Required</key>
@@ -349,6 +349,162 @@
 						<string></string>
 						<key>Description</key>
 						<string>Retrieve incoming mail through secure socket layer</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+				</array>
+				<key>Outgoing Mail</key>
+				<array>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Mail Server and Port</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Hostname or IP address, and port number for outgoing mail</string>
+						<key>CellType</key>
+						<string>TextFieldHostPort</string>
+					</dict>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>User Name</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The username used to connect to the server for outgoing mail</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Authentication Type</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The authentication method for the outgoing mail server</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>None</string>
+							<string>Password</string>
+							<string>MD5 Challenge-Response</string>
+							<string>NTLM</string>
+							<string>HTTP MD5 Digest</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Password</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the outgoing mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>MD5 Challenge-Response</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the outgoing mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>NTLM</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the outgoing mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+							<key>HTTP MD5 Digest</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>Description</key>
+									<string>The password for the outgoing mail server</string>
+									<key>CellType</key>
+									<string>TextField</string>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Outgoing password same as incoming</string>
+						<key>Key</key>
+						<string></string>
+						<key>Description</key>
+						<string>SMTP authentication uses the same password as POP/IMAP</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Use SSL</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Send outgoing mail through secure socket layer</string>
 						<key>CellType</key>
 						<string>Checkbox</string>
 					</dict>

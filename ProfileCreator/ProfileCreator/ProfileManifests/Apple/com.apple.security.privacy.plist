@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.security.privacy</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Security &amp; Privacy</string>
+	<key>IconName</key>
+	<string>MenuIconSecurityPrivacy.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>CellType</key>
+			<string>SegmentedControl</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>General</string>
+				<string>Privacy</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>General</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Do not allow user to override Gatekeeper setting</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>Description</key>
+						<string>Prevents the user from temporarily overriding the Gatekeeper setting by control-clicking to install any app</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Allow user to change password</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>Indent</key>
+						<true/>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Require password after sleep or screen saver begins</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>Indent</key>
+						<true/>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+						<key>ValueKeys</key>
+						<dict>
+							<key>True</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string></string>
+									<key>Description</key>
+									<string>Time before screen saver begins</string>
+									<key>CellType</key>
+									<string>PopUpButtonNoTitle</string>
+									<key>Indent</key>
+									<true/>
+									<key>DefaultValue</key>
+									<string>5 seconds</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>Immediately</string>
+										<string>5 seconds</string>
+										<string>1 minute</string>
+										<string>5 minutes</string>
+										<string>15 minutes</string>
+										<string>1 hour</string>
+										<string>4 hours</string>
+										<string>8 hours</string>
+									</array>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Allow user to set lock message</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>Indent</key>
+						<true/>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+					</dict>
+				</array>
+				<key>Privacy</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Allow sending diagnostic and usage data to Apple, and sharing crash data and statistics with app developers</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>Boolean</string>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

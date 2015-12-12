@@ -40,7 +40,7 @@
 			<key>Description</key>
 			<string>The CalDAV hostname or IP address and port number</string>
 			<key>CellType</key>
-			<string>TextField</string>
+			<string>TextFieldHostPort</string>
 		</dict>
 		<dict>
 			<key>Title</key>
