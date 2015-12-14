@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.vpn</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>VPN</string>
+	<key>IconName</key>
+	<string>MenuIconVPN.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Connection Name</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Display name of the connection (displayed on the device)</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Server</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Hostname of IP address for server</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Account</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>User account for authentication the connection</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>PlaceholderValue</key>
+			<string>Set on device</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Connection Type</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The type of connection enabled by this policy</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>DefaultValue</key>
+			<string>L2TP</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>IKEv2</string>
+				<string>IPSec</string>
+				<string>L2TP</string>
+				<string>PPTP</string>
+				<string>Cisco AnyConnect</string>
+				<string>Juniper SSL</string>
+				<string>F5 SSL</string>
+				<string>SonicWALL Mobile Connect</string>
+				<string>Aruba VIA</string>
+				<string>Check Point Mobile VPN</string>
+				<string>Custom SSL</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>L2TP</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>User Authentication</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>User authentication type for the connection</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Password</string>
+							<string>RSA SecurID</string>
+							<string>Certificate</string>
+							<string>Kerberos</string>
+							<string>CryptoCard</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Password</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Description</key>
+									<string>User Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>CellType</key>
+									<string>TextFieldNoTitle</string>
+								</dict>
+							</array>
+							<key>Certificate</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>Data</string>
+									<key>Description</key>
+									<string>Description</string>
+									<key>CellType</key>
+									<string>PopUpButtonNoTitle</string>
+									<key>DefaultValue</key>
+									<string>No applicable Certificate payload is configured</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>No applicable Certificate payload is configured</string>
+									</array>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Machine Authentication</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Authentication type for the connection</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>DefaultValue</key>
+						<string>Shared Secret</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Shared Secret</string>
+							<string>Certificate</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Shared Secret</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string></string>
+									<key>Description</key>
+									<string>Share secret for the connection</string>
+									<key>CellType</key>
+									<string>TextFieldNoTitle</string>
+								</dict>
+							</array>
+							<key>Certificate</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Title</key>
+									<string>Credential</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string></string>
+									<key>Description</key>
+									<string>Credential for authentication the connection</string>
+									<key>CellType</key>
+									<string>PopUpButtonNoTitle</string>
+									<key>DefaultValue</key>
+									<string>No applicable Certificate payload is configured</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>No applicable Certificate payload is configured</string>
+									</array>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+				</array>
+				<key>PPTP</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>User Authentication</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>User authentication type for the connection</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Password</string>
+							<string>RSA SecurID</string>
+							<string>Certificate</string>
+							<string>Kerberos</string>
+							<string>CryptoCard</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Password</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Description</key>
+									<string>User Password</string>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>String</string>
+									<key>CellType</key>
+									<string>TextFieldNoTitle</string>
+								</dict>
+							</array>
+							<key>Certificate</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string>Data</string>
+									<key>Description</key>
+									<string>Description</string>
+									<key>CellType</key>
+									<string>PopUpButtonNoTitle</string>
+									<key>DefaultValue</key>
+									<string>No applicable Certificate payload is configured</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>No applicable Certificate payload is configured</string>
+									</array>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Encyption Level</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Level of data encryption applied to the connection</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>DefaultValue</key>
+						<string>Automatic</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>None</string>
+							<string>Automatic</string>
+							<string>Maximum (128-bit)</string>
+						</array>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Send All Traffic</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Routes all network traffic through the VPN connection</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable VPN on Demand</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Description</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ValueKeys</key>
+			<dict>
+				<key>True</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Title</string>
+						<key>Description</key>
+						<string>Domain and host names that will establish a VPN</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>CellType</key>
+						<string>TableView</string>
+						<key>TableViewColumns</key>
+						<array>
+							<dict>
+								<key>Title</key>
+								<string>Match Domain or Host</string>
+								<key>CellType</key>
+								<string>TextField</string>
+							</dict>
+							<dict>
+								<key>Title</key>
+								<string>On Demand Action</string>
+								<key>CellType</key>
+								<string>PopUpButton</string>
+								<key>AvailableValues</key>
+								<array>
+									<string>Always</string>
+									<string>Never</string>
+									<string>Establish</string>
+								</array>
+								<key>DefaultValue</key>
+								<string>Always</string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Proxy Setup</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Configures proxies to be used with this VPN connection</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>DefaultValue</key>
+			<string>None</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>None</string>
+				<string>Manual</string>
+				<string>Automatic</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Manual</key>
+				<array>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Proxy Server and Port</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Hostname of IP address, and port number for the proxy server</string>
+						<key>CellType</key>
+						<string>TextFieldHostPort</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Authentication</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Username used to connect to the proxy</string>
+						<key>CellType</key>
+						<string>TextField</string>
+						<key>PlaceholderValue</key>
+						<string>Ask during installation</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Password</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Password used to authentication with the proxy</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+				<key>Automatic</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Proxy Server URL</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>URL used to retrieve proxy settings</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

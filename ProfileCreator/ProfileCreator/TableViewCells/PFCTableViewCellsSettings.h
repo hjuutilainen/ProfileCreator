@@ -139,12 +139,17 @@
 #pragma mark CellViewSettingsTableView
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-@interface CellViewSettingsTableView : NSTableCellView
+@interface CellViewSettingsTableView : NSTableCellView <NSTableViewDataSource, NSTableViewDelegate>
+@property NSMutableArray *tableViewContent;
+@property NSDictionary *tableViewColumnCellViews;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTableView *settingTableView;
 @property (weak) IBOutlet NSButton *settingButtonAdd;
+- (IBAction)settingButtonAdd:(id)sender;
 @property (weak) IBOutlet NSButton *settingButtonRemove;
+- (IBAction)settingButtonRemove:(id)sender;
+- (void)popUpButtonSelection:(id)sender;
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row;
 @end
 

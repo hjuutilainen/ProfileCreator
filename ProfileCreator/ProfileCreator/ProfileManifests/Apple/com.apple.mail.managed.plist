@@ -51,6 +51,8 @@
 				<key>IMAP</key>
 				<array>
 					<dict>
+						<key>Enabled</key>
+						<true/>
 						<key>Key</key>
 						<string></string>
 						<key>Type</key>
@@ -185,6 +187,8 @@
 						</array>
 					</dict>
 					<dict>
+						<key>Enabled</key>
+						<false/>
 						<key>Title</key>
 						<string>Enable per-message encryption switch</string>
 						<key>Key</key>

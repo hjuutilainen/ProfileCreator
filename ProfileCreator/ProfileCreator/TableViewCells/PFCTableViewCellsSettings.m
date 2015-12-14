@@ -8,6 +8,7 @@
 
 #import "PFCTableViewCellsSettings.h"
 #import "PFCProfileCreationWindowController.h"
+#import "PFCTableViewCellsSettingsTableView.h"
 
 @implementation PFCTableViewCellsSettings
 @end
@@ -58,7 +59,6 @@
     //  Value
     // ---------------------------------------------------------------------
     NSString *value = settingDict[@"Value"] ?: @"";
-    NSLog(@"value=%@", value);
     if ( [value length] == 0 ) {
         if ( [settingDict[@"DefaultValue"] length] != 0 ) {
             value = settingDict[@"DefaultValue"] ?: @"";
@@ -174,6 +174,7 @@
     
     return cellView;
 } // populateCellViewPopUp:settingDict:row
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +191,7 @@
 - (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
-
+    
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
@@ -270,7 +271,15 @@
     //  Description
     // ---------------------------------------------------------------------
     [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
-        
+    
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
+    //if ( [valueKeys count] != 0 ) {
+    //    [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row];
+    //}
+    
     return cellView;
 } // populateCellViewCheckbox:settingDict:row
 
@@ -321,6 +330,14 @@
     [[cellView settingCheckbox] setAction:@selector(checkbox:)];
     [[cellView settingCheckbox] setTarget:sender];
     [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
+    //if ( [valueKeys count] != 0 ) {
+    //    [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row];
+    //}
     
     return cellView;
 } // populateCellViewCheckboxNoDescription:settingDict:row
@@ -486,6 +503,81 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+} // drawRect
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return [_tableViewContent count];
+} // numberOfRowsInTableView
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    
+    // ---------------------------------------------------------------------
+    //  Verify the table view content array isn't empty, if so stop here
+    // ---------------------------------------------------------------------
+    if ( [_tableViewContent count] < row || [_tableViewContent count] == 0 ) {
+        return nil;
+    }
+    
+    NSDictionary *settingDict = _tableViewContent[(NSUInteger)row];
+    NSString *tableColumnIdentifier = [tableColumn identifier];
+    NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnIdentifier];
+    NSString *cellType = tableColumnCellViewDict[@"CellType"];
+    
+    if ( [cellType isEqualToString:@"TextField"] ) {
+        CellViewTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewTextField" owner:self];
+        return [cellView populateCellViewTextField:cellView settingDict:settingDict[tableColumnIdentifier] row:row sender:self];
+    } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
+        CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
+        return [cellView populateCellViewPopUpButton:cellView settingDict:settingDict[tableColumnIdentifier] row:row sender:self];
+    }
+    
+    return nil;
+} // tableView:viewForTableColumn:row
+
+- (NSInteger)insertRowInTableView:(NSDictionary *)rowDict {
+    NSInteger index = [_settingTableView selectedRow];
+    index++;
+    [_settingTableView beginUpdates];
+    [_settingTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationSlideDown];
+    [_settingTableView scrollRowToVisible:index];
+    [_tableViewContent insertObject:rowDict atIndex:(NSUInteger)index];
+    [_settingTableView endUpdates];
+    return index;
+} // insertRowInTableView
+
+- (IBAction)settingButtonAdd:(id) __unused sender {
+    
+    if ( ! _tableViewContent ) {
+        _tableViewContent = [[NSMutableArray alloc] init];
+    }
+    
+    NSMutableDictionary *newRowDict = [[NSMutableDictionary alloc] init];
+    NSArray *tableColumnKeys = [_tableViewColumnCellViews allKeys];
+    for ( NSString *tableColumnKey in tableColumnKeys ) {
+        NSMutableDictionary *tableColumnDict = [[NSMutableDictionary alloc] init];
+        NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnKey];
+        NSString *cellType = tableColumnCellViewDict[@"CellType"];
+        
+        if ( [cellType isEqualToString:@"TextField"] ) {
+            tableColumnDict[@"Value"] = @"";
+        } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
+            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
+            tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"];
+        }
+        newRowDict[tableColumnKey] = tableColumnDict;
+    }
+    
+    [self insertRowInTableView:[newRowDict copy]];
+} // settingButtonAdd
+
+- (IBAction)settingButtonRemove:(id) __unused sender {
+    NSIndexSet *indexes = [_settingTableView selectedRowIndexes];
+    [_tableViewContent removeObjectsAtIndexes:indexes];
+    [_settingTableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationSlideDown];
+} // settingButtonRemove
+
+- (void)popUpButtonSelection:(id)sender {
+    NSLog(@"Select!");
 }
 
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
@@ -507,7 +599,29 @@
     // ---------------------------------------------------------------------
     [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
     
+    // ---------------------------------------------------------------------
+    //  TableColumn set DataSource and Delegate to self
+    // ---------------------------------------------------------------------
+    [[cellView settingTableView] setDataSource:self];
+    [[cellView settingTableView] setDelegate:self];
     
+    // ---------------------------------------------------------------------
+    //  TableColumn add columns from settingsDict
+    // ---------------------------------------------------------------------
+    for ( NSTableColumn *tableColumn in [[[cellView settingTableView] tableColumns] copy] ) {
+        [[cellView settingTableView] removeTableColumn:tableColumn];
+    }
+    
+    NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
+    for ( NSDictionary *tableColumnDict in settingDict[@"TableViewColumns"] ) {
+        NSString *tableColumnTitle = tableColumnDict[@"Title"] ?: @"";
+        NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnTitle];
+        [tableColumn setTitle:tableColumnTitle];
+        [[cellView settingTableView] addTableColumn:tableColumn];
+        
+        tableColumnsCellViews[tableColumnTitle] = tableColumnDict;
+    }
+    [self setTableViewColumnCellViews:[tableColumnsCellViews copy]];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
@@ -661,6 +775,20 @@
     [[cellView settingSegmentedControl] setAction:@selector(segmentedControl:)];
     [[cellView settingSegmentedControl] setTarget:sender];
     [[cellView settingSegmentedControl] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
+    //if ( [valueKeys count] != 0 ) {
+    //    NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
+    //    NSLog(@"selectedSegment=%@", selectedSegment);
+    //    if ( [selectedSegment length] != 0 ) {
+    //        [sender updateSubKeysForDict:settingDict valueString:selectedSegment row:row];
+    //    } else {
+    //        NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", [cellView settingSegmentedControl]);
+    //    }
+    //}
     
     return cellView;
 }

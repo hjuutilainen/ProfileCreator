@@ -276,14 +276,16 @@
 
 - (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
     if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
+        
         if ( [_tableViewSettingsItemsEnabled count] <= 0 ) {
             return;
         }
+        
         NSDictionary *profileDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
         if ( [profileDict[@"Enabled"] boolValue] ) {
             [rowView setBackgroundColor:[NSColor clearColor]];
         } else {
-            [rowView setBackgroundColor:[NSColor lightGrayColor]];
+            [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
         }
     }
 } // tableView:didAddRowView:forRow
@@ -366,10 +368,10 @@
         NSDictionary *userInfo = [sender userInfo];
         NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
         NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
-        cellDict[@"Value"] = inputText;
+        cellDict[@"Value"] = [inputText copy];
         [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
     }
-}
+} // controlTextDidChange
 
 - (void)checkbox:(NSButton *)checkbox {
     NSNumber *buttonTag = @([checkbox tag]);
@@ -691,6 +693,8 @@
     NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
     if ( [valueKeys count] != 0 ) {
         
+        [_tableViewSettings beginUpdates];
+        
         // ---------------------------------------------------------------------
         //  Remove any previous sub keys
         // ---------------------------------------------------------------------
@@ -705,6 +709,7 @@
                 if ( valueKeys[obj[@"ParentKey"]] != nil ) {
                     
                     parentKeyArray = valueKeys[obj[@"ParentKey"]];
+                    //[_tableViewSettings removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:(row + 1)] withAnimation:NSTableViewAnimationEffectNone];
                     [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
                 } else {
                     
@@ -714,6 +719,7 @@
                     // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
                     for ( NSDictionary *parentKeyDict in parentKeyArray ) {
                         if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
+                            //[_tableViewSettings removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:(row + 1)] withAnimation:NSTableViewAnimationEffectNone];
                             [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
                             return;
                         }
@@ -738,10 +744,13 @@
                 // ---------------------------------------------------------------------
                 mutableValueDict[@"ParentKey"] = valueString;
                 [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+                //[_tableViewSettings insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectNone];
             }
         }
+        
+        [_tableViewSettings endUpdates];
     }
-}
+} // updateSubKeysForDict:valueString:row
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

@@ -40,6 +40,7 @@
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
 - (void)selectFile:(NSButton *)button;
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
+- (void)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 

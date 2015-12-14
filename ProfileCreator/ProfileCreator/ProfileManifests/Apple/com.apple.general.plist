@@ -82,6 +82,8 @@
 				<key>With Authorization</key>
 				<array>
 					<dict>
+						<key>Enabled</key>
+						<true/>
 						<key>Key</key>
 						<string></string>
 						<key>Type</key>
@@ -118,14 +120,14 @@
 				<key>On date</key>
 				<array>
 					<dict>
+						<key>Enabled</key>
+						<true/>
 						<key>Key</key>
 						<string></string>
 						<key>Type</key>
 						<string>Date</string>
 						<key>Description</key>
 						<string>Removal date</string>
-						<key>DefaultValue</key>
-						<string></string>
 						<key>CellType</key>
 						<string>DatePickerNoTitle</string>
 					</dict>
