@@ -239,6 +239,12 @@
             } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
                 CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
                 return [cellView populateCellViewSettingsTextFieldNumber:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"TextFieldCheckbox"] ) {
+                CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
+                return [cellView populateCellViewSettingsTextFieldCheckbox:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
+                CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
+                return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -315,7 +321,9 @@
                    [cellType isEqualToString:@"TextField"] ||
                    [cellType isEqualToString:@"TextFieldHostPort"] ||
                    [cellType isEqualToString:@"PopUpButton"] ||
-                   [cellType isEqualToString:@"TextFieldNumber"] ) {
+                   [cellType isEqualToString:@"TextFieldNumber"] ||
+                   [cellType isEqualToString:@"TextFieldCheckbox"] ||
+                   [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
             return 81;
         } else if (
                    [cellType isEqualToString:@"Checkbox"] ) {

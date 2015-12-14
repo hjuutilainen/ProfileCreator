@@ -41,6 +41,7 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
+@property (weak) IBOutlet NSTextField *settingUnit;
 @property (weak) IBOutlet NSStepper *settingStepper;
 @property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
 - (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
@@ -56,6 +57,33 @@
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
 - (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTextFieldCheckbox : NSTableCellView
+@property BOOL checkboxState;
+@property (weak) IBOutlet NSButton *settingCheckbox;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextField;
+- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldHostPortCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTextFieldHostPortCheckbox : NSTableCellView
+@property BOOL checkboxState;
+@property (weak) IBOutlet NSButton *settingCheckbox;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextFieldHost;
+@property (weak) IBOutlet NSTextField *settingTextFieldPort;
+- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +225,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewSettingsHostPort
+#pragma mark CellViewSettingsTextFieldHostPort
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextFieldHostPort : NSTableCellView

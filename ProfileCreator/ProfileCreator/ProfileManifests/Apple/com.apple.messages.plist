@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.messages</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Messages</string>
+	<key>IconName</key>
+	<string>MenuIconMessages.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Account Description</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>The display name of the account</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Account Name</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The chat username</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Account Type</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>The chat protocol to use for this configuration</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>DefaultValue</key>
+			<string>Jabber</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Jabber</string>
+				<string>AIM</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Jabber</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Authentication Type</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Authentication used for the account</string>
+						<key>CellType</key>
+						<string>PopUpButton</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Password</string>
+							<string>Kerberos v5</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Password</key>
+							<array>
+								<dict>
+									<key>Enabled</key>
+									<true/>
+									<key>Key</key>
+									<string></string>
+									<key>Type</key>
+									<string></string>
+									<key>Description</key>
+									<string>Password for the account</string>
+									<key>CellType</key>
+									<string>TextFieldNoTitle</string>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Server Address and Port</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Hostname or IP address, and port number for the server</string>
+						<key>CellType</key>
+						<string>TextFieldHostPort</string>
+						<key>PlaceholderValueHost</key>
+						<string>Auto</string>
+						<key>DefaultValuePort</key>
+						<string>5223</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Use SSL</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Enable Secure Socket Layer communication with chat server</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+					</dict>
+				</array>
+				<key>AIM</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Password</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>Password for the account</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

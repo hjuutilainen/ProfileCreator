@@ -116,6 +116,11 @@
     [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
+    //  Unit
+    // ---------------------------------------------------------------------
+    [[cellView settingUnit] setStringValue:settingDict[@"ValueUnit"] ?: @""];
+    
+    // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     NSNumber *value = settingDict[@"Value"] ?: @0;
@@ -200,6 +205,185 @@
     
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTextFieldCheckbox
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+
+- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    BOOL required = [settingDict[@"Required"] boolValue];
+    
+    // ---------------------------------------------------------------------
+    //  Title (Checkbox)
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setTitle:settingDict[@"Title"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setState:[settingDict[@"ValueCheckbox"] boolValue]];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setEnabled:enabled];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
+    [[cellView settingCheckbox] setTarget:sender];
+    [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSString *value = settingDict[@"ValueTextField"] ?: @"";
+    if ( [value length] == 0 ) {
+        if ( [settingDict[@"DefaultValueTextField"] length] != 0 ) {
+            value = settingDict[@"DefaultValueTextField"] ?: @"";
+        }
+    }
+    [[cellView settingTextField] setDelegate:sender];
+    [[cellView settingTextField] setStringValue:value];
+    [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"PlaceholderValue"] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:settingDict[@"PlaceholderValue"] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else {
+        [[cellView settingTextField] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Bind Checkbox to TextField 'Enabled'
+    // ---------------------------------------------------------------------
+    [[cellView settingTextField] bind:@"enabled" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingCheckbox] bind:@"value" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    
+    return cellView;
+} // populateCellViewTextField:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldHostPortCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTextFieldHostPortCheckbox
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    BOOL required = [settingDict[@"Required"] boolValue];
+    
+    // ---------------------------------------------------------------------
+    //  Title (Checkbox)
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setTitle:settingDict[@"Title"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setState:[settingDict[@"ValueCheckbox"] boolValue]];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setEnabled:enabled];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
+    [[cellView settingCheckbox] setTarget:sender];
+    [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value Host
+    // ---------------------------------------------------------------------
+    NSString *valueHost = settingDict[@"ValueHost"] ?: @"";
+    if ( [valueHost length] == 0 ) {
+        if ( [settingDict[@"DefaultValueHost"] length] != 0 ) {
+            valueHost = settingDict[@"DefaultValueHost"] ?: @"";
+        }
+    }
+    [[cellView settingTextFieldHost] setStringValue:valueHost];
+    [[cellView settingTextFieldHost] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"PlaceholderValueHost"] length] != 0 ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:settingDict[@"PlaceholderValueHost"] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+    } else {
+        [[cellView settingTextFieldHost] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Value Port
+    // ---------------------------------------------------------------------
+    NSString *valuePort = settingDict[@"ValuePort"] ?: @"";
+    if ( [valuePort length] == 0 ) {
+        if ( [settingDict[@"DefaultValuePort"] length] != 0 ) {
+            valuePort = settingDict[@"DefaultValuePort"] ?: @"";
+        }
+    }
+    [[cellView settingTextFieldPort] setStringValue:valuePort];
+    [[cellView settingTextFieldPort] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"PlaceholderValuePort"] length] != 0 ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:settingDict[@"PlaceholderValuePort"] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+    } else {
+        [[cellView settingTextFieldHost] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Bind Checkbox to TextField's 'Enabled'
+    // ---------------------------------------------------------------------
+    [[cellView settingTextFieldHost] bind:@"enabled" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingTextFieldPort] bind:@"enabled" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingCheckbox] bind:@"value" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    
+    return cellView;
+} // populateCellViewSettingsTextFieldHostPort:settingDict:row
 
 @end
 
@@ -384,6 +568,11 @@
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
     [[cellView settingCheckbox] setTitle:settingDict[@"Title"] ?: @""];
+    if ( [settingDict[@"FontWeight"] isEqualToString:@"Bold"] ) {
+        [[cellView settingCheckbox] setFont:[NSFont boldSystemFontOfSize:13]];
+    } else {
+        [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
+    }
     
     // ---------------------------------------------------------------------
     //  Value
@@ -685,6 +874,7 @@
     [[cellView settingTableView] setDataSource:self];
     [[cellView settingTableView] setDelegate:self];
     
+    
     // ---------------------------------------------------------------------
     //  TableColumn add columns from settingsDict
     // ---------------------------------------------------------------------
@@ -693,7 +883,8 @@
     }
     
     NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
-    for ( NSDictionary *tableColumnDict in settingDict[@"TableViewColumns"] ) {
+    NSArray *tableColumnsArray = settingDict[@"TableViewColumns"] ?: @[];
+    for ( NSDictionary *tableColumnDict in tableColumnsArray ) {
         NSString *tableColumnTitle = tableColumnDict[@"Title"] ?: @"";
         NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnTitle];
         [tableColumn setTitle:tableColumnTitle];
@@ -703,7 +894,17 @@
     }
     [self setTableViewColumnCellViews:[tableColumnsCellViews copy]];
     
-    [_settingTableView sizeToFit];
+    // ---------------------------------------------------------------------
+    //  If only one column, remove header view
+    // ---------------------------------------------------------------------
+    if ( [tableColumnsArray count] <= 1 ) {
+        [[cellView settingTableView] setHeaderView:nil];
+    } else {
+        [[cellView settingTableView] setHeaderView:[[NSTableHeaderView alloc] init]];
+    }
+    
+    NSLog(@"sizeToFit");
+    [[cellView settingTableView] sizeToFit];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row

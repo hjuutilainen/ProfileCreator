@@ -192,6 +192,8 @@
 			<string>Number</string>
 			<key>Description</key>
 			<string>The number of seconds to wait between poll attempts</string>
+			<key>ValueUnit</key>
+			<string>Seconds</string>
 			<key>CellType</key>
 			<string>TextFieldNumber</string>
 			<key>DefaultValue</key>
@@ -204,6 +206,8 @@
 			<string></string>
 			<key>Type</key>
 			<string></string>
+			<key>ValueUnit</key>
+			<string>Days</string>
 			<key>Description</key>
 			<string>The number of days before the certificate expires at which to start showing the expiration notification</string>
 			<key>CellType</key>

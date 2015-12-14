@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.proxies</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Proxies</string>
+	<key>IconName</key>
+	<string>MenuIconProxies.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Enable Web Proxy (HTTP)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for web proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable Secure Web Proxy (HTTPS)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for secure web proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable FTP Proxy</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for FTP proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable SOCKS Proxy</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for SOCKS proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable Streaming Proxy (RTSP)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for streaming proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable Gopher Proxy</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Hostname or IP address and port number for gopher proxy</string>
+			<key>CellType</key>
+			<string>TextFieldHostPortCheckbox</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Exceptions</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Bypass proxy settings for thses Hosts &amp; Domains</string>
+			<key>CellType</key>
+			<string>TableView</string>
+			<key>TableViewColumns</key>
+			<array>
+				<dict>
+					<key>CellType</key>
+					<string>TextField</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Use Passive FTP Mode (PASV)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>CellType</key>
+			<string>CheckboxNoDescription</string>
+			<key>FontWeight</key>
+			<string>Bold</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Enable Automatic Proxy Configuration</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Automatic Proxy Configuration URL</string>
+			<key>CellType</key>
+			<string>TextFieldCheckbox</string>
+		</dict>
+	</array>
+</dict>
+</plist>
