@@ -86,6 +86,86 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsTextFieldNumber
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTextFieldNumber
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+
+- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    BOOL required = [settingDict[@"Required"] boolValue];
+    
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView settingTitle] setStringValue:settingDict[@"Title"] ?: @""];
+    if ( enabled ) {
+        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    } else {
+        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSNumber *value = settingDict[@"Value"] ?: @0;
+    if ( value == nil ) {
+        if ( settingDict[@"DefaultValue"] != nil ) {
+            value = settingDict[@"DefaultValue"] ?: @0;
+        }
+    }
+    [[cellView settingTextField] setDelegate:sender];
+    [[cellView settingTextField] setStringValue:[value stringValue]];
+    [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( settingDict[@"PlaceholderValue"] != nil ) {
+        [[cellView settingTextField] setPlaceholderString:[settingDict[@"PlaceholderValue"] stringValue] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else {
+        [[cellView settingTextField] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  NumberFormatter Min/Max Value
+    // ---------------------------------------------------------------------
+    [[cellView settingNumberFormatter] setMinimum:settingDict[@"MinValue"] ?: @0];
+    [[cellView settingStepper] setMinValue:[settingDict[@"MinValue"] doubleValue] ?: 0.0];
+    
+    [[cellView settingNumberFormatter] setMaximum:settingDict[@"MaxValue"] ?: @99999];
+    [[cellView settingStepper] setMaxValue:[settingDict[@"MinValue"] doubleValue] ?: 99999.0];
+    
+    // ---------------------------------------------------------------------
+    //  Stepper
+    // ---------------------------------------------------------------------
+    [[cellView settingStepper] setValueWraps:NO];
+    if ( _stepperValue == nil ) {
+        [self setStepperValue:settingDict[@"Value"] ?: @0];
+    }
+    [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    
+    return cellView;
+} // populateCellViewTextField:settingDict:row
+
+@end
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsTextFieldNoTitle
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -622,6 +702,8 @@
         tableColumnsCellViews[tableColumnTitle] = tableColumnDict;
     }
     [self setTableViewColumnCellViews:[tableColumnsCellViews copy]];
+    
+    [_settingTableView sizeToFit];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row

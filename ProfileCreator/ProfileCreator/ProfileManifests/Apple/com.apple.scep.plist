@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.scep</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>SCEP</string>
+	<key>IconName</key>
+	<string>MenuIconSCEP.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>URL</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The base URL for the SCEP server</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Names</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The name of the instance: CA-IDENT</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Subject</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Representation of a X.500 name</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>PlaceholderValue</key>
+			<string>Example: O=Company Name, CN=Foo</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Subject Alternative Name Type</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>The type of a subject alternative name</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>DefaultValue</key>
+			<string>None</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>None</string>
+				<string>RFC 822 Name</string>
+				<string>DNS Name</string>
+				<string>Uniform Resource Identifier</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>RFC 822 Name</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Subject Alternative Name Value</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The value of a subject alternative name</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>NT Principal Name</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>An NT principal name for use in the certificate request</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+				<key>DNS Name</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Subject Alternative Name Value</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The value of a subject alternative name</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>NT Principal Name</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>An NT principal name for use in the certificate request</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+				<key>Uniform Resource Identifier</key>
+				<array>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>Subject Alternative Name Value</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The value of a subject alternative name</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Enabled</key>
+						<true/>
+						<key>Title</key>
+						<string>NT Principal Name</string>
+						<key>Key</key>
+						<string></string>
+						<key>Type</key>
+						<string></string>
+						<key>Description</key>
+						<string>An NT principal name for use in the certificate request</string>
+						<key>CellType</key>
+						<string>TextField</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Retries</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Number</string>
+			<key>Description</key>
+			<string>The number of times to poll the SCEP server for a signed certificate before giving up</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Retry Delay</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Number</string>
+			<key>Description</key>
+			<string>The number of seconds to wait between poll attempts</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+			<key>DefaultValue</key>
+			<integer>10</integer>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Certificate Expiration Notification Threshold</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>The number of days before the certificate expires at which to start showing the expiration notification</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+			<key>DefaultValue</key>
+			<integer>14</integer>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Challenge</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Used as the pre-shared secret for automatic enrollment</string>
+			<key>CellType</key>
+			<string>TextField</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -236,6 +236,9 @@
             } else if ( [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
                 CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
                 return [cellView populateCellViewSettingsPopUpNoTitle:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
+                CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
+                return [cellView populateCellViewSettingsTextFieldNumber:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -311,7 +314,8 @@
         } else if (
                    [cellType isEqualToString:@"TextField"] ||
                    [cellType isEqualToString:@"TextFieldHostPort"] ||
-                   [cellType isEqualToString:@"PopUpButton"] ) {
+                   [cellType isEqualToString:@"PopUpButton"] ||
+                   [cellType isEqualToString:@"TextFieldNumber"] ) {
             return 81;
         } else if (
                    [cellType isEqualToString:@"Checkbox"] ) {
@@ -323,7 +327,7 @@
                    [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
             return 39;
         } else if ( [cellType isEqualToString:@"TableView"] ) {
-            return 250;
+            return 212;
         } else if ( [cellType isEqualToString:@"File"] ) {
             return 192;
         } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {

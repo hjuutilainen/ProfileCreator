@@ -33,6 +33,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsTextFieldNumber
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTextFieldNumber : NSTableCellView
+@property NSNumber *stepperValue;
+@property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextField;
+@property (weak) IBOutlet NSStepper *settingStepper;
+@property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
+- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsTextFieldNoTitle
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
