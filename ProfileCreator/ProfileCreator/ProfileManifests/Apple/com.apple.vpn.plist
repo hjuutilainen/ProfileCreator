@@ -350,6 +350,8 @@
 								<string>Match Domain or Host</string>
 								<key>CellType</key>
 								<string>TextField</string>
+								<key>DefaultValue</key>
+								<string>localhost</string>
 							</dict>
 							<dict>
 								<key>Title</key>

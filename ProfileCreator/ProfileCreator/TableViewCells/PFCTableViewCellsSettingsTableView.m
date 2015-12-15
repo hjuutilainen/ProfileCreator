@@ -24,8 +24,6 @@
 } // drawRect
 
 - (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-
-    NSLog(@"settingDict=%@", settingDict);
     
     // ---------------------------------------------------------------------
     //  Value
@@ -66,8 +64,6 @@
 } // drawRect
 
 - (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-    
-    NSLog(@"settingDict=%@", settingDict);
     
     // ---------------------------------------------------------------------
     //  Value

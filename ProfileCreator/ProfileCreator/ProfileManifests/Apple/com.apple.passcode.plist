@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.passcode</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Passcode</string>
+	<key>IconName</key>
+	<string>MenuIconPasscode.png</string>
+	<key>DomainKeys</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>Allow simple value</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string>Boolean</string>
+			<key>Description</key>
+			<string>Permit the use of repeating, ascending and descending character sequances</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>IndentLeft</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Require alphanumeric value</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Requires passcode to contain at least one letter and one number</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>IndentLeft</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Minimum passcode length</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Smalles number of passcode characters allowed</string>
+			<key>CellType</key>
+			<string>PopUpButtonLeft</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>--</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+				<string>8</string>
+				<string>9</string>
+				<string>10</string>
+				<string>11</string>
+				<string>12</string>
+				<string>13</string>
+				<string>14</string>
+				<string>15</string>
+				<string>16</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>--</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Minimum number of complex characters</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Smalles number of non-alphanumeric characters allowed</string>
+			<key>CellType</key>
+			<string>PopUpButtonLeft</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>--</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>--</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Maximum passcode age (0-730 days, 0 = none)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Days after which the passcode must be changed</string>
+			<key>CellType</key>
+			<string>TextFieldNumberLeft</string>
+			<key>MinValue</key>
+			<integer>0</integer>
+			<key>MaxValue</key>
+			<integer>730</integer>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Maximum Auto-Lock</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Longest auto-lock time available to the user</string>
+			<key>CellType</key>
+			<string>PopUpButtonLeft</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>--</string>
+				<string>1 minute</string>
+				<string>2 minutes</string>
+				<string>3 minutes</string>
+				<string>4 minutes</string>
+				<string>5 minutes</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>--</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Passcode history (0-50 passcodes, 0 = none)</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Number of unique passcodes before reuse</string>
+			<key>CellType</key>
+			<string>TextFieldNumberLeft</string>
+			<key>MinValue</key>
+			<integer>0</integer>
+			<key>MaxValue</key>
+			<integer>50</integer>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Maximum grace period for device lock</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Longest device lock grace period available to the user</string>
+			<key>CellType</key>
+			<string>PopUpButtonLeft</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>--</string>
+				<string>Immediately</string>
+				<string>1 minute</string>
+				<string>5 minutes</string>
+				<string>15 minutes</string>
+				<string>1 hour</string>
+				<string>4 hours</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>--</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Maximum number of failed attempts</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Number of passcode entry attempts allowed before all data on device will be erased (iOS) or locked (OS X)</string>
+			<key>CellType</key>
+			<string>PopUpButtonLeft</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>--</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+				<string>8</string>
+				<string>9</string>
+				<string>10</string>
+				<string>11</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>--</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Delay after failed login attempts ( 0 = none )</string>
+			<key>Key</key>
+			<string></string>
+			<key>Type</key>
+			<string></string>
+			<key>Description</key>
+			<string>Delay after maximum number of failed attempts, in minutes</string>
+			<key>CellType</key>
+			<string>TextFieldNumberLeft</string>
+			<key>MinValue</key>
+			<integer>0</integer>
+			<key>MaxValue</key>
+			<integer>999</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

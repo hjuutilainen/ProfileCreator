@@ -41,6 +41,8 @@
 			<string>File</string>
 			<key>FilePrompt</key>
 			<string>Add Font</string>
+			<key>FileInfoProcessor</key>
+			<string>FileInfoProcessorFont</string>
 			<key>ButtonTitle</key>
 			<string>Add Font...</string>
 			<key>AllowedFileTypes</key>

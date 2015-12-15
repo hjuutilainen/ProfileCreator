@@ -53,9 +53,12 @@
 		537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520041C1B86B100FF3CB0 /* MenuIconXsan.png */; };
 		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
+		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339D1C1F394600119C71 /* com.apple.scep.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
+		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
+		53F1DDE91C20B85C003D3464 /* com.apple.passcode.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
 		53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
 		53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
@@ -77,6 +80,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				53F1DDE91C20B85C003D3464 /* com.apple.passcode.plist in Copy Manifests */,
 				53FCF0181C1F5E5500E440CB /* com.apple.proxies.plist in Copy Manifests */,
 				53FCF0111C1F58D700E440CB /* com.apple.messages.plist in Copy Manifests */,
 				53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */,
@@ -141,8 +145,11 @@
 		537520041C1B86B100FF3CB0 /* MenuIconXsan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconXsan.png; sourceTree = "<group>"; };
 		537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCalendarSubscription.png; sourceTree = "<group>"; };
 		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconDock.png; sourceTree = "<group>"; };
+		538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCFileInfoProcessors.h; path = FileInfoProcessors/PFCFileInfoProcessors.h; sourceTree = "<group>"; };
+		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.scep.plist; sourceTree = "<group>"; };
 		53C7339E1C1F396800119C71 /* MenuIconSCEP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSCEP.png; sourceTree = "<group>"; };
+		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.passcode.plist; sourceTree = "<group>"; };
 		53FCF0041C1F538000E440CB /* MenuIconLDAP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconLDAP.png; sourceTree = "<group>"; };
 		53FCF0061C1F539300E440CB /* com.apple.ldap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ldap.plist; sourceTree = "<group>"; };
 		53FCF0091C1F561900E440CB /* com.apple.messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.messages.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.messages.plist; sourceTree = "<group>"; };
@@ -182,6 +189,7 @@
 				53FCF0061C1F539300E440CB /* com.apple.ldap.plist */,
 				53FCF0091C1F561900E440CB /* com.apple.messages.plist */,
 				53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */,
+				53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */,
 			);
 			name = ProfileManifest;
 			sourceTree = "<group>";
@@ -232,6 +240,7 @@
 				5341D3221C15F2910014F5A7 /* ProfileCreation */,
 				532B6C4E1C17277100297025 /* ProfileManifest */,
 				53351E311C1601FF00A6FC08 /* TableViewCells */,
+				538A66581C2007AE008350F4 /* FileInfoProcessors */,
 				536FC51F1C15EEDE00B1D7CF /* Supporting Files */,
 				536FC51A1C15EEDE00B1D7CF /* Products */,
 			);
@@ -296,6 +305,15 @@
 				53751FF21C1B849400FF3CB0 /* MenuIconVPN.png */,
 			);
 			name = Graphics;
+			sourceTree = "<group>";
+		};
+		538A66581C2007AE008350F4 /* FileInfoProcessors */ = {
+			isa = PBXGroup;
+			children = (
+				538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */,
+				538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */,
+			);
+			name = FileInfoProcessors;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -372,6 +390,7 @@
 				53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */,
 				53751FF91C1B84B600FF3CB0 /* MenuIconGeneral.png in Resources */,
 				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */,
+				53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */,
 				53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */,
 				537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */,
 				53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */,
@@ -410,6 +429,7 @@
 			files = (
 				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
+				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
 				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,

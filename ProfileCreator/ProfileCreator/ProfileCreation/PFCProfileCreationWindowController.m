@@ -245,6 +245,12 @@
             } else if ( [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
                 CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
                 return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"PopUpButtonLeft"] ) {
+                CellViewSettingsPopUpLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpLeft" owner:self];
+                return [cellView populateCellViewSettingsPopUpLeft:cellView settingDict:settingDict row:row sender:self];
+            } else if ( [cellType isEqualToString:@"TextFieldNumberLeft"] ) {
+                CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
+                return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView settingDict:settingDict row:row sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             if ( [settingDict[@"Hidden"] boolValue] ) {
@@ -315,8 +321,11 @@
             return 30;
         } else if (
                    [cellType isEqualToString:@"TextFieldNoTitle"] ||
-                   [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
+                   [cellType isEqualToString:@"PopUpButtonNoTitle"] ||
+                   [cellType isEqualToString:@"TextFieldNumberLeft"] ) {
             return 54;
+        } else if ( [cellType isEqualToString:@"PopUpButtonLeft"] ) {
+            return 53;
         } else if (
                    [cellType isEqualToString:@"TextField"] ||
                    [cellType isEqualToString:@"TextFieldHostPort"] ||
@@ -329,7 +338,7 @@
                    [cellType isEqualToString:@"Checkbox"] ) {
             return 52;
         } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
-            return 30;
+            return 33;
         } else if (
                    [cellType isEqualToString:@"DatePickerNoTitle"] ||
                    [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {

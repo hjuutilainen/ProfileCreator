@@ -112,10 +112,38 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsPopUpLeft
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsPopUpLeft : NSTableCellView
+@property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
+- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldNumberLeft
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTextFieldNumberLeft : NSTableCellView
+@property NSNumber *stepperValue;
+@property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingTextField;
+@property (weak) IBOutlet NSStepper *settingStepper;
+@property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
+- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsCheckbox
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsCheckbox : NSTableCellView
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
 - (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
@@ -202,13 +230,19 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsFile : NSTableCellView
+@property id fileInfoProcessor;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSView *settingFileView;
 @property (weak) IBOutlet NSButton *settingButtonAdd;
 @property (weak) IBOutlet NSTextField *settingFileViewPrompt;
 @property (weak) IBOutlet NSTextField *settingFileTitle;
-@property (weak) IBOutlet NSTextField *settingFileDescription;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel1;
+@property (weak) IBOutlet NSTextField *settingFileDescription1;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel2;
+@property (weak) IBOutlet NSTextField *settingFileDescription2;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel3;
+@property (weak) IBOutlet NSTextField *settingFileDescription3;
 @property (weak) IBOutlet NSImageView *settingFileIcon;
 - (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end

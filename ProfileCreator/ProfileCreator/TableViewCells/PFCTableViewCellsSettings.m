@@ -9,6 +9,7 @@
 #import "PFCTableViewCellsSettings.h"
 #import "PFCProfileCreationWindowController.h"
 #import "PFCTableViewCellsSettingsTableView.h"
+#import "PFCFileInfoProcessors.h"
 
 @implementation PFCTableViewCellsSettings
 @end
@@ -96,7 +97,7 @@
 }
 
 - (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-
+    
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
     BOOL required = [settingDict[@"Required"] boolValue];
     
@@ -496,6 +497,139 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsPopUpLeft
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsPopUpLeft
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView settingTitle] setStringValue:settingDict[@"Title"] ?: @""];
+    if ( enabled ) {
+        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    } else {
+        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] removeAllItems];
+    [[cellView settingPopUpButton] addItemsWithTitles:settingDict[@"AvailableValues"] ?: @[]];
+    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: settingDict[@"DefaultValue"]];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] setEnabled:enabled];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
+    [[cellView settingPopUpButton] setTarget:sender];
+    [[cellView settingPopUpButton] setTag:row];
+    
+    return cellView;
+} // populateCellViewPopUp:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldNumberLeft
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTextFieldNumberLeft
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+}
+
+- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    BOOL enabled = [settingDict[@"Enabled"] boolValue];
+    BOOL required = [settingDict[@"Required"] boolValue];
+    
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView settingTitle] setStringValue:settingDict[@"Title"] ?: @""];
+    if ( enabled ) {
+        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    } else {
+        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSNumber *value = settingDict[@"Value"] ?: @0;
+    if ( value == nil ) {
+        if ( settingDict[@"DefaultValue"] != nil ) {
+            value = settingDict[@"DefaultValue"] ?: @0;
+        }
+    }
+    [[cellView settingTextField] setDelegate:sender];
+    [[cellView settingTextField] setStringValue:[value stringValue]];
+    [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( settingDict[@"PlaceholderValue"] != nil ) {
+        [[cellView settingTextField] setPlaceholderString:[settingDict[@"PlaceholderValue"] stringValue] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else {
+        [[cellView settingTextField] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  NumberFormatter Min/Max Value
+    // ---------------------------------------------------------------------
+    [[cellView settingNumberFormatter] setMinimum:settingDict[@"MinValue"] ?: @0];
+    [[cellView settingStepper] setMinValue:[settingDict[@"MinValue"] doubleValue] ?: 0.0];
+    
+    [[cellView settingNumberFormatter] setMaximum:settingDict[@"MaxValue"] ?: @99999];
+    [[cellView settingStepper] setMaxValue:[settingDict[@"MinValue"] doubleValue] ?: 99999.0];
+    
+    // ---------------------------------------------------------------------
+    //  Stepper
+    // ---------------------------------------------------------------------
+    [[cellView settingStepper] setValueWraps:NO];
+    if ( _stepperValue == nil ) {
+        [self setStepperValue:settingDict[@"Value"] ?: @0];
+    }
+    [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    
+    return cellView;
+} // populateCellViewTextField:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsCheckbox
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -535,6 +669,17 @@
     //  Description
     // ---------------------------------------------------------------------
     [[cellView settingDescription] setStringValue:settingDict[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Indent
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"IndentLeft"] boolValue] ) {
+        [[cellView constraintLeading] setConstant:102];
+    } else if ( [settingDict[@"Indent"] boolValue] ) {
+        [[cellView constraintLeading] setConstant:16];
+    } else {
+        [[cellView constraintLeading] setConstant:8];
+    }
     
     // ---------------------------------------------------------------------
     //  Update sub keys
@@ -828,7 +973,7 @@
         NSString *cellType = tableColumnCellViewDict[@"CellType"];
         
         if ( [cellType isEqualToString:@"TextField"] ) {
-            tableColumnDict[@"Value"] = @"";
+            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
         } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
             tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
             tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"];
@@ -873,7 +1018,7 @@
     // ---------------------------------------------------------------------
     [[cellView settingTableView] setDataSource:self];
     [[cellView settingTableView] setDelegate:self];
-    
+    [_tableViewContent removeAllObjects];
     
     // ---------------------------------------------------------------------
     //  TableColumn add columns from settingsDict
@@ -901,10 +1046,11 @@
         [[cellView settingTableView] setHeaderView:nil];
     } else {
         [[cellView settingTableView] setHeaderView:[[NSTableHeaderView alloc] init]];
+        //[[cellView settingTableView] setColumnAutoresizingStyle:NSTableViewLastColumnOnlyAutoresizingStyle];
     }
     
-    NSLog(@"sizeToFit");
     [[cellView settingTableView] sizeToFit];
+    [[cellView settingTableView] reloadData];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
@@ -920,6 +1066,64 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+}
+
+- (void)setInfoForFileAtURL:(NSURL *)fileURL withFileInfoProcessor:(NSString *)fileInfoProcessor {
+
+    if ( [fileInfoProcessor isEqualToString:@"FileInfoProcessorFont"] ) {
+        if ( ! _fileInfoProcessor ) {
+            [self setFileInfoProcessor:[[PFCFileInfoProcessorFont alloc] initWithFileURL:fileURL]];
+        } else {
+            [_fileInfoProcessor setFileURL:fileURL];
+        }
+        
+        NSDictionary *fileInfo = [_fileInfoProcessor fileInfo];
+        if ( [fileInfo count] != 0 ) {
+            [_settingFileTitle setStringValue:fileInfo[@"Title"] ?: [fileURL lastPathComponent]];
+            
+            if ( fileInfo[@"Description1"] != nil ) {
+                [_settingFileDescriptionLabel1 setStringValue:fileInfo[@"DescriptionLabel1"] ?: @""];
+                [_settingFileDescription1 setStringValue:fileInfo[@"Description1"] ?: @""];
+                
+                [_settingFileDescriptionLabel1 setHidden:NO];
+                [_settingFileDescription1 setHidden:NO];
+            } else {
+                [_settingFileDescriptionLabel1 setHidden:YES];
+                [_settingFileDescription1 setHidden:YES];
+            }
+            
+            if ( fileInfo[@"Description2"] != nil ) {
+                [_settingFileDescriptionLabel2 setStringValue:fileInfo[@"DescriptionLabel2"] ?: @""];
+                [_settingFileDescription2 setStringValue:fileInfo[@"Description2"] ?: @""];
+                
+                [_settingFileDescriptionLabel2 setHidden:NO];
+                [_settingFileDescription2 setHidden:NO];
+            } else {
+                [_settingFileDescriptionLabel1 setHidden:YES];
+                [_settingFileDescription1 setHidden:YES];
+            }
+            
+            if ( fileInfo[@"Description3"] != nil ) {
+                [_settingFileDescriptionLabel3 setStringValue:fileInfo[@"DescriptionLabel3"] ?: @""];
+                [_settingFileDescription3 setStringValue:fileInfo[@"Description3"] ?: @""];
+                
+                [_settingFileDescriptionLabel3 setHidden:NO];
+                [_settingFileDescription3 setHidden:NO];
+            } else {
+                [_settingFileDescriptionLabel3 setHidden:YES];
+                [_settingFileDescription3 setHidden:YES];
+            }
+            
+        } else {
+            
+            // ---------------------------------------------------------------------
+            //  If no file info was returned, just set file title and size
+            // ---------------------------------------------------------------------
+            NSString *title = [fileURL lastPathComponent];
+            [_settingFileTitle setStringValue:title];
+        }
+    }
+    
 }
 
 - (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
@@ -977,7 +1181,12 @@
         [[cellView settingFileViewPrompt] setHidden:NO];
         [[cellView settingFileIcon] setHidden:YES];
         [[cellView settingFileTitle] setHidden:YES];
-        [[cellView settingFileDescription] setHidden:YES];
+        [[cellView settingFileDescriptionLabel1] setHidden:YES];
+        [[cellView settingFileDescription1] setHidden:YES];
+        [[cellView settingFileDescriptionLabel2] setHidden:YES];
+        [[cellView settingFileDescription2] setHidden:YES];
+        [[cellView settingFileDescriptionLabel3] setHidden:YES];
+        [[cellView settingFileDescription3] setHidden:YES];
         return cellView;
     }
     
@@ -998,12 +1207,30 @@
         [[cellView settingFileIcon] setImage:icon];
     }
     
+    
     // ---------------------------------------------------------------------
-    //  File Title
+    //  File Info
     // ---------------------------------------------------------------------
-    // FIXME - Currently just use filename, later add class to handle file types
-    NSString *title = [fileURL lastPathComponent];
-    [[cellView settingFileTitle] setStringValue:title];
+    if ( [fileURL checkResourceIsReachableAndReturnError:nil] ) {
+        
+        if ( settingDict[@"FileInfoProcessor"] != nil ) {
+            [self setInfoForFileAtURL:fileURL withFileInfoProcessor:settingDict[@"FileInfoProcessor"]];
+        } else {
+            
+            // ---------------------------------------------------------------------
+            //  If no FileInfoProcessor is available, just set file title and size
+            // ---------------------------------------------------------------------
+            NSString *title = [fileURL lastPathComponent];
+            [[cellView settingFileTitle] setStringValue:title];
+            [[cellView settingFileDescriptionLabel1] setStringValue:@""];
+            [[cellView settingFileDescription1] setStringValue:@""];
+            [[cellView settingFileDescriptionLabel2] setStringValue:@""];
+            [[cellView settingFileDescription2] setStringValue:@""];
+            [[cellView settingFileDescriptionLabel3] setStringValue:@""];
+            [[cellView settingFileDescription3] setStringValue:@""];
+        }
+    }
+    
     if ( enabled ) {
         [[cellView settingFileTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -1011,19 +1238,11 @@
     }
     
     // ---------------------------------------------------------------------
-    //  File Description
-    // ---------------------------------------------------------------------
-    // FIXME - Currently just use "No Description", later add class to handle file types
-    NSString *description = @"No Description";
-    [[cellView settingFileDescription] setStringValue:description];
-    
-    // ---------------------------------------------------------------------
     //  Show file info
     // ---------------------------------------------------------------------
     [[cellView settingFileViewPrompt] setHidden:YES];
     [[cellView settingFileIcon] setHidden:NO];
     [[cellView settingFileTitle] setHidden:NO];
-    [[cellView settingFileDescription] setHidden:NO];
     
     return cellView;
 } // populateCellViewSettingsFile:settingDict:row
