@@ -32,7 +32,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView identifier="TableViewMenu" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="N2D-FV-fMu" userLabel="TableViewMenu">
-                                    <rect key="frame" x="0.0" y="0.0" width="188" height="1394"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="172" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -177,7 +177,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="i6D-je-6LX" userLabel="TableViewSettings">
-                                            <rect key="frame" x="0.0" y="0.0" width="548" height="1394"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="547.5" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -266,7 +266,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="ColumnSettings" width="457.66015625" minWidth="200" maxWidth="3.4028234663852886e+38" id="H4k-IH-kmy" userLabel="ColumnSettings">
+                                                <tableColumn identifier="ColumnSettings" width="458.16015625" minWidth="200" maxWidth="3.4028234663852886e+38" id="H4k-IH-kmy" userLabel="ColumnSettings">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -617,12 +617,12 @@
                                                                 </textField>
                                                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jqU-Rs-qUJ">
                                                                     <rect key="frame" x="55" y="21" width="64" height="26"/>
-                                                                    <popUpButtonCell key="cell" type="push" title="Item" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="XGZ-c3-YHZ" id="FAs-W8-v4x">
+                                                                    <popUpButtonCell key="cell" type="push" title="Item" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="XGZ-c3-YHZ" id="FAs-W8-v4x">
                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="menu"/>
                                                                         <menu key="menu" id="YDU-Ml-kMf">
                                                                             <items>
-                                                                                <menuItem title="Item" id="XGZ-c3-YHZ">
+                                                                                <menuItem title="Item" state="on" id="XGZ-c3-YHZ">
                                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                                 </menuItem>
                                                                             </items>

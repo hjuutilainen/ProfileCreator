@@ -437,6 +437,15 @@
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
     
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:settingDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+            [[sender tableViewSettings] reloadData];
+        }
+    }
+    
     return cellView;
 } // populateCellViewPopUp:settingDict:row
 
@@ -489,6 +498,15 @@
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:settingDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+            [[sender tableViewSettings] reloadData];
+        }
+    }
     
     return cellView;
 } // populateCellViewSettingsPopUpNoTitle:settingDict:row
@@ -543,6 +561,15 @@
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Update sub keys
+    // ---------------------------------------------------------------------
+    if ( [settingDict[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:settingDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+            [[sender tableViewSettings] reloadData];
+        }
+    }
     
     return cellView;
 } // populateCellViewPopUp:settingDict:row
@@ -684,10 +711,11 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
-    //if ( [valueKeys count] != 0 ) {
-    //    [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row];
-    //}
+    if ( [settingDict[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row] ) {
+            [[sender tableViewSettings] reloadData];
+        }
+    }
     
     return cellView;
 } // populateCellViewCheckbox:settingDict:row
@@ -748,10 +776,11 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
-    //if ( [valueKeys count] != 0 ) {
-    //    [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row];
-    //}
+    if ( [settingDict[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:settingDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row] ) {
+            [[sender tableViewSettings] reloadData];
+        }
+    }
     
     return cellView;
 } // populateCellViewCheckboxNoDescription:settingDict:row
@@ -1049,8 +1078,11 @@
         //[[cellView settingTableView] setColumnAutoresizingStyle:NSTableViewLastColumnOnlyAutoresizingStyle];
     }
     
+    [[cellView settingTableView] beginUpdates];
     [[cellView settingTableView] sizeToFit];
     [[cellView settingTableView] reloadData];
+    [[cellView settingTableView] endUpdates];
+
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
@@ -1263,6 +1295,11 @@
 - (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
+    //  Reset Segmented Control
+    // ---------------------------------------------------------------------
+    [[cellView settingSegmentedControl] setSegmentCount:0];
+    
+    // ---------------------------------------------------------------------
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
     NSArray *availableSelections = settingDict[@"AvailableValues"] ?: @[];
@@ -1270,6 +1307,11 @@
     [availableSelections enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [[cellView settingSegmentedControl] setLabel:obj forSegment:idx];
     }];
+    
+    // ---------------------------------------------------------------------
+    //  Select saved selection or 0 if never saved
+    // ---------------------------------------------------------------------
+    [[cellView settingSegmentedControl] setSelected:YES forSegment:[settingDict[@"Value"] integerValue] ?: 0];
     
     // ---------------------------------------------------------------------
     //  Segmented Control Action
@@ -1281,16 +1323,18 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    //NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
-    //if ( [valueKeys count] != 0 ) {
-    //    NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
-    //    NSLog(@"selectedSegment=%@", selectedSegment);
-    //    if ( [selectedSegment length] != 0 ) {
-    //        [sender updateSubKeysForDict:settingDict valueString:selectedSegment row:row];
-    //    } else {
-    //        NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", [cellView settingSegmentedControl]);
-    //    }
-    //}
+    NSDictionary *valueKeys = settingDict[@"ValueKeys"] ?: @{};
+    if ( [valueKeys count] != 0 ) {
+        NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
+        NSLog(@"selectedSegment=%@", selectedSegment);
+        if ( [selectedSegment length] != 0 ) {
+            if ( [sender updateSubKeysForDict:settingDict valueString:selectedSegment row:row] ) {
+                [[sender tableViewSettings] reloadData];
+            }
+        } else {
+            NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", [cellView settingSegmentedControl]);
+        }
+    }
     
     return cellView;
 }

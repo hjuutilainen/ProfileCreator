@@ -153,11 +153,13 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 #pragma unused(object, change, context)
     if ( [keyPath isEqualToString:@"advancedSettings"] ) {
+        NSInteger row = [_tableViewMenu selectedRow];
         [self updateTableColumnsMenu];
         [_tableViewMenu reloadData];
+        [_tableViewMenu selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
         
         [self updateTableColumnsSettings];
-        [_tableViewSettings reloadData];
+        [self tableViewMenu:nil];
     }
 } // observeValueForKeyPath
 
@@ -169,9 +171,9 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     if ( [[tableView identifier] isEqualToString:@"TableViewMenu"] ) {
-        return (NSInteger)[self->_tableViewMenuItemsEnabled count];
+        return (NSInteger)[_tableViewMenuItemsEnabled count];
     } else if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
-        return (NSInteger)[self->_tableViewSettingsItemsEnabled count];
+        return (NSInteger)[_tableViewSettingsItemsEnabled count];
     } else {
         return 0;
     }
@@ -415,7 +417,9 @@
             NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
             cellDict[@"Enabled"] = @(state);
             [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+            [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
+            [_tableViewSettings endUpdates];
         }
     } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsCheckbox class]] ) {
         if ( checkbox == [(CellViewSettingsCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
@@ -429,7 +433,9 @@
             //  Add subkeys for selected state
             // ---------------------------------------------------------------------
             [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row];
+            [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
+            [_tableViewSettings endUpdates];
         }
     } else if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsCheckboxNoDescription class]] ) {
         if ( checkbox == [(CellViewSettingsCheckboxNoDescription *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
@@ -443,7 +449,9 @@
             //  Add subkeys for selected state
             // ---------------------------------------------------------------------
             [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row];
+            [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
+            [_tableViewSettings endUpdates];
         }
     }
 } // checkbox
@@ -538,7 +546,9 @@
         //  Add subkeys for selected title
         // ---------------------------------------------------------------------
         [self updateSubKeysForDict:cellDict valueString:selectedTitle row:row];
+        [_tableViewSettings beginUpdates];
         [_tableViewSettings reloadData];
+        [_tableViewSettings endUpdates];
     }
 } // popUpButtonSelection
 
@@ -599,7 +609,9 @@
                 NSURL *fileURL = [selectedURLs firstObject];
                 cellDict[@"FilePath"] = [fileURL path];
                 [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+                [_tableViewSettings beginUpdates];
                 [_tableViewSettings reloadData];
+                [_tableViewSettings endUpdates];
             }
         }];
     }
@@ -631,7 +643,11 @@
     if ( segmentedControl == [(CellViewSettingsSegmentedControl *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingSegmentedControl] ) {
         
         NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
-        if ( [selectedSegment length] == 0 ) {
+        if ( [selectedSegment length] != 0 ) {
+            NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+            cellDict[@"Value"] = @([segmentedControl selectedSegment]);
+            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        } else {
             NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", segmentedControl);
             return;
         }
@@ -640,7 +656,9 @@
         //  Add subkeys for selected segmented control
         // ---------------------------------------------------------------------
         [self updateSubKeysForDict:[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row];
+        [_tableViewSettings beginUpdates];
         [_tableViewSettings reloadData];
+        [_tableViewSettings endUpdates];
     }
     
 } // segmentedControl
@@ -706,7 +724,9 @@
     return [combinedSettings copy];
 } // settingsForMenuItem
 
-- (void)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
+- (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
+    
+    __block BOOL updatedTableView = NO;
     
     // ---------------------------------------------------------------------
     //  Handle sub keys
@@ -714,38 +734,44 @@
     NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
     if ( [valueKeys count] != 0 ) {
         
-        [_tableViewSettings beginUpdates];
-        
         // ---------------------------------------------------------------------
         //  Remove any previous sub keys
         // ---------------------------------------------------------------------
+        __block NSArray *parentKeyArray;
         if ( row < [_tableViewSettingsItemsEnabled count] ) {
             NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
-            __block NSArray *parentKeyArray;
-            [_tableViewSettingsItemsEnabled enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
+            [[_tableViewSettingsItemsEnabled copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSLog(@"idx=%lu", (unsigned long)idx);
                 // ----------------------------------------------------------------------
                 //  Check if parent key exist in value keys (if it's added by the caller)
                 // ----------------------------------------------------------------------
                 if ( valueKeys[obj[@"ParentKey"]] != nil ) {
                     
                     parentKeyArray = valueKeys[obj[@"ParentKey"]];
-                    //[_tableViewSettings removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:(row + 1)] withAnimation:NSTableViewAnimationEffectNone];
-                    [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                    if ( ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                        NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                        NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                        [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                        updatedTableView = YES;
+                    }
                 } else {
                     
                     // ----------------------------------------------------------------------------------------
                     //  Check if parent key exist in parents value keys (if it's added by the caller's parent)
                     // ----------------------------------------------------------------------------------------
                     // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
-                    for ( NSDictionary *parentKeyDict in parentKeyArray ) {
-                        if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
-                            //[_tableViewSettings removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:(row + 1)] withAnimation:NSTableViewAnimationEffectNone];
-                            [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
-                            return;
+                    if ( ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                        for ( NSDictionary *parentKeyDict in parentKeyArray ) {
+                            if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
+                                NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                                NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                                [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                                updatedTableView = YES;
+                                return;
+                            }
+                            
                         }
                     }
-                    
                     *stop = YES;
                 }
             }];
@@ -755,22 +781,26 @@
         //  Check if any sub keys exist for selected value
         // ---------------------------------------------------------------------
         NSArray *valueKeyArray = [valueKeys[valueString] mutableCopy] ?: @[];
-        for ( NSDictionary *valueDict in valueKeyArray ) {
-            if ( [valueDict count] != 0 ) {
-                row++;
-                NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
-                
-                // ---------------------------------------------------------------------
-                //  Add sub key to table view below setting
-                // ---------------------------------------------------------------------
-                mutableValueDict[@"ParentKey"] = valueString;
-                [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
-                //[_tableViewSettings insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectNone];
+        if ( ! [parentKeyArray ?: @[] isEqualToArray:valueKeyArray] ) {
+            for ( NSDictionary *valueDict in valueKeyArray ) {
+                if ( [valueDict count] != 0 ) {
+                    row++;
+                    NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
+                    
+                    // ---------------------------------------------------------------------
+                    //  Add sub key to table view below setting
+                    // ---------------------------------------------------------------------
+                    mutableValueDict[@"ParentKey"] = valueString;
+                    NSLog(@"[DEBUG] Adding row: %ld", row);
+                    NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
+                    [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+                    updatedTableView = YES;
+                }
             }
         }
-        
-        [_tableViewSettings endUpdates];
     }
+    
+    return updatedTableView;
 } // updateSubKeysForDict:valueString:row
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -794,22 +824,25 @@
     //  Set _tableViewMenuSelectedRow to new selection
     // ---------------------------------------------------------------------
     [self setTableViewMenuSelectedRow:[_tableViewMenu selectedRow]];
+    NSLog(@"[DEBUG] Selected row: %ld", (long)_tableViewMenuSelectedRow);
     
-    [self->_tableViewSettings beginUpdates];
-    [self->_tableViewSettingsItemsEnabled removeAllObjects];
+    [_tableViewSettings beginUpdates];
+    [_tableViewSettingsItemsEnabled removeAllObjects];
+    NSLog(@"[DEBUG] Settings rows: %lu", (unsigned long)[_tableViewSettingsItemsEnabled count]);
     
     if ( 0 <= _tableViewMenuSelectedRow ) {
-        NSArray *settingsArray = [self settingsForMenuItem:self->_tableViewMenuItemsEnabled[self->_tableViewMenuSelectedRow]];
+        NSArray *settingsArray = [self settingsForMenuItem:_tableViewMenuItemsEnabled[_tableViewMenuSelectedRow]];
         if ( [settingsArray count] != 0 ) {
-            [self->_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
-            [self->_viewErrorReadingSettings setHidden:YES];
+            [_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
+            [_viewErrorReadingSettings setHidden:YES];
         } else {
-            [self->_viewErrorReadingSettings setHidden:NO];
+            [_viewErrorReadingSettings setHidden:NO];
         }
     }
     
-    [self->_tableViewSettings reloadData];
-    [self->_tableViewSettings endUpdates];
+    [_tableViewSettings reloadData];
+    [_tableViewSettings endUpdates];
+    
 } // tableViewMenu
 
 @end
