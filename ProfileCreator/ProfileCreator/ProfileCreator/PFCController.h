@@ -22,6 +22,10 @@
 @property (weak) IBOutlet NSButton *buttonCreateProfile;
 - (IBAction)buttonCreateProfile:(id)sender;
 
+@property (weak) IBOutlet NSButton *buttonOpenPlist;
+- (IBAction)buttonOpenPlist:(id)sender;
 
+@property (weak) IBOutlet NSButton *buttonOpenFoldera;
+- (IBAction)buttonOpenFoldera:(id)sender;
 
 @end

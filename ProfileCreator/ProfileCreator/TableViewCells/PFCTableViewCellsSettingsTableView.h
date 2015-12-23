@@ -17,7 +17,8 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewTextField : NSTableCellView
-- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@property NSString *columnIdentifier;
+- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,6 +27,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewPopUpButton : NSTableCellView
+@property NSString *columnIdentifier;
 @property (weak) IBOutlet NSPopUpButton *popUpButton;
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
 @end

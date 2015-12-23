@@ -50,6 +50,14 @@
                 [[cellView menuIcon] setImage:icon];
             }
         }
+        
+        iconURL = [NSURL fileURLWithPath:menuDict[@"IconPathBundle"] ?: @""];
+        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
+            NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
+            if ( icon ) {
+                [[cellView menuIcon] setImage:icon];
+            }
+        }
     }
     
     return cellView;

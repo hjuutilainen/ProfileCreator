@@ -23,7 +23,12 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------
+    //  ColumnIdentifier
+    // ---------------------------------------------------------------------
+    [cellView setColumnIdentifier:columnIdentifier];
     
     // ---------------------------------------------------------------------
     //  Value
@@ -63,7 +68,12 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
+
+    // ---------------------------------------------------------------------
+    //  ColumnIdentifier
+    // ---------------------------------------------------------------------
+    [cellView setColumnIdentifier:columnIdentifier];
     
     // ---------------------------------------------------------------------
     //  Value

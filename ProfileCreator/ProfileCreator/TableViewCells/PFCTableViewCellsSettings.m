@@ -233,7 +233,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setState:[settingDict[@"ValueCheckbox"] boolValue]];
+    [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -299,7 +299,7 @@
 } // drawRect
 
 - (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-    
+
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
     BOOL required = [settingDict[@"Required"] boolValue];
     
@@ -311,7 +311,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setState:[settingDict[@"ValueCheckbox"] boolValue]];
+    [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -339,6 +339,7 @@
             valueHost = settingDict[@"DefaultValueHost"] ?: @"";
         }
     }
+    [[cellView settingTextFieldHost] setDelegate:sender];
     [[cellView settingTextFieldHost] setStringValue:valueHost];
     [[cellView settingTextFieldHost] setTag:row];
     
@@ -362,6 +363,7 @@
             valuePort = settingDict[@"DefaultValuePort"] ?: @"";
         }
     }
+    [[cellView settingTextFieldPort] setDelegate:sender];
     [[cellView settingTextFieldPort] setStringValue:valuePort];
     [[cellView settingTextFieldPort] setTag:row];
     
@@ -948,6 +950,52 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
+- (void)controlTextDidChange:(NSNotification *)sender {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a text field
+    // ---------------------------------------------------------------------
+    if ( ! [[[sender object] class] isSubclassOfClass:[NSTextField class]] ) {
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get text field's row in the table view
+    // ---------------------------------------------------------------------
+    NSTextField *textField = [sender object];
+    NSNumber *textFieldTag = @([textField tag]);
+    if ( textFieldTag == nil ) {
+        NSLog(@"[ERROR] TextField: %@ tag is nil", textFieldTag);
+        return;
+    }
+    NSInteger row = [textFieldTag integerValue];
+    
+    NSString *columnIdentifier = [(CellViewTextField *)[textField superview] columnIdentifier];
+    
+    // ---------------------------------------------------------------------
+    //  Get current text and current cell dict
+    // ---------------------------------------------------------------------
+    NSDictionary *userInfo = [sender userInfo];
+    NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+    NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:row] mutableCopy];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification of text field type
+    // ---------------------------------------------------------------------
+    if ( [[[textField superview] class] isSubclassOfClass:[CellViewTextField class]] ) {
+        if ( textField == [[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] textField] ) {
+            NSMutableDictionary *columnDict = cellDict[columnIdentifier];
+            columnDict[@"Value"] = [inputText copy];
+            cellDict[columnIdentifier] = columnDict;
+        } else {
+            return;
+        }
+        
+        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        [self updateTableViewSavedContent];
+    }
+} // controlTextDidChange
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return [_tableViewContent count];
 } // numberOfRowsInTableView
@@ -968,10 +1016,12 @@
     
     if ( [cellType isEqualToString:@"TextField"] ) {
         CellViewTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewTextField" owner:self];
-        return [cellView populateCellViewTextField:cellView settingDict:settingDict[tableColumnIdentifier] row:row sender:self];
+        [cellView setIdentifier:nil];
+        return [cellView populateCellViewTextField:cellView settingDict:settingDict[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
     } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
         CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
-        return [cellView populateCellViewPopUpButton:cellView settingDict:settingDict[tableColumnIdentifier] row:row sender:self];
+        [cellView setIdentifier:nil];
+        return [cellView populateCellViewPopUpButton:cellView settingDict:settingDict[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
     }
     
     return nil;
@@ -987,6 +1037,14 @@
     [_settingTableView endUpdates];
     return index;
 } // insertRowInTableView
+
+- (void)updateTableViewSavedContent {
+    if ( _sender && _senderRow ) {
+        NSMutableDictionary *cellDict = [[[(PFCProfileCreationWindowController *)_sender tableViewSettingsItemsEnabled] objectAtIndex:(NSUInteger)_senderRow] mutableCopy];
+        cellDict[@"TableViewContent"] = [_tableViewContent copy];
+        [[(PFCProfileCreationWindowController *)_sender tableViewSettingsItemsEnabled] replaceObjectAtIndex:(NSUInteger)_senderRow withObject:cellDict];
+    }
+}
 
 - (IBAction)settingButtonAdd:(id) __unused sender {
     
@@ -1005,25 +1063,77 @@
             tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
         } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
             tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
-            tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"];
+            tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"] ?: @[];
         }
         newRowDict[tableColumnKey] = tableColumnDict;
     }
     
     [self insertRowInTableView:[newRowDict copy]];
+    [self updateTableViewSavedContent];
 } // settingButtonAdd
 
 - (IBAction)settingButtonRemove:(id) __unused sender {
     NSIndexSet *indexes = [_settingTableView selectedRowIndexes];
     [_tableViewContent removeObjectsAtIndexes:indexes];
     [_settingTableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationSlideDown];
+    [self updateTableViewSavedContent];
 } // settingButtonRemove
 
-- (void)popUpButtonSelection:(id)sender {
-    NSLog(@"Select!");
+- (void)popUpButtonSelection:(NSPopUpButton *)popUpButton {
+    
+    // ---------------------------------------------------------------------
+    //  Make sure it's a settings popup button
+    // ---------------------------------------------------------------------
+    if ( ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewPopUpButton class]] ) {
+        NSLog(@"[ERROR] PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
+        return;
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Get popup button's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *popUpButtonTag = @([popUpButton tag]);
+    if ( popUpButtonTag == nil ) {
+        NSLog(@"[ERROR] PopUpButton: %@ tag is nil", popUpButton);
+        return;
+    }
+    NSInteger row = [popUpButtonTag integerValue];
+    
+    NSString *columnIdentifier = [(CellViewPopUpButton *)[popUpButton superview] columnIdentifier];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsPopUp popup button
+    // ---------------------------------------------------------------------
+    if ( popUpButton == [(CellViewPopUpButton *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] popUpButton] ) {
+        
+        // ---------------------------------------------------------------------
+        //  Save selection
+        // ---------------------------------------------------------------------
+        NSString *selectedTitle = [popUpButton titleOfSelectedItem];
+        NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
+        NSMutableDictionary *columnDict = cellDict[columnIdentifier];
+        columnDict[@"Value"] = selectedTitle;
+        cellDict[columnIdentifier] = columnDict;
+        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        [self updateTableViewSavedContent];
+        
+        // ---------------------------------------------------------------------
+        //  Add subkeys for selected title
+        // ---------------------------------------------------------------------
+        [_settingTableView beginUpdates];
+        [_settingTableView reloadData];
+        [_settingTableView endUpdates];
+    }
 }
 
-- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
+- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    if ( ! _tableViewContent ) {
+        _tableViewContent = [settingDict[@"TableViewContent"] mutableCopy] ?: [[NSMutableArray alloc] init];
+    }
+    
+    [self setSender:sender];
+    [self setSenderRow:row];
     
     BOOL enabled = [settingDict[@"Enabled"] boolValue];
     
@@ -1047,7 +1157,6 @@
     // ---------------------------------------------------------------------
     [[cellView settingTableView] setDataSource:self];
     [[cellView settingTableView] setDelegate:self];
-    [_tableViewContent removeAllObjects];
     
     // ---------------------------------------------------------------------
     //  TableColumn add columns from settingsDict
@@ -1075,14 +1184,12 @@
         [[cellView settingTableView] setHeaderView:nil];
     } else {
         [[cellView settingTableView] setHeaderView:[[NSTableHeaderView alloc] init]];
-        //[[cellView settingTableView] setColumnAutoresizingStyle:NSTableViewLastColumnOnlyAutoresizingStyle];
     }
-    
+
     [[cellView settingTableView] beginUpdates];
     [[cellView settingTableView] sizeToFit];
     [[cellView settingTableView] reloadData];
     [[cellView settingTableView] endUpdates];
-
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
@@ -1101,7 +1208,7 @@
 }
 
 - (void)setInfoForFileAtURL:(NSURL *)fileURL withFileInfoProcessor:(NSString *)fileInfoProcessor {
-
+    
     if ( [fileInfoProcessor isEqualToString:@"FileInfoProcessorFont"] ) {
         if ( ! _fileInfoProcessor ) {
             [self setFileInfoProcessor:[[PFCFileInfoProcessorFont alloc] initWithFileURL:fileURL]];
@@ -1376,11 +1483,14 @@
     //  Value Host
     // ---------------------------------------------------------------------
     NSString *valueHost = settingDict[@"ValueHost"] ?: @"";
+    NSLog(@"settingsDict=%@", settingDict);
+    NSLog(@"valueHost=%@", valueHost);
     if ( [valueHost length] == 0 ) {
         if ( [settingDict[@"DefaultValueHost"] length] != 0 ) {
             valueHost = settingDict[@"DefaultValueHost"] ?: @"";
         }
     }
+    [[cellView settingTextFieldHost] setDelegate:sender];
     [[cellView settingTextFieldHost] setStringValue:valueHost];
     [[cellView settingTextFieldHost] setTag:row];
     
@@ -1404,6 +1514,7 @@
             valuePort = settingDict[@"DefaultValuePort"] ?: @"";
         }
     }
+    [[cellView settingTextFieldPort] setDelegate:sender];
     [[cellView settingTextFieldPort] setStringValue:valuePort];
     [[cellView settingTextFieldPort] setTag:row];
     

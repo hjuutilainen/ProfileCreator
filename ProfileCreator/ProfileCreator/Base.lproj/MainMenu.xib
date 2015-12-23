@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
@@ -11,6 +11,8 @@
         <customObject id="J1R-AM-bmu" customClass="PFCController">
             <connections>
                 <outlet property="buttonCreateProfile" destination="fA9-Ds-Z2b" id="bPm-ef-Ck6"/>
+                <outlet property="buttonOpenFoldera" destination="flu-Vl-01q" id="I6o-ZY-RXR"/>
+                <outlet property="buttonOpenPlist" destination="qSF-bU-xQ1" id="UrS-oH-QUg"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J0H-f7-8LJ"/>
             </connections>
         </customObject>
@@ -666,15 +668,14 @@
         </menu>
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="335" y="390" width="377" height="61"/>
+            <rect key="contentRect" x="335" y="390" width="377" height="127"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="377" height="61"/>
+                <rect key="frame" x="0.0" y="0.0" width="377" height="127"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fA9-Ds-Z2b">
-                        <rect key="frame" x="127" y="13" width="123" height="32"/>
-                        <animations/>
+                        <rect key="frame" x="127" y="79" width="123" height="32"/>
                         <buttonCell key="cell" type="push" title="Create Profile" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yep-gx-ycO">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -683,16 +684,38 @@
                             <action selector="buttonCreateProfile:" target="J1R-AM-bmu" id="iiK-9y-4P7"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qSF-bU-xQ1">
+                        <rect key="frame" x="137" y="46" width="103" height="32"/>
+                        <buttonCell key="cell" type="push" title="Open Plist" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Ry-RJ-UKh">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonOpenPlist:" target="J1R-AM-bmu" id="2VI-A4-KfE"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="flu-Vl-01q">
+                        <rect key="frame" x="131" y="13" width="115" height="32"/>
+                        <buttonCell key="cell" type="push" title="Open Folder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BAA-Wy-Ci8">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonOpenFoldera:" target="J1R-AM-bmu" id="u25-Fv-ntd"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="fA9-Ds-Z2b" secondAttribute="trailing" constant="133" id="Af7-jY-Sax"/>
-                    <constraint firstItem="fA9-Ds-Z2b" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="133" id="B2u-Th-hxM"/>
-                    <constraint firstAttribute="bottom" secondItem="fA9-Ds-Z2b" secondAttribute="bottom" constant="20" id="JjX-Vx-naG"/>
+                    <constraint firstItem="flu-Vl-01q" firstAttribute="top" secondItem="qSF-bU-xQ1" secondAttribute="bottom" constant="12" symbolic="YES" id="43q-Mt-cxS"/>
+                    <constraint firstItem="fA9-Ds-Z2b" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="6ZV-Du-tgY"/>
+                    <constraint firstItem="flu-Vl-01q" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="GZh-eh-cln"/>
+                    <constraint firstItem="qSF-bU-xQ1" firstAttribute="top" secondItem="fA9-Ds-Z2b" secondAttribute="bottom" constant="12" symbolic="YES" id="HGz-t6-hLl"/>
+                    <constraint firstItem="qSF-bU-xQ1" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="WXJ-uB-9gk"/>
+                    <constraint firstAttribute="bottom" secondItem="flu-Vl-01q" secondAttribute="bottom" constant="20" symbolic="YES" id="dFA-Ef-X84"/>
                     <constraint firstItem="fA9-Ds-Z2b" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="pCA-tS-lMg"/>
                 </constraints>
-                <animations/>
             </view>
-            <point key="canvasLocation" x="444.5" y="426.5"/>
+            <point key="canvasLocation" x="444.5" y="452"/>
         </window>
     </objects>
 </document>

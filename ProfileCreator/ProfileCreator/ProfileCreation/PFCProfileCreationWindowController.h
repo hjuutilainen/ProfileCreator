@@ -8,8 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, NBCErrorCodes) {
+    /** Apple Profile **/
+    kPFCProfileTypeApple,
+    /** Custom Plist **/
+    kPFCProfileTypeCustom
+};
+
 @interface PFCProfileCreationWindowController : NSWindowController <NSTableViewDelegate, NSTableViewDataSource>
 
+@property int profileType;
+@property NSArray *customMenu;
 @property BOOL advancedSettings;
 
 // TableView Menu
@@ -41,7 +50,7 @@
 - (void)selectFile:(NSButton *)button;
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
-
+- (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
-
+- (id)initWithProfileType:(int)profileType;
 @end

@@ -211,6 +211,8 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTableView : NSTableCellView <NSTableViewDataSource, NSTableViewDelegate>
+@property id sender;
+@property NSInteger senderRow;
 @property NSMutableArray *tableViewContent;
 @property NSDictionary *tableViewColumnCellViews;
 @property (weak) IBOutlet NSTextField *settingTitle;
@@ -221,7 +223,7 @@
 @property (weak) IBOutlet NSButton *settingButtonRemove;
 - (IBAction)settingButtonRemove:(id)sender;
 - (void)popUpButtonSelection:(id)sender;
-- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row;
+- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

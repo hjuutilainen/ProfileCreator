@@ -10,6 +10,7 @@
 		5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
 		5304B2501C1E07CB0085559C /* com.apple.vpn.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
 		5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */; };
+		532974ED1C22B21300191C5C /* PFCManifestCreationParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */; };
 		532B6C511C17289700297025 /* com.apple.general.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
 		532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
 		532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
@@ -105,6 +106,8 @@
 		5304B24D1C1E02C50085559C /* com.apple.vpn.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.vpn.plist; sourceTree = "<group>"; };
 		5304B2511C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettingsTableView.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettingsTableView.h; sourceTree = "<group>"; };
 		5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsSettingsTableView.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsSettingsTableView.m; sourceTree = "<group>"; };
+		532974EB1C22B21300191C5C /* PFCManifestCreationParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCManifestCreationParser.h; sourceTree = "<group>"; };
+		532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCManifestCreationParser.m; sourceTree = "<group>"; };
 		532B6C501C17289700297025 /* com.apple.general.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.general.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.general.plist; sourceTree = "<group>"; };
 		532B6C571C172E0300297025 /* com.apple.caldav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.caldav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.caldav.account.plist; sourceTree = "<group>"; };
 		532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mail.managed.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.mail.managed.plist; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 				5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */,
 				5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */,
 				5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */,
+				532974EB1C22B21300191C5C /* PFCManifestCreationParser.h */,
+				532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */,
 			);
 			name = ProfileCreation;
 			sourceTree = "<group>";
@@ -427,6 +432,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				532974ED1C22B21300191C5C /* PFCManifestCreationParser.m in Sources */,
 				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
