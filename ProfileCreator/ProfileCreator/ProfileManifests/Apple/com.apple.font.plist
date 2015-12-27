@@ -17,6 +17,8 @@
 	<key>DomainKeys</key>
 	<array>
 		<dict>
+			<key>ToolTip</key>
+			<string>The user-visible name for the font. This field is replaced by the actual name of the font after installation.</string>
 			<key>Title</key>
 			<string>Name</string>
 			<key>Key</key>
@@ -29,6 +31,8 @@
 			<string>TextField</string>
 		</dict>
 		<dict>
+			<key>ToolTip</key>
+			<string>The contents of the font file.</string>
 			<key>Title</key>
 			<string>Font</string>
 			<key>Key</key>
@@ -47,7 +51,8 @@
 			<string>Add Font...</string>
 			<key>AllowedFileTypes</key>
 			<array>
-				<string>public.font</string>
+				<string>public.opentype-font</string>
+				<string>public.truetype-font</string>
 			</array>
 		</dict>
 	</array>

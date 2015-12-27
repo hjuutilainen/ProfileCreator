@@ -9,6 +9,7 @@
 #import "PFCProfileCreationWindowController.h"
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
+#import "PFCManifestCreationParser.h"
 
 @interface PFCProfileCreationWindowController ()
 
@@ -842,6 +843,7 @@
             return menuDict[@"SavedSettings"];
         } else {
             NSArray *settings = menuDict[@"DomainKeys"];
+            
             for ( NSDictionary *setting in settings ) {
                 NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
                 combinedSettingDict[@"Enabled"] = @YES;
@@ -849,8 +851,16 @@
             }
             
             if ( [combinedSettings count] != 0 ) {
+                
+                // ---------------------------------------------------------------------
+                //  Add padding row to top of table view
+                // ---------------------------------------------------------------------
                 [combinedSettings insertObject:@{ @"CellType" : @"Padding",
                                                   @"Enabled" : @YES } atIndex:0];
+                
+                // ---------------------------------------------------------------------
+                //  Add padding row to end of table view
+                // ---------------------------------------------------------------------
                 [combinedSettings addObject:@{ @"CellType" : @"Padding",
                                                @"Enabled" : @YES }];
             }
@@ -877,13 +887,15 @@
             NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
             [[_tableViewSettingsItemsEnabled copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 NSLog(@"idx=%lu", (unsigned long)idx);
+                NSLog(@"obj=%@", obj);
+                
                 // ----------------------------------------------------------------------
                 //  Check if parent key exist in value keys (if it's added by the caller)
                 // ----------------------------------------------------------------------
                 if ( valueKeys[obj[@"ParentKey"]] != nil ) {
                     
                     parentKeyArray = valueKeys[obj[@"ParentKey"]];
-                    if ( ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
                         NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
                         NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
                         [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
@@ -895,7 +907,7 @@
                     //  Check if parent key exist in parents value keys (if it's added by the caller's parent)
                     // ----------------------------------------------------------------------------------------
                     // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
-                    if ( ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
                         for ( NSDictionary *parentKeyDict in parentKeyArray ) {
                             if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
                                 NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
@@ -910,6 +922,13 @@
                     *stop = YES;
                 }
             }];
+        }
+        
+        // ---------------------------------------------------------------------------
+        //  If selected object (valueString) in dict valueKeys is not an array, stop.
+        // ---------------------------------------------------------------------------
+        if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] ) {
+            return updatedTableView;
         }
         
         // ---------------------------------------------------------------------
@@ -980,5 +999,87 @@
     [_tableViewSettings endUpdates];
     
 } // tableViewMenu
+
+- (IBAction)buttonCancel:(id)sender {
+}
+
+- (IBAction)buttonSave:(id)sender {
+    
+    NSMutableArray *savedSettingsArray = [[NSMutableArray alloc] init];
+    
+    for ( NSDictionary *settingsDict in _tableViewSettingsItemsEnabled ) {
+        NSString *cellType = settingsDict[@"CellType"];
+        if ( [cellType isEqualToString:@"Padding"] ) {
+            continue;
+        } else {
+            NSDictionary *savedSettingsDict = [self savedSettingsForCellType:cellType cellDict:settingsDict];
+            if ( [savedSettingsDict count] != 0 ) {
+                [savedSettingsArray addObject:savedSettingsDict];
+            } else {
+                NSLog(@"");
+            }
+        }
+    }
+    
+    NSLog(@"savedSettingsArray=%@", savedSettingsArray);
+}
+
+- (NSDictionary *)savedSettingsForCellType:(NSString *)cellType cellDict:(NSDictionary *)cellDict {
+    NSMutableDictionary *savedSettingsDict = [[NSMutableDictionary alloc] init];
+    
+    // ---------------------------------------------------------------------
+    //  Key
+    // ---------------------------------------------------------------------
+    if ( [cellDict[@"Key"] length] == 0 ) {
+        NSLog(@"[ERROR] No key defined in dict!");
+        return @{};
+    } else {
+        savedSettingsDict[@"Key"] = cellDict[@"Key"];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    savedSettingsDict[@"Enabled"] = @([cellDict[@"Enabled"] boolValue]);
+    
+    // ---------------------------------------------------------------------
+    //  Save settings for each cell type
+    //  TextField
+    // ---------------------------------------------------------------------
+    if ( [cellType isEqualToString:@"TextField"] ) {
+        if ( [cellDict[@"Value"] length] != 0 ) {
+            savedSettingsDict[@"Value"] = cellDict[@"Value"];
+        }
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButton
+        // ---------------------------------------------------------------------
+    } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
+        NSString *selectedValue;
+        if ( [cellDict[@"Value"] length] != 0 ) {
+            selectedValue = cellDict[@"Value"];
+        } else if ( [cellDict[@"DefaultValue"] length] != 0 ) {
+            selectedValue = cellDict[@"DefaultValue"];
+        } else {
+            NSLog(@"[ERROR] Unknown selection in popUpButton!");
+            return @{};
+        }
+        
+        savedSettingsDict[@"Value"] = selectedValue;
+        
+        /* To be used when exporting probably
+        id valueKeyValue = cellDict[@"ValueKeys"][selectedValue];
+        NSString *keyValueType = [PFCManifestCreationParser typeStringFromValue:valueKeyValue];
+        NSLog(@"keyValueType=%@", keyValueType);
+        if ( [keyValueType isEqualToString:@"Array"] ) {
+            for ( NSDictionary *nestedCellDict in (NSArray *)valueKeyValue ) {
+                
+            }
+        }
+         */
+    }
+    
+    return [savedSettingsDict copy];
+}
 
 @end

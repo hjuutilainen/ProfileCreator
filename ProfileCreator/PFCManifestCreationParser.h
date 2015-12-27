@@ -11,5 +11,6 @@
 @interface PFCManifestCreationParser : NSObject
 
 + (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL;
++ (NSString *)typeStringFromValue:(id)value;
 
 @end

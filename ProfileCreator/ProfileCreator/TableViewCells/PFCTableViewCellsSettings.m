@@ -80,8 +80,27 @@
         [[cellView settingTextField] setPlaceholderString:@""];
     }
     
+    // ---------------------------------------------------------------------
+    //  Tool Tip
+    // ---------------------------------------------------------------------
+    [cellView setToolTip:[self toolTipWithKey:settingDict[@"Key"] type:settingDict[@"Type"] required:required description:settingDict[@"ToolTipDescription"]]];
+    
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
+// FIXME - Test for tool tips, will have to build this out to support attributed strings
+- (NSString *)toolTipWithKey:(NSString *)key type:(NSString *)type required:(BOOL)required description:(NSString *)description {
+    NSMutableString *toolTip = [[NSMutableString alloc] init];
+    
+    [toolTip appendString:[NSString stringWithFormat:@"\t\tKey: %@", key ?: @"Unknown"]];
+    [toolTip appendString:[NSString stringWithFormat:@"\n\t       Type: %@", type ?: @"Unknown"]];
+    [toolTip appendString:[NSString stringWithFormat:@"\n\tRequired: %@", (required) ? @"YES" : @"NO"]];
+    if ( [description length] != 0 ) {
+        [toolTip appendString:[NSString stringWithFormat:@"\n     Description: %@", description]];
+    }
+    
+    return toolTip;
+}
 
 @end
 
@@ -425,6 +444,7 @@
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:settingDict[@"AvailableValues"] ?: @[]];
+    
     [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: settingDict[@"DefaultValue"]];
     
     // ---------------------------------------------------------------------
@@ -1345,7 +1365,6 @@
     if ( icon ) {
         [[cellView settingFileIcon] setImage:icon];
     }
-    
     
     // ---------------------------------------------------------------------
     //  File Info

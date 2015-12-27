@@ -35,7 +35,7 @@
     if ( fontDataProvider ) {
         CGFontRef font = CGFontCreateWithDataProvider(fontDataProvider);
         if ( font ) {
-            NSString *fontFullName = CFBridgingRelease(CGFontCopyFullName(font));
+            NSString *fontFullName = CFBridgingRelease(CGFontCopyPostScriptName(font));
             fileInfoDict[@"Title"] = fontFullName ?: [_fileURL path];
         }
     } else {

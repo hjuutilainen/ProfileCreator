@@ -32,12 +32,19 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 // TableView Settings
 
 @property (weak) IBOutlet NSTableView *tableViewSettings;
+@property NSMutableDictionary *tableViewSettingsSettings;
 @property NSMutableArray *tableViewSettingsItemsEnabled;
 @property NSMutableArray *tableViewSettingsItemsDisabled;
 @property BOOL columnSettingsEnabledHidden;
 
 @property (weak) IBOutlet NSView *viewSettingsSuperView;
 @property (strong) IBOutlet NSView *viewErrorReadingSettings;
+
+@property (weak) IBOutlet NSButton *buttonCancel;
+- (IBAction)buttonCancel:(id)sender;
+
+@property (weak) IBOutlet NSButton *buttonSave;
+- (IBAction)buttonSave:(id)sender;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

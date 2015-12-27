@@ -19,6 +19,12 @@
 	<key>DomainKeys</key>
 	<array>
 		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.profile</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.profile</string>
 			<key>Title</key>
 			<string>Name</string>
 			<key>Key</key>
@@ -27,12 +33,18 @@
 			<string>String</string>
 			<key>Description</key>
 			<string>Display name of the profile (shown on the device)</string>
-			<key>DefaultValue</key>
-			<string></string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>A human-readable name for the profile payload. This name is displayed on the Detail screen. It does not have to be unique.</string>
 		</dict>
 		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.profile</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.profile</string>
 			<key>Title</key>
 			<string>Description</string>
 			<key>Key</key>
@@ -41,12 +53,18 @@
 			<string>String</string>
 			<key>Description</key>
 			<string>Brief description of the contents or purpose of the profile</string>
-			<key>DefaultValue</key>
-			<string></string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>A description of the profile, shown on the Detail screen for the profile. This should be descriptive enough to help the user decide whether to install the profile.</string>
 		</dict>
 		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.profile</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.profile</string>
 			<key>Title</key>
 			<string>Organization</string>
 			<key>Key</key>
@@ -55,18 +73,22 @@
 			<string>String</string>
 			<key>Description</key>
 			<string>Name of the organization for the profile</string>
-			<key>DefaultValue</key>
-			<string></string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>A human-readable string containing the name of the organization that provided the profile.</string>
 		</dict>
 		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.profile</string>
 			<key>Title</key>
 			<string>Security</string>
 			<key>Key</key>
-			<string></string>
+			<string>PayloadRemovalDisallowed</string>
 			<key>Type</key>
-			<string>String</string>
+			<string>Boolean</string>
 			<key>Description</key>
 			<string>Controls when the profile can be removed</string>
 			<key>DefaultValue</key>
@@ -79,13 +101,17 @@
 			</array>
 			<key>ValueKeys</key>
 			<dict>
+				<key>Always</key>
+				<false/>
 				<key>With Authorization</key>
 				<array>
 					<dict>
 						<key>Enabled</key>
 						<true/>
+						<key>PayloadType</key>
+						<string>com.apple.profileRemovalPassword</string>
 						<key>Key</key>
-						<string></string>
+						<string>RemovalPassword</string>
 						<key>Type</key>
 						<string>String</string>
 						<key>Description</key>
@@ -94,17 +120,17 @@
 						<string>TextFieldNoTitle</string>
 					</dict>
 				</array>
+				<key>Never</key>
+				<true/>
 			</dict>
 			<key>CellType</key>
 			<string>PopUpButton</string>
 		</dict>
 		<dict>
+			<key>Enabled</key>
+			<true/>
 			<key>Title</key>
 			<string>Automatically Remove Profile</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Settings for automatic profile removal</string>
 			<key>DefaultValue</key>
@@ -122,14 +148,18 @@
 					<dict>
 						<key>Enabled</key>
 						<true/>
+						<key>PayloadType</key>
+						<string>com.apple.profile</string>
 						<key>Key</key>
-						<string></string>
+						<string>RemovalDate</string>
 						<key>Type</key>
 						<string>Date</string>
 						<key>Description</key>
 						<string>Removal date</string>
 						<key>CellType</key>
 						<string>DatePickerNoTitle</string>
+						<key>ToolTipDescription</key>
+						<string>The date on which the profile will be automatically removed.</string>
 					</dict>
 				</array>
 				<key>After interval</key>
@@ -137,14 +167,16 @@
 					<dict>
 						<key>Enabled</key>
 						<true/>
+						<key>PayloadType</key>
+						<string>com.apple.profile</string>
 						<key>Key</key>
-						<string></string>
+						<string>DurationUntilRemoval</string>
 						<key>Type</key>
-						<string>String</string>
-						<key>DefaultValue</key>
-						<string></string>
+						<string>Float</string>
 						<key>CellType</key>
 						<string>TextFieldDaysHoursNoTitle</string>
+						<key>ToolTipDescription</key>
+						<string>Number of seconds until the profile is automatically removed. If the RemovalDate keys is present, whichever field yields the earliest date will be used.</string>
 					</dict>
 				</array>
 			</dict>

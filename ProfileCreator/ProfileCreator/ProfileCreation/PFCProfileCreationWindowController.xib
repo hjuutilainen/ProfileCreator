@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PFCProfileCreationWindowController">
             <connections>
+                <outlet property="buttonCancel" destination="Coi-Ob-7kC" id="9k0-BQ-H8A"/>
+                <outlet property="buttonSave" destination="glF-Gl-hET" id="Nvk-BV-Hhe"/>
                 <outlet property="tableViewMenu" destination="N2D-FV-fMu" id="pYL-8g-hl8"/>
                 <outlet property="tableViewSettings" destination="i6D-je-6LX" id="1mp-37-iOH"/>
                 <outlet property="viewErrorReadingSettings" destination="qP1-nq-PFP" id="if1-mX-ta8"/>
@@ -283,8 +285,42 @@
                                                             <rect key="frame" x="45" y="0.0" width="457" height="30"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         </tableCellView>
+                                                        <tableCellView identifier="CellViewSettingsPopUpNoTitle" id="KpB-mh-8MJ" customClass="CellViewSettingsPopUpNoTitle">
+                                                            <rect key="frame" x="45" y="30" width="457" height="37"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JZO-0T-ged">
+                                                                    <rect key="frame" x="81" y="5" width="359" height="26"/>
+                                                                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="NRS-aB-91q">
+                                                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                                        <font key="font" metaFont="menu"/>
+                                                                        <menu key="menu" id="yLL-1u-39i"/>
+                                                                    </popUpButtonCell>
+                                                                </popUpButton>
+                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="NSo-3e-EDQ">
+                                                                    <rect key="frame" x="6" y="12" width="71" height="17"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Templates:" id="3Xq-5J-SKI">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="NSo-3e-EDQ" firstAttribute="leading" secondItem="KpB-mh-8MJ" secondAttribute="leading" constant="8" id="Dfs-m9-CoG"/>
+                                                                <constraint firstItem="JZO-0T-ged" firstAttribute="baseline" secondItem="NSo-3e-EDQ" secondAttribute="baseline" id="WpP-dj-YwC"/>
+                                                                <constraint firstAttribute="trailing" secondItem="JZO-0T-ged" secondAttribute="trailing" constant="20" symbolic="YES" id="XD4-W8-ef1"/>
+                                                                <constraint firstAttribute="bottom" secondItem="JZO-0T-ged" secondAttribute="bottom" constant="8" id="af9-ff-q1E"/>
+                                                                <constraint firstItem="JZO-0T-ged" firstAttribute="top" secondItem="KpB-mh-8MJ" secondAttribute="top" constant="8" id="dED-hz-SDT"/>
+                                                                <constraint firstItem="JZO-0T-ged" firstAttribute="leading" secondItem="NSo-3e-EDQ" secondAttribute="trailing" constant="8" symbolic="YES" id="vfb-7g-sBL"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="settingDescription" destination="NSo-3e-EDQ" id="VdJ-tM-tQW"/>
+                                                                <outlet property="settingPopUpButton" destination="JZO-0T-ged" id="pDg-rR-RvV"/>
+                                                            </connections>
+                                                        </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextField" id="jQq-LM-XaK" customClass="CellViewSettingsTextField">
-                                                            <rect key="frame" x="45" y="30" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="67" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="70v-Nt-ieZ">
@@ -331,7 +367,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldNumber" id="120-by-QPU" customClass="CellViewSettingsTextFieldNumber">
-                                                            <rect key="frame" x="45" y="111" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="148" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="pBR-7K-zez">
@@ -401,7 +437,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldNoTitle" id="R7F-or-q8H" customClass="CellViewSettingsTextFieldNoTitle">
-                                                            <rect key="frame" x="45" y="192" width="457" height="54"/>
+                                                            <rect key="frame" x="45" y="229" width="457" height="54"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="tAX-Vt-NDp">
@@ -437,7 +473,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldHostPort" id="0En-MS-Q9b" customClass="CellViewSettingsTextFieldHostPort">
-                                                            <rect key="frame" x="45" y="246" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="283" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g5F-J6-mKz">
@@ -512,7 +548,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsPopUp" id="kSm-wM-kjj" customClass="CellViewSettingsPopUp">
-                                                            <rect key="frame" x="45" y="327" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="364" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6x3-Qh-rcv">
@@ -559,7 +595,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsPopUpNoTitle" id="Xde-aI-lNE" customClass="CellViewSettingsPopUpNoTitle">
-                                                            <rect key="frame" x="45" y="408" width="457" height="54"/>
+                                                            <rect key="frame" x="45" y="445" width="457" height="54"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6Gy-Pr-Axp">
@@ -596,7 +632,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsPopUpLeft" id="wdy-6M-i1O" customClass="CellViewSettingsPopUpLeft">
-                                                            <rect key="frame" x="45" y="462" width="457" height="53"/>
+                                                            <rect key="frame" x="45" y="499" width="457" height="53"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="rvB-um-BTT">
@@ -648,7 +684,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldNumberLeft" id="PG1-7C-flR" customClass="CellViewSettingsTextFieldNumberLeft">
-                                                            <rect key="frame" x="45" y="515" width="457" height="54"/>
+                                                            <rect key="frame" x="45" y="552" width="457" height="54"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="0Dz-iP-19x">
@@ -707,7 +743,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsCheckbox" id="35L-ut-YTi" customClass="CellViewSettingsCheckbox">
-                                                            <rect key="frame" x="45" y="569" width="457" height="52"/>
+                                                            <rect key="frame" x="45" y="606" width="457" height="52"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button translatesAutoresizingMaskIntoConstraints="NO" id="aSm-0N-zXA">
@@ -741,7 +777,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldCheckbox" id="zSs-k5-eQT" customClass="CellViewSettingsTextFieldCheckbox">
-                                                            <rect key="frame" x="45" y="621" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="658" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="im0-m6-xfh">
@@ -786,7 +822,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldHostPortCheckbox" id="dPt-hG-ibn" customClass="CellViewSettingsTextFieldHostPortCheckbox">
-                                                            <rect key="frame" x="45" y="702" width="457" height="81"/>
+                                                            <rect key="frame" x="45" y="739" width="457" height="81"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="gDL-3c-YnE">
@@ -859,7 +895,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsCheckboxNoDescription" id="VA6-3H-fPb" customClass="CellViewSettingsCheckboxNoDescription">
-                                                            <rect key="frame" x="45" y="783" width="457" height="33"/>
+                                                            <rect key="frame" x="45" y="820" width="457" height="33"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button translatesAutoresizingMaskIntoConstraints="NO" id="D08-LF-yTj">
@@ -881,7 +917,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsDatePickerNoTitle" id="jIc-mD-QIV" customClass="CellViewSettingsDatePickerNoTitle">
-                                                            <rect key="frame" x="45" y="816" width="457" height="39"/>
+                                                            <rect key="frame" x="45" y="853" width="457" height="39"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <datePicker verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mhd-eb-KeI">
@@ -919,7 +955,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTextFieldDaysHoursNoTitle" id="Wxt-QJ-dZf" customClass="CellViewSettingsTextFieldDaysHoursNoTitle">
-                                                            <rect key="frame" x="45" y="855" width="457" height="38"/>
+                                                            <rect key="frame" x="45" y="892" width="457" height="38"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v51-zc-aNg">
@@ -1002,7 +1038,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsTableView" id="mK2-Gd-5tf" customClass="CellViewSettingsTableView">
-                                                            <rect key="frame" x="45" y="893" width="457" height="212"/>
+                                                            <rect key="frame" x="45" y="930" width="457" height="212"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="nbp-QM-ucy">
@@ -1166,7 +1202,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsFile" wantsLayer="YES" id="l6W-js-rZr" customClass="CellViewSettingsFile">
-                                                            <rect key="frame" x="45" y="1105" width="457" height="192"/>
+                                                            <rect key="frame" x="45" y="1142" width="457" height="192"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="e34-xH-OaC">
@@ -1326,7 +1362,7 @@
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="CellViewSettingsSegmentedControl" wantsLayer="YES" id="V2g-zW-0l0" customClass="CellViewSettingsSegmentedControl">
-                                                            <rect key="frame" x="45" y="1297" width="457" height="38"/>
+                                                            <rect key="frame" x="45" y="1334" width="457" height="38"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ef2-Zc-W3Z">
@@ -1406,6 +1442,9 @@
 Gw
 </string>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonCancel:" target="-2" id="qJQ-at-X7s"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="glF-Gl-hET">
                         <rect key="frame" x="653" y="7" width="70" height="32"/>
@@ -1413,6 +1452,9 @@ Gw
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonSave:" target="-2" id="qXg-rJ-Yg7"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
