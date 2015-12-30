@@ -21,7 +21,7 @@
 	<string>MenuIconCertificates.png</string>
 	<key>IconPath</key>
 	<string>/System/Library/Frameworks/SecurityInterface.framework/Versions/A/Resources/CertLargeRoot@2x.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Required</key>

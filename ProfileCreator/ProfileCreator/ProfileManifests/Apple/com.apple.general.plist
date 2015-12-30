@@ -16,7 +16,7 @@
 	<string>General</string>
 	<key>IconName</key>
 	<string>MenuIconGeneral.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Enabled</key>
@@ -29,7 +29,7 @@
 			<string>Name</string>
 			<key>Key</key>
 			<string>PayloadDisplayName</string>
-			<key>Type</key>
+			<key>ValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>Display name of the profile (shown on the device)</string>
@@ -83,6 +83,8 @@
 			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.profile</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.profile</string>
 			<key>Title</key>
 			<string>Security</string>
 			<key>Key</key>
@@ -110,6 +112,8 @@
 						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.profileRemovalPassword</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.profileRemovalPassword</string>
 						<key>Key</key>
 						<string>RemovalPassword</string>
 						<key>Type</key>
@@ -118,6 +122,8 @@
 						<string>Authorization Password</string>
 						<key>CellType</key>
 						<string>TextFieldNoTitle</string>
+						<key>ToolTipDescription</key>
+						<string>Specifies the removal password for the profile</string>
 					</dict>
 				</array>
 				<key>Never</key>
@@ -150,6 +156,8 @@
 						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.profile</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.profile</string>
 						<key>Key</key>
 						<string>RemovalDate</string>
 						<key>Type</key>
@@ -169,6 +177,8 @@
 						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.profile</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.profile</string>
 						<key>Key</key>
 						<string>DurationUntilRemoval</string>
 						<key>Type</key>
@@ -182,6 +192,8 @@
 			</dict>
 			<key>CellType</key>
 			<string>PopUpButton</string>
+			<key>CellIdentifier</key>
+			<string>A96CA8A4-61F3-4A34-808B-4E796EA32847</string>
 		</dict>
 	</array>
 </dict>

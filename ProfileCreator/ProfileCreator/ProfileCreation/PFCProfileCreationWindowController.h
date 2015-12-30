@@ -31,8 +31,10 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 
 // TableView Settings
 
-@property (weak) IBOutlet NSTableView *tableViewSettings;
 @property NSMutableDictionary *tableViewSettingsSettings;
+@property NSMutableDictionary *tableViewSettingsCurrentSettings;
+
+@property (weak) IBOutlet NSTableView *tableViewSettings;
 @property NSMutableArray *tableViewSettingsItemsEnabled;
 @property NSMutableArray *tableViewSettingsItemsDisabled;
 @property BOOL columnSettingsEnabledHidden;

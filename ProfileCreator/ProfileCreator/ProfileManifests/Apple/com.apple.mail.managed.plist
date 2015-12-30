@@ -14,7 +14,7 @@
 	<string>MenuIconMail.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Mail.app/Contents/Resources/ApplicationIcon.icns</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Title</key>

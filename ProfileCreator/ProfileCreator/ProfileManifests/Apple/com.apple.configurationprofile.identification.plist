@@ -12,7 +12,7 @@
 	<string>Identification</string>
 	<key>IconName</key>
 	<string>MenuIconIdentification.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Required</key>

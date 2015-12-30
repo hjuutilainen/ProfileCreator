@@ -12,7 +12,7 @@
 	<string>Proxies</string>
 	<key>IconName</key>
 	<string>MenuIconProxies.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Title</key>

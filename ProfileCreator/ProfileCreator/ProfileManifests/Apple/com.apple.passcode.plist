@@ -12,7 +12,7 @@
 	<string>Passcode</string>
 	<key>IconName</key>
 	<string>MenuIconPasscode.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Title</key>

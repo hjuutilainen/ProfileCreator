@@ -15,7 +15,7 @@
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
-    manifestDict[@"DomainKeys"] = [self manifestSettingsForPlistAtURL:fileURL];
+    manifestDict[@"PayloadKeys"] = [self manifestSettingsForPlistAtURL:fileURL];
     
     return [manifestDict copy];
 }

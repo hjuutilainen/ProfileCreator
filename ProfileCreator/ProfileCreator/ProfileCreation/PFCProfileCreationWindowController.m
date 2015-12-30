@@ -30,11 +30,13 @@
         _tableViewMenuItemsDisabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsEnabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsDisabled = [[NSMutableArray alloc] init];
+        _tableViewSettingsSettings = [[NSMutableDictionary alloc] init];
+        _tableViewSettingsCurrentSettings = [[NSMutableDictionary alloc] init];
         
         _advancedSettings = NO;
         _columnMenuEnabledHidden = YES;
         _columnSettingsEnabledHidden = YES;
-        _tableViewMenuSelectedRow = -1;
+        _tableViewMenuSelectedRow = -1; // None selected
         _profileType = profileType;
     }
     return self;
@@ -222,8 +224,8 @@
         }
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
-        NSDictionary *settingDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
-        NSString *cellType = settingDict[@"CellType"];
+        NSDictionary *manifestDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        NSString *cellType = manifestDict[@"CellType"];
         if ( [tableColumnIdentifier isEqualToString:@"ColumnSettings"] ) {
             
             // ---------------------------------------------------------------------
@@ -235,141 +237,147 @@
                 // ---------------------------------------------------------------------
                 //  TextField
                 // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextField"] ) {
-                CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewTextField:cellView settingDict:settingDict row:row sender:self];
+            } else {
                 
-                // ---------------------------------------------------------------------
-                //  TextFieldNoTitle
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
-                CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewTextFieldNoTitle:cellView settingDict:settingDict row:row sender:self];
+                NSString *cellKey = [self keyForCellDict:manifestDict];
+                NSDictionary *cellSettingsDict = _tableViewSettingsCurrentSettings[cellKey];
                 
-                // ---------------------------------------------------------------------
-                //  PopUpButton
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
-                CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewPopUp:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  Checkbox
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"Checkbox"] ) {
-                CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsCheckbox:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  DatePickerNoTitle
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
-                CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewDatePickerNoTitle:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldDaysHoursNoTitle
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
-                CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView settingDict:settingDict row:row];
-                
-                // ---------------------------------------------------------------------
-                //  TableView
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TableView"] ) {
-                CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTableView:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  File
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"File"] ) {
-                CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsFile:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  SegmentedControl
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
-                CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsSegmentedControl:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldHostPort
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
-                CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldHostPort:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  CheckboxNoDescription
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
-                CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsCheckboxNoDescription:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  PopUpButtonNoTitle
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
-                CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsPopUpNoTitle:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldNumber
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
-                CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldNumber:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldCheckbox
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldCheckbox"] ) {
-                CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldCheckbox:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldHostPortCheckbox
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
-                CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  PopUpButtonLeft
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"PopUpButtonLeft"] ) {
-                CellViewSettingsPopUpLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpLeft" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsPopUpLeft:cellView settingDict:settingDict row:row sender:self];
-                
-                // ---------------------------------------------------------------------
-                //  TextFieldNumberLeft
-                // ---------------------------------------------------------------------
-            } else if ( [cellType isEqualToString:@"TextFieldNumberLeft"] ) {
-                CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView settingDict:settingDict row:row sender:self];
+                if ( [cellType isEqualToString:@"TextField"] ) {
+                    CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewTextField:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldNoTitle
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
+                    CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewTextFieldNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  PopUpButton
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
+                    CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewPopUp:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  Checkbox
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"Checkbox"] ) {
+                    CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsCheckbox:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  DatePickerNoTitle
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
+                    CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewDatePickerNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldDaysHoursNoTitle
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
+                    CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TableView
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TableView"] ) {
+                    CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTableView:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  File
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"File"] ) {
+                    CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsFile:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  SegmentedControl
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
+                    CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifestDict:manifestDict settingDict:manifestDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldHostPort
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
+                    CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  CheckboxNoDescription
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
+                    CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsCheckboxNoDescription:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  PopUpButtonNoTitle
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
+                    CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsPopUpNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldNumber
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
+                    CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldNumber:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldCheckbox
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldCheckbox"] ) {
+                    CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldCheckbox:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldHostPortCheckbox
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
+                    CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  PopUpButtonLeft
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"PopUpButtonLeft"] ) {
+                    CellViewSettingsPopUpLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpLeft" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsPopUpLeft:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
+                    //  TextFieldNumberLeft
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldNumberLeft"] ) {
+                    CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                }
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
-            if ( [settingDict[@"Hidden"] boolValue] ) {
+            if ( [manifestDict[@"Hidden"] boolValue] ) {
                 return nil;
             }
             
@@ -377,7 +385,7 @@
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else {
                 CellViewSettingsEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsEnabled" owner:self];
-                return [cellView populateCellViewEnabled:cellView settingDict:settingDict row:row sender:self];
+                return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict settingDict:manifestDict row:row sender:self];
             }
         }
     } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenu"] ) {
@@ -500,12 +508,24 @@
     NSInteger row = [textFieldTag integerValue];
     
     // ---------------------------------------------------------------------
-    //  Get current text and current cell dict
+    //  Get current entered text
     // ---------------------------------------------------------------------
     NSDictionary *userInfo = [sender userInfo];
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+    
+    // ---------------------------------------------------------------------
+    //  Get current cell's key in the settings dict
+    // ---------------------------------------------------------------------
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
-    NSLog(@"[[textField superview] class]=%@", [[textField superview] class]);
+    NSString *key = [self keyForCellDict:cellDict];
+    
+    NSMutableDictionary *settingsDict;
+    if ( [key length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        NSLog(@"[ERROR] No key returned from manifest dict!");
+        return;
+    }
     
     // ---------------------------------------------------------------------
     //  Another verification of text field type
@@ -515,31 +535,61 @@
         [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
         ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldHost] ) {
-            cellDict[@"ValueHost"] = [inputText copy];
+            settingsDict[@"ValueHost"] = [inputText copy];
         } else if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldPort] ) {
-            cellDict[@"ValuePort"] = [inputText copy];
+            settingsDict[@"ValuePort"] = [inputText copy];
         } else {
+            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
     } else if ( [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
-            cellDict[@"ValueTextField"] = [inputText copy];
+            settingsDict[@"ValueTextField"] = [inputText copy];
         } else {
+            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
     } else {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
-            cellDict[@"Value"] = [inputText copy];
+            settingsDict[@"Value"] = [inputText copy];
         } else {
+            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
     }
     
-    [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
-    
+    _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
 } // controlTextDidChange
 
+- (NSString *)keyForCellDict:(NSDictionary *)cellDict {
+    NSLog(@"cellDict=%@", cellDict);
+    NSString *payloadType = cellDict[@"PayloadType"];
+    if ( [payloadType length] == 0 ) {
+        NSLog(@"[ERROR] No PayloadType!");
+        return @"";
+    }
+    //NSLog(@"payloadType=%@", payloadType);
+    NSString *payloadParentKey = cellDict[@"PayloadParentKey"];
+    //NSLog(@"payloadParentKey=%@", payloadParentKey);
+    NSString *key = cellDict[@"Key"];
+    if ( [key length] == 0 ) {
+        NSLog(@"[ERROR] No Key!");
+        return @"";
+    }
+    //NSLog(@"key=%@", key);
+    
+    if ( [payloadParentKey length] != 0 && ! [payloadType isEqualToString:payloadParentKey] ) {
+        return [NSString stringWithFormat:@"%@.%@.%@", payloadType, payloadParentKey, key];
+    } else {
+        return [NSString stringWithFormat:@"%@.%@", payloadType, key];
+    }
+}
+
 - (void)checkbox:(NSButton *)checkbox {
+    
+    // ---------------------------------------------------------------------
+    //  Get checkbox's row in the table view
+    // ---------------------------------------------------------------------
     NSNumber *buttonTag = @([checkbox tag]);
     if ( buttonTag == nil ) {
         NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
@@ -547,41 +597,62 @@
     }
     NSInteger row = [buttonTag integerValue];
     
+    // ---------------------------------------------------------------------
+    //  Get current checkbox state
+    // ---------------------------------------------------------------------
     BOOL state = [checkbox state];
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
+    
+    // ---------------------------------------------------------------------
+    //  Get current cell's key in the settings dict
+    // ---------------------------------------------------------------------
+    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
+    NSString *key = [self keyForCellDict:cellDict];
+    
+    NSMutableDictionary *settingsDict;
+    if ( [key length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        NSLog(@"[ERROR] No key returned from manifest dict!");
+        return;
+    }
     
     if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]] ) {
-        if ( checkbox == [(CellViewMenuEnabled *)[_tableViewMenu viewAtColumn:[_tableViewMenu columnWithIdentifier:@"ColumnMenuEnabled"] row:[buttonTag integerValue] makeIfNecessary:NO] menuCheckbox] ) {
-            NSMutableDictionary *cellDict = [[_tableViewMenuItemsEnabled objectAtIndex:[buttonTag integerValue]] mutableCopy];
-            cellDict[@"Enabled"] = @(state);
+        if ( checkbox == [(CellViewMenuEnabled *)[_tableViewMenu viewAtColumn:[_tableViewMenu columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+            NSMutableDictionary *cellDict = [[_tableViewMenuItemsEnabled objectAtIndex:row] mutableCopy];
+            settingsDict[@"Enabled"] = @(state);
             [_tableViewMenuItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
             return;
         }
+        
     } else if (
                [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsEnabled class]]
                ) {
-        if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:[buttonTag integerValue] makeIfNecessary:NO] settingEnabled] ) {
-            cellDict[@"Enabled"] = @(state);
+        if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:row makeIfNecessary:NO] settingEnabled] ) {
+            settingsDict[@"Enabled"] = @(state);
             [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
             [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
             [_tableViewSettings endUpdates];
             return;
         }
+        
+        
     } else if (
                [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ||
                [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
                ) {
-        if ( checkbox == [(CellViewSettingsTextFieldCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
-            cellDict[@"ValueCheckbox"] = @(state);
+        if ( checkbox == [(CellViewSettingsTextFieldCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox] ) {
+            settingsDict[@"ValueCheckbox"] = @(state);
         }
+        
+        
     } else {
-        if ( checkbox == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:[buttonTag integerValue] makeIfNecessary:NO] settingCheckbox] ) {
-            cellDict[@"Value"] = @(state);
+        if ( checkbox == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox] ) {
+            settingsDict[@"Value"] = @(state);
         }
     }
     
-    [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+    _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
     
     // ---------------------------------------------------------------------
     //  Add subkeys for selected state
@@ -612,6 +683,17 @@
     }
     NSInteger row = [datePickerTag integerValue];
     
+    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSString *key = [self keyForCellDict:cellDict];
+    
+    NSMutableDictionary *settingsDict;
+    if ( [key length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        NSLog(@"[ERROR] No key returned from manifest dict!");
+        return;
+    }
+    
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsDatePickerNoTitle date picker
     // ---------------------------------------------------------------------
@@ -629,9 +711,9 @@
         NSDateComponents* components = [calendarUS components:flags fromDate:datePickerDate];
         NSDate* date = [calendarUS dateFromComponents:components];
         
-        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-        cellDict[@"Value"] = date;
-        [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        
+        settingsDict[@"Value"] = date;
+        _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
         
         // ---------------------------------------------------------------------
         //  Update description with time interval from today to selected date
@@ -663,6 +745,17 @@
     }
     NSInteger row = [popUpButtonTag integerValue];
     
+    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSString *key = [self keyForCellDict:cellDict];
+    
+    NSMutableDictionary *settingsDict;
+    if ( [key length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        NSLog(@"[ERROR] No key returned from manifest dict!");
+        return;
+    }
+    
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsPopUp popup button
     // ---------------------------------------------------------------------
@@ -674,9 +767,8 @@
         //  Save selection
         // ---------------------------------------------------------------------
         NSString *selectedTitle = [popUpButton titleOfSelectedItem];
-        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-        cellDict[@"Value"] = selectedTitle;
-        [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        settingsDict[@"Value"] = selectedTitle;
+        _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
         
         // ---------------------------------------------------------------------
         //  Add subkeys for selected title
@@ -708,12 +800,21 @@
     }
     NSInteger row = [buttonTag integerValue];
     
+    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSString *key = [self keyForCellDict:cellDict];
+    
+    NSMutableDictionary *settingsDict;
+    if ( [key length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        NSLog(@"[ERROR] No key returned from manifest dict!");
+        return;
+    }
+    
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsFile button
     // ---------------------------------------------------------------------
     if ( button == [(CellViewSettingsFile *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
-        
-        NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
         
         // --------------------------------------------------------------
         //  Get open dialog settings from dict
@@ -743,8 +844,10 @@
             if ( result == NSModalResponseOK ) {
                 NSArray *selectedURLs = [openPanel URLs];
                 NSURL *fileURL = [selectedURLs firstObject];
-                cellDict[@"FilePath"] = [fileURL path];
-                [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+                
+                settingsDict[@"FilePath"] = [fileURL path];
+                _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+                
                 [_tableViewSettings beginUpdates];
                 [_tableViewSettings reloadData];
                 [_tableViewSettings endUpdates];
@@ -842,7 +945,7 @@
         if ( menuDict[@"SavedSettings"] != nil ) {
             return menuDict[@"SavedSettings"];
         } else {
-            NSArray *settings = menuDict[@"DomainKeys"];
+            NSArray *settings = menuDict[@"PayloadKeys"];
             
             for ( NSDictionary *setting in settings ) {
                 NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
@@ -886,8 +989,8 @@
         if ( row < [_tableViewSettingsItemsEnabled count] ) {
             NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
             [[_tableViewSettingsItemsEnabled copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSLog(@"idx=%lu", (unsigned long)idx);
-                NSLog(@"obj=%@", obj);
+                //NSLog(@"idx=%lu", (unsigned long)idx);
+                //NSLog(@"obj=%@", obj);
                 
                 // ----------------------------------------------------------------------
                 //  Check if parent key exist in value keys (if it's added by the caller)
@@ -896,8 +999,8 @@
                     
                     parentKeyArray = valueKeys[obj[@"ParentKey"]];
                     if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
-                        NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
-                        NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                        //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                        //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
                         [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
                         updatedTableView = YES;
                     }
@@ -945,8 +1048,8 @@
                     //  Add sub key to table view below setting
                     // ---------------------------------------------------------------------
                     mutableValueDict[@"ParentKey"] = valueString;
-                    NSLog(@"[DEBUG] Adding row: %ld", row);
-                    NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
+                    //NSLog(@"[DEBUG] Adding row: %ld", row);
+                    //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
                     [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
                     updatedTableView = YES;
                 }
@@ -970,7 +1073,10 @@
     // ---------------------------------------------------------------------
     if ( 0 <= _tableViewMenuSelectedRow ) {
         NSMutableDictionary *currentMenuDict = [[self->_tableViewMenuItemsEnabled objectAtIndex:self->_tableViewMenuSelectedRow] mutableCopy];
-        NSLog(@"_tableViewSettingsItemsEnabled=%@", _tableViewSettingsItemsEnabled);
+        if ( [_tableViewSettingsCurrentSettings count] != 0 ) {
+            NSString *menuDomain = currentMenuDict[@"Domain"];
+            _tableViewSettingsSettings[menuDomain] = [_tableViewSettingsCurrentSettings copy];
+        }
         currentMenuDict[@"SavedSettings"] = [self->_tableViewSettingsItemsEnabled copy];
         [_tableViewMenuItemsEnabled replaceObjectAtIndex:self->_tableViewMenuSelectedRow withObject:[currentMenuDict copy]];
     }
@@ -979,13 +1085,14 @@
     //  Set _tableViewMenuSelectedRow to new selection
     // ---------------------------------------------------------------------
     [self setTableViewMenuSelectedRow:[_tableViewMenu selectedRow]];
-    NSLog(@"[DEBUG] Selected row: %ld", (long)_tableViewMenuSelectedRow);
     
     [_tableViewSettings beginUpdates];
     [_tableViewSettingsItemsEnabled removeAllObjects];
-    NSLog(@"[DEBUG] Settings rows: %lu", (unsigned long)[_tableViewSettingsItemsEnabled count]);
     
     if ( 0 <= _tableViewMenuSelectedRow ) {
+        NSMutableDictionary *currentMenuDict = [[self->_tableViewMenuItemsEnabled objectAtIndex:self->_tableViewMenuSelectedRow] mutableCopy];
+        NSString *menuDomain = currentMenuDict[@"Domain"];
+        [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[menuDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         NSArray *settingsArray = [self settingsForMenuItem:_tableViewMenuItemsEnabled[_tableViewMenuSelectedRow]];
         if ( [settingsArray count] != 0 ) {
             [_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
@@ -997,7 +1104,6 @@
     
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
-    
 } // tableViewMenu
 
 - (IBAction)buttonCancel:(id)sender {
@@ -1068,14 +1174,14 @@
         savedSettingsDict[@"Value"] = selectedValue;
         
         /* To be used when exporting probably
-        id valueKeyValue = cellDict[@"ValueKeys"][selectedValue];
-        NSString *keyValueType = [PFCManifestCreationParser typeStringFromValue:valueKeyValue];
-        NSLog(@"keyValueType=%@", keyValueType);
-        if ( [keyValueType isEqualToString:@"Array"] ) {
-            for ( NSDictionary *nestedCellDict in (NSArray *)valueKeyValue ) {
-                
-            }
-        }
+         id valueKeyValue = cellDict[@"ValueKeys"][selectedValue];
+         NSString *keyValueType = [PFCManifestCreationParser typeStringFromValue:valueKeyValue];
+         NSLog(@"keyValueType=%@", keyValueType);
+         if ( [keyValueType isEqualToString:@"Array"] ) {
+         for ( NSDictionary *nestedCellDict in (NSArray *)valueKeyValue ) {
+         
+         }
+         }
          */
     }
     

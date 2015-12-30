@@ -12,7 +12,7 @@
 	<string>SCEP</string>
 	<key>IconName</key>
 	<string>MenuIconSCEP.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Required</key>

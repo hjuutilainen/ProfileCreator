@@ -12,7 +12,7 @@
 	<string>Messages</string>
 	<key>IconName</key>
 	<string>MenuIconMessages.png</string>
-	<key>DomainKeys</key>
+	<key>PayloadKeys</key>
 	<array>
 		<dict>
 			<key>Required</key>
