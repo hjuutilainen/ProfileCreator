@@ -152,19 +152,19 @@
     [[cellView settingTextField] setDelegate:sender];
     [[cellView settingTextField] setStringValue:[value stringValue]];
     [[cellView settingTextField] setTag:row];
-
+    
     /* Never used, as the binding always sets it to at least 0
-    // ---------------------------------------------------------------------
-    //  Placeholder Value
-    // ---------------------------------------------------------------------
-    if ( manifestDict[@"PlaceholderValue"] != nil ) {
-        [[cellView settingTextField] setPlaceholderString:[manifestDict[@"PlaceholderValue"] stringValue] ?: @""];
-    } else if ( required ) {
-        [[cellView settingTextField] setPlaceholderString:@"Required"];
-    } else {
-        [[cellView settingTextField] setPlaceholderString:@""];
-    }
-    */
+     // ---------------------------------------------------------------------
+     //  Placeholder Value
+     // ---------------------------------------------------------------------
+     if ( manifestDict[@"PlaceholderValue"] != nil ) {
+     [[cellView settingTextField] setPlaceholderString:[manifestDict[@"PlaceholderValue"] stringValue] ?: @""];
+     } else if ( required ) {
+     [[cellView settingTextField] setPlaceholderString:@"Required"];
+     } else {
+     [[cellView settingTextField] setPlaceholderString:@""];
+     }
+     */
     
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
@@ -324,7 +324,7 @@
 } // drawRect
 
 - (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-
+    
     BOOL enabled = [manifestDict[@"Enabled"] boolValue];
     BOOL required = [manifestDict[@"Required"] boolValue];
     
@@ -925,9 +925,40 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row {
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self addObserver:self forKeyPath:@"stepperValueRemovalIntervalDays" options:NSKeyValueObservingOptionNew context:nil];
+        [self addObserver:self forKeyPath:@"stepperValueRemovalIntervalHours" options:NSKeyValueObservingOptionNew context:nil];
+    }
+    return self;
+} // initWithCoder
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"stepperValueRemovalIntervalDays"];
+    [self removeObserver:self forKeyPath:@"stepperValueRemovalIntervalHours"];
+} // dealloc
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *) __unused change context:(void *) __unused context {
+    if ( ( _sender != nil && [_cellIdentifier length] != 0 ) && ( [keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"] )) {
+        int seconds = ( ( [_stepperValueRemovalIntervalDays intValue] * 86400 ) + ( [_stepperValueRemovalIntervalHours intValue] * 60 ) );
+        NSMutableDictionary *settingsDict = [[(PFCProfileCreationWindowController *)_sender tableViewSettingsCurrentSettings] mutableCopy];
+        if ( seconds == 0 ) {
+            [settingsDict removeObjectForKey:_cellIdentifier];
+        } else {
+            NSMutableDictionary *cellDict = [settingsDict[_cellIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+            cellDict[@"Value"] = @(seconds);
+            settingsDict[_cellIdentifier] = cellDict;
+        }
+        [(PFCProfileCreationWindowController *)_sender setTableViewSettingsCurrentSettings:settingsDict];
+    }
+} // observeValueForKeyPath
+
+- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL enabled = [manifestDict[@"Enabled"] boolValue];
+    
+    [self setSender:sender];
+    [self setCellIdentifier:manifestDict[@"Identifier"] ?: @""];
     
     if ( _stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil ) {
         NSNumber *seconds = settingDict[@"Value"] ?: @0;
@@ -1211,7 +1242,7 @@
     } else {
         [[cellView settingTableView] setHeaderView:[[NSTableHeaderView alloc] init]];
     }
-
+    
     [[cellView settingTableView] beginUpdates];
     [[cellView settingTableView] sizeToFit];
     [[cellView settingTableView] reloadData];

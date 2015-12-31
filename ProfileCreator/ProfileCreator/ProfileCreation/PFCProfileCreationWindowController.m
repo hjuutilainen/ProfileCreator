@@ -61,7 +61,6 @@
 } // initializeMenu
 
 - (void)setupMenu {
-    NSLog(@"Setup menu: %d", _profileType);
     switch (_profileType) {
         case kPFCProfileTypeApple:
             [self setupMenuProfilesApple];
@@ -72,7 +71,7 @@
         default:
             break;
     }
-}
+} // setupMenu
 
 - (void)setupMenuProfilesCustom {
     if ( ! _customMenu ) {
@@ -81,7 +80,7 @@
     }
     
     [_tableViewMenuItemsEnabled addObjectsFromArray:_customMenu];
-}
+} // setupMenuProfilesCustom
 
 - (void)setupMenuProfilesApple {
     
@@ -162,7 +161,7 @@
 - (void)updateTableColumnsMenu {
     for ( NSTableColumn *column in [_tableViewMenu tableColumns] ) {
         if ( [[column identifier] isEqualToString:@"ColumnMenuEnabled"] ) {
-            [column setHidden:!self->_advancedSettings];
+            [column setHidden:!_advancedSettings];
         }
     }
 } // updateTableColumnsMenu
@@ -170,7 +169,7 @@
 - (void)updateTableColumnsSettings {
     for ( NSTableColumn *column in [_tableViewSettings tableColumns] ) {
         if ( [[column identifier] isEqualToString:@"ColumnSettingsEnabled"] ) {
-            [column setHidden:!self->_advancedSettings];
+            [column setHidden:!_advancedSettings];
         } else if ( [[column identifier] isEqualToString:@"ColumnMinOS"] ) {
             [column setHidden:YES];
         }
@@ -239,8 +238,8 @@
                 // ---------------------------------------------------------------------
             } else {
                 
-                NSString *cellKey = [self keyForCellDict:manifestDict];
-                NSDictionary *cellSettingsDict = _tableViewSettingsCurrentSettings[cellKey];
+                NSString *identifier = manifestDict[@"Identifier"];
+                NSDictionary *cellSettingsDict = _tableViewSettingsCurrentSettings[identifier];
                 
                 if ( [cellType isEqualToString:@"TextField"] ) {
                     CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
@@ -285,7 +284,7 @@
                 } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
                     CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row];
+                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TableView
@@ -514,14 +513,14 @@
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
     
     // ---------------------------------------------------------------------
-    //  Get current cell's key in the settings dict
+    //  Get current cell identifier in the manifest dict
     // ---------------------------------------------------------------------
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
-    NSString *key = [self keyForCellDict:cellDict];
+    NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
-    if ( [key length] != 0 ) {
-        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    if ( [identifier length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         NSLog(@"[ERROR] No key returned from manifest dict!");
         return;
@@ -558,32 +557,8 @@
         }
     }
     
-    _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+    _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
 } // controlTextDidChange
-
-- (NSString *)keyForCellDict:(NSDictionary *)cellDict {
-    NSLog(@"cellDict=%@", cellDict);
-    NSString *payloadType = cellDict[@"PayloadType"];
-    if ( [payloadType length] == 0 ) {
-        NSLog(@"[ERROR] No PayloadType!");
-        return @"";
-    }
-    //NSLog(@"payloadType=%@", payloadType);
-    NSString *payloadParentKey = cellDict[@"PayloadParentKey"];
-    //NSLog(@"payloadParentKey=%@", payloadParentKey);
-    NSString *key = cellDict[@"Key"];
-    if ( [key length] == 0 ) {
-        NSLog(@"[ERROR] No Key!");
-        return @"";
-    }
-    //NSLog(@"key=%@", key);
-    
-    if ( [payloadParentKey length] != 0 && ! [payloadType isEqualToString:payloadParentKey] ) {
-        return [NSString stringWithFormat:@"%@.%@.%@", payloadType, payloadParentKey, key];
-    } else {
-        return [NSString stringWithFormat:@"%@.%@", payloadType, key];
-    }
-}
 
 - (void)checkbox:(NSButton *)checkbox {
     
@@ -606,11 +581,11 @@
     //  Get current cell's key in the settings dict
     // ---------------------------------------------------------------------
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
-    NSString *key = [self keyForCellDict:cellDict];
+    NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
-    if ( [key length] != 0 ) {
-        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    if ( [identifier length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         NSLog(@"[ERROR] No key returned from manifest dict!");
         return;
@@ -652,7 +627,7 @@
         }
     }
     
-    _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+    _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
     
     // ---------------------------------------------------------------------
     //  Add subkeys for selected state
@@ -684,11 +659,11 @@
     NSInteger row = [datePickerTag integerValue];
     
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-    NSString *key = [self keyForCellDict:cellDict];
+    NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
-    if ( [key length] != 0 ) {
-        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    if ( [identifier length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         NSLog(@"[ERROR] No key returned from manifest dict!");
         return;
@@ -713,7 +688,7 @@
         
         
         settingsDict[@"Value"] = date;
-        _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+        _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
         
         // ---------------------------------------------------------------------
         //  Update description with time interval from today to selected date
@@ -746,11 +721,11 @@
     NSInteger row = [popUpButtonTag integerValue];
     
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-    NSString *key = [self keyForCellDict:cellDict];
+    NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
-    if ( [key length] != 0 ) {
-        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    if ( [identifier length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         NSLog(@"[ERROR] No key returned from manifest dict!");
         return;
@@ -768,7 +743,7 @@
         // ---------------------------------------------------------------------
         NSString *selectedTitle = [popUpButton titleOfSelectedItem];
         settingsDict[@"Value"] = selectedTitle;
-        _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+        _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
         
         // ---------------------------------------------------------------------
         //  Add subkeys for selected title
@@ -801,11 +776,11 @@
     NSInteger row = [buttonTag integerValue];
     
     NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
-    NSString *key = [self keyForCellDict:cellDict];
+    NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
-    if ( [key length] != 0 ) {
-        settingsDict = [_tableViewSettingsCurrentSettings[key] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    if ( [identifier length] != 0 ) {
+        settingsDict = [_tableViewSettingsCurrentSettings[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         NSLog(@"[ERROR] No key returned from manifest dict!");
         return;
@@ -846,7 +821,7 @@
                 NSURL *fileURL = [selectedURLs firstObject];
                 
                 settingsDict[@"FilePath"] = [fileURL path];
-                _tableViewSettingsCurrentSettings[key] = [settingsDict copy];
+                _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
                 
                 [_tableViewSettings beginUpdates];
                 [_tableViewSettings reloadData];
@@ -1111,23 +1086,7 @@
 
 - (IBAction)buttonSave:(id)sender {
     
-    NSMutableArray *savedSettingsArray = [[NSMutableArray alloc] init];
-    
-    for ( NSDictionary *settingsDict in _tableViewSettingsItemsEnabled ) {
-        NSString *cellType = settingsDict[@"CellType"];
-        if ( [cellType isEqualToString:@"Padding"] ) {
-            continue;
-        } else {
-            NSDictionary *savedSettingsDict = [self savedSettingsForCellType:cellType cellDict:settingsDict];
-            if ( [savedSettingsDict count] != 0 ) {
-                [savedSettingsArray addObject:savedSettingsDict];
-            } else {
-                NSLog(@"");
-            }
-        }
-    }
-    
-    NSLog(@"savedSettingsArray=%@", savedSettingsArray);
+    NSLog(@"savedSettingsArray=%@", _tableViewSettingsCurrentSettings);
 }
 
 - (NSDictionary *)savedSettingsForCellType:(NSString *)cellType cellDict:(NSDictionary *)cellDict {

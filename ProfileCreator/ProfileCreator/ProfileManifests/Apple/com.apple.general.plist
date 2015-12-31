@@ -19,6 +19,8 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>CD1A01D6-908D-49CD-BAD6-181B45CC6738</string>
 			<key>Enabled</key>
 			<true/>
 			<key>PayloadType</key>
@@ -39,6 +41,8 @@
 			<string>A human-readable name for the profile payload. This name is displayed on the Detail screen. It does not have to be unique.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>65377BE1-1799-40D8-93E7-4C7CB0E7B9B4</string>
 			<key>Enabled</key>
 			<true/>
 			<key>PayloadType</key>
@@ -59,6 +63,8 @@
 			<string>A description of the profile, shown on the Detail screen for the profile. This should be descriptive enough to help the user decide whether to install the profile.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>E2E64509-BDE4-4743-8AE9-D46B76E0CDA8</string>
 			<key>Enabled</key>
 			<true/>
 			<key>PayloadType</key>
@@ -79,6 +85,8 @@
 			<string>A human-readable string containing the name of the organization that provided the profile.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>7106197F-1F9F-4A3A-B605-310BAB552065</string>
 			<key>Enabled</key>
 			<true/>
 			<key>PayloadType</key>
@@ -108,6 +116,8 @@
 				<key>With Authorization</key>
 				<array>
 					<dict>
+						<key>Identifier</key>
+						<string>E0342E6C-10E1-425A-898B-076DF68D0280</string>
 						<key>Enabled</key>
 						<true/>
 						<key>PayloadType</key>
@@ -133,6 +143,8 @@
 			<string>PopUpButton</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>F0B3C075-D53B-4AC1-9C46-367D41260C90</string>
 			<key>Enabled</key>
 			<true/>
 			<key>Title</key>
@@ -152,6 +164,8 @@
 				<key>On date</key>
 				<array>
 					<dict>
+						<key>Identifier</key>
+						<string>F3D11C11-CD32-460A-805C-98F19D043CFA</string>
 						<key>Enabled</key>
 						<true/>
 						<key>PayloadType</key>
@@ -173,6 +187,8 @@
 				<key>After interval</key>
 				<array>
 					<dict>
+						<key>Identifier</key>
+						<string>EA6DB9D5-FD38-4C06-8E2B-EC1257845185</string>
 						<key>Enabled</key>
 						<true/>
 						<key>PayloadType</key>
@@ -192,8 +208,6 @@
 			</dict>
 			<key>CellType</key>
 			<string>PopUpButton</string>
-			<key>CellIdentifier</key>
-			<string>A96CA8A4-61F3-4A34-808B-4E796EA32847</string>
 		</dict>
 	</array>
 </dict>

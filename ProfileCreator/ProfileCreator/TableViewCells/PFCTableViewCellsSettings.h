@@ -196,13 +196,15 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextFieldDaysHoursNoTitle : NSTableCellView
+@property id sender;
+@property NSString *cellIdentifier;
 @property NSNumber *stepperValueRemovalIntervalDays;
 @property NSNumber *stepperValueRemovalIntervalHours;
 @property (weak) IBOutlet NSTextField *settingDays;
 @property (weak) IBOutlet NSStepper *settingStepperDays;
 @property (weak) IBOutlet NSTextField *settingHours;
 @property (weak) IBOutlet NSStepper *settingStepperHours;
-- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row;
+- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
