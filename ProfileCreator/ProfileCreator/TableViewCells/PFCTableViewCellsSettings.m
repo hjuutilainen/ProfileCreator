@@ -38,8 +38,15 @@
 
 - (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
-    BOOL enabled = [manifestDict[@"Enabled"] boolValue];
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = NO;
+    if ( manifestDict[@"Required"] != nil ) {
+        required = [manifestDict[@"Required"] boolValue];
+    }
+    
+    BOOL enabled = YES;
+    if ( ! required && settingDict[@"Enabled"] != nil ) {
+        enabled = [settingDict[@"Enabled"] boolValue];
+    }
     
     // ---------------------------------------------------------------------
     //  Title
@@ -85,6 +92,11 @@
     // ---------------------------------------------------------------------
     [cellView setToolTip:[self toolTipWithKey:manifestDict[@"Key"] type:manifestDict[@"Type"] required:required description:manifestDict[@"ToolTipDescription"]]];
     
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingTextField] setEnabled:enabled];
+    
     return cellView;
 } // populateCellViewTextField:settingDict:row
 
@@ -117,8 +129,15 @@
 
 - (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
-    BOOL enabled = [manifestDict[@"Enabled"] boolValue];
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = NO;
+    if ( manifestDict[@"Required"] != nil ) {
+        required = [manifestDict[@"Required"] boolValue];
+    }
+    
+    BOOL enabled = YES;
+    if ( ! required && settingDict[@"Enabled"] != nil ) {
+        enabled = [settingDict[@"Enabled"] boolValue];
+    }
     
     // ---------------------------------------------------------------------
     //  Title
@@ -153,19 +172,6 @@
     [[cellView settingTextField] setStringValue:[value stringValue]];
     [[cellView settingTextField] setTag:row];
     
-    /* Never used, as the binding always sets it to at least 0
-     // ---------------------------------------------------------------------
-     //  Placeholder Value
-     // ---------------------------------------------------------------------
-     if ( manifestDict[@"PlaceholderValue"] != nil ) {
-     [[cellView settingTextField] setPlaceholderString:[manifestDict[@"PlaceholderValue"] stringValue] ?: @""];
-     } else if ( required ) {
-     [[cellView settingTextField] setPlaceholderString:@"Required"];
-     } else {
-     [[cellView settingTextField] setPlaceholderString:@""];
-     }
-     */
-    
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
@@ -185,6 +191,12 @@
     [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingTextField] setEnabled:enabled];
+    [[cellView settingStepper] setEnabled:enabled];
+    
     return cellView;
 } // populateCellViewTextField:settingDict:row
 
@@ -203,6 +215,11 @@
 } // drawRect
 
 - (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+
+    BOOL enabled = YES;
+    if ( settingDict[@"Enabled"] != nil ) {
+        enabled = [settingDict[@"Enabled"] boolValue];
+    }
     
     // ---------------------------------------------------------------------
     //  Description
@@ -215,6 +232,11 @@
     [[cellView settingTextField] setStringValue:settingDict[@"Value"] ?: @""];
     [[cellView settingTextField] setDelegate:sender];
     [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingTextField] setEnabled:enabled];
     
     // ---------------------------------------------------------------------
     //  Indent
@@ -828,15 +850,29 @@
 
 - (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
+    BOOL required = NO;
+    if ( manifestDict[@"Required"] != nil ) {
+        required = [manifestDict[@"Required"] boolValue];
+    } else if ( manifestDict[@"RequiredHost"] != nil ) {
+        required = [manifestDict[@"RequiredHost"] boolValue];
+    } else if ( manifestDict[@"RequiredPort"] != nil ) {
+        required = [manifestDict[@"RequiredPort"] boolValue];
+    }
+    
+    BOOL enabled = YES;
+    if ( ! required && settingDict[@"Enabled"] != nil ) {
+        enabled = [settingDict[@"Enabled"] boolValue];
+    }
+    
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setState:[manifestDict[@"Enabled"] boolValue]];
+    [[cellView settingEnabled] setState:enabled];
     
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    [[cellView settingEnabled] setHidden:[manifestDict[@"Required"] boolValue]];
+    [[cellView settingEnabled] setHidden:required];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -885,6 +921,7 @@
     // ---------------------------------------------------------------------
     //  Set minimum value selectable to tomorrow
     // ---------------------------------------------------------------------
+    // FIXME - The time is set to 23:00, should probably investigate the format
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
     [offsetComponents setDay:1];
@@ -971,8 +1008,8 @@
         NSDate *endDate = [startDate dateByAddingTimeInterval:[seconds doubleValue]];
         
         NSDateComponents *components = [calendarUS components:unitFlags fromDate:startDate toDate:endDate options:0];
-        _stepperValueRemovalIntervalDays = @([components day]) ?: @0;
-        _stepperValueRemovalIntervalHours = @([components hour]) ?: @0;
+        [self setStepperValueRemovalIntervalDays:@([components day]) ?: @0];
+        [self setStepperValueRemovalIntervalHours:@([components hour]) ?: @0];
     }
     
     // ---------------------------------------------------------------------
@@ -1517,7 +1554,20 @@
 - (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL enabled = [manifestDict[@"Enabled"] boolValue];
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    
+    BOOL requiredHost;
+    if ( manifestDict[@"RequiredHost"] != nil ) {
+        requiredHost = [manifestDict[@"RequiredHost"] boolValue];
+    } else {
+        requiredHost = [manifestDict[@"Required"] boolValue];
+    }
+    
+    BOOL requiredPort;
+    if ( manifestDict[@"RequiredPort"] != nil ) {
+        requiredPort = [manifestDict[@"RequiredPort"] boolValue];
+    } else {
+        requiredPort = [manifestDict[@"Required"] boolValue];
+    }
     
     // ---------------------------------------------------------------------
     //  Title
@@ -1538,8 +1588,6 @@
     //  Value Host
     // ---------------------------------------------------------------------
     NSString *valueHost = settingDict[@"ValueHost"] ?: @"";
-    //NSLog(@"settingsDict=%@", settingDict);
-    //NSLog(@"valueHost=%@", valueHost);
     if ( [valueHost length] == 0 ) {
         if ( [manifestDict[@"DefaultValueHost"] length] != 0 ) {
             valueHost = manifestDict[@"DefaultValueHost"] ?: @"";
@@ -1554,7 +1602,7 @@
     // ---------------------------------------------------------------------
     if ( [manifestDict[@"PlaceholderValueHost"] length] != 0 ) {
         [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValueHost"] ?: @""];
-    } else if ( required ) {
+    } else if ( requiredHost ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
     } else {
         [[cellView settingTextFieldHost] setPlaceholderString:@""];
@@ -1577,11 +1625,11 @@
     //  Placeholder Value
     // ---------------------------------------------------------------------
     if ( [manifestDict[@"PlaceholderValuePort"] length] != 0 ) {
-        [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValuePort"] ?: @""];
-    } else if ( required ) {
-        [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+        [[cellView settingTextFieldPort] setPlaceholderString:manifestDict[@"PlaceholderValuePort"] ?: @""];
+    } else if ( requiredPort ) {
+        [[cellView settingTextFieldPort] setPlaceholderString:@"Req"];
     } else {
-        [[cellView settingTextFieldHost] setPlaceholderString:@""];
+        [[cellView settingTextFieldPort] setPlaceholderString:@""];
     }
     
     return cellView;

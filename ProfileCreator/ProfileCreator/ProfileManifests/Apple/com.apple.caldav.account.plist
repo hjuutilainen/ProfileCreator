@@ -17,82 +17,136 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>D91E7B0F-2EA0-46C6-B04C-30E443B967A4</string>
 			<key>Title</key>
 			<string>Account Description</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKey</key>
+			<string>CalDAVAccountDescription</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The description of the account</string>
 		</dict>
 		<dict>
-			<key>Required</key>
-			<true/>
+			<key>Identifier</key>
+			<string>D5551825-A8FB-455B-8C16-EFA22E7E728E</string>
 			<key>Title</key>
 			<string>Account Hostname and Port</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKeyHost</key>
+			<string>CalDAVHostName</string>
+			<key>PayloadParentKeyHost</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueTypeHost</key>
 			<string>String</string>
+			<key>PayloadKeyPort</key>
+			<string>CalDAVPort</string>
+			<key>PayloadParentKeyPort</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>The CalDAV hostname or IP address and port number</string>
 			<key>CellType</key>
 			<string>TextFieldHostPort</string>
+			<key>ToolTipDescription</key>
+			<string>The server address and port on which to connect to the server</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>6901F6A5-955D-4339-B225-CD1F05634FDD</string>
 			<key>Title</key>
 			<string>Principal URL</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKey</key>
+			<string>CalDAVPrincipalURL</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The Principal URL for the CalDAV account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The base URL to the user’s calendar. In OS X this URL is required if the user doesn’t provide a password, because auto-discovery of the service will fail and the account won’t be created</string>
 		</dict>
 		<dict>
-			<key>Required</key>
-			<true/>
+			<key>Identifier</key>
+			<string>CC84A191-01D5-4E45-8419-84FCCD456C6D</string>
 			<key>Title</key>
 			<string>Account Username</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>Required</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKey</key>
+			<string>CalDAVUsername</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The CalDAV username</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The user&apos;s login name</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>2D557087-9D64-4BAE-B010-F53A20CC939D</string>
 			<key>Title</key>
 			<string>Account Password</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKey</key>
+			<string>CalDAVPassword</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The CalDAV password</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The user&apos;s password</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>BBC4CA69-6A61-42FD-88EF-18867C97C18B</string>
 			<key>Title</key>
 			<string>Use SSL</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadKey</key>
+			<string>CalDAVUseSSL</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.caldav.account</string>
+			<key>PayloadValueType</key>
 			<string>Boolean</string>
-			<key>Description</key>
-			<string>Enable Secure Socket Layer communication with CalDAV server</string>
 			<key>DefaultValue</key>
 			<true/>
+			<key>Description</key>
+			<string>Enable Secure Socket Layer communication with CalDAV server</string>
 			<key>CellType</key>
 			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>Whether or not to use SSL</string>
 		</dict>
 	</array>
 </dict>

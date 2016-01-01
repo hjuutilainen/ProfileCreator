@@ -383,8 +383,13 @@
             if ( [cellType isEqualToString:@"Padding"] ) {
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else {
+                
+                NSString *identifier = manifestDict[@"Identifier"];
+                NSDictionary *cellSettingsDict = _tableViewSettingsCurrentSettings[identifier];
+                
                 CellViewSettingsEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsEnabled" owner:self];
-                return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict settingDict:manifestDict row:row sender:self];
+                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
             }
         }
     } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenu"] ) {
@@ -415,15 +420,36 @@
 - (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
     if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
         
+        // ---------------------------------------------------------------------
+        //  Verify the settings array isn't empty, if so stop here
+        // ---------------------------------------------------------------------
         if ( [_tableViewSettingsItemsEnabled count] <= 0 ) {
             return;
         }
         
-        NSDictionary *profileDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
-        if ( [profileDict[@"Enabled"] boolValue] ) {
+        // ---------------------------------------------------------------------
+        //  Get current cell's manifest dict identifier
+        // ---------------------------------------------------------------------
+        NSDictionary *cellDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        NSString *cellType = cellDict[@"CellType"];
+        if ( ! [cellType isEqualToString:@"Padding"] ) {
+            NSString *identifier = cellDict[@"Identifier"];
+            if ( [identifier length] == 0 ) {
+                NSLog(@"No Identifier for cell dict: %@", cellDict);
+                return;
+            }
+            
+            // ---------------------------------------------------------------------
+            //  It the cell is disabled, change cell background to grey
+            // ---------------------------------------------------------------------
+            if ( _tableViewSettingsCurrentSettings[identifier][@"Enabled"] != nil ) {
+                if ( ! [_tableViewSettingsCurrentSettings[identifier][@"Enabled"] boolValue] ) {
+                    [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
+                    return;
+                }
+            }
+            
             [rowView setBackgroundColor:[NSColor clearColor]];
-        } else {
-            [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
         }
     }
 } // tableView:didAddRowView:forRow
@@ -604,7 +630,7 @@
                ) {
         if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:row makeIfNecessary:NO] settingEnabled] ) {
             settingsDict[@"Enabled"] = @(state);
-            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+            _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
             [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
             [_tableViewSettings endUpdates];
