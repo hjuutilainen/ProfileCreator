@@ -1041,19 +1041,34 @@
         NSArray *valueKeyArray = [valueKeys[valueString] mutableCopy] ?: @[];
         if ( ! [parentKeyArray ?: @[] isEqualToArray:valueKeyArray] ) {
             for ( NSDictionary *valueDict in valueKeyArray ) {
-                if ( [valueDict count] != 0 ) {
-                    row++;
-                    NSMutableDictionary *mutableValueDict = [valueDict mutableCopy];
-                    
-                    // ---------------------------------------------------------------------
-                    //  Add sub key to table view below setting
-                    // ---------------------------------------------------------------------
-                    mutableValueDict[@"ParentKey"] = valueString;
-                    //NSLog(@"[DEBUG] Adding row: %ld", row);
-                    //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
-                    [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
-                    updatedTableView = YES;
+                if ( [valueDict count] == 0 ) {
+                    continue;
                 }
+                
+                NSMutableDictionary *mutableValueDict;
+                if ( [valueDict[@"SharedKey"] length] != 0 ) {
+                    NSString *sharedKey = valueDict[@"SharedKey"];
+                    NSLog(@"sharedKey=%@", sharedKey);
+                    NSDictionary *valueKeysShared = cellDict[@"ValueKeysShared"];
+                    if ( [valueKeysShared count] != 0 ) {
+                        mutableValueDict = valueKeysShared[sharedKey];
+                    } else {
+                        NSLog(@"Shared Key is defined, but no ValueKeysShared dict was found!");
+                        continue;
+                    }
+                } else {
+                    mutableValueDict = [valueDict mutableCopy];
+                }
+                
+                row++;
+                // ---------------------------------------------------------------------
+                //  Add sub key to table view below setting
+                // ---------------------------------------------------------------------
+                mutableValueDict[@"ParentKey"] = valueString;
+                //NSLog(@"[DEBUG] Adding row: %ld", row);
+                //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
+                [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+                updatedTableView = YES;
             }
         }
     }

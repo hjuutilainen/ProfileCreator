@@ -106,7 +106,12 @@
 			<key>ValueKeys</key>
 			<dict>
 				<key>Always</key>
-				<false/>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<false/>
+					</dict>
+				</array>
 				<key>With Authorization</key>
 				<array>
 					<dict>
@@ -129,7 +134,12 @@
 					</dict>
 				</array>
 				<key>Never</key>
-				<true/>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<true/>
+					</dict>
+				</array>
 			</dict>
 		</dict>
 		<dict>

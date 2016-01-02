@@ -17,28 +17,42 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>19E60ED2-4867-4B9B-BA87-7EC24DF04304</string>
 			<key>Title</key>
 			<string>Account Description</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadKey</key>
+			<string>EmailAccountDescription</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account (e.g. &quot;Company Mail Account&quot;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>A user-visible description of the email account, shown in the Mail and Settings applications</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>C24B76FB-F10D-42C7-9EBA-151B638DB85B</string>
 			<key>Title</key>
 			<string>Account Type</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadKey</key>
+			<string>EmailAccountType</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
-			<key>Description</key>
-			<string>The protocol for accessing the account</string>
 			<key>DefaultValue</key>
 			<string>IMAP</string>
+			<key>Description</key>
+			<string>The protocol for accessing the account</string>
 			<key>CellType</key>
 			<string>PopUpButton</string>
 			<key>AvailableValues</key>
@@ -48,160 +62,85 @@
 			</array>
 			<key>ValueKeys</key>
 			<dict>
+				<key>POP</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<string>EmailTypePOP</string>
+					</dict>
+				</array>
 				<key>IMAP</key>
 				<array>
 					<dict>
-						<key>Enabled</key>
-						<true/>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadValue</key>
+						<string>EmailTypeIMAP</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>C85C6D52-CDB8-4A02-AC72-FD6070E636A4</string>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>IncomingMailServerIMAPPathPrefix</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
 						<string>Path Prefix</string>
 						<key>CellType</key>
 						<string>TextFieldNoTitle</string>
+						<key>ToolTipDescription</key>
+						<string>CHANGEME</string>
 					</dict>
 				</array>
 			</dict>
+			<key>ToolTipDescription</key>
+			<string></string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>F2FD0304-7271-4DD5-B692-49BF1FAF0665</string>
 			<key>Required</key>
 			<true/>
 			<key>Title</key>
 			<string>User Display Name</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadKey</key>
+			<string>EmailAccountName</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the user (e.g. &quot;John Appleseed&quot;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The full user name for the account. This is the user name in sent messages, etc</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>84E7E56D-DE77-409A-BC7A-C90FFCC61389</string>
 			<key>Required</key>
 			<true/>
 			<key>Title</key>
 			<string>Email Address</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadKey</key>
+			<string>EmailAddress</string>
+			<key>PayloadParentKey</key>
+			<string>com.apple.mail.managed</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The address of the account (e.g. &quot;john@example.com&quot;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Allow user to move messages from this account</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>Boolean</string>
-			<key>Description</key>
-			<string>Messages can be moved out of this account into another</string>
-			<key>CellType</key>
-			<string>Checkbox</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Allow recent addresses to be synced</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>Boolean</string>
-			<key>Description</key>
-			<string>Include this account in recent address syncing</string>
-			<key>CellType</key>
-			<string>Checkbox</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Use Only in Mail</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>Boolean</string>
-			<key>Description</key>
-			<string>Send outgoing mail from this account only from Mail app</string>
-			<key>CellType</key>
-			<string>Checkbox</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Enable S/MIME</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>Boolean</string>
-			<key>Description</key>
-			<string>Support S/MIME for this account</string>
-			<key>DefaultValue</key>
-			<false/>
-			<key>CellType</key>
-			<string>Checkbox</string>
-			<key>ValueKeys</key>
-			<dict>
-				<key>True</key>
-				<array>
-					<dict>
-						<key>Enabled</key>
-						<true/>
-						<key>Title</key>
-						<string>Signing Certificate</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string>Data</string>
-						<key>Description</key>
-						<string>Certificate used to sign messages sent from this account</string>
-						<key>DefaultValue</key>
-						<string>No applicable Certificate payload is configured</string>
-						<key>CellType</key>
-						<string>PopUpButton</string>
-						<key>AvailableValues</key>
-						<array>
-							<string>No applicable Certificate payload is configured</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Enabled</key>
-						<true/>
-						<key>Title</key>
-						<string>Encryption Certificate</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string>Data</string>
-						<key>Description</key>
-						<string>Certificate used to decrypt messages sent to this account</string>
-						<key>DefaultValue</key>
-						<string>No applicable Certificate payload is configured</string>
-						<key>CellType</key>
-						<string>PopUpButton</string>
-						<key>AvailableValues</key>
-						<array>
-							<string>No applicable Certificate payload is configured</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Enabled</key>
-						<false/>
-						<key>Title</key>
-						<string>Enable per-message encryption switch</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string>Boolean</string>
-						<key>Description</key>
-						<string>Allow the user to choose whether to encrypt each message</string>
-						<key>CellType</key>
-						<string>Checkbox</string>
-					</dict>
-				</array>
-			</dict>
+			<key>ToolTipDescription</key>
+			<string>Designates the full email address for the account. If not present in the payload, the device prompts for this string during profile installation</string>
 		</dict>
 		<dict>
 			<key>CellType</key>
@@ -216,45 +155,67 @@
 				<key>Incoming Mail</key>
 				<array>
 					<dict>
+						<key>Identifier</key>
+						<string>2004D35B-B58C-456F-8366-1585AFBE2873</string>
 						<key>Required</key>
-						<true/>
-						<key>Enabled</key>
 						<true/>
 						<key>Title</key>
 						<string>Mail Server and Port</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKeyHost</key>
+						<string>IncomingMailServerHostName</string>
+						<key>PayloadParentKeyHost</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueTypeHost</key>
 						<string>String</string>
+						<key>PayloadKeyPort</key>
+						<string>IncomingMailServerPortNumber</string>
+						<key>PayloadParentKeyPort</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueTypePort</key>
+						<string>Integer</string>
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for incoming mail</string>
 						<key>CellType</key>
 						<string>TextFieldHostPort</string>
+						<key>ToolTipDescription</key>
+						<string>Designates the incoming mail server host name (or IP address) and port number. If no port number is specified, the default port for a given protocol is used.</string>
 					</dict>
 					<dict>
+						<key>Identifier</key>
+						<string>5DE7F895-8440-4FEA-B3CD-3A7A319F258F</string>
 						<key>Required</key>
-						<true/>
-						<key>Enabled</key>
 						<true/>
 						<key>Title</key>
 						<string>User Name</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>IncomingMailServerUsername</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
 						<string>The username used to connect to the server for incoming mail</string>
 						<key>CellType</key>
 						<string>TextField</string>
+						<key>ToolTipDescription</key>
+						<string>Designates the user name for the email account, usually the same as the email address up to the @ character. If not present in the payload, and the account is set up to require authentication for incoming email, the device will prompt for this string during profile installation.</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
-						<true/>
+						<key>Identifier</key>
+						<string>966A8A2F-44B0-4CA5-B446-92814707339B</string>
 						<key>Title</key>
 						<string>Authentication Type</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>IncomingMailServerAuthentication</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
 						<string>The authentication method for the incoming mail server</string>
@@ -272,75 +233,84 @@
 						</array>
 						<key>ValueKeys</key>
 						<dict>
+							<key>None</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string>EmailAuthNone</string>
+								</dict>
+							</array>
 							<key>Password</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthPassword</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the incoming mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>MD5 Challenge-Response</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthCRAMMD5</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the incoming mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>NTLM</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthNTLM</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the incoming mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>HTTP MD5 Digest</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthHTTPMD5</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the incoming mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 						</dict>
+						<key>ValueKeysShared</key>
+						<dict>
+							<key>Password</key>
+							<dict>
+								<key>Identifier</key>
+								<string>4C899047-9418-4B96-ACBE-4A562D27BD40</string>
+								<key>Title</key>
+								<string>Password</string>
+								<key>PayloadType</key>
+								<string>com.apple.mail.managed</string>
+								<key>PayloadKey</key>
+								<string>IncomingPassword</string>
+								<key>PayloadParentKey</key>
+								<string>com.apple.mail.managed</string>
+								<key>PayloadValueType</key>
+								<string>String</string>
+								<key>Description</key>
+								<string>The password for the incoming mail server</string>
+								<key>CellType</key>
+								<string>TextField</string>
+								<key>ToolTipDescription</key>
+								<string>Password for the Incoming Mail Server</string>
+							</dict>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>Designates the authentication scheme for incoming mail</string>
 					</dict>
 					<dict>
 						<key>Enabled</key>
@@ -360,52 +330,74 @@
 				<key>Outgoing Mail</key>
 				<array>
 					<dict>
+						<key>Identifier</key>
+						<string>481BC566-3218-4275-9EDB-8BA09FFA972E</string>
 						<key>Required</key>
-						<true/>
-						<key>Enabled</key>
 						<true/>
 						<key>Title</key>
 						<string>Mail Server and Port</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKeyHost</key>
+						<string>OutgoingMailServerHostName</string>
+						<key>PayloadParentKeyHost</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueTypeHost</key>
 						<string>String</string>
+						<key>PayloadKeyPort</key>
+						<string>OutgoingMailServerPortNumber</string>
+						<key>PayloadParentKeyPort</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueTypePort</key>
+						<string>Integer</string>
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for outgoing mail</string>
 						<key>CellType</key>
 						<string>TextFieldHostPort</string>
+						<key>ToolTipDescription</key>
+						<string>Designates the outgoing mail server host name (or IP address) and port number. If no port number is specified, the default port for a given protocol is used.</string>
 					</dict>
 					<dict>
+						<key>Identifier</key>
+						<string>D7857F19-D1EB-40B6-9E9C-86104EF2034D</string>
 						<key>Required</key>
-						<true/>
-						<key>Enabled</key>
 						<true/>
 						<key>Title</key>
 						<string>User Name</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>OutgoingMailServerUsername</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
 						<string>The username used to connect to the server for outgoing mail</string>
 						<key>CellType</key>
 						<string>TextField</string>
+						<key>ToolTipDescription</key>
+						<string>Designates the user name for the email account, usually the same as the email address up to the @ character. If not present in the payload, and the account is set up to require authentication for outgoing email, the device prompts for this string during profile installation.</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
-						<true/>
+						<key>Identifier</key>
+						<string>A6018E0E-2E23-41C1-9EA0-697E5765EE6F</string>
 						<key>Title</key>
 						<string>Authentication Type</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>OutgoingMailServerAuthentication</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
 						<string>String</string>
+						<key>DefaultValue</key>
+						<string>Password</string>
 						<key>Description</key>
 						<string>The authentication method for the outgoing mail server</string>
 						<key>CellType</key>
 						<string>PopUpButton</string>
-						<key>DefaultValue</key>
-						<string>Password</string>
 						<key>AvailableValues</key>
 						<array>
 							<string>None</string>
@@ -416,101 +408,126 @@
 						</array>
 						<key>ValueKeys</key>
 						<dict>
+							<key>None</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string>EmailAuthNone</string>
+								</dict>
+							</array>
 							<key>Password</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthPassword</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the outgoing mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>MD5 Challenge-Response</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthCRAMMD5</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the outgoing mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>NTLM</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthNTLM</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the outgoing mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 							<key>HTTP MD5 Digest</key>
 							<array>
 								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Title</key>
+									<key>PayloadValue</key>
+									<string>EmailAuthHTTPMD5</string>
+								</dict>
+								<dict>
+									<key>SharedKey</key>
 									<string>Password</string>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string>String</string>
-									<key>Description</key>
-									<string>The password for the outgoing mail server</string>
-									<key>CellType</key>
-									<string>TextField</string>
 								</dict>
 							</array>
 						</dict>
+						<key>ValueKeysShared</key>
+						<dict>
+							<key>Password</key>
+							<dict>
+								<key>Identifier</key>
+								<string>4C899047-9418-4B96-ACBE-4A562D27BD40</string>
+								<key>Title</key>
+								<string>Password</string>
+								<key>PayloadType</key>
+								<string>com.apple.mail.managed</string>
+								<key>PayloadKey</key>
+								<string>OutgoingPassword</string>
+								<key>PayloadParentKey</key>
+								<string>com.apple.mail.managed</string>
+								<key>PayloadValueType</key>
+								<string>String</string>
+								<key>Description</key>
+								<string>The password for the outgoing mail server</string>
+								<key>CellType</key>
+								<string>TextField</string>
+								<key>ToolTipDescription</key>
+								<string>Password for the Incoming Mail Server</string>
+							</dict>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>Designates the authentication scheme for outgoing mail</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
-						<true/>
+						<key>Identifier</key>
+						<string>746FE362-60C6-4C30-B7F0-6FC7078D909F</string>
 						<key>Title</key>
 						<string>Outgoing password same as incoming</string>
-						<key>Key</key>
-						<string></string>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>OutgoingPasswordSameAsIncomingPassword</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
+						<string>Boolean</string>
 						<key>Description</key>
 						<string>SMTP authentication uses the same password as POP/IMAP</string>
 						<key>CellType</key>
 						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>If set, the user will be prompted for the password only once and it will be used for both outgoing and incoming mail.</string>
 					</dict>
 					<dict>
+						<key>Identifier</key>
+						<string>C9F0BE6D-2044-43FD-AA4C-F8BE92BBA547</string>
 						<key>Enabled</key>
 						<true/>
 						<key>Title</key>
 						<string>Use SSL</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>OutgoingMailServerUseSSL</string>
+						<key>PayloadParentKey</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadValueType</key>
+						<string>Boolean</string>
 						<key>Description</key>
 						<string>Send outgoing mail through secure socket layer</string>
 						<key>CellType</key>
 						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>Designates whether the outgoing mail server uses SSL for authentication</string>
 					</dict>
 				</array>
 			</dict>
