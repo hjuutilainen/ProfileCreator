@@ -27,8 +27,6 @@
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
 			<string>PayloadDisplayName</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.profile</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -47,8 +45,6 @@
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
 			<string>PayloadDescription</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.profile</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -67,8 +63,6 @@
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
 			<string>PayloadOrganization</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.profile</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -87,8 +81,6 @@
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
 			<string>PayloadRemovalDisallowed</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.profile</string>
 			<key>PayloadValueType</key>
 			<string>Boolean</string>
 			<key>DefaultValue</key>
@@ -121,8 +113,6 @@
 						<string>com.apple.profileRemovalPassword</string>
 						<key>PayloadKey</key>
 						<string>RemovalPassword</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.profileRemovalPassword</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
@@ -170,11 +160,9 @@
 						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.profile</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.profile</string>
-						<key>Key</key>
+						<key>PayloadKey</key>
 						<string>RemovalDate</string>
-						<key>Type</key>
+						<key>PayloadValueType</key>
 						<string>Date</string>
 						<key>Description</key>
 						<string>Removal date</string>
@@ -193,11 +181,9 @@
 						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.profile</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.profile</string>
-						<key>Key</key>
+						<key>PayloadKey</key>
 						<string>DurationUntilRemoval</string>
-						<key>Type</key>
+						<key>PayloadValueType</key>
 						<string>Float</string>
 						<key>CellType</key>
 						<string>TextFieldDaysHoursNoTitle</string>

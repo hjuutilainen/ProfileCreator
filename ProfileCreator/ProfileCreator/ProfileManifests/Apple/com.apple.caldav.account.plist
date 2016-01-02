@@ -23,8 +23,6 @@
 			<string>Account Description</string>
 			<key>PayloadType</key>
 			<string>com.apple.caldav.account</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVAccountDescription</string>
 			<key>PayloadValueType</key>
@@ -47,14 +45,10 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKeyHost</key>
 			<string>CalDAVHostName</string>
-			<key>PayloadParentKeyHost</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueTypeHost</key>
 			<string>String</string>
 			<key>PayloadKeyPort</key>
 			<string>CalDAVPort</string>
-			<key>PayloadParentKeyPort</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueTypePort</key>
 			<string>Integer</string>
 			<key>Description</key>
@@ -73,8 +67,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVPrincipalURL</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -95,8 +87,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVUsername</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -115,8 +105,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVPassword</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -135,8 +123,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVUseSSL</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.caldav.account</string>
 			<key>PayloadValueType</key>
 			<string>Boolean</string>
 			<key>DefaultValue</key>

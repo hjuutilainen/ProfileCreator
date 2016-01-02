@@ -25,8 +25,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVAccountDescription</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -47,14 +45,10 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKeyHost</key>
 			<string>CardDAVHostName</string>
-			<key>PayloadParentKeyHost</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueTypeHost</key>
 			<string>String</string>
 			<key>PayloadKeyPort</key>
 			<string>CardDAVPort</string>
-			<key>PayloadParentKeyPort</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueTypePort</key>
 			<string>Integer</string>
 			<key>Description</key>
@@ -73,8 +67,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVPrincipalURL</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -95,8 +87,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVUsername</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -115,8 +105,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVPassword</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -135,8 +123,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVUseSSL</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.carddav.account</string>
 			<key>PayloadValueType</key>
 			<string>Boolean</string>
 			<key>DefaultValue</key>

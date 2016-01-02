@@ -435,7 +435,7 @@
         if ( ! [cellType isEqualToString:@"Padding"] ) {
             NSString *identifier = cellDict[@"Identifier"];
             if ( [identifier length] == 0 ) {
-                NSLog(@"No Identifier for cell dict: %@", cellDict);
+                //NSLog(@"No Identifier for cell dict: %@", cellDict);
                 return;
             }
             

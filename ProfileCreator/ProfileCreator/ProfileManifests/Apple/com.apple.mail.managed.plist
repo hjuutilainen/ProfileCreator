@@ -25,8 +25,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAccountDescription</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.mail.managed</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -45,8 +43,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAccountType</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.mail.managed</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>DefaultValue</key>
@@ -82,8 +78,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>IncomingMailServerIMAPPathPrefix</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
@@ -109,8 +103,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAccountName</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.mail.managed</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -131,8 +123,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAddress</string>
-			<key>PayloadParentKey</key>
-			<string>com.apple.mail.managed</string>
 			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
@@ -165,14 +155,10 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKeyHost</key>
 						<string>IncomingMailServerHostName</string>
-						<key>PayloadParentKeyHost</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueTypeHost</key>
 						<string>String</string>
 						<key>PayloadKeyPort</key>
 						<string>IncomingMailServerPortNumber</string>
-						<key>PayloadParentKeyPort</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueTypePort</key>
 						<string>Integer</string>
 						<key>Description</key>
@@ -193,8 +179,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>IncomingMailServerUsername</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
@@ -213,8 +197,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>IncomingMailServerAuthentication</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
@@ -297,8 +279,6 @@
 								<string>com.apple.mail.managed</string>
 								<key>PayloadKey</key>
 								<string>IncomingPassword</string>
-								<key>PayloadParentKey</key>
-								<string>com.apple.mail.managed</string>
 								<key>PayloadValueType</key>
 								<string>String</string>
 								<key>Description</key>
@@ -340,14 +320,10 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKeyHost</key>
 						<string>OutgoingMailServerHostName</string>
-						<key>PayloadParentKeyHost</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueTypeHost</key>
 						<string>String</string>
 						<key>PayloadKeyPort</key>
 						<string>OutgoingMailServerPortNumber</string>
-						<key>PayloadParentKeyPort</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueTypePort</key>
 						<string>Integer</string>
 						<key>Description</key>
@@ -368,8 +344,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingMailServerUsername</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>Description</key>
@@ -388,8 +362,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingMailServerAuthentication</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>String</string>
 						<key>DefaultValue</key>
@@ -465,15 +437,13 @@
 							<key>Password</key>
 							<dict>
 								<key>Identifier</key>
-								<string>4C899047-9418-4B96-ACBE-4A562D27BD40</string>
+								<string>025E96F9-7E61-4021-BE14-D7CE04C69621</string>
 								<key>Title</key>
 								<string>Password</string>
 								<key>PayloadType</key>
 								<string>com.apple.mail.managed</string>
 								<key>PayloadKey</key>
 								<string>OutgoingPassword</string>
-								<key>PayloadParentKey</key>
-								<string>com.apple.mail.managed</string>
 								<key>PayloadValueType</key>
 								<string>String</string>
 								<key>Description</key>
@@ -496,8 +466,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingPasswordSameAsIncomingPassword</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>Boolean</string>
 						<key>Description</key>
@@ -518,8 +486,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingMailServerUseSSL</string>
-						<key>PayloadParentKey</key>
-						<string>com.apple.mail.managed</string>
 						<key>PayloadValueType</key>
 						<string>Boolean</string>
 						<key>Description</key>

@@ -17,89 +17,135 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>9D5ACD31-CD0B-42C9-9A16-4F7A37CA5656</string>
 			<key>Required</key>
 			<true/>
 			<key>Title</key>
 			<string>Account Name</string>
-			<key>Key</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
 			<string></string>
-			<key>Type</key>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>Name for the Exchange ActiveSync account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>CHANGEME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>6B335EE9-80D6-40E3-BE2F-398A4FAA6C09</string>
 			<key>Title</key>
 			<string>User</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>Required</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>UserName</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The user of the account with optional domain (e.g. &quot;user&quot; or &quot;domain\user&quot;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>This string specifies the user name for this Exchange account. If missing, the devices prompts for it during profile installation</string>
 		</dict>
 		<dict>
-			<key>Required</key>
-			<true/>
+			<key>Identifier</key>
+			<string>979120AA-21F5-48B4-B303-6CF9E72060DF</string>
 			<key>Title</key>
 			<string>Email Address</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>Required</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>EmailAddress</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The address of the account (e.g. &quot;john@example.com&quot;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the full email address for the account. If not present in the payload, the device prompts for this string during profile installation</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>161341F5-60FA-49D4-AA02-3071E05F7D23</string>
 			<key>Title</key>
 			<string>Password</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>Password</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The password for the account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The password of the account</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>CD83F214-7982-460B-919F-9FD7F282AA3F</string>
 			<key>Required</key>
 			<true/>
 			<key>Title</key>
 			<string>Internal Exchange Host</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKeyHost</key>
+			<string>Host</string>
+			<key>PayloadValueTypeHost</key>
 			<string>String</string>
+			<key>PayloadKeyPort</key>
+			<string>Port</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Microsoft Exchange Server</string>
 			<key>CellType</key>
 			<string>TextFieldHostPort</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the Exchange server host name (or IP address) and port</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>E53A1612-7608-4C1B-B0A1-9143540EC03E</string>
 			<key>Title</key>
 			<string>Internal Server Path</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>Path</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>Server path for the internal exchange host</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>CHANGEME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>25A31495-6B17-4A76-AF2F-92BAC5356C81</string>
 			<key>Title</key>
 			<string>Use SSL for Internal Exchange Host</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>SSL</string>
+			<key>PayloadValueType</key>
 			<string>Boolean</string>
 			<key>Description</key>
 			<string>Send all communication through secure socket layer</string>
@@ -107,44 +153,66 @@
 			<true/>
 			<key>CellType</key>
 			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies whether the Exchange server uses SSL for authentication.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>472BE6ED-AE6C-47D7-9CEE-5B7A448F46D2</string>
 			<key>Title</key>
 			<string>External Exchange Host</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKeyHost</key>
+			<string>ExternalHost</string>
+			<key>PayloadValueTypeHost</key>
 			<string>String</string>
+			<key>PayloadKeyPort</key>
+			<string>ExternalPort</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Microsoft Exchange Server</string>
 			<key>CellType</key>
 			<string>TextFieldHostPort</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the Exchange server host name (or IP address) and port</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>538EF6C2-721E-49A6-9118-85FB71821BB9</string>
 			<key>Title</key>
 			<string>External Server Path</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>ExternalPath</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>Server path for the external exchange host</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>CHANGEME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>F5058E50-3E0F-4AE4-B544-654A75E302A4</string>
 			<key>Title</key>
 			<string>Use SSL for External Exchange Host</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ews.account</string>
+			<key>PayloadKey</key>
+			<string>ExternalSSL</string>
+			<key>PayloadValueType</key>
 			<string>Boolean</string>
+			<key>DefaultValue</key>
+			<true/>
 			<key>Description</key>
 			<string>Send all communication through secure socket layer</string>
 			<key>CellType</key>
 			<string>Checkbox</string>
-			<key>DefaultValue</key>
-			<true/>
 		</dict>
 	</array>
 </dict>
