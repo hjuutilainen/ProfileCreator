@@ -15,74 +15,110 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>5952BDD7-BA6F-4A96-BCF6-CBF9D84B12CF</string>
 			<key>Title</key>
 			<string>Account Description</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPAccountDescription</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account (e.g. &apos;Company LDAP Account&apos;)</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>Description of the account</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>8B0C4805-A434-4686-9399-2322974374A0</string>
 			<key>Title</key>
 			<string>Account Username</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPAccountUserName</string>
+			<key>PayloadValueType</key>
 			<string>String</string>
 			<key>Description</key>
 			<string>The username for this LDAP account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The username</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>ACBB47C4-9C36-4205-8836-9F114EFE3B9F</string>
 			<key>Title</key>
 			<string>Account Password</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPAccountPassword</string>
+			<key>PayloadValueType</key>
+			<string>String</string>
 			<key>Description</key>
 			<string>The password for this LDAP account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The password</string>
 		</dict>
 		<dict>
-			<key>Required</key>
-			<true/>
+			<key>Identifier</key>
+			<string>7AB49012-EFF9-4507-80DB-3C626B71DE30</string>
 			<key>Title</key>
 			<string>Account Hostname</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Required</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPAccountHostName</string>
+			<key>PayloadValueType</key>
+			<string>String</string>
 			<key>Description</key>
 			<string>The LDAP hostname or IP address</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The host</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>212A1B93-383C-4586-8BFF-931D82DE06F5</string>
 			<key>Title</key>
 			<string>Use SSL</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPAccountUseSSL</string>
+			<key>PayloadValueType</key>
 			<string>Boolean</string>
 			<key>Description</key>
 			<string>Enable secure socket layer for this connection</string>
 			<key>CellType</key>
 			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>Whether or not to use SSL</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>EA65D9EF-A460-4E0D-8D8B-8EBCF571D1A4</string>
 			<key>Title</key>
 			<string>Search Settings</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadType</key>
+			<string>com.apple.ldap</string>
+			<key>PayloadKey</key>
+			<string>LDAPSearchSettings</string>
+			<key>PayloadValueType</key>
+			<string>Array</string>
+			<key>ArrayContentType</key>
+			<string>Dict</string>
 			<key>Description</key>
 			<string>Search settings for this LDAP server</string>
 			<key>CellType</key>
@@ -92,6 +128,14 @@
 				<dict>
 					<key>Title</key>
 					<string>Description</string>
+					<key>PayloadType</key>
+					<string>com.apple.ldap</string>
+					<key>PayloadKey</key>
+					<string>LDAPSearchSettingDescription</string>
+					<key>PayloadParentKey</key>
+					<string>LDAPSearchSettings</string>
+					<key>PayloadValueType</key>
+					<string>String</string>
 					<key>CellType</key>
 					<string>TextField</string>
 					<key>DefaultValue</key>
@@ -100,26 +144,69 @@
 				<dict>
 					<key>Title</key>
 					<string>Scope</string>
-					<key>CellType</key>
-					<string>PopUpButton</string>
+					<key>PayloadType</key>
+					<string>com.apple.ldap</string>
+					<key>PayloadKey</key>
+					<string>LDAPSearchSettingScope</string>
+					<key>PayloadParentKey</key>
+					<string>LDAPSearchSettings</string>
+					<key>PayloadValueType</key>
+					<string>String</string>
 					<key>DefaultValue</key>
 					<string>Subtree</string>
+					<key>CellType</key>
+					<string>PopUpButton</string>
 					<key>AvailableValues</key>
 					<array>
 						<string>Base</string>
 						<string>One Level</string>
 						<string>Subtree</string>
 					</array>
+					<key>ValueKeys</key>
+					<dict>
+						<key>Base</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>LDAPSearchSettingScopeBase</string>
+							</dict>
+						</array>
+						<key>One Level</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>LDAPSearchSettingScopeOneLevel</string>
+							</dict>
+						</array>
+						<key>Subtree</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>LDAPSearchSettingScopeSubtree</string>
+							</dict>
+						</array>
+					</dict>
 				</dict>
 				<dict>
 					<key>Title</key>
 					<string>Search Base</string>
-					<key>CellType</key>
-					<string>TextField</string>
+					<key>PayloadType</key>
+					<string>com.apple.ldap</string>
+					<key>PayloadKey</key>
+					<string>LDAPSearchSettingSearchBase</string>
+					<key>PayloadParentKey</key>
+					<string>LDAPSearchSettings</string>
+					<key>PayloadValueType</key>
+					<string>String</string>
 					<key>DefaultValue</key>
 					<string>ou=MyDepartment, o=My Company</string>
+					<key>CellType</key>
+					<string>TextField</string>
 				</dict>
 			</array>
+			<key>ToolTipDescription</key>
+			<string>Top level container object. Can have many of these for one account. Should have at least one for the account to be useful.
+Each LDAPSearchSettings object represents a node in the LDAP tree to start searching from, and tells what scope to search in (the node, the node plus one level of children, or the node plus all levels of children)</string>
 		</dict>
 	</array>
 </dict>

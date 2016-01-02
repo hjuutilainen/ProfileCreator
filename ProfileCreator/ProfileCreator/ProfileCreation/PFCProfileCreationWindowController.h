@@ -22,9 +22,15 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 @property BOOL advancedSettings;
 
 // TableView Menu
-@property (weak) IBOutlet NSTableView *tableViewMenu;
+@property (weak) IBOutlet NSTableView *tableViewMenuEnabled;
+@property NSInteger tableViewMenuEnabledSelectedRow;
+
+@property (weak) IBOutlet NSTableView *tableViewMenuDisabled;
+@property NSInteger tableViewMenuDisabledSelectedRow;
+
 - (IBAction)tableViewMenu:(id)sender;
-@property NSInteger tableViewMenuSelectedRow;
+@property NSString *tableViewMenuSelectedTableView;
+
 @property NSMutableArray *tableViewMenuItemsEnabled;
 @property NSMutableArray *tableViewMenuItemsDisabled;
 @property BOOL columnMenuEnabledHidden;

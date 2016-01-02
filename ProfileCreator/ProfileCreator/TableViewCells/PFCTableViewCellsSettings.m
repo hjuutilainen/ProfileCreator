@@ -453,6 +453,38 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsTemplates
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTemplates
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] removeAllItems];
+    [[cellView settingPopUpButton] addItemsWithTitles:manifestDict[@"AvailableValues"] ?: @[]];
+    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: manifestDict[@"DefaultValue"]];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
+    [[cellView settingPopUpButton] setTarget:sender];
+    [[cellView settingPopUpButton] setTag:row];
+        
+    return cellView;
+} // populateCellViewPopUp:settingDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsPopUp
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -1310,7 +1342,7 @@
     NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
     NSArray *tableColumnsArray = manifestDict[@"TableViewColumns"] ?: @[];
     for ( NSDictionary *tableColumnDict in tableColumnsArray ) {
-        NSString *tableColumnTitle = manifestDict[@"Title"] ?: @"";
+        NSString *tableColumnTitle = tableColumnDict[@"Title"] ?: @"";
         NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnTitle];
         [tableColumn setTitle:tableColumnTitle];
         [[cellView settingTableView] addTableColumn:tableColumn];
@@ -1332,6 +1364,13 @@
     [[cellView settingTableView] sizeToFit];
     [[cellView settingTableView] reloadData];
     [[cellView settingTableView] endUpdates];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingTableView] setEnabled:enabled];
+    [[cellView settingButtonAdd] setEnabled:enabled];
+    [[cellView settingButtonRemove] setEnabled:enabled];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row

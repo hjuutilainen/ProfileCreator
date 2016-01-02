@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
-		5304B2501C1E07CB0085559C /* com.apple.vpn.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
 		5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */; };
 		532974ED1C22B21300191C5C /* PFCManifestCreationParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */; };
 		532B6C511C17289700297025 /* com.apple.general.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
@@ -32,7 +31,6 @@
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
-		5359E2D51C1CC65F00646980 /* com.apple.security.privacy.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		53662BDB1C2DECD200360101 /* TempSavedSettings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53662BDA1C2DECD200360101 /* TempSavedSettings.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
@@ -57,10 +55,8 @@
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
-		53C7339D1C1F394600119C71 /* com.apple.scep.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
-		53F1DDE91C20B85C003D3464 /* com.apple.passcode.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
 		53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
 		53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
@@ -68,11 +64,9 @@
 		53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00B1C1F567700E440CB /* MenuIconMessages.png */; };
 		53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00D1C1F568B00E440CB /* MenuIconFinder.png */; };
 		53FCF0101C1F569B00E440CB /* MenuIconAccessibility.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00F1C1F569B00E440CB /* MenuIconAccessibility.png */; };
-		53FCF0111C1F58D700E440CB /* com.apple.messages.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.plist */; };
 		53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0121C1F5D7F00E440CB /* MenuIconPrinting.png */; };
 		53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0141C1F5DA200E440CB /* MenuIconProxies.png */; };
 		53FCF0171C1F5DB500E440CB /* com.apple.proxies.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */; };
-		53FCF0181C1F5E5500E440CB /* com.apple.proxies.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -82,13 +76,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
-				53F1DDE91C20B85C003D3464 /* com.apple.passcode.plist in Copy Manifests */,
-				53FCF0181C1F5E5500E440CB /* com.apple.proxies.plist in Copy Manifests */,
-				53FCF0111C1F58D700E440CB /* com.apple.messages.plist in Copy Manifests */,
 				53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */,
-				53C7339D1C1F394600119C71 /* com.apple.scep.plist in Copy Manifests */,
-				5304B2501C1E07CB0085559C /* com.apple.vpn.plist in Copy Manifests */,
-				5359E2D51C1CC65F00646980 /* com.apple.security.privacy.plist in Copy Manifests */,
 				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,
 				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests */,
@@ -181,20 +169,20 @@
 			isa = PBXGroup;
 			children = (
 				532B6C501C17289700297025 /* com.apple.general.plist */,
+				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
 				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
-				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
 				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
 				532B6C661C17311200297025 /* com.apple.font.plist */,
 				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */,
-				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */,
-				5304B24D1C1E02C50085559C /* com.apple.vpn.plist */,
-				53C7339B1C1F37E300119C71 /* com.apple.scep.plist */,
 				53FCF0061C1F539300E440CB /* com.apple.ldap.plist */,
 				53FCF0091C1F561900E440CB /* com.apple.messages.plist */,
-				53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */,
 				53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */,
+				53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */,
+				53C7339B1C1F37E300119C71 /* com.apple.scep.plist */,
+				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */,
+				5304B24D1C1E02C50085559C /* com.apple.vpn.plist */,
 				53662BDA1C2DECD200360101 /* TempSavedSettings.plist */,
 			);
 			name = ProfileManifest;

@@ -88,6 +88,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsTemplates
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsTemplates : NSTableCellView
+@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsPopUp
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////

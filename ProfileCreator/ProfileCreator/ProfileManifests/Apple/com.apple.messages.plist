@@ -15,10 +15,14 @@
 	<key>PayloadKeys</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>E6D46519-3E86-4B0C-B062-EDB55258B1EF</string>
 			<key>Required</key>
 			<true/>
 			<key>Title</key>
 			<string>Account Description</string>
+			<key>PayloadType</key>
+			<string></string>
 			<key>Key</key>
 			<string></string>
 			<key>Type</key>
