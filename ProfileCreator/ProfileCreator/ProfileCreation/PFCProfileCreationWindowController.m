@@ -684,6 +684,7 @@
                 NSUInteger row = ( [_tableViewMenuItemsDisabled count] -1 );
                 NSLog(@"Selecting row: %lu", (unsigned long)row);
                 [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                [[self window] makeFirstResponder:_tableViewMenuDisabled];
                 [self setTableViewMenuDisabledSelectedRow:row];
                 [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
             }
@@ -731,6 +732,7 @@
                 NSUInteger row = ( [_tableViewMenuItemsEnabled count] -1 );
                 NSLog(@"Selecting row: %lu", (unsigned long)row);
                 [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                [[self window] makeFirstResponder:_tableViewMenuEnabled];
                 [self setTableViewMenuEnabledSelectedRow:row];
                 [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
             }
