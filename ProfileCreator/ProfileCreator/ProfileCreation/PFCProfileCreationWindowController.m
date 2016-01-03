@@ -629,7 +629,7 @@
     _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
 } // controlTextDidChange
 
-- (void)checkbox:(NSButton *)checkbox {
+- (void)checkboxMenuEnabled:(NSButton *)checkbox {
     
     // ---------------------------------------------------------------------
     //  Get checkbox's row in the table view
@@ -643,102 +643,89 @@
     
     if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]] ) {
         if ( ( row < [_tableViewMenuItemsEnabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuEnabled viewAtColumn:[_tableViewMenuEnabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
-            
             NSDictionary *cellDict = [_tableViewMenuItemsEnabled objectAtIndex:row];
-            
-            NSInteger selectedRow = [_tableViewMenuEnabled selectedRow];
-            
+            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
             [_tableViewMenuEnabled beginUpdates];
             [_tableViewMenuItemsEnabled removeObjectAtIndex:(NSUInteger)row];
             [_tableViewMenuEnabled reloadData];
             [_tableViewMenuEnabled endUpdates];
             
-            if ( 0 <= selectedRow && selectedRow != row ) {
-                if ( row < selectedRow ) {
-                    selectedRow--;
-                }
-                
+            if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
+                NSInteger selectedRow = ( row < tableViewMenuEnabledSelectedRow ) ? ( tableViewMenuEnabledSelectedRow - 1 ) : tableViewMenuEnabledSelectedRow;
                 [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [self setTableViewMenuEnabledSelectedRow:selectedRow];
             }
             
-            selectedRow = [_tableViewMenuDisabled selectedRow];
-            
+            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
             [_tableViewMenuDisabled beginUpdates];
             [_tableViewMenuItemsDisabled addObject:cellDict];
             [_tableViewMenuDisabled reloadData];
             [_tableViewMenuDisabled endUpdates];
             
-            if ( 0 <= selectedRow && selectedRow != row ) {
-                if ( row < selectedRow ) {
-                    selectedRow--;
-                }
-                
-                [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+            if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
+                [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuDisabledSelectedRow] byExtendingSelection:NO];
+                [self setTableViewMenuDisabledSelectedRow:tableViewMenuDisabledSelectedRow];
             }
             
-            NSLog(@"_tableViewMenuEnabledSelectedRow=%ld", (long)_tableViewMenuEnabledSelectedRow);
-            NSLog(@"row=%ld", (long)row);
-            if ( _tableViewMenuEnabledSelectedRow == row ) {
+            if ( tableViewMenuEnabledSelectedRow == row ) {
                 [_tableViewMenuEnabled deselectAll:self];
                 [self setTableViewMenuEnabledSelectedRow:-1];
                 NSUInteger row = ( [_tableViewMenuItemsDisabled count] -1 );
-                NSLog(@"Selecting row: %lu", (unsigned long)row);
                 [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
                 [[self window] makeFirstResponder:_tableViewMenuDisabled];
                 [self setTableViewMenuDisabledSelectedRow:row];
                 [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
             }
-            return;
         } else if ( ( row < [_tableViewMenuItemsDisabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuDisabled viewAtColumn:[_tableViewMenuDisabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
-            
             NSDictionary *cellDict = [_tableViewMenuItemsDisabled objectAtIndex:row];
-            
-            NSInteger selectedRow = [_tableViewMenuDisabled selectedRow];
-            
+            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
             [_tableViewMenuDisabled beginUpdates];
             [_tableViewMenuItemsDisabled removeObjectAtIndex:(NSUInteger)row];
             [_tableViewMenuDisabled reloadData];
             [_tableViewMenuDisabled endUpdates];
             
-            if ( 0 <= selectedRow && selectedRow != row ) {
-                if ( row < selectedRow ) {
-                    selectedRow--;
-                }
-                
+            if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
+                NSInteger selectedRow = ( row < tableViewMenuDisabledSelectedRow ) ? ( tableViewMenuDisabledSelectedRow - 1 ) : tableViewMenuDisabledSelectedRow;
                 [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [self setTableViewMenuDisabledSelectedRow:selectedRow];
             }
             
-            selectedRow = [_tableViewMenuEnabled selectedRow];
-            
+            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
             [_tableViewMenuEnabled beginUpdates];
             [_tableViewMenuItemsEnabled addObject:cellDict];
             [_tableViewMenuEnabled reloadData];
             [_tableViewMenuEnabled endUpdates];
             
-            if ( 0 <= selectedRow && selectedRow != row ) {
-                if ( row < selectedRow ) {
-                    selectedRow--;
-                }
-                
-                [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+            if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
+                [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuEnabledSelectedRow] byExtendingSelection:NO];
+                [self setTableViewMenuEnabledSelectedRow:tableViewMenuEnabledSelectedRow];
             }
             
-            NSLog(@"_tableViewMenuDisabledSelectedRow=%ld", (long)_tableViewMenuDisabledSelectedRow);
-            NSLog(@"row=%ld", (long)row);
-            if ( _tableViewMenuDisabledSelectedRow == row ) {
+            if ( tableViewMenuDisabledSelectedRow == row ) {
                 [_tableViewMenuDisabled deselectAll:self];
                 [self setTableViewMenuDisabledSelectedRow:-1];
                 
-                NSUInteger row = ( [_tableViewMenuItemsEnabled count] -1 );
-                NSLog(@"Selecting row: %lu", (unsigned long)row);
+                NSUInteger row = ( [_tableViewMenuItemsEnabled count] - 1 );
                 [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
                 [[self window] makeFirstResponder:_tableViewMenuEnabled];
                 [self setTableViewMenuEnabledSelectedRow:row];
                 [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
             }
-            return;
         }
     }
+}
+
+- (void)checkbox:(NSButton *)checkbox {
+    
+    // ---------------------------------------------------------------------
+    //  Get checkbox's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *buttonTag = @([checkbox tag]);
+    if ( buttonTag == nil ) {
+        NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
+        return;
+    }
+    NSInteger row = [buttonTag integerValue];
     
     // ---------------------------------------------------------------------
     //  Get current checkbox state

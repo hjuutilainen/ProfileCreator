@@ -96,7 +96,7 @@
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setAction:@selector(checkbox:)];
+    [[cellView menuCheckbox] setAction:@selector(checkboxMenuEnabled:)];
     [[cellView menuCheckbox] setTarget:sender];
     [[cellView menuCheckbox] setTag:row];
     

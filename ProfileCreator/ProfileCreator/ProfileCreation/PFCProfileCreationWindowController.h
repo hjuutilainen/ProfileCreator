@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 - (void)checkbox:(NSButton *)checkbox;
+- (void)checkboxMenuEnabled:(NSButton *)checkbox;
 - (void)datePickerSelection:(NSDatePicker *)datePicker;
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
 - (void)selectFile:(NSButton *)button;
