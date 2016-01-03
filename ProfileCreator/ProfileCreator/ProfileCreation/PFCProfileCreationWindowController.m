@@ -642,78 +642,163 @@
     NSInteger row = [buttonTag integerValue];
     
     if ( [[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]] ) {
+        
+        // ---------------------------------------------------------------------
+        //  Check if checbox is in table view menu ENABLED
+        // ---------------------------------------------------------------------
         if ( ( row < [_tableViewMenuItemsEnabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuEnabled viewAtColumn:[_tableViewMenuEnabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+            
+            // ---------------------------------------------------------------------
+            //  Store the cell dict for move
+            // ---------------------------------------------------------------------
             NSDictionary *cellDict = [_tableViewMenuItemsEnabled objectAtIndex:row];
+            
+            // ---------------------------------------------------------------------
+            //  Remove the cell dict from table view menu ENABLED
+            // ---------------------------------------------------------------------
             NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
             [_tableViewMenuEnabled beginUpdates];
             [_tableViewMenuItemsEnabled removeObjectAtIndex:(NSUInteger)row];
             [_tableViewMenuEnabled reloadData];
             [_tableViewMenuEnabled endUpdates];
             
+            // ----------------------------------------------------------------------
+            //  If current cell dict wasn't selected, restore selection after reload
+            // ----------------------------------------------------------------------
             if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
                 NSInteger selectedRow = ( row < tableViewMenuEnabledSelectedRow ) ? ( tableViewMenuEnabledSelectedRow - 1 ) : tableViewMenuEnabledSelectedRow;
                 [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
                 [self setTableViewMenuEnabledSelectedRow:selectedRow];
             }
             
+            // ---------------------------------------------------------------------
+            //  Add the cell dict to table view menu DISABLED
+            // ---------------------------------------------------------------------
             NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
             [_tableViewMenuDisabled beginUpdates];
             [_tableViewMenuItemsDisabled addObject:cellDict];
+            [_tableViewMenuItemsDisabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
             [_tableViewMenuDisabled reloadData];
             [_tableViewMenuDisabled endUpdates];
             
+            // -----------------------------------------------------------------------------
+            //  If item in table view DISABLED was selected, restore selection after reload
+            // -----------------------------------------------------------------------------
             if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
                 [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuDisabledSelectedRow] byExtendingSelection:NO];
                 [self setTableViewMenuDisabledSelectedRow:tableViewMenuDisabledSelectedRow];
             }
             
+            // -----------------------------------------------------------------------------
+            //  If current cell dict was selected, move selection to table view DISABLED
+            // -----------------------------------------------------------------------------
             if ( tableViewMenuEnabledSelectedRow == row ) {
+                
+                // Deselect items in table view ENABLED
                 [_tableViewMenuEnabled deselectAll:self];
                 [self setTableViewMenuEnabledSelectedRow:-1];
-                NSUInteger row = ( [_tableViewMenuItemsDisabled count] -1 );
-                [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                [[self window] makeFirstResponder:_tableViewMenuDisabled];
-                [self setTableViewMenuDisabledSelectedRow:row];
-                [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
+                
+                // ---------------------------------------------------------------------
+                //  Find index of moved cell dict and select it
+                // ---------------------------------------------------------------------
+                NSUInteger row = [_tableViewMenuItemsDisabled indexOfObject:cellDict];
+                if ( row != NSNotFound ) {
+                    [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                    [[self window] makeFirstResponder:_tableViewMenuDisabled];
+                    [self setTableViewMenuDisabledSelectedRow:row];
+                    [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
+                }
             }
+            
+            // ---------------------------------------------------------------------
+            //  Check if checbox is in table view menu DISABLED
+            // ---------------------------------------------------------------------
         } else if ( ( row < [_tableViewMenuItemsDisabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuDisabled viewAtColumn:[_tableViewMenuDisabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+            
+            // ---------------------------------------------------------------------
+            //  Store the cell dict for move
+            // ---------------------------------------------------------------------
             NSDictionary *cellDict = [_tableViewMenuItemsDisabled objectAtIndex:row];
+            
+            // ---------------------------------------------------------------------
+            //  Remove the cell dict from table view menu DISABLED
+            // ---------------------------------------------------------------------
             NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
             [_tableViewMenuDisabled beginUpdates];
             [_tableViewMenuItemsDisabled removeObjectAtIndex:(NSUInteger)row];
             [_tableViewMenuDisabled reloadData];
             [_tableViewMenuDisabled endUpdates];
             
+            // ----------------------------------------------------------------------
+            //  If current cell dict wasn't selected, restore selection after reload
+            // ----------------------------------------------------------------------
             if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
                 NSInteger selectedRow = ( row < tableViewMenuDisabledSelectedRow ) ? ( tableViewMenuDisabledSelectedRow - 1 ) : tableViewMenuDisabledSelectedRow;
                 [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
                 [self setTableViewMenuDisabledSelectedRow:selectedRow];
             }
             
+            // ---------------------------------------------------------------------
+            //  Add the cell dict to table view menu ENABLED
+            // ---------------------------------------------------------------------
             NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
             [_tableViewMenuEnabled beginUpdates];
             [_tableViewMenuItemsEnabled addObject:cellDict];
+            [_tableViewMenuItemsEnabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
             [_tableViewMenuEnabled reloadData];
             [_tableViewMenuEnabled endUpdates];
             
+            // -----------------------------------------------------------------------------
+            //  If item in table view ENABLED was selected, restore selection after reload
+            // -----------------------------------------------------------------------------
             if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
                 [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuEnabledSelectedRow] byExtendingSelection:NO];
                 [self setTableViewMenuEnabledSelectedRow:tableViewMenuEnabledSelectedRow];
             }
             
+            // ---------------------------------------------------------------------
+            //  Find index of menu item com.apple.general
+            // ---------------------------------------------------------------------
+            NSUInteger idx = [_tableViewMenuItemsEnabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+                return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
+            }];
+
+            // ---------------------------------------------------------------------
+            //  Move menu item com.apple.general to the top of the menu array
+            // ---------------------------------------------------------------------
+            if ( idx != NSNotFound ) {
+                NSDictionary *generalSettingsDict = [_tableViewMenuItemsEnabled objectAtIndex:idx];
+                [_tableViewMenuItemsEnabled removeObjectAtIndex:idx];
+                [_tableViewMenuItemsEnabled insertObject:generalSettingsDict atIndex:0];
+            } else {
+                NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
+            }
+            
+            // -----------------------------------------------------------------------------
+            //  If current cell dict was selected, move selection to table view ENABLED
+            // -----------------------------------------------------------------------------
             if ( tableViewMenuDisabledSelectedRow == row ) {
+                
+                // Deselect items in table view DISABLED
                 [_tableViewMenuDisabled deselectAll:self];
                 [self setTableViewMenuDisabledSelectedRow:-1];
                 
-                NSUInteger row = ( [_tableViewMenuItemsEnabled count] - 1 );
-                [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                [[self window] makeFirstResponder:_tableViewMenuEnabled];
-                [self setTableViewMenuEnabledSelectedRow:row];
-                [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
+                // ---------------------------------------------------------------------
+                //  Find index of moved cell dict and select it
+                // ---------------------------------------------------------------------
+                NSUInteger row = [_tableViewMenuItemsEnabled indexOfObject:cellDict];
+                if ( row != NSNotFound ) {
+                    [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                    [[self window] makeFirstResponder:_tableViewMenuEnabled];
+                    [self setTableViewMenuEnabledSelectedRow:row];
+                    [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
+                }
             }
         }
+    } else {
+        NSLog(@"[ERROR] Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
     }
-}
+} // checkboxMenuEnabled
 
 - (void)checkbox:(NSButton *)checkbox {
     
