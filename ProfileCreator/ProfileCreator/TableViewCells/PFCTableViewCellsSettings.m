@@ -86,15 +86,34 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[self toolTipWithKey:manifestDict[@"Key"] type:manifestDict[@"Type"] required:required description:manifestDict[@"ToolTipDescription"]]];
+    [cellView setToolTip:[self toolTipWithKey:manifestDict[@"PayloadKey"] type:manifestDict[@"PayloadValueType"] required:required description:manifestDict[@"ToolTipDescription"]]];
     
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
     [[cellView settingTextField] setEnabled:enabled];
     
+    // ---------------------------------------------------------------------
+    //  Required
+    // ---------------------------------------------------------------------
+    if ( required && [value length] == 0 ) {
+        [self showRequired:YES];
+    } else {
+        [self showRequired:NO];
+    }
+    
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
+- (void)showRequired:(BOOL)show {
+    if ( show ) {
+        [_constraintTextFieldTrailing setConstant:34.0];
+        [_imageViewRequired setHidden:NO];
+    } else {
+        [_constraintTextFieldTrailing setConstant:8.0];
+        [_imageViewRequired setHidden:YES];
+    }
+}
 
 // FIXME - Test for tool tips, will have to build this out to support attributed strings
 - (NSString *)toolTipWithKey:(NSString *)key type:(NSString *)type required:(BOOL)required description:(NSString *)description {
@@ -242,6 +261,16 @@
     
     return cellView;
 } // populateCellViewTextField:settingDict:row
+
+- (void)showRequired:(BOOL)show {
+    if ( show ) {
+        [_constraintTextFieldTrailing setConstant:34.0];
+        [_imageViewRequired setHidden:NO];
+    } else {
+        [_constraintTextFieldTrailing setConstant:8.0];
+        [_imageViewRequired setHidden:YES];
+    }
+}
 
 @end
 
@@ -1732,7 +1761,26 @@
     [[cellView settingTextFieldHost] setEnabled:enabled];
     [[cellView settingTextFieldPort] setEnabled:enabled];
     
+    // ---------------------------------------------------------------------
+    //  Required
+    // ---------------------------------------------------------------------
+    if ( requiredHost && [valueHost length] == 0 ) {
+        [self showRequired:YES];
+    } else {
+        [self showRequired:NO];
+    }
+    
     return cellView;
 } // populateCellViewSettingsTextFieldHostPort:settingDict:row
+
+- (void)showRequired:(BOOL)show {
+    if ( show ) {
+        [_constraintTextFieldPortTrailing setConstant:34.0];
+        [_imageViewRequired setHidden:NO];
+    } else {
+        [_constraintTextFieldPortTrailing setConstant:8.0];
+        [_imageViewRequired setHidden:YES];
+    }
+}
 
 @end

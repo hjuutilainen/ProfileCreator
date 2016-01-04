@@ -25,10 +25,13 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextField : NSTableCellView
+@property (weak) IBOutlet NSImageView *imageViewRequired;
+@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldTrailing;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
 - (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (void)showRequired:(BOOL)show;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,10 +56,13 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextFieldNoTitle : NSTableCellView
+@property (weak) IBOutlet NSImageView *imageViewRequired;
+@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldTrailing;
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
 - (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (void)showRequired:(BOOL)show;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -277,9 +283,12 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTextFieldHostPort : NSTableCellView
+@property (weak) IBOutlet NSImageView *imageViewRequired;
+@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldPortTrailing;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextFieldHost;
 @property (weak) IBOutlet NSTextField *settingTextFieldPort;
 - (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (void)showRequired:(BOOL)show;
 @end

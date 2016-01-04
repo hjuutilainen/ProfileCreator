@@ -2,17 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>com.apple.general</key>
-	<array>
-		<dict>
-			<key>com.apple.profile.PayloadDescription</key>
+	<key>Name</key>
+	<string>Untitled</string>
+	<key>Version</key>
+	<integer>1</integer>
+	<key>Settings</key>
+	<dict>
+		<key>com.apple.general</key>
+		<array>
 			<dict>
-				<key>Enabled</key>
-				<true/>
-				<key>Value</key>
-				<string>Description</string>
+				<key>com.apple.profile.PayloadDescription</key>
+				<dict>
+					<key>Enabled</key>
+					<true/>
+					<key>Value</key>
+					<string>Description</string>
+				</dict>
 			</dict>
-		</dict>
-	</array>
+		</array>
+	</dict>
 </dict>
 </plist>

@@ -10,6 +10,7 @@
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
 #import "PFCManifestCreationParser.h"
+#import "PFCController.h"
 
 @interface PFCProfileCreationWindowController ()
 
@@ -23,22 +24,23 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (id)initWithProfileType:(int)profileType {
+- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict {
     self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
     if (self != nil) {
         _tableViewMenuItemsEnabled = [[NSMutableArray alloc] init];
         _tableViewMenuItemsDisabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsEnabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsDisabled = [[NSMutableArray alloc] init];
-        _tableViewSettingsSettings = [[NSMutableDictionary alloc] init];
+        _tableViewSettingsSettings = [profileDict[@"Settings"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _tableViewSettingsCurrentSettings = [[NSMutableDictionary alloc] init];
-        
+
         _advancedSettings = NO;
         _columnMenuEnabledHidden = YES;
         _columnSettingsEnabledHidden = YES;
         _tableViewMenuEnabledSelectedRow = -1; // None selected
         _tableViewMenuDisabledSelectedRow = -1; // None selected
         _profileType = profileType;
+        _profileDict = profileDict ?: @{};
     }
     return self;
 } // init
@@ -610,6 +612,30 @@
             NSLog(@"[ERROR] Unknown text field!");
             return;
         }
+        
+        if ( [[textField superview] respondsToSelector:@selector(showRequired:)] ) {
+            BOOL showRequired = NO;
+            BOOL required = [cellDict[@"Required"] boolValue];
+            BOOL requiredHost = [cellDict[@"RequiredHost"] boolValue];
+            BOOL requiredPort = [cellDict[@"RequiredPort"] boolValue];
+            
+            if ( required || requiredHost || requiredPort ) {
+                if ( required && ( [settingsDict[@"ValueHost"] length] == 0 || [settingsDict[@"ValuePort"] length] == 0 ) ) {
+                    showRequired = YES;
+                }
+                
+                if ( requiredHost && [settingsDict[@"ValueHost"] length] == 0 ) {
+                    showRequired = YES;
+                }
+                
+                if ( requiredPort && [settingsDict[@"ValuePort"] length] == 0 ) {
+                    showRequired = YES;
+                }
+
+                [(CellViewSettingsTextFieldHostPort *)[textField superview] showRequired:showRequired];
+            }
+        }
+        
     } else if ( [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
             settingsDict[@"ValueTextField"] = [inputText copy];
@@ -620,6 +646,15 @@
     } else {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
             settingsDict[@"Value"] = [inputText copy];
+            if ( [[textField superview] respondsToSelector:@selector(showRequired:)] ) {
+                if ( [cellDict[@"Required"] boolValue] && [inputText length] == 0 ) {
+                    [(CellViewSettingsTextField *)[textField superview] showRequired:YES];
+                } else if ( [cellDict[@"Required"] boolValue] ) {
+                    [(CellViewSettingsTextField *)[textField superview] showRequired:NO];
+                } else {
+                    NSLog(@"Not Required!");
+                }
+            }
         } else {
             NSLog(@"[ERROR] Unknown text field!");
             return;
@@ -694,7 +729,9 @@
             // -----------------------------------------------------------------------------
             if ( tableViewMenuEnabledSelectedRow == row ) {
                 
-                // Deselect items in table view ENABLED
+                // ---------------------------------------------------------------------
+                //  Deselect items in table view ENABLED
+                // ---------------------------------------------------------------------
                 [_tableViewMenuEnabled deselectAll:self];
                 [self setTableViewMenuEnabledSelectedRow:-1];
                 
@@ -762,7 +799,7 @@
             NSUInteger idx = [_tableViewMenuItemsEnabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
                 return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
             }];
-
+            
             // ---------------------------------------------------------------------
             //  Move menu item com.apple.general to the top of the menu array
             // ---------------------------------------------------------------------
@@ -779,7 +816,9 @@
             // -----------------------------------------------------------------------------
             if ( tableViewMenuDisabledSelectedRow == row ) {
                 
-                // Deselect items in table view DISABLED
+                // ---------------------------------------------------------------------
+                //  Deselect items in table view DISABLED
+                // ---------------------------------------------------------------------
                 [_tableViewMenuDisabled deselectAll:self];
                 [self setTableViewMenuDisabledSelectedRow:-1];
                 
@@ -1387,8 +1426,18 @@
 }
 
 - (IBAction)buttonSave:(id)sender {
+    NSError *error = nil;
+    NSURL *savedProfilesFolderURL = [PFCController profileCreatorFolder:kPFCFolderSavedProfiles];
+    NSLog(@"savedProfilesFolderURL=%@", savedProfilesFolderURL);
+    if ( ! [savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
+        if ( ! [[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:&error] ) {
+            NSLog(@"[ERROR] %@", [error localizedDescription]);
+        }
+    }
     
-    NSLog(@"savedSettingsArray=%@", _tableViewSettingsCurrentSettings);
+    if ( _profileDict[@"Name"] ) {
+        
+    }
 }
 
 - (NSDictionary *)savedSettingsForCellType:(NSString *)cellType cellDict:(NSDictionary *)cellDict {

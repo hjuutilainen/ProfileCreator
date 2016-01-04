@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 @property BOOL columnMenuEnabledHidden;
 
 // TableView Settings
-
+@property NSDictionary *profileDict;
 @property NSMutableDictionary *tableViewSettingsSettings;
 @property NSMutableDictionary *tableViewSettingsCurrentSettings;
 
@@ -68,5 +68,5 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
 - (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
-- (id)initWithProfileType:(int)profileType;
+- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict;
 @end

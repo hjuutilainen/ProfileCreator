@@ -57,6 +57,8 @@
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
+		53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */; };
+		53FB4BF31C3A82A200799418 /* PFCProfileExporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BF21C3A82A200799418 /* PFCProfileExporter.m */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
 		53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
 		53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
@@ -143,6 +145,10 @@
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.scep.plist; sourceTree = "<group>"; };
 		53C7339E1C1F396800119C71 /* MenuIconSCEP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSCEP.png; sourceTree = "<group>"; };
 		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.passcode.plist; sourceTree = "<group>"; };
+		53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsProfiles.h; path = ProfileCreator/TableViewCells/PFCTableViewCellsProfiles.h; sourceTree = "<group>"; };
+		53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsProfiles.m; path = ProfileCreator/TableViewCells/PFCTableViewCellsProfiles.m; sourceTree = "<group>"; };
+		53FB4BF11C3A82A200799418 /* PFCProfileExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileExporter.h; path = ProfileCreator/ProfileCreation/PFCProfileExporter.h; sourceTree = "<group>"; };
+		53FB4BF21C3A82A200799418 /* PFCProfileExporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileExporter.m; path = ProfileCreator/ProfileCreation/PFCProfileExporter.m; sourceTree = "<group>"; };
 		53FCF0041C1F538000E440CB /* MenuIconLDAP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconLDAP.png; sourceTree = "<group>"; };
 		53FCF0061C1F539300E440CB /* com.apple.ldap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.ldap.plist; sourceTree = "<group>"; };
 		53FCF0091C1F561900E440CB /* com.apple.messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.messages.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.messages.plist; sourceTree = "<group>"; };
@@ -197,6 +203,8 @@
 				53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */,
 				5304B2511C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.h */,
 				5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */,
+				53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */,
+				53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -225,6 +233,8 @@
 				5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */,
 				532974EB1C22B21300191C5C /* PFCManifestCreationParser.h */,
 				532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */,
+				53FB4BF11C3A82A200799418 /* PFCProfileExporter.h */,
+				53FB4BF21C3A82A200799418 /* PFCProfileExporter.m */,
 			);
 			name = ProfileCreation;
 			sourceTree = "<group>";
@@ -428,9 +438,11 @@
 				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
+				53FB4BF31C3A82A200799418 /* PFCProfileExporter.m in Sources */,
 				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
+				53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */,
 				5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
