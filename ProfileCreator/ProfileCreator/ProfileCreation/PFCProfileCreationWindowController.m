@@ -11,6 +11,7 @@
 #import "PFCTableViewCellsSettings.h"
 #import "PFCManifestCreationParser.h"
 #import "PFCController.h"
+#import "PFCPayloadVerification.h"
 
 @interface PFCProfileCreationWindowController ()
 
@@ -24,16 +25,18 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict {
+- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict sender:(id)sender {
     self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
     if (self != nil) {
         _tableViewMenuItemsEnabled = [[NSMutableArray alloc] init];
         _tableViewMenuItemsDisabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsEnabled = [[NSMutableArray alloc] init];
         _tableViewSettingsItemsDisabled = [[NSMutableArray alloc] init];
-        _tableViewSettingsSettings = [profileDict[@"Settings"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        _tableViewSettingsSettings = [profileDict[@"Config"][@"Settings"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _tableViewSettingsCurrentSettings = [[NSMutableDictionary alloc] init];
-
+        
+        _parentObject = sender;
+        
         _advancedSettings = NO;
         _columnMenuEnabledHidden = YES;
         _columnSettingsEnabledHidden = YES;
@@ -41,6 +44,8 @@
         _tableViewMenuDisabledSelectedRow = -1; // None selected
         _profileType = profileType;
         _profileDict = profileDict ?: @{};
+        [[self window] setDelegate:self];
+        _windowShouldClose = NO;
     }
     return self;
 } // init
@@ -61,6 +66,7 @@
     [self updateTableColumnsMenuDisabled];
     [self updateTableColumnsSettings];
     [self setupMenu];
+    [self tableViewMenu:nil];
     [_tableViewMenuEnabled reloadData];
     [_tableViewMenuDisabled reloadData];
 } // initializeMenu
@@ -91,6 +97,17 @@
     
     NSError *error = nil;
     
+    [_tableViewMenuItemsEnabled removeAllObjects];
+    [_tableViewMenuItemsDisabled removeAllObjects];
+    
+    NSMutableArray *enabledPayloadDomains = [NSMutableArray array];
+    for ( NSString *payloadDomain in [_tableViewSettingsSettings allKeys] ) {
+        NSDictionary *payloadDict = _tableViewSettingsSettings[payloadDomain];
+        if ( [payloadDict[@"Selected"] boolValue] ) {
+            [enabledPayloadDomains addObject:payloadDomain];
+        }
+    }
+    
     // ---------------------------------------------------------------------
     //  Get URL to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
@@ -112,21 +129,30 @@
         for ( NSURL *manifestURL in [manifestPlists filteredArrayUsingPredicate:predicateManifestPlists] ) {
             NSDictionary *manifestDict = [NSDictionary dictionaryWithContentsOfURL:manifestURL];
             if ( [manifestDict count] != 0 ) {
-                [_tableViewMenuItemsDisabled addObject:manifestDict];
+                NSString *manifestDomain = manifestDict[@"Domain"] ?: @"";
+                if (
+                    [enabledPayloadDomains containsObject:manifestDomain] ||
+                    [manifestDomain isEqualToString:@"com.apple.general"]
+                    ) {
+                    [_tableViewMenuItemsEnabled addObject:manifestDict];
+                } else {
+                    [_tableViewMenuItemsDisabled addObject:manifestDict];
+                }
             } else {
                 NSLog(@"[ERROR] Manifest %@ was empty!", [manifestURL lastPathComponent]);
             }
         }
         
         // ---------------------------------------------------------------------
-        //  Sort menu array
+        //  Sort menu arrays
         // ---------------------------------------------------------------------
+        [_tableViewMenuItemsEnabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         [_tableViewMenuItemsDisabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         
         // ---------------------------------------------------------------------
         //  Find index of menu item com.apple.general
         // ---------------------------------------------------------------------
-        NSUInteger idx = [_tableViewMenuItemsDisabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger idx = [_tableViewMenuItemsEnabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
         }];
         
@@ -134,8 +160,8 @@
         //  Move menu item com.apple.general to the top of the menu array
         // ---------------------------------------------------------------------
         if (idx != NSNotFound) {
-            NSDictionary *generalSettingsDict = [_tableViewMenuItemsDisabled objectAtIndex:idx];
-            [_tableViewMenuItemsDisabled removeObjectAtIndex:idx];
+            NSDictionary *generalSettingsDict = [_tableViewMenuItemsEnabled objectAtIndex:idx];
+            [_tableViewMenuItemsEnabled removeObjectAtIndex:idx];
             [_tableViewMenuItemsEnabled insertObject:generalSettingsDict atIndex:0];
         } else {
             NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
@@ -188,6 +214,15 @@
         }
     }
 } // updateTableColumnsSettings
+
+- (void)updateMenuErrorCount {
+    if ( [_tableViewMenuSelectedTableView isEqualToString:@"TableViewMenuEnabled"] ) {
+        if ( 0 <= _tableViewMenuEnabledSelectedRow && _tableViewMenuEnabledSelectedRow <= [_tableViewMenuItemsEnabled count] ) {
+            NSInteger columnIndex = [_tableViewMenuEnabled columnWithIdentifier:@"ColumnMenu"];
+            [_tableViewMenuEnabled reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewMenuEnabledSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
+        }
+    }
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 #pragma unused(object, change, context)
@@ -268,6 +303,14 @@
                     return [cellView populateCellViewTextField:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
+                    //  TextFieldHostPort
+                    // ---------------------------------------------------------------------
+                } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
+                    CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
+                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
+                    
+                    // ---------------------------------------------------------------------
                     //  TextFieldNoTitle
                     // ---------------------------------------------------------------------
                 } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
@@ -330,14 +373,6 @@
                     CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsSegmentedControl:cellView manifestDict:manifestDict settingDict:manifestDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------------------
-                    //  TextFieldHostPort
-                    // ---------------------------------------------------------------------
-                } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
-                    CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  CheckboxNoDescription
@@ -424,11 +459,27 @@
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
         NSDictionary *menuDict = _tableViewMenuItemsEnabled[(NSUInteger)row];
+
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
+
+            NSDictionary *manifestSettings;
+            if ( _tableViewMenuEnabledSelectedRow == -1 && _tableViewMenuDisabledSelectedRow == -1 ) {
+                NSDictionary *domain = menuDict[@"Domain"];
+                manifestSettings = _tableViewSettingsSettings[domain];
+            } else {
+                manifestSettings = _tableViewSettingsCurrentSettings;
+            }
+            
+            NSDictionary *errorDict = [[PFCPayloadVerification sharedInstance] verifyManifest:menuDict[@"PayloadKeys"] settingsDict:manifestSettings];
+            NSNumber *errorCount;
+            if ( [errorDict count] != 0 ) {
+                errorCount = @([errorDict[@"Error"] count]);
+            }
+            
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
-                return [cellView populateCellViewMenu:cellView menuDict:menuDict row:row];
+                return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:errorCount row:row];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -449,7 +500,7 @@
             NSString *cellType = menuDict[@"CellType"];
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
-                return [cellView populateCellViewMenu:cellView menuDict:menuDict row:row];
+                return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:nil row:row];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -631,11 +682,10 @@
                 if ( requiredPort && [settingsDict[@"ValuePort"] length] == 0 ) {
                     showRequired = YES;
                 }
-
+                
                 [(CellViewSettingsTextFieldHostPort *)[textField superview] showRequired:showRequired];
             }
         }
-        
     } else if ( [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
             settingsDict[@"ValueTextField"] = [inputText copy];
@@ -662,6 +712,7 @@
     }
     
     _tableViewSettingsCurrentSettings[identifier] = [settingsDict copy];
+    [self updateMenuErrorCount];
 } // controlTextDidChange
 
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
@@ -687,6 +738,7 @@
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
             NSDictionary *cellDict = [_tableViewMenuItemsEnabled objectAtIndex:row];
+            NSString *payloadDomain = cellDict[@"Domain"];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu ENABLED
@@ -745,10 +797,20 @@
                     [self setTableViewMenuDisabledSelectedRow:row];
                     [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
                 }
+                
+                [_tableViewSettingsCurrentSettings removeObjectForKey:@"Selected"];
+            } else {
+                NSMutableDictionary *settingsDict = [_tableViewSettingsSettings[payloadDomain] mutableCopy] ?: [NSMutableDictionary dictionary];
+                [settingsDict removeObjectForKey:@"Selected"];
+                if ( [settingsDict count] == 0 ) {
+                    [_tableViewSettingsSettings removeObjectForKey:payloadDomain];
+                } else {
+                    _tableViewSettingsSettings[payloadDomain] = [settingsDict copy];
+                }
             }
             
             // ---------------------------------------------------------------------
-            //  Check if checbox is in table view menu DISABLED
+            //  Check if checkbox is in table view menu DISABLED
             // ---------------------------------------------------------------------
         } else if ( ( row < [_tableViewMenuItemsDisabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuDisabled viewAtColumn:[_tableViewMenuDisabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
@@ -756,6 +818,7 @@
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
             NSDictionary *cellDict = [_tableViewMenuItemsDisabled objectAtIndex:row];
+            NSString *payloadDomain = cellDict[@"Domain"];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu DISABLED
@@ -832,6 +895,12 @@
                     [self setTableViewMenuEnabledSelectedRow:row];
                     [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
                 }
+                
+                _tableViewSettingsCurrentSettings[@"Selected"] = @YES;
+            } else {
+                NSMutableDictionary *settingsDict = [_tableViewSettingsSettings[payloadDomain] mutableCopy] ?: [NSMutableDictionary dictionary];
+                settingsDict[@"Selected"] = @YES;
+                _tableViewSettingsSettings[payloadDomain] = [settingsDict copy];
             }
         }
     } else {
@@ -1326,10 +1395,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (IBAction)tableViewMenu:(id)sender {
-    
-    NSString *identifier = [sender identifier];
-    
+- (void)saveCurrentSettings {
     if ( [_tableViewMenuSelectedTableView isEqualToString:@"TableViewMenuEnabled"] ) {
         
         // ---------------------------------------------------------------------
@@ -1359,8 +1425,16 @@
             currentMenuDict[@"SavedSettings"] = [_tableViewSettingsItemsEnabled copy];
             [_tableViewMenuItemsDisabled replaceObjectAtIndex:_tableViewMenuDisabledSelectedRow withObject:[currentMenuDict copy]];
         }
+    } else {
+        //NSLog(@"No settings selected!");
     }
+}
+
+- (IBAction)tableViewMenu:(id)sender {
     
+    [self saveCurrentSettings];
+    
+    NSString *identifier = [sender identifier];
     if ( [identifier isEqualToString:@"TableViewMenuEnabled"] ) {
         
         // ---------------------------------------------------------------------
@@ -1425,18 +1499,105 @@
 - (IBAction)buttonCancel:(id)sender {
 }
 
+- (BOOL)windowShouldClose:(id)sender {
+    
+    if ( _windowShouldClose ) {
+        [self setWindowShouldClose:NO];
+        if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
+            NSLog(@"_profileDict: %@", _profileDict);
+            [_parentObject removeControllerForProfileDictWithName:_profileDict[@"Config"][@"Name"]];
+        }
+        return YES;
+    }
+    
+    if ( [self settingsSaved] ) {
+        return YES;
+    } else {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"Save & Close"];
+        [alert addButtonWithTitle:@"Close"];
+        [alert addButtonWithTitle:@"Cancel"];
+        [alert setMessageText:@"Unsaved Settings"];
+        [alert setInformativeText:@"If you close this window, all unsaved settings will be lost. Are you sure you want to close the window?"];
+        [alert setAlertStyle:NSInformationalAlertStyle];
+        [alert beginSheetModalForWindow:[self window] completionHandler:^(NSInteger returnCode) {
+            
+            // Save & Close
+            if ( returnCode == NSAlertFirstButtonReturn ) {
+                [self setWindowShouldClose:YES];
+                [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+                //[[self window] close];
+                
+                // Close
+            } else if ( returnCode == NSAlertSecondButtonReturn ) {
+                [self setWindowShouldClose:YES];
+                [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+                //[[self window] close];
+                
+                // Cancel
+            } else if ( returnCode == NSAlertThirdButtonReturn ) {
+                [self setWindowShouldClose:NO];
+            }
+        }];
+        
+        return NO;
+    }
+}
+
+- (void)closeWindow {
+    [[self window] performClose:self];
+}
+
+- (BOOL)settingsSaved {
+    
+    NSString *profilePath = _profileDict[@"Path"];
+    if ( [profilePath length] == 0 ) {
+        return NO;
+    }
+    
+    NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
+    
+    if ( ! [profileURL checkResourceIsReachableAndReturnError:nil] ) {
+        return NO;
+    }
+    
+    NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
+    if ( [profileDict count] == 0 ) {
+        return NO;
+    } else {
+        return [profileDict[@"Settings"] isEqualToDictionary:_tableViewSettingsSettings];
+    }
+}
+
 - (IBAction)buttonSave:(id)sender {
+    
+    // Save current settings
+    [self saveCurrentSettings];
+    
     NSError *error = nil;
     NSURL *savedProfilesFolderURL = [PFCController profileCreatorFolder:kPFCFolderSavedProfiles];
-    NSLog(@"savedProfilesFolderURL=%@", savedProfilesFolderURL);
     if ( ! [savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
         if ( ! [[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:&error] ) {
             NSLog(@"[ERROR] %@", [error localizedDescription]);
         }
     }
     
-    if ( _profileDict[@"Name"] ) {
-        
+    NSString *profilePath = _profileDict[@"Path"];
+    if ( [profilePath length] == 0 ) {
+        profilePath = [PFCController newProfilePath];
+    }
+    
+    NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
+    NSMutableDictionary *profileDict = [_profileDict mutableCopy];
+    NSMutableDictionary *configurationDict = [_profileDict[@"Config"] mutableCopy];
+    
+    configurationDict[@"Settings"] = _tableViewSettingsSettings;
+    NSLog(@"configurationDict: %@", configurationDict);
+    if ( [configurationDict writeToURL:profileURL atomically:YES] ) {
+        profileDict[@"Config"] = [configurationDict copy];
+        [self setProfileDict:[profileDict copy]];
+    } else {
+        NSLog(@"Save failed!");
     }
 }
 

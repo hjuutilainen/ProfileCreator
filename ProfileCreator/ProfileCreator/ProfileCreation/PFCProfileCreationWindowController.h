@@ -15,7 +15,9 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
     kPFCProfileTypeCustom
 };
 
-@interface PFCProfileCreationWindowController : NSWindowController <NSTableViewDelegate, NSTableViewDataSource>
+@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
+
+@property BOOL windowShouldClose;
 
 @property int profileType;
 @property NSArray *customMenu;
@@ -30,6 +32,8 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 
 - (IBAction)tableViewMenu:(id)sender;
 @property NSString *tableViewMenuSelectedTableView;
+
+@property id parentObject;
 
 @property NSMutableArray *tableViewMenuItemsEnabled;
 @property NSMutableArray *tableViewMenuItemsDisabled;
@@ -68,5 +72,5 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
 - (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
-- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict;
+- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end

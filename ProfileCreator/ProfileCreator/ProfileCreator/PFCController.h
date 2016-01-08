@@ -23,6 +23,9 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 
 @property PFCProfileCreationWindowController *profileWindowController;
 
+@property BOOL initialized; // Temporary
+@property (weak) IBOutlet NSMenu *menuAdvancedOptions;
+
 // Te be used when opening multiple profile windows
 @property NSMutableDictionary *profileWindows;
 
@@ -46,6 +49,8 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 @property (weak) IBOutlet NSButton *buttonOpenFoldera;
 - (IBAction)buttonOpenFoldera:(id)sender;
 
++ (NSString *)newProfilePath;
 + (NSURL *)profileCreatorFolder:(NSInteger)folder;
+- (void)removeControllerForProfileDictWithName:(NSString *)name;
 
 @end

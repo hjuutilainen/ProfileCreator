@@ -25,8 +25,6 @@
 			<string>com.apple.security.certificate</string>
 			<key>PayloadKey</key>
 			<string>PayloadCertificateFileName</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Name or description of the certificate credential</string>
 			<key>CellType</key>
@@ -69,8 +67,6 @@
 			<string>com.apple.security.certificate</string>
 			<key>PayloadKey</key>
 			<string>Password</string>
-			<key>PayloadValueValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Passphrase used to secure the credentials</string>
 			<key>CellType</key>

@@ -27,8 +27,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string></string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Name for the Exchange ActiveSync account</string>
 			<key>CellType</key>
@@ -47,8 +45,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string>UserName</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The user of the account with optional domain (e.g. &quot;user&quot; or &quot;domain\user&quot;)</string>
 			<key>CellType</key>
@@ -67,8 +63,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string>EmailAddress</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The address of the account (e.g. &quot;john@example.com&quot;)</string>
 			<key>CellType</key>
@@ -85,8 +79,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string>Password</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The password for the account</string>
 			<key>CellType</key>
@@ -127,8 +119,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string>Path</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Server path for the internal exchange host</string>
 			<key>CellType</key>
@@ -187,8 +177,6 @@
 			<string>com.apple.ews.account</string>
 			<key>PayloadKey</key>
 			<string>ExternalPath</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Server path for the external exchange host</string>
 			<key>CellType</key>

@@ -9,6 +9,7 @@
 #import "PFCController.h"
 #import "PFCManifestCreationParser.h"
 #import "PFCTableViewCellsProfiles.h"
+#import "PFCProfileExportWindowController.h"
 
 @implementation PFCController
 
@@ -24,6 +25,7 @@
         _profileWindows = [[NSMutableDictionary alloc] init];
         _tableViewProfilesItems = [[NSMutableArray alloc] init];
         _savedProfiles = [[NSMutableDictionary alloc] init];
+        _initialized = NO;
     }
     return self;
 } // init
@@ -93,26 +95,25 @@
         [_viewNoProfiles setHidden:NO];
     } else {
         for ( NSURL *profileURL in savedProfiles ) {
+
             NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
             if ( [profileDict count] == 0 ) {
                 NSLog(@"[ERROR] Couldn't read profile at path: %@", [profileURL path]);
                 continue;
             }
-            
+
             NSString *name = profileDict[@"Name"];
             if ( [name length] == 0 ) {
                 NSLog(@"[ERROR] Profile doesn't contain a name!");
                 continue;
             }
-            
-            NSDictionary *savedProfileDict = @{ @"URL" : [profileURL path],
-                                                @"Dict" : profileDict };
-            
-            _savedProfiles[name] = savedProfileDict;
+
+            NSDictionary *savedProfileDict = @{ @"Path" : [profileURL path],
+                                                @"Config" : profileDict };
             
             // FIXME - Add sanity checking to see if this actually is a profile save
             
-            [_tableViewProfilesItems addObject:profileDict];
+            [_tableViewProfilesItems addObject:savedProfileDict];
         }
         
         [_tableViewProfiles reloadData];
@@ -126,10 +127,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)awakeFromNib {
-    [_tableViewProfiles setTarget:self];
-    [_tableViewProfiles setDoubleAction:@selector(openProfileCreationWindow:)];
-    [self setupViewNoProfiles];
-    [self addSavedProfiles];
+    if ( ! _initialized ) {
+        [self setInitialized:YES];
+        [_tableViewProfiles setTarget:self];
+        [_tableViewProfiles setDoubleAction:@selector(openProfileCreationWindow:)];
+        [self setupViewNoProfiles];
+        [self addSavedProfiles];
+        [self setupAdvancedOptions];
+    }
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *) __unused notification {
@@ -149,6 +154,68 @@
         return 0;
     }
 } // numberOfRowsInTableView
+
+- (void)removeControllerForProfileDictWithName:(NSString *)name {
+    NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        return [item[@"Config"][@"Name"] isEqualToString:name];
+    }];
+    
+    if ( idx != NSNotFound ) {
+        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
+        [profileDict removeObjectForKey:@"Controller"];
+        [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
+    } else {
+        NSLog(@"Found no profile named: %@", name);
+    }
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    
+    NSString *menuItemTitle = [menuItem title];
+    
+    // Verify one (1) profile is selected
+    if (
+        [menuItemTitle isEqualToString:@"Rename"] ||
+        [menuItemTitle isEqualToString:@"Export"]
+        ) {
+        return ( [[_tableViewProfiles selectedRowIndexes] count] == 1 ) ? YES : NO;
+    }
+    
+    return YES;
+}
+
+- (void)setupAdvancedOptions {
+    NSMenuItem *menuItemRename = [[NSMenuItem alloc] initWithTitle:@"Rename" action:@selector(renameProfile) keyEquivalent:@""];
+    [menuItemRename setTarget:self];
+    [_menuAdvancedOptions addItem:menuItemRename];
+    
+    [_menuAdvancedOptions addItem:[NSMenuItem separatorItem]];
+    
+    NSMenuItem *menuItemExport = [[NSMenuItem alloc] initWithTitle:@"Export" action:@selector(exportProfile) keyEquivalent:@""];
+    [menuItemExport setTarget:self];
+    [_menuAdvancedOptions addItem:menuItemExport];
+    
+}
+
+- (void)renameProfile {
+    NSLog(@"Renaming!");
+}
+
+- (void)exportProfile {    
+    NSInteger idx = [_tableViewProfiles selectedRow];
+    
+    if ( 0 <= idx && idx <= [_tableViewProfilesItems count] ) {
+        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
+        PFCProfileExportWindowController *exporter = [[PFCProfileExportWindowController alloc] initWithProfileDict:[profileDict copy]];
+        if ( exporter ) {
+        profileDict[@"Controller"] = exporter;
+        [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
+            [[exporter window] makeKeyAndOrderFront:self];
+        } else {
+            NSLog(@"[ERROR] Problem creating export controller!");
+        }
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -194,21 +261,25 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
++ (NSString *)newProfilePath {
+    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
+    NSURL *profileURL = [[PFCController profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
+    return [profileURL path];
+}
+
 - (IBAction)buttonCreateProfile:(id)sender {
     
+    NSMutableDictionary *profileDict = [@{ @"Path" : [PFCController newProfilePath],
+                                           @"Config" : @{ @"Name" : @"Untitled..." }} mutableCopy];
+    
     PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeApple
-                                                                                                         profileDict:@{}];
+                                                                                                         profileDict:[profileDict copy] sender:self];
     if ( controller ) {
-        NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
-        NSURL *profileURL = [[PFCController profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
-        
-        NSDictionary *profileDict = @{ @"URL" : [profileURL path],
-                                       @"Dict" : @{ @"Name" : @"Untitled..." },
-                                       @"Controller" : controller };
-        
-        [self insertProfileInTableView:profileDict];
+        profileDict[@"Controller"] = controller;
         [[controller window] makeKeyAndOrderFront:self];
     }
+    
+    [self insertProfileInTableView:[profileDict copy]];
 } // buttonCreateProfile
 
 - (void)openProfileCreationWindow:(id)sender {
@@ -220,9 +291,13 @@
             controller = profileDict[@"Controller"];
         } else {
             controller = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeApple
-                                                                             profileDict:@{}];
-            profileDict[@"Controller"] = controller;
-            [_tableViewProfilesItems replaceObjectAtIndex:row withObject:[profileDict copy]];
+                                                                             profileDict:[profileDict copy] sender:self];
+            if ( controller ) {
+                profileDict[@"Controller"] = controller;
+                [_tableViewProfilesItems replaceObjectAtIndex:row withObject:[profileDict copy]];
+            } else {
+                NSLog(@"[ERROR] No Controller!");
+            }
         }
         [[controller window] makeKeyAndOrderFront:self];
     }
@@ -277,7 +352,7 @@
             NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:fileURL];
             if ( ! _profileWindowController ) {
                 _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeCustom
-                                                                                               profileDict:@{}];
+                                                                                               profileDict:@{} sender:self];
                 [_profileWindowController setCustomMenu:@[ fileManifest ]];
             }
             [[_profileWindowController window] makeKeyAndOrderFront:self];
@@ -316,7 +391,7 @@
             if ( ! _profileWindowController ) {
                 NSLog(@"Initing with custom!");
                 _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeCustom
-                                                                                               profileDict:@{}];
+                                                                                               profileDict:@{} sender:self];
                 [_profileWindowController setCustomMenu:menuArray];
             }
             [[_profileWindowController window] makeKeyAndOrderFront:self];

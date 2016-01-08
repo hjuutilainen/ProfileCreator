@@ -25,8 +25,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVAccountDescription</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account</string>
 			<key>CellType</key>
@@ -67,8 +65,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVPrincipalURL</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The Principal URL for the CardDAV account</string>
 			<key>CellType</key>
@@ -87,8 +83,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVUsername</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The CardDAV username</string>
 			<key>CellType</key>
@@ -105,8 +99,6 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
 			<string>CardDAVPassword</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The CardDAV password</string>
 			<key>CellType</key>

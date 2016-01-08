@@ -25,8 +25,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVAccountDescription</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account</string>
 			<key>CellType</key>
@@ -67,8 +65,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVPrincipalURL</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The Principal URL for the CalDAV account</string>
 			<key>CellType</key>
@@ -105,8 +101,6 @@
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
 			<string>CalDAVPassword</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The CalDAV password</string>
 			<key>CellType</key>

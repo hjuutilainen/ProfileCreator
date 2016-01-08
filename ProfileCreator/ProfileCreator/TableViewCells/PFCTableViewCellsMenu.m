@@ -24,7 +24,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row {
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
+    
+    if ( errorCount != nil ) {
+        NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
+        [[cellView errorCount] setAttributedStringValue:errorCountString];
+    } else {
+        [[cellView errorCount] setStringValue:@""];
+    }
     
     // ---------------------------------------------------------------------
     //  Title

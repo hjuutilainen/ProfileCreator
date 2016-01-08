@@ -18,10 +18,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface CellViewMenu : NSTableCellView
+@property (weak) IBOutlet NSTextField *errorCount;
 @property (weak) IBOutlet NSTextField *menuTitle;
 @property (weak) IBOutlet NSTextField *menuDescription;
 @property (weak) IBOutlet NSImageView *menuIcon;
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row;
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
 + (CGFloat)cellViewHeight;
 @end
 

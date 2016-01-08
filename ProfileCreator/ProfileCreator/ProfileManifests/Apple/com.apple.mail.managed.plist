@@ -25,8 +25,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAccountDescription</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the account (e.g. &quot;Company Mail Account&quot;)</string>
 			<key>CellType</key>
@@ -78,8 +76,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>IncomingMailServerIMAPPathPrefix</string>
-						<key>PayloadValueType</key>
-						<string>String</string>
 						<key>Description</key>
 						<string>Path Prefix</string>
 						<key>CellType</key>
@@ -103,8 +99,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAccountName</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The display name of the user (e.g. &quot;John Appleseed&quot;)</string>
 			<key>CellType</key>
@@ -123,8 +117,6 @@
 			<string>com.apple.mail.managed</string>
 			<key>PayloadKey</key>
 			<string>EmailAddress</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The address of the account (e.g. &quot;john@example.com&quot;)</string>
 			<key>CellType</key>
@@ -179,8 +171,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>IncomingMailServerUsername</string>
-						<key>PayloadValueType</key>
-						<string>String</string>
 						<key>Description</key>
 						<string>The username used to connect to the server for incoming mail</string>
 						<key>CellType</key>
@@ -279,8 +269,6 @@
 								<string>com.apple.mail.managed</string>
 								<key>PayloadKey</key>
 								<string>IncomingPassword</string>
-								<key>PayloadValueType</key>
-								<string>String</string>
 								<key>Description</key>
 								<string>The password for the incoming mail server</string>
 								<key>CellType</key>
@@ -344,8 +332,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingMailServerUsername</string>
-						<key>PayloadValueType</key>
-						<string>String</string>
 						<key>Description</key>
 						<string>The username used to connect to the server for outgoing mail</string>
 						<key>CellType</key>
@@ -444,8 +430,6 @@
 								<string>com.apple.mail.managed</string>
 								<key>PayloadKey</key>
 								<string>OutgoingPassword</string>
-								<key>PayloadValueType</key>
-								<string>String</string>
 								<key>Description</key>
 								<string>The password for the outgoing mail server</string>
 								<key>CellType</key>

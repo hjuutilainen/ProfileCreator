@@ -23,8 +23,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>FullName</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The user display name for the accounts</string>
 			<key>CellType</key>
@@ -41,8 +39,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>EmailAddress</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The email address for the accounts</string>
 			<key>CellType</key>
@@ -59,8 +55,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>UserName</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The user name for the accounts</string>
 			<key>CellType</key>
@@ -77,8 +71,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>Password</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The password for the accounts</string>
 			<key>CellType</key>
@@ -115,8 +107,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>Prompt</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Pompt text for any of the above values</string>
 			<key>CellType</key>
@@ -133,8 +123,6 @@
 			<string>com.apple.configurationprofile.identification</string>
 			<key>PayloadKey</key>
 			<string>PromptMessage</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>Additional descriptive text for the Prompt field</string>
 			<key>CellType</key>

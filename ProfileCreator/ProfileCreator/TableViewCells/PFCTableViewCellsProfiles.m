@@ -24,8 +24,9 @@
 } // drawRect
 
 - (CellViewProfile *)populateCellViewProfile:(CellViewProfile *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
-    
-    NSDictionary *profileSettingsDict = profileDict[@"Dict"];
+
+    NSDictionary *profileSettingsDict = profileDict[@"Config"];
+
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------

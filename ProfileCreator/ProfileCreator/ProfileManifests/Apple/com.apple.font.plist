@@ -27,8 +27,6 @@
 			<string>com.apple.font</string>
 			<key>PayloadKey</key>
 			<string>Name</string>
-			<key>PayloadValueType</key>
-			<string>String</string>
 			<key>Description</key>
 			<string>The user-visible name for the font</string>
 			<key>CellType</key>

@@ -12,6 +12,7 @@
             <connections>
                 <outlet property="buttonCreateProfile" destination="CQI-pc-lTr" id="1DF-bE-o80"/>
                 <outlet property="buttonRemoveProfile" destination="RuK-fY-H39" id="gj5-UB-nIy"/>
+                <outlet property="menuAdvancedOptions" destination="lP6-cG-oyh" id="JQe-QM-cdj"/>
                 <outlet property="tableViewProfiles" destination="pfy-i1-zvg" id="cxU-By-03q"/>
                 <outlet property="viewNoProfiles" destination="JCg-7c-7Ab" id="Whn-XV-4Gk"/>
                 <outlet property="viewTableViewProfilesSuperview" destination="aCA-g0-cV9" id="psc-rD-ZiW"/>
@@ -669,11 +670,11 @@
             </items>
         </menu>
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="335" y="390" width="366" height="310"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <rect key="contentRect" x="335" y="390" width="467" height="310"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="366" height="310"/>
+                <rect key="frame" x="0.0" y="0.0" width="467" height="310"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RuK-fY-H39">
@@ -695,8 +696,8 @@
                                     <rect key="frame" x="1" y="1" width="148" height="248"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView identifier="TableViewProfiles" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="pfy-i1-zvg">
-                                            <rect key="frame" x="0.0" y="0.0" width="148" height="248"/>
+                                        <tableView identifier="TableViewProfiles" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="pfy-i1-zvg">
+                                            <rect key="frame" x="0.0" y="0.0" width="148" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -767,14 +768,12 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="31" id="Oph-Hq-cks"/>
                         </constraints>
-                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" pullsDown="YES" selectedItem="xm6-Av-n8S" id="1DF-Zt-8vT">
+                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" pullsDown="YES" id="1DF-Zt-8vT">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
                             <menu key="menu" id="lP6-cG-oyh">
                                 <items>
                                     <menuItem state="on" image="NSSmartBadgeTemplate" hidden="YES" id="xm6-Av-n8S"/>
-                                    <menuItem title="Item 2" id="cQ3-Z6-zg1"/>
-                                    <menuItem title="Item 3" id="Ucs-9x-Xsx"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>
@@ -793,10 +792,14 @@
                             <action selector="buttonCreateProfile:" target="J1R-AM-bmu" id="SG8-mf-wMv"/>
                         </connections>
                     </button>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="atZ-RF-GPy">
+                        <rect key="frame" x="178" y="40" width="269" height="250"/>
+                    </customView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="RuK-fY-H39" firstAttribute="top" secondItem="aCA-g0-cV9" secondAttribute="bottom" constant="-1" id="24a-iI-YTI"/>
                     <constraint firstAttribute="bottom" secondItem="CQI-pc-lTr" secondAttribute="bottom" constant="20" symbolic="YES" id="2Dr-Hv-r48"/>
+                    <constraint firstItem="atZ-RF-GPy" firstAttribute="leading" secondItem="aCA-g0-cV9" secondAttribute="trailing" constant="8" symbolic="YES" id="LCf-Km-9Qo"/>
                     <constraint firstItem="mfp-Vl-9xL" firstAttribute="leading" secondItem="RuK-fY-H39" secondAttribute="trailing" constant="-1" id="LzD-lk-LB3"/>
                     <constraint firstItem="mfp-Vl-9xL" firstAttribute="height" secondItem="RuK-fY-H39" secondAttribute="height" id="Mce-yS-xgY"/>
                     <constraint firstItem="RuK-fY-H39" firstAttribute="centerY" secondItem="CQI-pc-lTr" secondAttribute="centerY" id="PQR-nu-d7p"/>
@@ -805,11 +808,14 @@
                     <constraint firstItem="RuK-fY-H39" firstAttribute="width" secondItem="CQI-pc-lTr" secondAttribute="width" id="WHj-FA-w3q"/>
                     <constraint firstItem="RuK-fY-H39" firstAttribute="leading" secondItem="CQI-pc-lTr" secondAttribute="trailing" constant="-1" id="crJ-xg-hCq"/>
                     <constraint firstItem="aCA-g0-cV9" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="d8q-4N-Hck"/>
+                    <constraint firstAttribute="trailing" secondItem="atZ-RF-GPy" secondAttribute="trailing" constant="20" symbolic="YES" id="dLo-Kz-GLD"/>
+                    <constraint firstAttribute="bottom" secondItem="atZ-RF-GPy" secondAttribute="bottom" constant="40" id="ePU-Wc-jWN"/>
                     <constraint firstItem="aCA-g0-cV9" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="ea3-gJ-d3y"/>
+                    <constraint firstItem="atZ-RF-GPy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="gqI-WQ-bBi"/>
                     <constraint firstItem="RuK-fY-H39" firstAttribute="height" secondItem="CQI-pc-lTr" secondAttribute="height" id="tkt-Vc-7ci"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="625" y="552.5"/>
+            <point key="canvasLocation" x="622.5" y="539"/>
         </window>
         <customView id="JCg-7c-7Ab">
             <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>
