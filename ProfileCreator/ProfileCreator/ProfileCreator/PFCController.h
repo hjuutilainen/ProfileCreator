@@ -36,21 +36,12 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 @property NSMutableArray *tableViewProfilesItems;
 @property NSMutableDictionary *savedProfiles;
 
-@property (weak) IBOutlet NSButton *buttonCreateProfile;
-- (IBAction)buttonCreateProfile:(id)sender;
-
-@property (weak) IBOutlet NSButton *buttonRemoveProfile;
-- (IBAction)buttonRemoveProfile:(id)sender;
-
-
-@property (weak) IBOutlet NSButton *buttonOpenPlist;
-- (IBAction)buttonOpenPlist:(id)sender;
-
-@property (weak) IBOutlet NSButton *buttonOpenFoldera;
-- (IBAction)buttonOpenFoldera:(id)sender;
+@property (weak) IBOutlet NSSegmentedControl *segmentedControlAddRemove;
+- (IBAction)segmentedControlAddRemove:(id)sender;
 
 + (NSString *)newProfilePath;
 + (NSURL *)profileCreatorFolder:(NSInteger)folder;
 - (void)removeControllerForProfileDictWithName:(NSString *)name;
+- (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName;
 
 @end

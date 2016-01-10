@@ -101,6 +101,8 @@
 		<dict>
 			<key>Identifier</key>
 			<string>86BA7451-0E30-4213-8D88-F2F6ACBE422E</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
 			<string>Prompt</string>
 			<key>PayloadType</key>
@@ -117,6 +119,8 @@
 		<dict>
 			<key>Identifier</key>
 			<string>FB292609-673D-485B-AC91-57494474A290</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
 			<string>Prompt Message</string>
 			<key>PayloadType</key>

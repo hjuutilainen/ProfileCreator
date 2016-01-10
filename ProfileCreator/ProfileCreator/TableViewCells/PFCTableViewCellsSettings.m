@@ -39,6 +39,7 @@
 - (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
     
     BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL optional = [manifestDict[@"Optional"] boolValue];
     BOOL enabled = YES;
     if ( ! required && settingDict[@"Enabled"] != nil ) {
         enabled = [settingDict[@"Enabled"] boolValue];
@@ -79,6 +80,8 @@
         [[cellView settingTextField] setPlaceholderString:manifestDict[@"PlaceholderValue"] ?: @""];
     } else if ( required ) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else if ( optional ) {
+        [[cellView settingTextField] setPlaceholderString:@"Optional"];
     } else {
         [[cellView settingTextField] setPlaceholderString:@""];
     }
@@ -86,7 +89,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[self toolTipWithKey:manifestDict[@"PayloadKey"] type:manifestDict[@"PayloadValueType"] required:required description:manifestDict[@"ToolTipDescription"]]];
+    [cellView setToolTip:[self toolTipWithKey:manifestDict[@"PayloadKey"] type:@"String" required:required description:manifestDict[@"ToolTipDescription"]]];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -228,6 +231,7 @@
 - (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
 
     BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL optional = [manifestDict[@"Optional"] boolValue];
     BOOL enabled = YES;
     if ( ! required && settingDict[@"Enabled"] != nil ) {
         enabled = [settingDict[@"Enabled"] boolValue];
@@ -244,6 +248,19 @@
     [[cellView settingTextField] setStringValue:settingDict[@"Value"] ?: @""];
     [[cellView settingTextField] setDelegate:sender];
     [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value
+    // ---------------------------------------------------------------------
+    if ( [manifestDict[@"PlaceholderValue"] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:manifestDict[@"PlaceholderValue"] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else if ( optional ) {
+        [[cellView settingTextField] setPlaceholderString:@"Optional"];
+    } else {
+        [[cellView settingTextField] setPlaceholderString:@""];
+    }
     
     // ---------------------------------------------------------------------
     //  Indent
@@ -304,7 +321,7 @@
     if ( settingDict[@"ValueCheckbox"] != nil ) {
         [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
     } else {
-        [cellView setCheckboxState:[settingDict[@"DefaultValueCheckbox"] boolValue]];
+        [cellView setCheckboxState:[manifestDict[@"DefaultValueCheckbox"] boolValue]];
     }
     
     // ---------------------------------------------------------------------
@@ -391,15 +408,21 @@
         enabled = [settingDict[@"Enabled"] boolValue];
     }
     
+    BOOL optional = [manifestDict[@"Optional"] boolValue];
+    
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
     [[cellView settingCheckbox] setTitle:manifestDict[@"Title"] ?: @""];
     
     // ---------------------------------------------------------------------
-    //  Value
+    //  ValueCheckbox
     // ---------------------------------------------------------------------
-    [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
+    if ( settingDict[@"ValueCheckbox"] != nil ) {
+        [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
+    } else {
+        [cellView setCheckboxState:[manifestDict[@"DefaultValueCheckbox"] boolValue]];
+    }
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -433,6 +456,8 @@
         [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValueHost"] ?: @""];
     } else if ( requiredHost ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+    } else if ( optional ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:@"Optional"];
     } else {
         [[cellView settingTextFieldHost] setPlaceholderString:@""];
     }
@@ -821,7 +846,11 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
+    if ( settingDict[@"Value"] != nil ) {
+        [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
+    } else {
+        [[cellView settingCheckbox] setState:[manifestDict[@"DefaultValue"] boolValue]];
+    }
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -897,7 +926,11 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
+    if ( settingDict[@"Value"] != nil ) {
+        [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
+    } else {
+        [[cellView settingCheckbox] setState:[manifestDict[@"DefaultValue"] boolValue]];
+    }
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -1245,7 +1278,21 @@
     }
 }
 
-- (IBAction)settingButtonAdd:(id) __unused sender {
+- (IBAction)segmentedControlButton:(id)sender {
+    switch ( [sender selectedSegment] ) {
+        case 0:
+            [self buttonAdd];
+            break;
+            
+        case 1:
+            [self buttonRemove];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)buttonAdd {
     
     if ( ! _tableViewContent ) {
         _tableViewContent = [[NSMutableArray alloc] init];
@@ -1269,14 +1316,14 @@
     
     [self insertRowInTableView:[newRowDict copy]];
     [self updateTableViewSavedContent];
-} // settingButtonAdd
+} // buttonAdd
 
-- (IBAction)settingButtonRemove:(id) __unused sender {
+- (void)buttonRemove {
     NSIndexSet *indexes = [_settingTableView selectedRowIndexes];
     [_tableViewContent removeObjectsAtIndexes:indexes];
     [_settingTableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationSlideDown];
     [self updateTableViewSavedContent];
-} // settingButtonRemove
+} // buttonRemove
 
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton {
     
@@ -1398,8 +1445,7 @@
     //  Enabled
     // ---------------------------------------------------------------------
     [[cellView settingTableView] setEnabled:enabled];
-    [[cellView settingButtonAdd] setEnabled:enabled];
-    [[cellView settingButtonRemove] setEnabled:enabled];
+    [[cellView settingSegmentedControlButton] setEnabled:enabled];
     
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
@@ -1648,7 +1694,9 @@
         NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
         if ( [selectedSegment length] != 0 ) {
             if ( [sender updateSubKeysForDict:manifestDict valueString:selectedSegment row:row] ) {
+                [[sender tableViewSettings] beginUpdates];
                 [[sender tableViewSettings] reloadData];
+                [[sender tableViewSettings] endUpdates];
             }
         } else {
             NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", [cellView settingSegmentedControl]);
@@ -1692,6 +1740,8 @@
         enabled = [settingDict[@"Enabled"] boolValue];
     }
     
+    BOOL optional = [manifestDict[@"Optional"] boolValue];
+    
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
@@ -1727,6 +1777,8 @@
         [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValueHost"] ?: @""];
     } else if ( requiredHost ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+    } else if ( optional ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:@"Optional"];
     } else {
         [[cellView settingTextFieldHost] setPlaceholderString:@""];
     }

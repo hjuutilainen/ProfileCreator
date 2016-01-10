@@ -95,19 +95,19 @@
         [_viewNoProfiles setHidden:NO];
     } else {
         for ( NSURL *profileURL in savedProfiles ) {
-
+            
             NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
             if ( [profileDict count] == 0 ) {
                 NSLog(@"[ERROR] Couldn't read profile at path: %@", [profileURL path]);
                 continue;
             }
-
+            
             NSString *name = profileDict[@"Name"];
             if ( [name length] == 0 ) {
                 NSLog(@"[ERROR] Profile doesn't contain a name!");
                 continue;
             }
-
+            
             NSDictionary *savedProfileDict = @{ @"Path" : [profileURL path],
                                                 @"Config" : profileDict };
             
@@ -128,6 +128,7 @@
 
 - (void)awakeFromNib {
     if ( ! _initialized ) {
+        [_window setBackgroundColor:[NSColor whiteColor]];
         [self setInitialized:YES];
         [_tableViewProfiles setTarget:self];
         [_tableViewProfiles setDoubleAction:@selector(openProfileCreationWindow:)];
@@ -169,6 +170,24 @@
     }
 }
 
+- (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName {
+    NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        return [item[@"Config"][@"Name"] isEqualToString:name];
+    }];
+    
+    if ( idx != NSNotFound ) {
+        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
+        NSLog(@"profileDict=%@", profileDict);
+        NSMutableDictionary *configDict = [profileDict[@"Config"] mutableCopy];
+        configDict[@"Name"] = newName ?: @"";
+        profileDict[@"Config"] = [configDict copy];
+        [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
+        [_tableViewProfiles reloadData];
+    } else {
+        NSLog(@"Found no profile named: %@", name);
+    }
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     
     NSString *menuItemTitle = [menuItem title];
@@ -201,15 +220,15 @@
     NSLog(@"Renaming!");
 }
 
-- (void)exportProfile {    
+- (void)exportProfile {
     NSInteger idx = [_tableViewProfiles selectedRow];
     
     if ( 0 <= idx && idx <= [_tableViewProfilesItems count] ) {
         NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
         PFCProfileExportWindowController *exporter = [[PFCProfileExportWindowController alloc] initWithProfileDict:[profileDict copy]];
         if ( exporter ) {
-        profileDict[@"Controller"] = exporter;
-        [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
+            profileDict[@"Controller"] = exporter;
+            [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
             [[exporter window] makeKeyAndOrderFront:self];
         } else {
             NSLog(@"[ERROR] Problem creating export controller!");
@@ -261,13 +280,27 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (IBAction)segmentedControlAddRemove:(id)sender {
+    switch ( [sender selectedSegment] ) {
+        case 0:
+            [self createProfile];
+            break;
+            
+        case 1:
+            [self removeProfile];
+            break;
+        default:
+            break;
+    }
+}
+
 + (NSString *)newProfilePath {
     NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
     NSURL *profileURL = [[PFCController profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
     return [profileURL path];
 }
 
-- (IBAction)buttonCreateProfile:(id)sender {
+- (void)createProfile {
     
     NSMutableDictionary *profileDict = [@{ @"Path" : [PFCController newProfilePath],
                                            @"Config" : @{ @"Name" : @"Untitled..." }} mutableCopy];
@@ -303,33 +336,54 @@
     }
 }
 
-- (IBAction)buttonRemoveProfile:(id)sender {
+- (void)removeProfile {
     
-    NSIndexSet *indexes = [_tableViewProfiles selectedRowIndexes];
+    NSInteger index = [_tableViewProfiles selectedRow];
     
-    if ( [indexes count] == 0 ) {
+    if ( index < 0 ) {
         NSLog(@"No profile selected");
         return;
     }
+    
+    NSDictionary *profileDict = [_tableViewProfilesItems objectAtIndex:index];
+    NSString *profileName = profileDict[@"Config"][@"Name"] ?: @"";
     
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"Cancel"];
     [alert addButtonWithTitle:@"Delete"];
     [alert setMessageText:@"Delete profile"];
-    [alert setInformativeText:[NSString stringWithFormat:@"Are you sure you want to delete %lu %@?", (unsigned long)[indexes count], ([indexes count] == 1) ? @"profile" : @"profiles"]];
+    [alert setInformativeText:[NSString stringWithFormat:@"Are you sure you want to delete profile: %@?", profileName ]];
     [alert setAlertStyle:NSInformationalAlertStyle];
     [alert beginSheetModalForWindow:[self window] completionHandler:^(NSInteger returnCode) {
         if ( returnCode == NSAlertSecondButtonReturn ) { // Delete
-            [_tableViewProfilesItems removeObjectsAtIndexes:indexes];
-            [_tableViewProfiles removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectNone];
-            if ( [_tableViewProfilesItems count] == 0 ) {
-                [_viewNoProfiles setHidden:NO];
+            
+            NSString *profilePath = profileDict[@"Path"];
+            if ( [profilePath length] == 0 ) {
+                NSLog(@"[ERROR] No path to profile!");
+                return;
+            }
+            
+            NSError *error = nil;
+            NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
+            if ( ! [profileURL checkResourceIsReachableAndReturnError:&error] ) {
+                NSLog(@"[ERROR] %@", [error localizedDescription]);
+                return;
+            } else {
+                if ( [[NSFileManager defaultManager] removeItemAtURL:profileURL error:&error] ) {
+                    [_tableViewProfilesItems removeObjectAtIndex:index];
+                    [_tableViewProfiles removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:index] withAnimation:NSTableViewAnimationEffectNone];
+                    if ( [_tableViewProfilesItems count] == 0 ) {
+                        [_viewNoProfiles setHidden:NO];
+                    }
+                } else {
+                    NSLog(@"[ERROR] %@", [error localizedDescription]);
+                }
             }
         }
     }];
-    
-    
 }
+
+
 
 - (IBAction)buttonOpenPlist:(id)sender {
     // --------------------------------------------------------------

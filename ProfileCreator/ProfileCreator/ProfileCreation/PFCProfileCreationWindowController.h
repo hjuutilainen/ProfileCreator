@@ -23,6 +23,15 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 @property NSArray *customMenu;
 @property BOOL advancedSettings;
 
+@property (strong) IBOutlet NSWindow *sheetProfileName;
+@property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
+- (IBAction)buttonCancelSheetProfileName:(id)sender;
+@property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
+- (IBAction)buttonSaveSheetProfileName:(id)sender;
+
+@property (weak) IBOutlet NSClipView *viewSettingsClipView;
+@property (weak) IBOutlet NSScrollView *viewSettingsScrollView;
+
 // TableView Menu
 @property (weak) IBOutlet NSTableView *tableViewMenuEnabled;
 @property NSInteger tableViewMenuEnabledSelectedRow;

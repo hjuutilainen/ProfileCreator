@@ -43,12 +43,10 @@
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKeyHost</key>
 			<string>CardDAVHostName</string>
-			<key>PayloadValueTypeHost</key>
-			<string>String</string>
 			<key>PayloadKeyPort</key>
 			<string>CardDAVPort</string>
-			<key>PayloadValueTypePort</key>
-			<string>Integer</string>
+			<key>DefaultValuePort</key>
+			<string>8843</string>
 			<key>Description</key>
 			<string>The CardDAV hostname or IP address and port number</string>
 			<key>CellType</key>

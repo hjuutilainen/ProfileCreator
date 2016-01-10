@@ -19,6 +19,8 @@
 		<dict>
 			<key>Identifier</key>
 			<string>19E60ED2-4867-4B9B-BA87-7EC24DF04304</string>
+			<key>Required</key>
+			<true/>
 			<key>Title</key>
 			<string>Account Description</string>
 			<key>PayloadType</key>
@@ -72,6 +74,8 @@
 					<dict>
 						<key>Identifier</key>
 						<string>C85C6D52-CDB8-4A02-AC72-FD6070E636A4</string>
+						<key>Optional</key>
+						<true/>
 						<key>PayloadType</key>
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
@@ -139,7 +143,7 @@
 					<dict>
 						<key>Identifier</key>
 						<string>2004D35B-B58C-456F-8366-1585AFBE2873</string>
-						<key>Required</key>
+						<key>RequiredHost</key>
 						<true/>
 						<key>Title</key>
 						<string>Mail Server and Port</string>
@@ -147,12 +151,10 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKeyHost</key>
 						<string>IncomingMailServerHostName</string>
-						<key>PayloadValueTypeHost</key>
-						<string>String</string>
 						<key>PayloadKeyPort</key>
 						<string>IncomingMailServerPortNumber</string>
-						<key>PayloadValueTypePort</key>
-						<string>Integer</string>
+						<key>DefaultValuePort</key>
+						<string>993</string>
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for incoming mail</string>
 						<key>CellType</key>
@@ -281,18 +283,22 @@
 						<string>Designates the authentication scheme for incoming mail</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
-						<true/>
+						<key>Identifier</key>
+						<string>4585950C-B8A5-4DC0-81C9-96365194FBD3</string>
 						<key>Title</key>
 						<string>Use SSL</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
+						<key>PayloadType</key>
+						<string>com.apple.mail.managed</string>
+						<key>PayloadKey</key>
+						<string>IncomingMailServerUseSSL</string>
+						<key>DefaultValue</key>
+						<true/>
 						<key>Description</key>
 						<string>Retrieve incoming mail through secure socket layer</string>
 						<key>CellType</key>
 						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>Designates whether the incoming mail server uses SSL for authentication</string>
 					</dict>
 				</array>
 				<key>Outgoing Mail</key>
@@ -300,7 +306,7 @@
 					<dict>
 						<key>Identifier</key>
 						<string>481BC566-3218-4275-9EDB-8BA09FFA972E</string>
-						<key>Required</key>
+						<key>RequiredHost</key>
 						<true/>
 						<key>Title</key>
 						<string>Mail Server and Port</string>
@@ -308,12 +314,10 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKeyHost</key>
 						<string>OutgoingMailServerHostName</string>
-						<key>PayloadValueTypeHost</key>
-						<string>String</string>
 						<key>PayloadKeyPort</key>
 						<string>OutgoingMailServerPortNumber</string>
-						<key>PayloadValueTypePort</key>
-						<string>Integer</string>
+						<key>DefaultValuePort</key>
+						<string>587</string>
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for outgoing mail</string>
 						<key>CellType</key>
@@ -450,8 +454,6 @@
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingPasswordSameAsIncomingPassword</string>
-						<key>PayloadValueType</key>
-						<string>Boolean</string>
 						<key>Description</key>
 						<string>SMTP authentication uses the same password as POP/IMAP</string>
 						<key>CellType</key>
@@ -462,16 +464,14 @@
 					<dict>
 						<key>Identifier</key>
 						<string>C9F0BE6D-2044-43FD-AA4C-F8BE92BBA547</string>
-						<key>Enabled</key>
-						<true/>
 						<key>Title</key>
 						<string>Use SSL</string>
 						<key>PayloadType</key>
 						<string>com.apple.mail.managed</string>
 						<key>PayloadKey</key>
 						<string>OutgoingMailServerUseSSL</string>
-						<key>PayloadValueType</key>
-						<string>Boolean</string>
+						<key>DefaultValue</key>
+						<true/>
 						<key>Description</key>
 						<string>Send outgoing mail through secure socket layer</string>
 						<key>CellType</key>

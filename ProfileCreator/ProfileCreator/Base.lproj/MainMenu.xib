@@ -10,9 +10,8 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="J1R-AM-bmu" customClass="PFCController">
             <connections>
-                <outlet property="buttonCreateProfile" destination="CQI-pc-lTr" id="1DF-bE-o80"/>
-                <outlet property="buttonRemoveProfile" destination="RuK-fY-H39" id="gj5-UB-nIy"/>
                 <outlet property="menuAdvancedOptions" destination="lP6-cG-oyh" id="JQe-QM-cdj"/>
+                <outlet property="segmentedControlAddRemove" destination="F1e-Bs-Uhl" id="XiX-sI-w5o"/>
                 <outlet property="tableViewProfiles" destination="pfy-i1-zvg" id="cxU-By-03q"/>
                 <outlet property="viewNoProfiles" destination="JCg-7c-7Ab" id="Whn-XV-4Gk"/>
                 <outlet property="viewTableViewProfilesSuperview" destination="aCA-g0-cV9" id="psc-rD-ZiW"/>
@@ -671,24 +670,14 @@
         </menu>
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
-            <rect key="contentRect" x="335" y="390" width="467" height="310"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="contentRect" x="335" y="390" width="190" height="319"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="467" height="310"/>
+                <rect key="frame" x="0.0" y="0.0" width="190" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RuK-fY-H39">
-                        <rect key="frame" x="43" y="19" width="24" height="23"/>
-                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pmS-2h-irc">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonRemoveProfile:" target="J1R-AM-bmu" id="qZP-XA-xBo"/>
-                        </connections>
-                    </button>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="aCA-g0-cV9">
-                        <rect key="frame" x="20" y="40" width="150" height="250"/>
+                        <rect key="frame" x="20" y="49" width="150" height="250"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdD-fF-vyN">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="250"/>
@@ -697,7 +686,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewProfiles" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="pfy-i1-zvg">
-                                            <rect key="frame" x="0.0" y="0.0" width="148" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="149" height="248"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -745,7 +734,7 @@
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Lgf-M4-4f9">
-                                    <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                    <rect key="frame" x="1" y="234" width="148" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="xB8-x0-AD1">
@@ -763,13 +752,26 @@
                             <constraint firstAttribute="trailing" secondItem="XdD-fF-vyN" secondAttribute="trailing" id="qOL-a5-o8b"/>
                         </constraints>
                     </customView>
-                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mfp-Vl-9xL">
-                        <rect key="frame" x="66" y="19" width="31" height="23"/>
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="F1e-Bs-Uhl">
+                        <rect key="frame" x="18" y="18" width="71" height="24"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="AOk-4j-Mbb">
+                            <font key="font" metaFont="system"/>
+                            <segments>
+                                <segment image="NSAddTemplate" width="32"/>
+                                <segment image="NSRemoveTemplate" width="32" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="segmentedControlAddRemove:" target="J1R-AM-bmu" id="tpI-Je-IdZ"/>
+                        </connections>
+                    </segmentedControl>
+                    <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="mfp-Vl-9xL">
+                        <rect key="frame" x="93" y="17" width="47" height="27"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="31" id="Oph-Hq-cks"/>
+                            <constraint firstAttribute="width" constant="43" id="Q4U-z0-Pg1"/>
                         </constraints>
-                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" pullsDown="YES" id="1DF-Zt-8vT">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" pullsDown="YES" id="1DF-Zt-8vT">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="menu"/>
                             <menu key="menu" id="lP6-cG-oyh">
                                 <items>
@@ -778,44 +780,18 @@
                             </menu>
                         </popUpButtonCell>
                     </popUpButton>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CQI-pc-lTr">
-                        <rect key="frame" x="20" y="19" width="24" height="23"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="21" id="2IY-rZ-jfk"/>
-                            <constraint firstAttribute="width" constant="24" id="ndF-Tl-w4u"/>
-                        </constraints>
-                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QUg-fh-tru">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonCreateProfile:" target="J1R-AM-bmu" id="SG8-mf-wMv"/>
-                        </connections>
-                    </button>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="atZ-RF-GPy">
-                        <rect key="frame" x="178" y="40" width="269" height="250"/>
-                    </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="RuK-fY-H39" firstAttribute="top" secondItem="aCA-g0-cV9" secondAttribute="bottom" constant="-1" id="24a-iI-YTI"/>
-                    <constraint firstAttribute="bottom" secondItem="CQI-pc-lTr" secondAttribute="bottom" constant="20" symbolic="YES" id="2Dr-Hv-r48"/>
-                    <constraint firstItem="atZ-RF-GPy" firstAttribute="leading" secondItem="aCA-g0-cV9" secondAttribute="trailing" constant="8" symbolic="YES" id="LCf-Km-9Qo"/>
-                    <constraint firstItem="mfp-Vl-9xL" firstAttribute="leading" secondItem="RuK-fY-H39" secondAttribute="trailing" constant="-1" id="LzD-lk-LB3"/>
-                    <constraint firstItem="mfp-Vl-9xL" firstAttribute="height" secondItem="RuK-fY-H39" secondAttribute="height" id="Mce-yS-xgY"/>
-                    <constraint firstItem="RuK-fY-H39" firstAttribute="centerY" secondItem="CQI-pc-lTr" secondAttribute="centerY" id="PQR-nu-d7p"/>
-                    <constraint firstItem="CQI-pc-lTr" firstAttribute="leading" secondItem="aCA-g0-cV9" secondAttribute="leading" id="QBR-jV-kMA"/>
-                    <constraint firstItem="mfp-Vl-9xL" firstAttribute="centerY" secondItem="RuK-fY-H39" secondAttribute="centerY" id="UgF-qJ-XC3"/>
-                    <constraint firstItem="RuK-fY-H39" firstAttribute="width" secondItem="CQI-pc-lTr" secondAttribute="width" id="WHj-FA-w3q"/>
-                    <constraint firstItem="RuK-fY-H39" firstAttribute="leading" secondItem="CQI-pc-lTr" secondAttribute="trailing" constant="-1" id="crJ-xg-hCq"/>
+                    <constraint firstItem="mfp-Vl-9xL" firstAttribute="centerY" secondItem="F1e-Bs-Uhl" secondAttribute="centerY" id="J1T-dx-TIV"/>
+                    <constraint firstItem="F1e-Bs-Uhl" firstAttribute="leading" secondItem="aCA-g0-cV9" secondAttribute="leading" id="RE7-60-dKo"/>
                     <constraint firstItem="aCA-g0-cV9" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="d8q-4N-Hck"/>
-                    <constraint firstAttribute="trailing" secondItem="atZ-RF-GPy" secondAttribute="trailing" constant="20" symbolic="YES" id="dLo-Kz-GLD"/>
-                    <constraint firstAttribute="bottom" secondItem="atZ-RF-GPy" secondAttribute="bottom" constant="40" id="ePU-Wc-jWN"/>
                     <constraint firstItem="aCA-g0-cV9" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="ea3-gJ-d3y"/>
-                    <constraint firstItem="atZ-RF-GPy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="gqI-WQ-bBi"/>
-                    <constraint firstItem="RuK-fY-H39" firstAttribute="height" secondItem="CQI-pc-lTr" secondAttribute="height" id="tkt-Vc-7ci"/>
+                    <constraint firstItem="mfp-Vl-9xL" firstAttribute="leading" secondItem="F1e-Bs-Uhl" secondAttribute="trailing" constant="8" symbolic="YES" id="ewM-bE-95T"/>
+                    <constraint firstItem="F1e-Bs-Uhl" firstAttribute="top" secondItem="aCA-g0-cV9" secondAttribute="bottom" constant="8" symbolic="YES" id="nXH-BP-v07"/>
+                    <constraint firstAttribute="bottom" secondItem="F1e-Bs-Uhl" secondAttribute="bottom" constant="20" symbolic="YES" id="zEW-DQ-8ZI"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="622.5" y="539"/>
+            <point key="canvasLocation" x="508" y="315"/>
         </window>
         <customView id="JCg-7c-7Ab">
             <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>

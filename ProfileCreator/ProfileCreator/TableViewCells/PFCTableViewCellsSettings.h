@@ -236,10 +236,8 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTableView *settingTableView;
-@property (weak) IBOutlet NSButton *settingButtonAdd;
-- (IBAction)settingButtonAdd:(id)sender;
-@property (weak) IBOutlet NSButton *settingButtonRemove;
-- (IBAction)settingButtonRemove:(id)sender;
+@property (weak) IBOutlet NSSegmentedControl *settingSegmentedControlButton;
+- (IBAction)segmentedControlButton:(id)sender;
 - (void)popUpButtonSelection:(id)sender;
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
 @end

@@ -22,7 +22,7 @@
 - (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict {
     NSMutableArray *errorDict = [NSMutableArray array];
     for ( NSDictionary *payloadDict in manifestArray ) {
-        if ( payloadDict[@"PayloadValue"] ) {
+        if ( payloadDict[@"PayloadValue"] || payloadDict[@"SharedKey"] ) {
             continue;
         }
         NSDictionary *report = [[PFCPayloadVerification sharedInstance] verifyCellDict:payloadDict settingsDict:settingsDict];
@@ -81,6 +81,8 @@
         return [self verifyCellTypeCheckbox:cellDict settingsDict:settingsDict];
     } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
         return [self verifyCellTypeCheckbox:cellDict settingsDict:settingsDict];
+    } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
+        
     } else if ( [cellType isEqualToString:@"File"] ) {
         return [self verifyCellTypeFile:cellDict settingsDict:settingsDict];
     } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
@@ -95,6 +97,7 @@
         
     } else {
         NSLog(@"[ERROR] Unknown CellType: %@", cellType);
+        NSLog(@"[ERROR] cellDict: %@", cellDict);
     }
     
     return @{};

@@ -459,10 +459,10 @@
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
         NSDictionary *menuDict = _tableViewMenuItemsEnabled[(NSUInteger)row];
-
+        
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
-
+            
             NSDictionary *manifestSettings;
             if ( _tableViewMenuEnabledSelectedRow == -1 && _tableViewMenuDisabledSelectedRow == -1 ) {
                 NSDictionary *domain = menuDict[@"Domain"];
@@ -609,6 +609,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)controlTextDidChange:(NSNotification *)sender {
+    
+    if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
+        NSDictionary *userInfo = [sender userInfo];
+        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+        if ( [inputText isEqualToString:@"Untitled..."] || [inputText length] == 0 ) {
+            [_buttonSaveSheetProfileName setEnabled:NO];
+        } else {
+            [_buttonSaveSheetProfileName setEnabled:YES];
+        }
+        return;
+    }
     
     // ---------------------------------------------------------------------
     //  Make sure it's a text field
@@ -971,10 +982,11 @@
     // ---------------------------------------------------------------------
     //  Add subkeys for selected state
     // ---------------------------------------------------------------------
-    [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row];
-    [_tableViewSettings beginUpdates];
-    [_tableViewSettings reloadData];
-    [_tableViewSettings endUpdates];
+    if ( [self updateSubKeysForDict:cellDict valueString:state ? @"True" : @"False" row:row] ) {
+        [_tableViewSettings beginUpdates];
+        [_tableViewSettings reloadData];
+        [_tableViewSettings endUpdates];
+    }
 } // checkbox
 
 - (void)datePickerSelection:(NSDatePicker *)datePicker {
@@ -1087,10 +1099,11 @@
         // ---------------------------------------------------------------------
         //  Add subkeys for selected title
         // ---------------------------------------------------------------------
-        [self updateSubKeysForDict:cellDict valueString:selectedTitle row:row];
-        [_tableViewSettings beginUpdates];
-        [_tableViewSettings reloadData];
-        [_tableViewSettings endUpdates];
+        if ( [self updateSubKeysForDict:cellDict valueString:selectedTitle row:row] ) {
+            [_tableViewSettings beginUpdates];
+            [_tableViewSettings reloadData];
+            [_tableViewSettings endUpdates];
+        }
     }
 } // popUpButtonSelection
 
@@ -1208,10 +1221,11 @@
         // ---------------------------------------------------------------------
         //  Add subkeys for selected segmented control
         // ---------------------------------------------------------------------
-        [self updateSubKeysForDict:[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row];
-        [_tableViewSettings beginUpdates];
-        [_tableViewSettings reloadData];
-        [_tableViewSettings endUpdates];
+        if ( [self updateSubKeysForDict:[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row] ) {
+            [_tableViewSettings beginUpdates];
+            [_tableViewSettings reloadData];
+            [_tableViewSettings endUpdates];
+        }
     }
     
 } // segmentedControl
@@ -1327,8 +1341,8 @@
                     if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
                         for ( NSDictionary *parentKeyDict in parentKeyArray ) {
                             if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
-                                NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
-                                NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                                //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                                //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
                                 [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
                                 updatedTableView = YES;
                                 return;
@@ -1361,7 +1375,6 @@
                 NSMutableDictionary *mutableValueDict;
                 if ( [valueDict[@"SharedKey"] length] != 0 ) {
                     NSString *sharedKey = valueDict[@"SharedKey"];
-                    NSLog(@"sharedKey=%@", sharedKey);
                     NSDictionary *valueKeysShared = cellDict[@"ValueKeysShared"];
                     if ( [valueKeysShared count] != 0 ) {
                         mutableValueDict = valueKeysShared[sharedKey];
@@ -1497,6 +1510,7 @@
 } // tableViewMenu
 
 - (IBAction)buttonCancel:(id)sender {
+    [[self window] performClose:self];
 }
 
 - (BOOL)windowShouldClose:(id)sender {
@@ -1504,7 +1518,6 @@
     if ( _windowShouldClose ) {
         [self setWindowShouldClose:NO];
         if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
-            NSLog(@"_profileDict: %@", _profileDict);
             [_parentObject removeControllerForProfileDictWithName:_profileDict[@"Config"][@"Name"]];
         }
         return YES;
@@ -1570,6 +1583,18 @@
 }
 
 - (IBAction)buttonSave:(id)sender {
+    [_buttonSaveSheetProfileName setEnabled:NO];
+    if ( [_profileDict[@"Config"][@"Name"] isEqualToString:@"Untitled..."] ) {
+        [_textFieldSheetProfileName setStringValue:@"Untitled..."];
+        [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
+            
+        }];
+    } else {
+        [self saveProfile];
+    }
+}
+
+- (void)saveProfile {
     
     // Save current settings
     [self saveCurrentSettings];
@@ -1591,7 +1616,17 @@
     NSMutableDictionary *profileDict = [_profileDict mutableCopy];
     NSMutableDictionary *configurationDict = [_profileDict[@"Config"] mutableCopy];
     
-    configurationDict[@"Settings"] = _tableViewSettingsSettings;
+    NSMutableDictionary *settings = [_tableViewSettingsSettings mutableCopy];
+    for ( NSString *domain in [settings allKeys] ) {
+        if ( [settings[domain][@"UUID"] length] == 0 ) {
+            NSMutableDictionary *domainDict = [settings[domain] mutableCopy];
+            domainDict[@"UUID"] = [[NSUUID UUID] UUIDString];
+            settings[domain] = [domainDict copy];
+        }
+    }
+    _tableViewSettingsSettings = [settings mutableCopy];
+    
+    configurationDict[@"Settings"] = [settings copy];
     NSLog(@"configurationDict: %@", configurationDict);
     if ( [configurationDict writeToURL:profileURL atomically:YES] ) {
         profileDict[@"Config"] = [configurationDict copy];
@@ -1657,6 +1692,34 @@
     }
     
     return [savedSettingsDict copy];
+}
+
+- (IBAction)buttonCancelSheetProfileName:(id)sender {
+    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    [_sheetProfileName orderOut:self];
+}
+
+- (IBAction)buttonSaveSheetProfileName:(id)sender {
+    if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
+        [_parentObject renameProfileWithName:@"Untitled..." newName:[_textFieldSheetProfileName stringValue]];
+        
+        NSMutableDictionary *profileDict = [_profileDict mutableCopy];
+        NSMutableDictionary *configDict = [_profileDict[@"Config"] mutableCopy];
+        configDict[@"Name"] = [_textFieldSheetProfileName stringValue];
+        profileDict[@"Config"] = [configDict copy];
+        [self setProfileDict:[profileDict copy]];
+        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+        [_sheetProfileName orderOut:self];
+        [self saveProfile];
+    } else {
+        NSLog(@"Parent doesnt respond to rename profile!");
+        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+        [_sheetProfileName orderOut:self];
+    }
+}
+
+- (IBAction)segmentedControlTest:(id)sender {
+    NSLog(@"sender=%ld", (long)[sender selectedSegment]);
 }
 
 @end
