@@ -25,13 +25,18 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict sender:(id)sender {
+- (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender {
     self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
     if (self != nil) {
-        _tableViewMenuItemsEnabled = [[NSMutableArray alloc] init];
-        _tableViewMenuItemsDisabled = [[NSMutableArray alloc] init];
-        _tableViewSettingsItemsEnabled = [[NSMutableArray alloc] init];
-        _tableViewSettingsItemsDisabled = [[NSMutableArray alloc] init];
+        
+        
+        _arrayProfilePayloads = [[NSMutableArray alloc] init];
+        _arrayPayloadLibrary = [[NSMutableArray alloc] init];
+        _arraySettings = [[NSMutableArray alloc] init];
+
+        
+        
+        
         _tableViewSettingsSettings = [profileDict[@"Config"][@"Settings"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _tableViewSettingsCurrentSettings = [[NSMutableDictionary alloc] init];
         
@@ -40,10 +45,9 @@
         _advancedSettings = NO;
         _columnMenuEnabledHidden = YES;
         _columnSettingsEnabledHidden = YES;
-        _tableViewMenuEnabledSelectedRow = -1; // None selected
-        _tableViewMenuDisabledSelectedRow = -1; // None selected
-        _profileType = profileType;
+
         _profileDict = profileDict ?: @{};
+        
         [[self window] setDelegate:self];
         _windowShouldClose = NO;
     }
@@ -57,34 +61,38 @@
 
 - (void)windowDidLoad {
     [super windowDidLoad];
+    
+    // Setup Main Window
+    [[self window] setBackgroundColor:[NSColor whiteColor]];
+    [self insertSubview:_viewProfilePayloadsSuperview inSuperview:_viewProfilePayloadsSplitView cTop:-1 cBottom:0 cRight:-1 cLeft:-1];
+    [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView cTop:-1 cBottom:0 cRight:-1 cLeft:-1];
+    [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
+    
+    // Setup KVO observers
     [self addObserver:self forKeyPath:@"profileName" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
-    [self setProfileName:_profileDict[@"Config"][@"Name"] ?: @"Profile"];
+    
+    // Setup TableViews
     [self initializeTableViewMenu];
+    
+    [self setProfileName:_profileDict[@"Config"][@"Name"] ?: @"Profile"];
 } // windowDidLoad
 
 - (void)initializeTableViewMenu {
-    [self setupSettingsErrorView];
-    [self updateTableColumnsMenuEnabled];
-    [self updateTableColumnsMenuDisabled];
     [self updateTableColumnsSettings];
     [self setupMenu];
-    [self tableViewMenu:nil];
-    [_tableViewMenuEnabled reloadData];
-    [_tableViewMenuDisabled reloadData];
+    
+    [self tableViewProfilePayloads:nil];
+    [self setTableViewProfilePayloadsSelectedRow:-1];
+    [self setTableViewPayloadLibrarySelectedRow:-1];
+    
+    [self tableViewPayloadLibrary:nil];
+    [_tableViewProfilePayloads reloadData];
+    [_tableViewPayloadLibrary reloadData];
 } // initializeMenu
 
 - (void)setupMenu {
-    switch (_profileType) {
-        case kPFCProfileTypeApple:
             [self setupMenuProfilesApple];
-            break;
-        case kPFCProfileTypeCustom:
-            [self setupMenuProfilesCustom];
-            break;
-        default:
-            break;
-    }
 } // setupMenu
 
 - (void)setupMenuProfilesCustom {
@@ -93,15 +101,15 @@
         return;
     }
     
-    [_tableViewMenuItemsEnabled addObjectsFromArray:_customMenu];
+    [_arrayProfilePayloads addObjectsFromArray:_customMenu];
 } // setupMenuProfilesCustom
 
 - (void)setupMenuProfilesApple {
     
     NSError *error = nil;
     
-    [_tableViewMenuItemsEnabled removeAllObjects];
-    [_tableViewMenuItemsDisabled removeAllObjects];
+    [_arrayProfilePayloads removeAllObjects];
+    [_arrayPayloadLibrary removeAllObjects];
     
     NSMutableArray *enabledPayloadDomains = [NSMutableArray array];
     for ( NSString *payloadDomain in [_tableViewSettingsSettings allKeys] ) {
@@ -137,9 +145,9 @@
                     [enabledPayloadDomains containsObject:manifestDomain] ||
                     [manifestDomain isEqualToString:@"com.apple.general"]
                     ) {
-                    [_tableViewMenuItemsEnabled addObject:manifestDict];
+                    [_arrayProfilePayloads addObject:manifestDict];
                 } else {
-                    [_tableViewMenuItemsDisabled addObject:manifestDict];
+                    [_arrayPayloadLibrary addObject:manifestDict];
                 }
             } else {
                 NSLog(@"[ERROR] Manifest %@ was empty!", [manifestURL lastPathComponent]);
@@ -149,13 +157,13 @@
         // ---------------------------------------------------------------------
         //  Sort menu arrays
         // ---------------------------------------------------------------------
-        [_tableViewMenuItemsEnabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-        [_tableViewMenuItemsDisabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+        [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+        [_arrayPayloadLibrary sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         
         // ---------------------------------------------------------------------
         //  Find index of menu item com.apple.general
         // ---------------------------------------------------------------------
-        NSUInteger idx = [_tableViewMenuItemsEnabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger idx = [_arrayProfilePayloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
         }];
         
@@ -163,9 +171,9 @@
         //  Move menu item com.apple.general to the top of the menu array
         // ---------------------------------------------------------------------
         if (idx != NSNotFound) {
-            NSDictionary *generalSettingsDict = [_tableViewMenuItemsEnabled objectAtIndex:idx];
-            [_tableViewMenuItemsEnabled removeObjectAtIndex:idx];
-            [_tableViewMenuItemsEnabled insertObject:generalSettingsDict atIndex:0];
+            NSDictionary *generalSettingsDict = [_arrayProfilePayloads objectAtIndex:idx];
+            [_arrayProfilePayloads removeObjectAtIndex:idx];
+            [_arrayProfilePayloads insertObject:generalSettingsDict atIndex:0];
         } else {
             NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
         }
@@ -174,41 +182,30 @@
     }
 } // setupMenu
 
-- (void)setupSettingsErrorView {
-    [_viewSettingsSuperView addSubview:_viewErrorReadingSettings positioned:NSWindowAbove relativeTo:nil];
-    [_viewErrorReadingSettings setTranslatesAutoresizingMaskIntoConstraints:NO];
+- (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview cTop:(int)cTop cBottom:(int)cBottom cRight:(int)cRight cLeft:(int)cLeft {
+    [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
+    [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    
     NSArray *constraintsArray;
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[_viewErrorReadingSettings]-|"
+    NSString *constraintLeft = [NSString stringWithFormat:@"-(%d)-", cLeft ?: 0];
+    NSString *constraintRight = [NSString stringWithFormat:@"-(%d)-", cRight ?: 0];
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|%@[subview]%@|", constraintLeft, constraintRight]
                                                                options:0
                                                                metrics:nil
-                                                                 views:NSDictionaryOfVariableBindings(_viewErrorReadingSettings)];
-    [_viewSettingsSuperView addConstraints:constraintsArray];
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_viewErrorReadingSettings]-|"
+                                                                 views:NSDictionaryOfVariableBindings(subview)];
+    [superview addConstraints:constraintsArray];
+    
+    NSString *constraintTop = [NSString stringWithFormat:@"-(%d)-", cTop ?: 0];
+    NSString *constraintBottom = [NSString stringWithFormat:@"-(%d)-", cBottom ?: 0];
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|%@[subview]%@|", constraintTop, constraintBottom]
                                                                options:0
                                                                metrics:nil
-                                                                 views:NSDictionaryOfVariableBindings(_viewErrorReadingSettings)];
-    [_viewSettingsSuperView addConstraints:constraintsArray];
-    [_viewSettingsSuperView setHidden:NO];
-    [_viewErrorReadingSettings setHidden:YES];
-} // setupSettings
-
-- (void)updateTableColumnsMenuEnabled {
-    for ( NSTableColumn *column in [_tableViewMenuEnabled tableColumns] ) {
-        if ( [[column identifier] isEqualToString:@"ColumnMenuEnabled"] ) {
-            [column setHidden:NO];
-            //[column setHidden:!_advancedSettings];
-        }
-    }
-} // updateTableColumnsMenuEnabled
-
-- (void)updateTableColumnsMenuDisabled {
-    for ( NSTableColumn *column in [_tableViewMenuDisabled tableColumns] ) {
-        if ( [[column identifier] isEqualToString:@"ColumnMenuEnabled"] ) {
-            [column setHidden:NO];
-            //[column setHidden:!_advancedSettings];
-        }
-    }
-} // updateTableColumnsMenuDisabled
+                                                                 views:NSDictionaryOfVariableBindings(subview)];
+    [superview addConstraints:constraintsArray];
+    [superview setHidden:NO];
+    [subview setHidden:NO];
+}
 
 - (void)updateTableColumnsSettings {
     for ( NSTableColumn *column in [_tableViewSettings tableColumns] ) {
@@ -221,10 +218,10 @@
 } // updateTableColumnsSettings
 
 - (void)updateMenuErrorCount {
-    if ( [_tableViewMenuSelectedTableView isEqualToString:@"TableViewMenuEnabled"] ) {
-        if ( 0 <= _tableViewMenuEnabledSelectedRow && _tableViewMenuEnabledSelectedRow <= [_tableViewMenuItemsEnabled count] ) {
-            NSInteger columnIndex = [_tableViewMenuEnabled columnWithIdentifier:@"ColumnMenu"];
-            [_tableViewMenuEnabled reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewMenuEnabledSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
+    if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+        if ( 0 <= _tableViewProfilePayloadsSelectedRow && _tableViewProfilePayloadsSelectedRow <= [_arrayProfilePayloads count] ) {
+            NSInteger columnIndex = [_tableViewProfilePayloads columnWithIdentifier:@"ColumnMenu"];
+            [_tableViewProfilePayloads reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewProfilePayloadsSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
         }
     }
 }
@@ -261,11 +258,11 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     if ( [[tableView identifier] isEqualToString:@"TableViewMenuEnabled"] ) {
-        return (NSInteger)[_tableViewMenuItemsEnabled count];
+        return (NSInteger)[_arrayProfilePayloads count];
     } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuDisabled"] ) {
-        return (NSInteger)[_tableViewMenuItemsDisabled count];
+        return (NSInteger)[_arrayPayloadLibrary count];
     } else if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
-        return (NSInteger)[_tableViewSettingsItemsEnabled count];
+        return (NSInteger)[_arraySettings count];
     } else {
         return 0;
     }
@@ -284,12 +281,12 @@
         // ---------------------------------------------------------------------
         //  Verify the settings array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_tableViewSettingsItemsEnabled count] < row || [_tableViewSettingsItemsEnabled count] == 0 ) {
+        if ( [_arraySettings count] < row || [_arraySettings count] == 0 ) {
             return nil;
         }
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
-        NSDictionary *manifestDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        NSDictionary *manifestDict = _arraySettings[(NSUInteger)row];
         NSString *cellType = manifestDict[@"CellType"];
         if ( [tableColumnIdentifier isEqualToString:@"ColumnSettings"] ) {
             
@@ -463,18 +460,18 @@
         // ---------------------------------------------------------------------
         //  Verify the menu array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_tableViewMenuItemsEnabled count] < row || [_tableViewMenuItemsEnabled count] == 0 ) {
+        if ( [_arrayProfilePayloads count] < row || [_arrayProfilePayloads count] == 0 ) {
             return nil;
         }
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
-        NSDictionary *menuDict = _tableViewMenuItemsEnabled[(NSUInteger)row];
+        NSDictionary *menuDict = _arrayProfilePayloads[(NSUInteger)row];
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
             
             NSDictionary *manifestSettings;
-            if ( _tableViewMenuEnabledSelectedRow == -1 && _tableViewMenuDisabledSelectedRow == -1 ) {
+            if ( _tableViewProfilePayloadsSelectedRow == -1 && _tableViewPayloadLibrarySelectedRow == -1 ) {
                 NSDictionary *domain = menuDict[@"Domain"];
                 manifestSettings = _tableViewSettingsSettings[domain];
             } else {
@@ -500,20 +497,20 @@
         // ---------------------------------------------------------------------
         //  Verify the menu array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_tableViewMenuItemsDisabled count] < row || [_tableViewMenuItemsDisabled count] == 0 ) {
+        if ( [_arrayPayloadLibrary count] < row || [_arrayPayloadLibrary count] == 0 ) {
             return nil;
         }
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
-        NSDictionary *menuDict = _tableViewMenuItemsDisabled[(NSUInteger)row];
+        NSDictionary *menuDict = _arrayPayloadLibrary[(NSUInteger)row];
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
             if ( [cellType isEqualToString:@"Menu"] ) {
-                CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
+                CellViewMenu *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenu" owner:self];
                 return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:nil row:row];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
-            CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
+            CellViewMenuEnabled *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
             return [cellView populateCellViewEnabled:cellView menuDict:menuDict row:row sender:self];
         }
     }
@@ -526,14 +523,14 @@
         // ---------------------------------------------------------------------
         //  Verify the settings array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_tableViewSettingsItemsEnabled count] <= 0 ) {
+        if ( [_arraySettings count] <= 0 ) {
             return;
         }
         
         // ---------------------------------------------------------------------
         //  Get current cell's manifest dict identifier
         // ---------------------------------------------------------------------
-        NSDictionary *cellDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        NSDictionary *cellDict = _arraySettings[(NSUInteger)row];
         NSString *cellType = cellDict[@"CellType"];
         if ( ! [cellType isEqualToString:@"Padding"] ) {
             NSString *identifier = cellDict[@"Identifier"];
@@ -563,11 +560,11 @@
         // ---------------------------------------------------------------------
         //  Verify the settings array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_tableViewSettingsItemsEnabled count] < row || [_tableViewSettingsItemsEnabled count] == 0 ) {
+        if ( [_arraySettings count] < row || [_arraySettings count] == 0 ) {
             return 1;
         }
         
-        NSDictionary *profileDict = _tableViewSettingsItemsEnabled[(NSUInteger)row];
+        NSDictionary *profileDict = _arraySettings[(NSUInteger)row];
         
         NSString *cellType = profileDict[@"CellType"];
         if ( [cellType isEqualToString:@"Padding"] ) {
@@ -658,7 +655,7 @@
     // ---------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
     // ---------------------------------------------------------------------
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
+    NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:row] mutableCopy];
     NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
@@ -751,48 +748,48 @@
         // ---------------------------------------------------------------------
         //  Check if checbox is in table view menu ENABLED
         // ---------------------------------------------------------------------
-        if ( ( row < [_tableViewMenuItemsEnabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuEnabled viewAtColumn:[_tableViewMenuEnabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+        if ( ( row < [_arrayProfilePayloads count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewProfilePayloads viewAtColumn:[_tableViewProfilePayloads columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
             // ---------------------------------------------------------------------
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
-            NSDictionary *cellDict = [_tableViewMenuItemsEnabled objectAtIndex:row];
+            NSDictionary *cellDict = [_arrayProfilePayloads objectAtIndex:row];
             NSString *payloadDomain = cellDict[@"Domain"];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu ENABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
-            [_tableViewMenuEnabled beginUpdates];
-            [_tableViewMenuItemsEnabled removeObjectAtIndex:(NSUInteger)row];
-            [_tableViewMenuEnabled reloadData];
-            [_tableViewMenuEnabled endUpdates];
+            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewProfilePayloads selectedRow];
+            [_tableViewProfilePayloads beginUpdates];
+            [_arrayProfilePayloads removeObjectAtIndex:(NSUInteger)row];
+            [_tableViewProfilePayloads reloadData];
+            [_tableViewProfilePayloads endUpdates];
             
             // ----------------------------------------------------------------------
             //  If current cell dict wasn't selected, restore selection after reload
             // ----------------------------------------------------------------------
             if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
                 NSInteger selectedRow = ( row < tableViewMenuEnabledSelectedRow ) ? ( tableViewMenuEnabledSelectedRow - 1 ) : tableViewMenuEnabledSelectedRow;
-                [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
-                [self setTableViewMenuEnabledSelectedRow:selectedRow];
+                [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [self setTableViewProfilePayloadsSelectedRow:selectedRow];
             }
             
             // ---------------------------------------------------------------------
             //  Add the cell dict to table view menu DISABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
-            [_tableViewMenuDisabled beginUpdates];
-            [_tableViewMenuItemsDisabled addObject:cellDict];
-            [_tableViewMenuItemsDisabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-            [_tableViewMenuDisabled reloadData];
-            [_tableViewMenuDisabled endUpdates];
+            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewPayloadLibrary selectedRow];
+            [_tableViewPayloadLibrary beginUpdates];
+            [_arrayPayloadLibrary addObject:cellDict];
+            [_arrayPayloadLibrary sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+            [_tableViewPayloadLibrary reloadData];
+            [_tableViewPayloadLibrary endUpdates];
             
             // -----------------------------------------------------------------------------
             //  If item in table view DISABLED was selected, restore selection after reload
             // -----------------------------------------------------------------------------
             if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
-                [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuDisabledSelectedRow] byExtendingSelection:NO];
-                [self setTableViewMenuDisabledSelectedRow:tableViewMenuDisabledSelectedRow];
+                [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuDisabledSelectedRow] byExtendingSelection:NO];
+                [self setTableViewPayloadLibrarySelectedRow:tableViewMenuDisabledSelectedRow];
             }
             
             // -----------------------------------------------------------------------------
@@ -803,18 +800,18 @@
                 // ---------------------------------------------------------------------
                 //  Deselect items in table view ENABLED
                 // ---------------------------------------------------------------------
-                [_tableViewMenuEnabled deselectAll:self];
-                [self setTableViewMenuEnabledSelectedRow:-1];
+                [_tableViewProfilePayloads deselectAll:self];
+                [self setTableViewProfilePayloadsSelectedRow:-1];
                 
                 // ---------------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // ---------------------------------------------------------------------
-                NSUInteger row = [_tableViewMenuItemsDisabled indexOfObject:cellDict];
+                NSUInteger row = [_arrayPayloadLibrary indexOfObject:cellDict];
                 if ( row != NSNotFound ) {
-                    [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                    [[self window] makeFirstResponder:_tableViewMenuDisabled];
-                    [self setTableViewMenuDisabledSelectedRow:row];
-                    [self setTableViewMenuSelectedTableView:[_tableViewMenuDisabled identifier]];
+                    [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                    [[self window] makeFirstResponder:_tableViewPayloadLibrary];
+                    [self setTableViewPayloadLibrarySelectedRow:row];
+                    [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
                 }
                 
                 [_tableViewSettingsCurrentSettings removeObjectForKey:@"Selected"];
@@ -831,54 +828,54 @@
             // ---------------------------------------------------------------------
             //  Check if checkbox is in table view menu DISABLED
             // ---------------------------------------------------------------------
-        } else if ( ( row < [_tableViewMenuItemsDisabled count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewMenuDisabled viewAtColumn:[_tableViewMenuDisabled columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+        } else if ( ( row < [_arrayPayloadLibrary count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewPayloadLibrary viewAtColumn:[_tableViewPayloadLibrary columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
             // ---------------------------------------------------------------------
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
-            NSDictionary *cellDict = [_tableViewMenuItemsDisabled objectAtIndex:row];
+            NSDictionary *cellDict = [_arrayPayloadLibrary objectAtIndex:row];
             NSString *payloadDomain = cellDict[@"Domain"];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu DISABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewMenuDisabled selectedRow];
-            [_tableViewMenuDisabled beginUpdates];
-            [_tableViewMenuItemsDisabled removeObjectAtIndex:(NSUInteger)row];
-            [_tableViewMenuDisabled reloadData];
-            [_tableViewMenuDisabled endUpdates];
+            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewPayloadLibrary selectedRow];
+            [_tableViewPayloadLibrary beginUpdates];
+            [_arrayPayloadLibrary removeObjectAtIndex:(NSUInteger)row];
+            [_tableViewPayloadLibrary reloadData];
+            [_tableViewPayloadLibrary endUpdates];
             
             // ----------------------------------------------------------------------
             //  If current cell dict wasn't selected, restore selection after reload
             // ----------------------------------------------------------------------
             if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
                 NSInteger selectedRow = ( row < tableViewMenuDisabledSelectedRow ) ? ( tableViewMenuDisabledSelectedRow - 1 ) : tableViewMenuDisabledSelectedRow;
-                [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
-                [self setTableViewMenuDisabledSelectedRow:selectedRow];
+                [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [self setTableViewPayloadLibrarySelectedRow:selectedRow];
             }
             
             // ---------------------------------------------------------------------
             //  Add the cell dict to table view menu ENABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewMenuEnabled selectedRow];
-            [_tableViewMenuEnabled beginUpdates];
-            [_tableViewMenuItemsEnabled addObject:cellDict];
-            [_tableViewMenuItemsEnabled sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-            [_tableViewMenuEnabled reloadData];
-            [_tableViewMenuEnabled endUpdates];
+            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewProfilePayloads selectedRow];
+            [_tableViewProfilePayloads beginUpdates];
+            [_arrayProfilePayloads addObject:cellDict];
+            [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+            [_tableViewProfilePayloads reloadData];
+            [_tableViewProfilePayloads endUpdates];
             
             // -----------------------------------------------------------------------------
             //  If item in table view ENABLED was selected, restore selection after reload
             // -----------------------------------------------------------------------------
             if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
-                [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuEnabledSelectedRow] byExtendingSelection:NO];
-                [self setTableViewMenuEnabledSelectedRow:tableViewMenuEnabledSelectedRow];
+                [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuEnabledSelectedRow] byExtendingSelection:NO];
+                [self setTableViewProfilePayloadsSelectedRow:tableViewMenuEnabledSelectedRow];
             }
             
             // ---------------------------------------------------------------------
             //  Find index of menu item com.apple.general
             // ---------------------------------------------------------------------
-            NSUInteger idx = [_tableViewMenuItemsEnabled indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+            NSUInteger idx = [_arrayProfilePayloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
                 return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
             }];
             
@@ -886,9 +883,9 @@
             //  Move menu item com.apple.general to the top of the menu array
             // ---------------------------------------------------------------------
             if ( idx != NSNotFound ) {
-                NSDictionary *generalSettingsDict = [_tableViewMenuItemsEnabled objectAtIndex:idx];
-                [_tableViewMenuItemsEnabled removeObjectAtIndex:idx];
-                [_tableViewMenuItemsEnabled insertObject:generalSettingsDict atIndex:0];
+                NSDictionary *generalSettingsDict = [_arrayProfilePayloads objectAtIndex:idx];
+                [_arrayProfilePayloads removeObjectAtIndex:idx];
+                [_arrayProfilePayloads insertObject:generalSettingsDict atIndex:0];
             } else {
                 NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
             }
@@ -901,18 +898,18 @@
                 // ---------------------------------------------------------------------
                 //  Deselect items in table view DISABLED
                 // ---------------------------------------------------------------------
-                [_tableViewMenuDisabled deselectAll:self];
-                [self setTableViewMenuDisabledSelectedRow:-1];
+                [_tableViewPayloadLibrary deselectAll:self];
+                [self setTableViewPayloadLibrarySelectedRow:-1];
                 
                 // ---------------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // ---------------------------------------------------------------------
-                NSUInteger row = [_tableViewMenuItemsEnabled indexOfObject:cellDict];
+                NSUInteger row = [_arrayProfilePayloads indexOfObject:cellDict];
                 if ( row != NSNotFound ) {
-                    [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                    [[self window] makeFirstResponder:_tableViewMenuEnabled];
-                    [self setTableViewMenuEnabledSelectedRow:row];
-                    [self setTableViewMenuSelectedTableView:[_tableViewMenuEnabled identifier]];
+                    [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                    [[self window] makeFirstResponder:_tableViewProfilePayloads];
+                    [self setTableViewProfilePayloadsSelectedRow:row];
+                    [self setSelectedPayloadTableViewIdentifier:[_tableViewProfilePayloads identifier]];
                 }
                 
                 _tableViewSettingsCurrentSettings[@"Selected"] = @YES;
@@ -947,7 +944,7 @@
     // ---------------------------------------------------------------------
     //  Get current cell's key in the settings dict
     // ---------------------------------------------------------------------
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:row] mutableCopy];
+    NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:row] mutableCopy];
     NSString *identifier = cellDict[@"Identifier"];
     NSMutableDictionary *settingsDict;
     if ( [identifier length] != 0 ) {
@@ -1017,7 +1014,7 @@
     }
     NSInteger row = [datePickerTag integerValue];
     
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
     NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
@@ -1079,7 +1076,7 @@
     }
     NSInteger row = [popUpButtonTag integerValue];
     
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
     NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
@@ -1135,7 +1132,7 @@
     }
     NSInteger row = [buttonTag integerValue];
     
-    NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
     NSString *identifier = cellDict[@"Identifier"];
     
     NSMutableDictionary *settingsDict;
@@ -1218,9 +1215,9 @@
         
         NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
         if ( [selectedSegment length] != 0 ) {
-            NSMutableDictionary *cellDict = [[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] mutableCopy];
+            NSMutableDictionary *cellDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
             cellDict[@"Value"] = @([segmentedControl selectedSegment]);
-            [_tableViewSettingsItemsEnabled replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+            [_arraySettings replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
         } else {
             NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", segmentedControl);
             return;
@@ -1229,7 +1226,7 @@
         // ---------------------------------------------------------------------
         //  Add subkeys for selected segmented control
         // ---------------------------------------------------------------------
-        if ( [self updateSubKeysForDict:[_tableViewSettingsItemsEnabled objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row] ) {
+        if ( [self updateSubKeysForDict:[_arraySettings objectAtIndex:(NSUInteger)row] valueString:selectedSegment row:row] ) {
             [_tableViewSettings beginUpdates];
             [_tableViewSettings reloadData];
             [_tableViewSettings endUpdates];
@@ -1322,9 +1319,9 @@
         //  Remove any previous sub keys
         // ---------------------------------------------------------------------
         __block NSArray *parentKeyArray;
-        if ( row < [_tableViewSettingsItemsEnabled count] ) {
-            NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_tableViewSettingsItemsEnabled count]-(row + 1))];
-            [[_tableViewSettingsItemsEnabled copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ( row < [_arraySettings count] ) {
+            NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_arraySettings count]-(row + 1))];
+            [[_arraySettings copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 //NSLog(@"idx=%lu", (unsigned long)idx);
                 //NSLog(@"obj=%@", obj);
                 
@@ -1337,7 +1334,7 @@
                     if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
                         //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
                         //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
-                        [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                        [_arraySettings removeObjectAtIndex:(row + 1)];
                         updatedTableView = YES;
                     }
                 } else {
@@ -1351,7 +1348,7 @@
                             if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
                                 //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
                                 //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
-                                [_tableViewSettingsItemsEnabled removeObjectAtIndex:(row + 1)];
+                                [_arraySettings removeObjectAtIndex:(row + 1)];
                                 updatedTableView = YES;
                                 return;
                             }
@@ -1401,7 +1398,7 @@
                 mutableValueDict[@"ParentKey"] = valueString;
                 //NSLog(@"[DEBUG] Adding row: %ld", row);
                 //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
-                [_tableViewSettingsItemsEnabled insertObject:[mutableValueDict copy] atIndex:row];
+                [_arraySettings insertObject:[mutableValueDict copy] atIndex:row];
                 updatedTableView = YES;
             }
         }
@@ -1417,105 +1414,39 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)saveCurrentSettings {
-    if ( [_tableViewMenuSelectedTableView isEqualToString:@"TableViewMenuEnabled"] ) {
+    if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
         
         // ---------------------------------------------------------------------
         //  Save current settings in menu dict
         // ---------------------------------------------------------------------
-        if ( 0 <= _tableViewMenuEnabledSelectedRow ) {
-            NSMutableDictionary *currentMenuDict = [[_tableViewMenuItemsEnabled objectAtIndex:self->_tableViewMenuEnabledSelectedRow] mutableCopy];
+        if ( 0 <= _tableViewProfilePayloadsSelectedRow ) {
+            NSMutableDictionary *currentMenuDict = [[_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsSelectedRow] mutableCopy];
             if ( [_tableViewSettingsCurrentSettings count] != 0 ) {
                 NSString *menuDomain = currentMenuDict[@"Domain"];
                 _tableViewSettingsSettings[menuDomain] = [_tableViewSettingsCurrentSettings copy];
             }
-            currentMenuDict[@"SavedSettings"] = [_tableViewSettingsItemsEnabled copy];
-            [_tableViewMenuItemsEnabled replaceObjectAtIndex:_tableViewMenuEnabledSelectedRow withObject:[currentMenuDict copy]];
+            currentMenuDict[@"SavedSettings"] = [_arraySettings copy];
+            [_arrayProfilePayloads replaceObjectAtIndex:_tableViewProfilePayloadsSelectedRow withObject:[currentMenuDict copy]];
         }
         
-    } else if ( [_tableViewMenuSelectedTableView isEqualToString:@"TableViewMenuDisabled"] ) {
+    } else if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
         
         // ---------------------------------------------------------------------
         //  Save current settings in menu dict
         // ---------------------------------------------------------------------
-        if ( 0 <= _tableViewMenuDisabledSelectedRow ) {
-            NSMutableDictionary *currentMenuDict = [[_tableViewMenuItemsDisabled objectAtIndex:_tableViewMenuDisabledSelectedRow] mutableCopy];
+        if ( 0 <= _tableViewPayloadLibrarySelectedRow ) {
+            NSMutableDictionary *currentMenuDict = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
             if ( [_tableViewSettingsCurrentSettings count] != 0 ) {
                 NSString *menuDomain = currentMenuDict[@"Domain"];
                 _tableViewSettingsSettings[menuDomain] = [_tableViewSettingsCurrentSettings copy];
             }
-            currentMenuDict[@"SavedSettings"] = [_tableViewSettingsItemsEnabled copy];
-            [_tableViewMenuItemsDisabled replaceObjectAtIndex:_tableViewMenuDisabledSelectedRow withObject:[currentMenuDict copy]];
+            currentMenuDict[@"SavedSettings"] = [_arraySettings copy];
+            [_arrayPayloadLibrary replaceObjectAtIndex:_tableViewPayloadLibrarySelectedRow withObject:[currentMenuDict copy]];
         }
     } else {
         //NSLog(@"No settings selected!");
     }
 }
-
-- (IBAction)tableViewMenu:(id)sender {
-    
-    [self saveCurrentSettings];
-    
-    NSString *identifier = [sender identifier];
-    if ( [identifier isEqualToString:@"TableViewMenuEnabled"] ) {
-        
-        // ---------------------------------------------------------------------
-        //  Set _tableViewMenuSelectedRow to new selection
-        // ---------------------------------------------------------------------
-        [_tableViewMenuDisabled deselectAll:self];
-        [self setTableViewMenuDisabledSelectedRow:-1];
-        [self setTableViewMenuEnabledSelectedRow:[_tableViewMenuEnabled selectedRow]];
-        
-        [_tableViewSettings beginUpdates];
-        [_tableViewSettingsItemsEnabled removeAllObjects];
-        
-        if ( 0 <= _tableViewMenuEnabledSelectedRow ) {
-            
-            NSMutableDictionary *currentMenuDict = [[_tableViewMenuItemsEnabled objectAtIndex:_tableViewMenuEnabledSelectedRow] mutableCopy];
-            NSString *menuDomain = currentMenuDict[@"Domain"];
-            [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[menuDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-            [self setTableViewMenuSelectedTableView:identifier];
-            NSArray *settingsArray = [self settingsForMenuItem:_tableViewMenuItemsEnabled[_tableViewMenuEnabledSelectedRow]];
-            if ( [settingsArray count] != 0 ) {
-                [_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
-                [_viewErrorReadingSettings setHidden:YES];
-            } else {
-                [_viewErrorReadingSettings setHidden:NO];
-            }
-        } else {
-            [self setTableViewMenuSelectedTableView:nil];
-        }
-    } else if ( [identifier isEqualToString:@"TableViewMenuDisabled"] ) {
-        
-        // ---------------------------------------------------------------------
-        //  Set _tableViewMenuSelectedRow to new selection
-        // ---------------------------------------------------------------------
-        [_tableViewMenuEnabled deselectAll:self];
-        [self setTableViewMenuEnabledSelectedRow:-1];
-        [self setTableViewMenuDisabledSelectedRow:[_tableViewMenuDisabled selectedRow]];
-        
-        [_tableViewSettings beginUpdates];
-        [_tableViewSettingsItemsEnabled removeAllObjects];
-        
-        if ( 0 <= _tableViewMenuDisabledSelectedRow ) {
-            NSMutableDictionary *currentMenuDict = [[self->_tableViewMenuItemsDisabled objectAtIndex:self->_tableViewMenuDisabledSelectedRow] mutableCopy];
-            NSString *menuDomain = currentMenuDict[@"Domain"];
-            [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[menuDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-            [self setTableViewMenuSelectedTableView:identifier];
-            NSArray *settingsArray = [self settingsForMenuItem:_tableViewMenuItemsDisabled[_tableViewMenuDisabledSelectedRow]];
-            if ( [settingsArray count] != 0 ) {
-                [_tableViewSettingsItemsEnabled addObjectsFromArray:[settingsArray copy]];
-                [_viewErrorReadingSettings setHidden:YES];
-            } else {
-                [_viewErrorReadingSettings setHidden:NO];
-            }
-        } else {
-            [self setTableViewMenuSelectedTableView:nil];
-        }
-    }
-    
-    [_tableViewSettings reloadData];
-    [_tableViewSettings endUpdates];
-} // tableViewMenu
 
 - (IBAction)buttonCancel:(id)sender {
     [[self window] performClose:self];
@@ -1729,8 +1660,75 @@
     }
 }
 
-- (IBAction)segmentedControlTest:(id)sender {
-    NSLog(@"sender=%ld", (long)[sender selectedSegment]);
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark IBActions NEW
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (IBAction)tableViewProfilePayloads:(id)sender {
+
+    [self saveCurrentSettings];
+    
+    [_tableViewPayloadLibrary deselectAll:self];
+    [self setTableViewPayloadLibrarySelectedRow:-1];
+    [self setTableViewProfilePayloadsSelectedRow:[_tableViewProfilePayloads selectedRow]];
+    
+    [_tableViewSettings beginUpdates];
+    [_arraySettings removeAllObjects];
+    
+    if ( 0 <= _tableViewProfilePayloadsSelectedRow ) {
+        
+        NSMutableDictionary *currentMenuDict = [[_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsSelectedRow] mutableCopy];
+        NSString *menuDomain = currentMenuDict[@"Domain"];
+        [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[menuDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSelectedPayloadTableViewIdentifier:[_tableViewProfilePayloads identifier]];
+        NSArray *settingsArray = [self settingsForMenuItem:_arrayProfilePayloads[_tableViewProfilePayloadsSelectedRow]];
+        if ( [settingsArray count] != 0 ) {
+            [_arraySettings addObjectsFromArray:[settingsArray copy]];
+            [_viewSettingsError setHidden:YES];
+        } else {
+            [_viewSettingsError setHidden:NO];
+        }
+    } else {
+        [self setSelectedPayloadTableViewIdentifier:nil];
+    }
+    
+    [_tableViewSettings reloadData];
+    [_tableViewSettings endUpdates];
 }
 
+- (IBAction)tableViewPayloadLibrary:(id)sender {
+    
+    [self saveCurrentSettings];
+    
+    [_tableViewProfilePayloads deselectAll:self];
+    [self setTableViewProfilePayloadsSelectedRow:-1];
+    [self setTableViewPayloadLibrarySelectedRow:[_tableViewPayloadLibrary selectedRow]];
+    
+    [_tableViewSettings beginUpdates];
+    [_arraySettings removeAllObjects];
+    
+    if ( 0 <= _tableViewPayloadLibrarySelectedRow ) {
+        NSMutableDictionary *currentMenuDict = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
+        NSString *menuDomain = currentMenuDict[@"Domain"];
+        [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[menuDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
+        NSArray *settingsArray = [self settingsForMenuItem:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
+        if ( [settingsArray count] != 0 ) {
+            [_arraySettings addObjectsFromArray:[settingsArray copy]];
+            [_viewSettingsError setHidden:YES];
+        } else {
+            [_viewSettingsError setHidden:NO];
+        }
+    } else {
+        [self setSelectedPayloadTableViewIdentifier:nil];
+    }
+    
+    [_tableViewSettings reloadData];
+    [_tableViewSettings endUpdates];
+}
+
+- (IBAction)segmentedControlLibrary:(id)sender {
+}
 @end

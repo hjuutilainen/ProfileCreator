@@ -358,8 +358,7 @@
     NSMutableDictionary *profileDict = [@{ @"Path" : [PFCController newProfilePath],
                                            @"Config" : @{ @"Name" : @"Untitled..." }} mutableCopy];
     
-    PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeApple
-                                                                                                         profileDict:[profileDict copy] sender:self];
+    PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
     if ( controller ) {
         profileDict[@"Controller"] = controller;
         [[controller window] makeKeyAndOrderFront:self];
@@ -376,8 +375,7 @@
         if ( profileDict[@"Controller"] != nil ) {
             controller = profileDict[@"Controller"];
         } else {
-            controller = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeApple
-                                                                             profileDict:[profileDict copy] sender:self];
+            controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
             if ( controller ) {
                 profileDict[@"Controller"] = controller;
                 [_tableViewProfilesItems replaceObjectAtIndex:row withObject:[profileDict copy]];
@@ -458,8 +456,7 @@
             NSURL *fileURL = [selectedURLs firstObject];
             NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:fileURL];
             if ( ! _profileWindowController ) {
-                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeCustom
-                                                                                               profileDict:@{} sender:self];
+                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileDict:@{} sender:self];
                 [_profileWindowController setCustomMenu:@[ fileManifest ]];
             }
             [[_profileWindowController window] makeKeyAndOrderFront:self];
@@ -497,8 +494,7 @@
             
             if ( ! _profileWindowController ) {
                 NSLog(@"Initing with custom!");
-                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileType:kPFCProfileTypeCustom
-                                                                                               profileDict:@{} sender:self];
+                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileDict:@{} sender:self];
                 [_profileWindowController setCustomMenu:menuArray];
             }
             [[_profileWindowController window] makeKeyAndOrderFront:self];

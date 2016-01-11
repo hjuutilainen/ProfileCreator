@@ -35,6 +35,7 @@
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
 		535B07BC1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B07BA1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m */; };
 		535B07BD1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 535B07BB1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.xib */; };
+		536213041C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 536213031C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m */; };
 		53662BDB1C2DECD200360101 /* TempSavedSettings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53662BDA1C2DECD200360101 /* TempSavedSettings.plist */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
@@ -127,6 +128,8 @@
 		535B07B91C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCProfileExportPayloadViewController.h; sourceTree = "<group>"; };
 		535B07BA1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCProfileExportPayloadViewController.m; sourceTree = "<group>"; };
 		535B07BB1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PFCProfileExportPayloadViewController.xib; sourceTree = "<group>"; };
+		536213021C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCSplitViewPayloadLibrary.h; sourceTree = "<group>"; };
+		536213031C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCSplitViewPayloadLibrary.m; sourceTree = "<group>"; };
 		53662BDA1C2DECD200360101 /* TempSavedSettings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TempSavedSettings.plist; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 				5327463D1C3C53A30030CD95 /* PFCProfileExportWindowController.h */,
 				5327463E1C3C53A30030CD95 /* PFCProfileExportWindowController.m */,
 				5327463F1C3C53A30030CD95 /* PFCProfileExportWindowController.xib */,
+				536213021C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.h */,
+				536213031C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m */,
 			);
 			name = ProfileCreation;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 			files = (
 				532974ED1C22B21300191C5C /* PFCManifestCreationParser.m in Sources */,
 				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
+				536213041C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
 				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,

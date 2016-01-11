@@ -8,19 +8,49 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef NS_ENUM(NSInteger, NBCErrorCodes) {
-    /** Apple Profile **/
-    kPFCProfileTypeApple,
-    /** Custom Plist **/
-    kPFCProfileTypeCustom
-};
-
 @interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
 
+
+// Window
 @property BOOL windowShouldClose;
 
-@property NSString *profileName;
+// Random
+@property NSString *selectedPayloadTableViewIdentifier;
 
+// ProfilePayloads
+@property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
+@property (weak)    IBOutlet NSView *viewProfilePayloadsSplitView;
+@property (weak)    IBOutlet NSTableView *tableViewProfilePayloads;
+@property (readwrite)        NSMutableArray *arrayProfilePayloads;
+@property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
+- (IBAction)tableViewProfilePayloads:(id)sender;
+
+// PayloadLibrary
+@property (weak)    IBOutlet NSView *viewPayloadLibrarySuperview;
+@property (weak)    IBOutlet NSView *viewPayloadLibrarySplitView;
+@property (weak)    IBOutlet NSTableView *tableViewPayloadLibrary;
+@property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
+@property (readwrite)        NSMutableArray *arrayPayloadLibrary;
+@property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
+- (IBAction)tableViewPayloadLibrary:(id)sender;
+- (IBAction)segmentedControlLibrary:(id)sender;
+
+// SettingsView
+@property (weak)    IBOutlet NSView *viewSettingsSuperView;
+@property (weak)    IBOutlet NSView *viewSettingsSplitView;
+@property (weak)    IBOutlet NSView *viewSettingsError;
+@property (weak)    IBOutlet NSTableView *tableViewSettings;
+@property (readwrite)        NSMutableArray *arraySettings;
+
+
+
+
+
+
+
+
+
+@property NSString *profileName;
 @property int profileType;
 @property NSArray *customMenu;
 @property BOOL advancedSettings;
@@ -31,37 +61,17 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 @property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
 - (IBAction)buttonSaveSheetProfileName:(id)sender;
 
-@property (weak) IBOutlet NSClipView *viewSettingsClipView;
-@property (weak) IBOutlet NSScrollView *viewSettingsScrollView;
 
-// TableView Menu
-@property (weak) IBOutlet NSTableView *tableViewMenuEnabled;
-@property NSInteger tableViewMenuEnabledSelectedRow;
 
-@property (weak) IBOutlet NSTableView *tableViewMenuDisabled;
-@property NSInteger tableViewMenuDisabledSelectedRow;
-
-- (IBAction)tableViewMenu:(id)sender;
-@property NSString *tableViewMenuSelectedTableView;
 
 @property id parentObject;
-
-@property NSMutableArray *tableViewMenuItemsEnabled;
-@property NSMutableArray *tableViewMenuItemsDisabled;
 @property BOOL columnMenuEnabledHidden;
 
 // TableView Settings
 @property NSDictionary *profileDict;
 @property NSMutableDictionary *tableViewSettingsSettings;
 @property NSMutableDictionary *tableViewSettingsCurrentSettings;
-
-@property (weak) IBOutlet NSTableView *tableViewSettings;
-@property NSMutableArray *tableViewSettingsItemsEnabled;
-@property NSMutableArray *tableViewSettingsItemsDisabled;
 @property BOOL columnSettingsEnabledHidden;
-
-@property (weak) IBOutlet NSView *viewSettingsSuperView;
-@property (strong) IBOutlet NSView *viewErrorReadingSettings;
 
 @property (weak) IBOutlet NSButton *buttonCancel;
 - (IBAction)buttonCancel:(id)sender;
@@ -83,5 +93,5 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
 - (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
-- (id)initWithProfileType:(int)profileType profileDict:(NSDictionary *)profileDict sender:(id)sender;
+- (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end

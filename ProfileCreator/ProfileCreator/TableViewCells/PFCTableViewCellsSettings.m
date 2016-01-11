@@ -1272,9 +1272,9 @@
 
 - (void)updateTableViewSavedContent {
     if ( _sender && _senderRow ) {
-        NSMutableDictionary *cellDict = [[[(PFCProfileCreationWindowController *)_sender tableViewSettingsItemsEnabled] objectAtIndex:(NSUInteger)_senderRow] mutableCopy];
+        NSMutableDictionary *cellDict = [[[(PFCProfileCreationWindowController *)_sender arraySettings] objectAtIndex:(NSUInteger)_senderRow] mutableCopy];
         cellDict[@"TableViewContent"] = [_tableViewContent copy];
-        [[(PFCProfileCreationWindowController *)_sender tableViewSettingsItemsEnabled] replaceObjectAtIndex:(NSUInteger)_senderRow withObject:cellDict];
+        [[(PFCProfileCreationWindowController *)_sender arraySettings] replaceObjectAtIndex:(NSUInteger)_senderRow withObject:cellDict];
     }
 }
 
