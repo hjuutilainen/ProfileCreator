@@ -10,9 +10,12 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="J1R-AM-bmu" customClass="PFCController">
             <connections>
+                <outlet property="buttonSaveSheetProfileName" destination="cqI-Ub-7cF" id="97Z-Lz-JfF"/>
                 <outlet property="menuAdvancedOptions" destination="lP6-cG-oyh" id="JQe-QM-cdj"/>
                 <outlet property="segmentedControlAddRemove" destination="F1e-Bs-Uhl" id="XiX-sI-w5o"/>
+                <outlet property="sheetProfileName" destination="nJh-e2-HNR" id="DbP-83-75A"/>
                 <outlet property="tableViewProfiles" destination="pfy-i1-zvg" id="cxU-By-03q"/>
+                <outlet property="textFieldSheetProfileName" destination="Qeu-v2-T9K" id="iuo-68-DKl"/>
                 <outlet property="viewNoProfiles" destination="JCg-7c-7Ab" id="Whn-XV-4Gk"/>
                 <outlet property="viewTableViewProfilesSuperview" destination="aCA-g0-cV9" id="psc-rD-ZiW"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J0H-f7-8LJ"/>
@@ -682,11 +685,11 @@
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdD-fF-vyN">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="250"/>
                                 <clipView key="contentView" id="ZX0-ay-R3n">
-                                    <rect key="frame" x="1" y="1" width="148" height="248"/>
+                                    <rect key="frame" x="1.5" y="0.5" width="148" height="248"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewProfiles" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="pfy-i1-zvg">
-                                            <rect key="frame" x="0.0" y="0.0" width="149" height="248"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="148" height="248"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -733,7 +736,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Lgf-M4-4f9">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="Lgf-M4-4f9">
                                     <rect key="frame" x="1" y="234" width="148" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -812,6 +815,76 @@
             </constraints>
             <point key="canvasLocation" x="530" y="880.5"/>
         </customView>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="nJh-e2-HNR">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="283" y="305" width="379" height="91"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" id="3qT-mL-gCN">
+                <rect key="frame" x="0.0" y="0.0" width="379" height="91"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cqI-Ub-7cF">
+                        <rect key="frame" x="295" y="13" width="70" height="32"/>
+                        <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mej-Gk-xeg">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonSaveSheetProfileName:" target="J1R-AM-bmu" id="KTj-L9-CVg"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tcH-jm-Mpq">
+                        <rect key="frame" x="213" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2JN-gd-d54">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelSheetProfileName:" target="J1R-AM-bmu" id="rVO-E5-Ig7"/>
+                        </connections>
+                    </button>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qeu-v2-T9K">
+                        <rect key="frame" x="110" y="49" width="249" height="22"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="xaq-9L-E2t">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="J1R-AM-bmu" id="WAT-ei-ElH"/>
+                        </connections>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9Ga-e9-7Cb">
+                        <rect key="frame" x="18" y="52" width="86" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Profile Name:" id="5Rh-wr-Ufn">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Qeu-v2-T9K" firstAttribute="leading" secondItem="9Ga-e9-7Cb" secondAttribute="trailing" constant="8" symbolic="YES" id="2As-7A-WTd"/>
+                    <constraint firstItem="Qeu-v2-T9K" firstAttribute="top" secondItem="3qT-mL-gCN" secondAttribute="top" constant="20" symbolic="YES" id="9zi-2O-mCK"/>
+                    <constraint firstItem="Qeu-v2-T9K" firstAttribute="baseline" secondItem="9Ga-e9-7Cb" secondAttribute="baseline" id="AeZ-uG-kOt"/>
+                    <constraint firstItem="tcH-jm-Mpq" firstAttribute="top" secondItem="Qeu-v2-T9K" secondAttribute="bottom" constant="8" symbolic="YES" id="VN9-zC-Wd8"/>
+                    <constraint firstItem="9Ga-e9-7Cb" firstAttribute="leading" secondItem="3qT-mL-gCN" secondAttribute="leading" constant="20" symbolic="YES" id="YUO-EZ-avE"/>
+                    <constraint firstAttribute="trailing" secondItem="cqI-Ub-7cF" secondAttribute="trailing" constant="20" symbolic="YES" id="j6o-Po-lyl"/>
+                    <constraint firstItem="cqI-Ub-7cF" firstAttribute="centerY" secondItem="tcH-jm-Mpq" secondAttribute="centerY" id="oit-hL-Ccz"/>
+                    <constraint firstItem="cqI-Ub-7cF" firstAttribute="leading" secondItem="tcH-jm-Mpq" secondAttribute="trailing" constant="12" symbolic="YES" id="rrG-hp-jWP"/>
+                    <constraint firstAttribute="bottom" secondItem="cqI-Ub-7cF" secondAttribute="bottom" constant="20" symbolic="YES" id="tzs-y9-qX1"/>
+                    <constraint firstAttribute="trailing" secondItem="Qeu-v2-T9K" secondAttribute="trailing" constant="20" symbolic="YES" id="uSA-Lz-xJR"/>
+                </constraints>
+            </view>
+            <point key="canvasLocation" x="135.5" y="210.5"/>
+        </window>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>

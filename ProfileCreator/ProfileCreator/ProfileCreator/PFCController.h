@@ -17,7 +17,15 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
     kPFCFolderSavedProfiles
 };
 
+
+
 @interface PFCController : NSObject <NSApplicationDelegate, NSTableViewDelegate, NSTableViewDataSource>
+
+@property (strong) IBOutlet NSWindow *sheetProfileName;
+@property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
+- (IBAction)buttonCancelSheetProfileName:(id)sender;
+@property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
+- (IBAction)buttonSaveSheetProfileName:(id)sender;
 
 @property (weak) IBOutlet NSWindow *window;
 

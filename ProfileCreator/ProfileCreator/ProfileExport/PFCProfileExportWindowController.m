@@ -8,6 +8,7 @@
 
 #import "PFCProfileExportWindowController.h"
 #import "PFCPayloadVerification.h"
+#import "PFCController.h"
 
 @interface PFCProfileExportWindowController ()
 
@@ -16,17 +17,29 @@
 @implementation PFCProfileExportWindowController
 
 
-- (id)initWithProfileDict:(NSDictionary *)profileDict {
+- (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender {
     self = [super initWithWindowNibName:@"PFCProfileExportWindowController"];
     if (self != nil) {
         _profileDict = profileDict;
+        _parentObject = sender;
     }
     return self;
 }
 
+- (void)awakeFromNib {
+    [_stackView setOrientation:NSUserInterfaceLayoutOrientationVertical];
+    [_stackView setAlignment:NSLayoutAttributeCenterX];
+    [_stackView setSpacing:0];
+    [_stackView setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_stackView setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
+}
+
 - (void)windowDidLoad {
     [super windowDidLoad];
+    [[self window] setBackgroundColor:[NSColor whiteColor]];
+    [[self window] setTitle:[NSString stringWithFormat:@"Export %@", _profileDict[@"Config"][@"Name"]] ?: @"Export"];
     [self updateProfileInfo];
+    [self verifyProfile];
 }
 
 - (void)updateProfileInfo {
@@ -57,8 +70,92 @@
                                                             }];
 }
 
+- (BOOL)windowShouldClose:(id)sender {
+        if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
+            [_parentObject removeControllerForProfileDictWithName:_profileDict[@"Config"][@"Name"]];
+        }
+        return YES;
+}
+
 - (IBAction)buttonExport:(id)sender {
     
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    NSString *profileName = _profileDict[@"Config"][@"Name"] ?: @"";
+        
+        //[panel setAllowedFileTypes:@[ @"com.github.NBICreator.template" ]];
+        [panel setCanCreateDirectories:YES];
+        [panel setTitle:@"Export Template"];
+        [panel setPrompt:@"Export"];
+        [panel setNameFieldStringValue:[NSString stringWithFormat:@"%@.mobileconfig", profileName]];
+        [panel beginSheetModalForWindow:[[NSApp delegate] window] completionHandler:^(NSInteger result) {
+            if (result == NSFileHandlingPanelOKButton) {
+                NSURL *saveURL = [panel URL];
+                [self exportProfileToURL:saveURL];
+            }
+        }];
+}
+
+- (void)verifyProfile {
+    
+    NSDictionary *configDict = _profileDict[@"Config"][@"Settings"];
+    NSMutableDictionary *selectedDict = [NSMutableDictionary dictionary];
+    for ( NSString *key in [configDict allKeys] ) {
+        NSDictionary *payloadSettings = configDict[key];
+        if ( ! [payloadSettings[@"Selected"] boolValue] && ! [key isEqualToString:@"com.apple.general"] ) {
+            continue;
+        }
+        
+        selectedDict[key] = configDict[key];
+    }
+    
+    NSArray *selectedDomains = [selectedDict allKeys];
+    NSArray *manifestDicts = [self manifestDictsForDomains:selectedDomains];
+    
+    for ( NSDictionary *manifestDict in manifestDicts ) {
+        NSString *manifestDomain = manifestDict[@"Domain"];
+        NSDictionary *settingsDict = selectedDict[manifestDomain];
+        NSDictionary *settingsInfo = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[@"PayloadKeys"] settingsDict:settingsDict];
+        if ( [settingsInfo count] != 0 ) {
+            NSArray *warnings = settingsInfo[@"Warning"];
+            for ( NSDictionary *warningDict in warnings ) {
+                NSLog(@"[WARNING] %@", warningDict);
+            }
+            
+            NSArray *errors = settingsInfo[@"Error"];
+            for ( NSDictionary *errorDict in errors ) {
+                NSLog(@"[ERROR] %@", errorDict);
+            }
+        }
+    }
+    
+    NSMutableArray *payloadArray = [NSMutableArray array];
+    for ( NSDictionary *manifestDict in manifestDicts ) {
+        NSString *manifestDomain = manifestDict[@"Domain"];
+        NSDictionary *settingsDict = selectedDict[manifestDomain];
+        [self createPayloadFromManifestArray:manifestDict[@"PayloadKeys"] settingsDict:settingsDict payloadArray:&payloadArray];
+    }
+    
+    NSUInteger idx = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        return [[item objectForKey:@"PayloadType"] isEqualToString:@"com.apple.profile"];
+    }];
+    
+    if ( idx == NSNotFound ) {
+        NSLog(@"[ERROR] No general settings found!");
+        return;
+    }
+    
+    [payloadArray removeObjectAtIndex:idx];
+    NSLog(@"array: %@", payloadArray);
+    NSNumber *payloadCount = @([payloadArray count]);
+    if ( [payloadCount intValue] == 1 ) {
+        [_textFieldPayloadsCount setStringValue:[NSString stringWithFormat:@"%ld Payload", (long)[payloadCount integerValue]]];
+    } else {
+        [_textFieldPayloadsCount setStringValue:[NSString stringWithFormat:@"%ld Payloads", (long)[payloadCount integerValue]]];
+    }
+}
+
+- (void)exportProfileToURL:(NSURL *)profileURL {
+
     NSDictionary *configDict = _profileDict[@"Config"][@"Settings"];
     NSMutableDictionary *selectedDict = [NSMutableDictionary dictionary];
     for ( NSString *key in [configDict allKeys] ) {
@@ -134,8 +231,21 @@
     
     // Payloads
     profile[@"PayloadContent"] = payloadArray ?: @[];
+    NSError *error = nil;
     
-    [profile writeToFile:@"/Users/erikberglund/Desktop/profile.mobileconfig" atomically:NO];
+    if ( ! [profile writeToURL:profileURL atomically:NO] ) {
+        NSLog(@"[ERROR] write profile failed!");
+    } else {
+        if ( [profileURL checkResourceIsReachableAndReturnError:&error] ) {
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ profileURL ]];
+        } else {
+            NSLog(@"[ERROR] %@", [error localizedDescription]);
+        }
+    }
+}
+
+- (IBAction)buttonCancel:(id)sender {
+    [[self window] performClose:self];
 }
 
 - (void)createPayloadFromManifestArray:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict payloadArray:(NSMutableArray **)payloadArray {

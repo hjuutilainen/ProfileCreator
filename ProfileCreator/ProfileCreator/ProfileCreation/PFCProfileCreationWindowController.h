@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, NBCErrorCodes) {
 
 @property BOOL windowShouldClose;
 
+@property NSString *profileName;
+
 @property int profileType;
 @property NSArray *customMenu;
 @property BOOL advancedSettings;

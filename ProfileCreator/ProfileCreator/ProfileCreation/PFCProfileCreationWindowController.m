@@ -52,11 +52,14 @@
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
+    [self removeObserver:self forKeyPath:@"profileName" context:nil];
 } // dealloc
 
 - (void)windowDidLoad {
     [super windowDidLoad];
+    [self addObserver:self forKeyPath:@"profileName" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
+    [self setProfileName:_profileDict[@"Config"][@"Name"] ?: @"Profile"];
     [self initializeTableViewMenu];
 } // windowDidLoad
 
@@ -192,7 +195,8 @@
 - (void)updateTableColumnsMenuEnabled {
     for ( NSTableColumn *column in [_tableViewMenuEnabled tableColumns] ) {
         if ( [[column identifier] isEqualToString:@"ColumnMenuEnabled"] ) {
-            [column setHidden:!_advancedSettings];
+            [column setHidden:NO];
+            //[column setHidden:!_advancedSettings];
         }
     }
 } // updateTableColumnsMenuEnabled
@@ -200,7 +204,8 @@
 - (void)updateTableColumnsMenuDisabled {
     for ( NSTableColumn *column in [_tableViewMenuDisabled tableColumns] ) {
         if ( [[column identifier] isEqualToString:@"ColumnMenuEnabled"] ) {
-            [column setHidden:!_advancedSettings];
+            [column setHidden:NO];
+            //[column setHidden:!_advancedSettings];
         }
     }
 } // updateTableColumnsMenuDisabled
@@ -228,18 +233,23 @@
 #pragma unused(object, change, context)
     if ( [keyPath isEqualToString:@"advancedSettings"] ) {
         
-        NSInteger menuEnabledRow = [_tableViewMenuEnabled selectedRow];
-        [self updateTableColumnsMenuEnabled];
-        [_tableViewMenuEnabled reloadData];
-        [_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:menuEnabledRow] byExtendingSelection:NO];
+        //NSInteger menuEnabledRow = [_tableViewMenuEnabled selectedRow];
+        //[self updateTableColumnsMenuEnabled];
+        //[_tableViewMenuEnabled reloadData];
+        //[_tableViewMenuEnabled selectRowIndexes:[NSIndexSet indexSetWithIndex:menuEnabledRow] byExtendingSelection:NO];
         
-        NSInteger menuDisabledRow = [_tableViewMenuDisabled selectedRow];
-        [self updateTableColumnsMenuDisabled];
-        [_tableViewMenuDisabled reloadData];
-        [_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:menuDisabledRow] byExtendingSelection:NO];
+        //NSInteger menuDisabledRow = [_tableViewMenuDisabled selectedRow];
+        //[self updateTableColumnsMenuDisabled];
+        //[_tableViewMenuDisabled reloadData];
+        //[_tableViewMenuDisabled selectRowIndexes:[NSIndexSet indexSetWithIndex:menuDisabledRow] byExtendingSelection:NO];
         
         [self updateTableColumnsSettings];
-        [self tableViewMenu:nil];
+        //[self tableViewMenu:nil];
+    } else if ( [keyPath isEqualToString:@"profileName"] ) {
+        NSString *newProfileName = change[@"new"];
+        if ( [newProfileName length] != 0 ) {
+            [[self window] setTitle:newProfileName];
+        }
     }
 } // observeValueForKeyPath
 
@@ -712,8 +722,6 @@
                     [(CellViewSettingsTextField *)[textField superview] showRequired:YES];
                 } else if ( [cellDict[@"Required"] boolValue] ) {
                     [(CellViewSettingsTextField *)[textField superview] showRequired:NO];
-                } else {
-                    NSLog(@"Not Required!");
                 }
             }
         } else {
@@ -1627,10 +1635,13 @@
     _tableViewSettingsSettings = [settings mutableCopy];
     
     configurationDict[@"Settings"] = [settings copy];
-    NSLog(@"configurationDict: %@", configurationDict);
     if ( [configurationDict writeToURL:profileURL atomically:YES] ) {
         profileDict[@"Config"] = [configurationDict copy];
         [self setProfileDict:[profileDict copy]];
+        NSString *newProfileName = _profileDict[@"Config"][@"Name"];
+        if ( [newProfileName length] != 0 ) {
+            [[self window] setTitle:newProfileName];
+        }
     } else {
         NSLog(@"Save failed!");
     }

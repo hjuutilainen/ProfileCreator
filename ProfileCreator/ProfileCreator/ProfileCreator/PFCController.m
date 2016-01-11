@@ -120,6 +120,43 @@
     }
 } // addSavedProfiles
 
+- (void)controlTextDidChange:(NSNotification *)sender {
+    if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
+        NSDictionary *userInfo = [sender userInfo];
+        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+        
+        NSInteger selectedRow = [_tableViewProfiles selectedRow];
+        if ( selectedRow < 0 ) {
+            NSLog(@"[ERROR] No row is selected!");
+            return;
+        }
+        
+        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:selectedRow] mutableCopy];
+        if ( [ profileDict count] == 0 ) {
+            NSLog(@"[ERROR] profile at index: %ld is empty!", (long)selectedRow);
+            return;
+        }
+        
+        NSString *profilePath = profileDict[@"Path"];
+        if ( [profilePath length] == 0 ) {
+            NSLog(@"[ERROR] No path to profile!");
+            return;
+        }
+        
+        NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
+        
+        if (
+            [inputText isEqualToString:@"Untitled..."] ||
+            [inputText isEqualToString:profileCurrentName] ||
+            [inputText length] == 0 ) {
+            [_buttonSaveSheetProfileName setEnabled:NO];
+        } else {
+            [_buttonSaveSheetProfileName setEnabled:YES];
+        }
+        return;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Delegate Methods NSApplicationDelegate
@@ -177,7 +214,6 @@
     
     if ( idx != NSNotFound ) {
         NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
-        NSLog(@"profileDict=%@", profileDict);
         NSMutableDictionary *configDict = [profileDict[@"Config"] mutableCopy];
         configDict[@"Name"] = newName ?: @"";
         profileDict[@"Config"] = [configDict copy];
@@ -217,7 +253,24 @@
 }
 
 - (void)renameProfile {
-    NSLog(@"Renaming!");
+    NSInteger selectedRow = [_tableViewProfiles selectedRow];
+    if ( selectedRow < 0 ) {
+        NSLog(@"[ERROR] No row is selected!");
+        return;
+    }
+    
+    NSDictionary *profileDict = [_tableViewProfilesItems objectAtIndex:selectedRow];
+    if ( [ profileDict count] == 0 ) {
+        NSLog(@"[ERROR] profile at index: %ld is empty!", (long)selectedRow);
+        return;
+    }
+    
+    NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
+    [_buttonSaveSheetProfileName setEnabled:NO];
+    [_textFieldSheetProfileName setStringValue:profileCurrentName];
+    [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
+        
+    }];
 }
 
 - (void)exportProfile {
@@ -225,7 +278,7 @@
     
     if ( 0 <= idx && idx <= [_tableViewProfilesItems count] ) {
         NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
-        PFCProfileExportWindowController *exporter = [[PFCProfileExportWindowController alloc] initWithProfileDict:[profileDict copy]];
+        PFCProfileExportWindowController *exporter = [[PFCProfileExportWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
         if ( exporter ) {
             profileDict[@"Controller"] = exporter;
             [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
@@ -451,6 +504,45 @@
             [[_profileWindowController window] makeKeyAndOrderFront:self];
         }
     }];
+}
+
+- (IBAction)buttonCancelSheetProfileName:(id)sender {
+    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    [_sheetProfileName orderOut:self];
+}
+
+- (IBAction)buttonSaveSheetProfileName:(id)sender {
+    
+    NSInteger selectedRow = [_tableViewProfiles selectedRow];
+    if ( selectedRow < 0 ) {
+        NSLog(@"[ERROR] No row is selected!");
+        return;
+    }
+    
+    NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:selectedRow] mutableCopy];
+    if ( [ profileDict count] == 0 ) {
+        NSLog(@"[ERROR] profile at index: %ld is empty!", (long)selectedRow);
+        return;
+    }
+    
+    NSString *profilePath = profileDict[@"Path"];
+    if ( [profilePath length] == 0 ) {
+        NSLog(@"[ERROR] No path to profile!");
+        return;
+    }
+    
+    NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
+    
+    NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
+    NSString *newName = [_textFieldSheetProfileName stringValue];
+    [self renameProfileWithName:profileCurrentName newName:newName];
+    
+    NSMutableDictionary *configDict = [profileDict[@"Config"] mutableCopy];
+    configDict[@"Name"] = newName;
+    
+    [configDict writeToURL:profileURL atomically:NO];
+    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    [_sheetProfileName orderOut:self];
 }
 
 @end

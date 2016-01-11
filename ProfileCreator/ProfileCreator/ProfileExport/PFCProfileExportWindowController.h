@@ -10,12 +10,19 @@
 
 @interface PFCProfileExportWindowController : NSWindowController
 @property (weak) IBOutlet NSTextField *textFieldName;
+@property (weak) IBOutlet NSTextField *textFieldPayloadsCount;
 
 @property NSDictionary *profileDict;
 
-- (id)initWithProfileDict:(NSDictionary *)profileDict;
+@property id parentObject;
+
+@property (weak) IBOutlet NSStackView *stackView;
+
+- (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 
 @property (weak) IBOutlet NSButton *buttonExport;
 - (IBAction)buttonExport:(id)sender;
+
+- (IBAction)buttonCancel:(id)sender;
 
 @end

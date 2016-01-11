@@ -27,10 +27,10 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Untitled Profile" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="196" y="240" width="738" height="1241"/>
+            <rect key="contentRect" x="196" y="240" width="738" height="683"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="738" height="1241"/>
+                <rect key="frame" x="0.0" y="0.0" width="738" height="683"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="y2r-ul-OWb">
@@ -44,16 +44,16 @@
                         </connections>
                     </button>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="aqu-6q-Ith">
-                        <rect key="frame" x="187" y="49" width="552" height="1193"/>
+                        <rect key="frame" x="187" y="49" width="552" height="635"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="81" horizontalPageScroll="10" verticalLineScroll="81" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E7Q-5H-bhD">
-                                <rect key="frame" x="0.0" y="0.0" width="552" height="1193"/>
+                                <rect key="frame" x="0.0" y="0.0" width="552" height="635"/>
                                 <clipView key="contentView" id="dJm-tt-KEC">
-                                    <rect key="frame" x="1" y="1" width="550" height="1191"/>
+                                    <rect key="frame" x="1" y="1" width="550" height="633"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="i6D-je-6LX" userLabel="TableViewSettings">
-                                            <rect key="frame" x="0.0" y="0.0" width="550" height="1191"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="550" height="633"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -1389,17 +1389,17 @@ Gw
                         </connections>
                     </button>
                     <splitView arrangesAllSubviews="NO" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="9kA-We-ROB">
-                        <rect key="frame" x="-1" y="49" width="189" height="1193"/>
+                        <rect key="frame" x="-1" y="49" width="189" height="635"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="44" horizontalPageScroll="10" verticalLineScroll="44" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="9wT-pd-MVV">
-                                <rect key="frame" x="0.0" y="0.0" width="189" height="304"/>
+                                <rect key="frame" x="0.0" y="0.0" width="189" height="162"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" id="vyv-0D-vXd">
-                                    <rect key="frame" x="1" y="1" width="187" height="302"/>
+                                    <rect key="frame" x="1" y="1" width="187" height="160"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewMenuEnabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="eM5-DV-hNZ" userLabel="TableViewMenu">
-                                            <rect key="frame" x="0.0" y="0.0" width="187" height="302"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="187" height="160"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -1535,14 +1535,14 @@ Gw
                                 </scroller>
                             </scrollView>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="44" horizontalPageScroll="10" verticalLineScroll="44" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="k5D-XE-GVd">
-                                <rect key="frame" x="0.0" y="305" width="189" height="888"/>
+                                <rect key="frame" x="0.0" y="163" width="189" height="472"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" id="dSp-dP-krv">
-                                    <rect key="frame" x="1" y="1" width="187" height="886"/>
+                                    <rect key="frame" x="1" y="1" width="187" height="470"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewMenuDisabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="fG8-4I-pxw" userLabel="TableViewMenu">
-                                            <rect key="frame" x="0.0" y="0.0" width="187" height="886"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="187" height="470"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -1704,7 +1704,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-256" y="-176.5"/>
+            <point key="canvasLocation" x="-256" y="-455.5"/>
         </window>
         <customView id="qP1-nq-PFP">
             <rect key="frame" x="0.0" y="0.0" width="467" height="71"/>
@@ -1728,14 +1728,14 @@ Gw
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="283" y="305" width="480" height="91"/>
+            <rect key="contentRect" x="283" y="305" width="379" height="91"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="ZPH-fG-Mc4">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="91"/>
+                <rect key="frame" x="0.0" y="0.0" width="379" height="91"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RpK-cU-ZHv">
-                        <rect key="frame" x="396" y="13" width="70" height="32"/>
+                        <rect key="frame" x="295" y="13" width="70" height="32"/>
                         <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="le2-kN-U8m">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -1748,7 +1748,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a7g-vQ-kC3">
-                        <rect key="frame" x="314" y="13" width="82" height="32"/>
+                        <rect key="frame" x="213" y="13" width="82" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zXY-KB-WEf">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -1761,7 +1761,7 @@ Gw
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KVN-J4-SI1">
-                        <rect key="frame" x="110" y="49" width="350" height="22"/>
+                        <rect key="frame" x="110" y="49" width="249" height="22"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Tri-B4-B8v">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
