@@ -16,6 +16,7 @@
     
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
     manifestDict[@"PayloadKeys"] = [self manifestSettingsForPlistAtURL:fileURL];
+    manifestDict[@"PlistPath"] = [fileURL path];
     
     return [manifestDict copy];
 }

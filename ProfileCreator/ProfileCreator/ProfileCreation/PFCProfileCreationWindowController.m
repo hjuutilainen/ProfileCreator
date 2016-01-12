@@ -96,10 +96,12 @@
     
     [self tableViewProfilePayloads:nil];
     [self setTableViewProfilePayloadsSelectedRow:-1];
+    [_tableViewProfilePayloads setParentWindowController:self];
     [_tableViewProfilePayloads reloadData];
     
     [self tableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
+    [_tableViewPayloadLibrary setParentWindowController:self];
     [_tableViewPayloadLibrary reloadData];
     
 } // initializeMenu
@@ -356,7 +358,6 @@
                 //  TextField
                 // ---------------------------------------------------------------------
             } else {
-                
                 NSString *identifier = manifestDict[@"Identifier"];
                 NSDictionary *cellSettingsDict = _tableViewSettingsCurrentSettings[identifier];
                 
@@ -542,7 +543,10 @@
             
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
+                [cellView setIdentifier:nil];
                 return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:errorCount row:row];
+            } else {
+                NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -561,9 +565,13 @@
         NSDictionary *menuDict = _arrayPayloadLibrary[(NSUInteger)row];
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
+            
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenu" owner:self];
+                [cellView setIdentifier:nil];
                 return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:nil row:row];
+            } else {
+                NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -1887,6 +1895,35 @@
             NSLog(@"Unknown!");
             break;
     }
+}
+
+- (IBAction)menuItemShowInFinder:(id)sender {
+    NSLog(@"menuItemShowInFinder");
+}
+
+@end
+
+@implementation PFCPayloadLibraryTableView
+
+- (void)setParentWindowController:(PFCProfileCreationWindowController *)windowController {
+    NSLog(@"setParentWindowController");
+    [self setWindowController:windowController];
+    NSLog(@"_menuPayloadMenuItem=%@", _menuPayloadMenuItem);
+    for ( NSMenuItem *menuItem in [_menuPayloadMenuItem itemArray] ) {
+        NSLog(@"menuItem=%@", menuItem);
+        [menuItem setTarget:windowController];
+    }
+}
+
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent {
+    NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSInteger row = [self rowAtPoint:mousePoint];
+    
+    if ( row < 0 ) {
+        return [super menuForEvent:theEvent];
+    }
+    NSLog(@"returning menu: %@", _menuPayloadMenuItem);
+    return _menuPayloadMenuItem;
 }
 
 @end

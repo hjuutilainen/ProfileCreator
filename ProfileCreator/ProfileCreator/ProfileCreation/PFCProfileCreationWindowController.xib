@@ -196,7 +196,7 @@ Gw
                         <rect key="frame" x="1" y="1" width="192" height="113"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewMenuEnabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="xAs-Je-CWh">
+                            <tableView identifier="TableViewMenuEnabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="xAs-Je-CWh" customClass="PFCPayloadLibraryTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="192" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -363,7 +363,7 @@ Gw
                         <rect key="frame" x="1" y="1" width="192" height="87"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewMenuDisabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl">
+                            <tableView identifier="TableViewMenuDisabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl" customClass="PFCPayloadLibraryTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="192" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -1769,8 +1769,24 @@ Gw
                 <constraint firstItem="6Op-f3-UEY" firstAttribute="leading" secondItem="bwR-yz-4m2" secondAttribute="leading" id="umJ-H3-Th3"/>
                 <constraint firstAttribute="trailing" secondItem="6Op-f3-UEY" secondAttribute="trailing" id="z8K-ry-PKd"/>
             </constraints>
-            <point key="canvasLocation" x="-903.5" y="-149"/>
+            <point key="canvasLocation" x="-714.5" y="-143"/>
         </customView>
+        <customObject id="srB-68-ofc" customClass="PFCPayloadLibraryTableView">
+            <connections>
+                <outlet property="menuPayloadMenuItem" destination="Dz4-LU-gBY" id="vFX-3J-pdj"/>
+            </connections>
+        </customObject>
+        <menu id="Dz4-LU-gBY">
+            <items>
+                <menuItem title="Show In Finder" id="XJU-HK-qma">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="menuItemShowInFinder:" target="-2" id="elS-ER-Cdb"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-759.5" y="-683.5"/>
+        </menu>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>

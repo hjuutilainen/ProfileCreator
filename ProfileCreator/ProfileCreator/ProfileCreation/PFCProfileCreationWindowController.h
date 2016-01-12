@@ -7,8 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class PFCPayloadLibraryTableView;
 
-typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
+typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
     /** Profile Library Apple **/
     kPFCPayloadLibraryApple,
     /** Profile Library /User/Library/Preferences **/
@@ -28,7 +29,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
 // ProfilePayloads
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSplitView;
-@property (weak)    IBOutlet NSTableView *tableViewProfilePayloads;
+@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewProfilePayloads;
 @property (readwrite)        NSMutableArray *arrayProfilePayloads;
 @property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
 - (IBAction)tableViewProfilePayloads:(id)sender;
@@ -36,7 +37,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
 // PayloadLibrary
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySuperview;
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySplitView;
-@property (weak)    IBOutlet NSTableView *tableViewPayloadLibrary;
+@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadLibrary;
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
@@ -56,8 +57,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
 @property (weak)    IBOutlet NSTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
 
-
-
+- (IBAction)menuItemShowInFinder:(id)sender;
 
 @property NSString *profileName;
 @property int profileType;
@@ -96,4 +96,10 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
 - (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
+@end
+
+@interface PFCPayloadLibraryTableView : NSTableView
+@property PFCProfileCreationWindowController *windowController;
+@property (weak) IBOutlet NSMenu *menuPayloadMenuItem;
+- (void)setParentWindowController:(PFCProfileCreationWindowController *)windowController;
 @end

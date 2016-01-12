@@ -434,35 +434,6 @@
     }];
 }
 
-
-
-- (IBAction)buttonOpenPlist:(id)sender {
-    // --------------------------------------------------------------
-    //  Setup open dialog for current settings
-    // --------------------------------------------------------------
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setTitle:@"Open Plist"];
-    [openPanel setPrompt:@"Select"];
-    [openPanel setCanChooseFiles:YES];
-    [openPanel setCanChooseDirectories:NO];
-    [openPanel setCanCreateDirectories:NO];
-    [openPanel setAllowsMultipleSelection:NO];
-    
-    [openPanel setAllowedFileTypes:@[@"com.apple.property-list"]];
-    
-    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-        if ( result == NSModalResponseOK ) {
-            NSArray *selectedURLs = [openPanel URLs];
-            NSURL *fileURL = [selectedURLs firstObject];
-            NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:fileURL];
-            if ( ! _profileWindowController ) {
-                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileDict:@{} sender:self];
-                [_profileWindowController setCustomMenu:@[ fileManifest ]];
-            }
-            [[_profileWindowController window] makeKeyAndOrderFront:self];
-        }
-    }];
-}
 - (IBAction)buttonOpenFoldera:(id)sender {
     // --------------------------------------------------------------
     //  Setup open dialog for current settings
@@ -484,9 +455,9 @@
                                                                   includingPropertiesForKeys:@[]
                                                                                      options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                                        error:nil];
-            NSPredicate * fltr = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
             NSMutableArray *menuArray = [[NSMutableArray alloc] init];
-            for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:fltr] ) {
+            for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
                 NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:plistURL];
                 [menuArray addObject:fileManifest];
             }
