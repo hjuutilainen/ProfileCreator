@@ -60,9 +60,9 @@
     NSMutableArray *manifestArray = [[NSMutableArray alloc] init];
     NSArray *dictKeys = [dict allKeys];
     for ( NSString *key in dictKeys ) {
-        if ( @YES ) {
+        if ( @YES ) { // For a setting to allow ALL keys to be seen
             if ( [self isAppleKey:key] ) {
-                NSLog(@"%@ is an Apple key, ignoring...", key);
+                //NSLog(@"%@ is an Apple key, ignoring...", key);
                 continue;
             }
         }
@@ -146,7 +146,11 @@
     if ( [value isKindOfClass:[NSString class]] )       return @"String";
     if ( [valueClass isEqualTo:[@(YES) class]] )        return @"Boolean";
     if ( [valueClass isEqualTo:[@(0) class]] ) {
-        // Figure out what kind
+        CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
+        if ( numberType <= 4 )                          return @"Integer";
+        if ( 5 <= numberType && numberType <= 6 )       return @"Float";
+        
+        NSLog(@"[ERROR] Unknown CFNumberType: %ld", numberType);
         return @"Number";
     }
     if ( [value isKindOfClass:[NSArray class]] )        return @"Array";
@@ -159,7 +163,8 @@
 + (NSString *)cellTypeFromTypeString:(NSString *)typeString {
     if ( [typeString isEqualToString:@"String"] )   return @"TextField";
     if ( [typeString isEqualToString:@"Boolean"] )  return @"Checkbox";
-    if ( [typeString isEqualToString:@"Number"] )   return @"TextFieldNumber";
+    if ( [typeString isEqualToString:@"Integer"] )   return @"TextFieldNumber";
+    if ( [typeString isEqualToString:@"Float"] )   return @"TextFieldNumber";
     if ( [typeString isEqualToString:@"Array"] )    return @"TableView";
     if ( [typeString isEqualToString:@"Dict"] )     return @"SegmentedControl";
     if ( [typeString isEqualToString:@"Date"] )     return @"TextFieldDate";

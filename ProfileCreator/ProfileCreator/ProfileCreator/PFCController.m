@@ -487,7 +487,6 @@
             NSPredicate * fltr = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
             NSMutableArray *menuArray = [[NSMutableArray alloc] init];
             for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:fltr] ) {
-                
                 NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:plistURL];
                 [menuArray addObject:fileManifest];
             }

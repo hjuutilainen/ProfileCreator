@@ -8,8 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
+typedef NS_ENUM(NSInteger, PFCPayloadLibraryes) {
+    /** Profile Library Apple **/
+    kPFCPayloadLibraryApple,
+    /** Profile Library /User/Library/Preferences **/
+    kPFCPayloadLibraryUserPreferences,
+    /** Profile Library Custom **/
+    kPFCPayloadLibraryCustom
+};
 
+@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
 
 // Window
 @property BOOL windowShouldClose;
@@ -32,8 +40,14 @@
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
+@property (readwrite)        NSInteger segmentedControlLibrarySelectedSegment;
 - (IBAction)tableViewPayloadLibrary:(id)sender;
 - (IBAction)segmentedControlLibrary:(id)sender;
+
+// PayloadLibrary Arrays
+@property (readwrite)        NSMutableArray *arrayPayloadLibraryApple;
+@property (readwrite)        NSMutableArray *arrayPayloadLibraryUserPreferences;
+@property (readwrite)        NSMutableArray *arrayPayloadLibraryCustom;
 
 // SettingsView
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
@@ -45,29 +59,17 @@
 
 
 
-
-
-
-
-
 @property NSString *profileName;
 @property int profileType;
 @property NSArray *customMenu;
 @property BOOL advancedSettings;
-
 @property (strong) IBOutlet NSWindow *sheetProfileName;
 @property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
 - (IBAction)buttonCancelSheetProfileName:(id)sender;
 @property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
 - (IBAction)buttonSaveSheetProfileName:(id)sender;
-
-
-
-
 @property id parentObject;
 @property BOOL columnMenuEnabledHidden;
-
-// TableView Settings
 @property NSDictionary *profileDict;
 @property NSMutableDictionary *tableViewSettingsSettings;
 @property NSMutableDictionary *tableViewSettingsCurrentSettings;

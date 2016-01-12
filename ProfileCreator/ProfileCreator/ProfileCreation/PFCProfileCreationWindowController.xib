@@ -197,7 +197,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewMenuEnabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="xAs-Je-CWh">
-                                <rect key="frame" x="0.0" y="0.0" width="192" height="113"/>
+                                <rect key="frame" x="0.0" y="0.0" width="192" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -364,7 +364,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewMenuDisabled" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl">
-                                <rect key="frame" x="0.0" y="0.0" width="192" height="87"/>
+                                <rect key="frame" x="0.0" y="0.0" width="192" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -424,7 +424,7 @@ Gw
                 <constraint firstItem="NWj-Ps-yH3" firstAttribute="leading" secondItem="Zf9-0g-a6x" secondAttribute="leading" id="iM4-jV-z8P"/>
                 <constraint firstItem="NWj-Ps-yH3" firstAttribute="top" secondItem="ROz-hU-Srw" secondAttribute="bottom" constant="5" id="nYe-Er-6mA"/>
             </constraints>
-            <point key="canvasLocation" x="-856" y="-871.5"/>
+            <point key="canvasLocation" x="-873" y="-911.5"/>
         </customView>
         <customView id="bwR-yz-4m2" userLabel="View Settings Superview">
             <rect key="frame" x="0.0" y="0.0" width="511" height="1498"/>
@@ -437,7 +437,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings">
-                                <rect key="frame" x="0.0" y="0.0" width="509" height="1496"/>
+                                <rect key="frame" x="0.0" y="0.0" width="508.5" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -526,7 +526,7 @@ Gw
                                             </tableCellView>
                                         </prototypeCellViews>
                                     </tableColumn>
-                                    <tableColumn identifier="ColumnSettings" width="418.41015625" minWidth="200" maxWidth="3.4028234663852886e+38" id="JMP-fg-zUJ" userLabel="ColumnSettings">
+                                    <tableColumn identifier="ColumnSettings" width="418.91015625" minWidth="200" maxWidth="3.4028234663852886e+38" id="JMP-fg-zUJ" userLabel="ColumnSettings">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1385,7 +1385,7 @@ Gw
                                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="25" horizontalPageScroll="10" verticalLineScroll="25" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F3y-2I-drV">
                                                         <rect key="frame" x="8" y="37" width="403" height="123"/>
                                                         <clipView key="contentView" id="MK7-Yj-q1e">
-                                                            <rect key="frame" x="1" y="23" width="401" height="99"/>
+                                                            <rect key="frame" x="1" y="0.0" width="401" height="122"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="23" rowSizeStyle="automatic" headerView="wyc-dT-mgC" viewBased="YES" id="uPM-iD-nJd">
@@ -1769,7 +1769,7 @@ Gw
                 <constraint firstItem="6Op-f3-UEY" firstAttribute="leading" secondItem="bwR-yz-4m2" secondAttribute="leading" id="umJ-H3-Th3"/>
                 <constraint firstAttribute="trailing" secondItem="6Op-f3-UEY" secondAttribute="trailing" id="z8K-ry-PKd"/>
             </constraints>
-            <point key="canvasLocation" x="-1263.5" y="-119"/>
+            <point key="canvasLocation" x="-903.5" y="-149"/>
         </customView>
     </objects>
     <resources>
