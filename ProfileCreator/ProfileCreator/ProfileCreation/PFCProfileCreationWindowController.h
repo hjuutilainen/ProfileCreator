@@ -18,13 +18,18 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
     kPFCPayloadLibraryCustom
 };
 
-@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
+@protocol PFCPayloadLibraryTableViewDelegate <NSObject>
+-(void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
+@end
+
+@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate>
 
 // Window
 @property BOOL windowShouldClose;
 
 // Random
 @property NSString *selectedPayloadTableViewIdentifier;
+@property NSString *clickedPayloadTableViewIdentifier;
 
 // ProfilePayloads
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
@@ -32,6 +37,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewProfilePayloads;
 @property (readwrite)        NSMutableArray *arrayProfilePayloads;
 @property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
+@property (readwrite)        NSInteger tableViewProfilePayloadsClickedRow;
 - (IBAction)tableViewProfilePayloads:(id)sender;
 
 // PayloadLibrary
@@ -41,6 +47,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
+@property (readwrite)        NSInteger tableViewPayloadLibraryClickedRow;
 @property (readwrite)        NSInteger segmentedControlLibrarySelectedSegment;
 - (IBAction)tableViewPayloadLibrary:(id)sender;
 - (IBAction)segmentedControlLibrary:(id)sender;
@@ -98,8 +105,11 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Class PFCPayloadLibraryTableView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 @interface PFCPayloadLibraryTableView : NSTableView
-@property PFCProfileCreationWindowController *windowController;
-@property (weak) IBOutlet NSMenu *menuPayloadMenuItem;
-- (void)setParentWindowController:(PFCProfileCreationWindowController *)windowController;
+@property id <PFCPayloadLibraryTableViewDelegate>tableViewMenuDelegate;
 @end

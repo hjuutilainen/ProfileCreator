@@ -96,12 +96,12 @@
     
     [self tableViewProfilePayloads:nil];
     [self setTableViewProfilePayloadsSelectedRow:-1];
-    [_tableViewProfilePayloads setParentWindowController:self];
+    [_tableViewProfilePayloads setTableViewMenuDelegate:self];
     [_tableViewProfilePayloads reloadData];
     
     [self tableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
-    [_tableViewPayloadLibrary setParentWindowController:self];
+    [_tableViewPayloadLibrary setTableViewMenuDelegate:self];
     [_tableViewPayloadLibrary reloadData];
     
 } // initializeMenu
@@ -1898,22 +1898,73 @@
 }
 
 - (IBAction)menuItemShowInFinder:(id)sender {
-    NSLog(@"menuItemShowInFinder");
+    NSError *error = nil;
+    NSDictionary *manifestDict;
+    if ( [_clickedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+        manifestDict = [_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsClickedRow];
+    } else if ( [_clickedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+        manifestDict = [_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibraryClickedRow];
+    } else {
+        NSLog(@"[ERROR] Unknown table view identifier: %@", _clickedPayloadTableViewIdentifier);
+        return;
+    }
+    
+    if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+        NSString *filePath = manifestDict[@"PlistPath"] ?: @"";
+        NSLog(@"filePath=%@", filePath);
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
+        } else {
+            NSLog(@"[ERROR] %@", [error localizedDescription]);
+        }
+    }
+}
+
+- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
+    
+    [self setClickedPayloadTableViewIdentifier:tableViewIdentifier];
+
+    if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+        if ( 0 <= row && [_arrayProfilePayloads count] <= row ) {
+            menu = nil;
+            return;
+        }
+        
+        [self setTableViewProfilePayloadsClickedRow:row];
+        
+        NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
+        NSDictionary *manifestDict = [_arrayProfilePayloads objectAtIndex:row];
+        if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+            [menuItemShowOriginalInFinder setEnabled:YES];
+        } else {
+            [menu removeItem:menuItemShowOriginalInFinder];
+        }
+    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+        
+        if ( 0 <= row && [_arrayPayloadLibrary count] <= row ) {
+            menu = nil;
+            return;
+        }
+        
+        [self setTableViewPayloadLibraryClickedRow:row];
+        
+        // MenuItem "Show Original In Finder"
+        NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
+        NSDictionary *manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
+        if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+            [menuItemShowOriginalInFinder setEnabled:YES];
+        } else {
+            [menu removeItem:menuItemShowOriginalInFinder];
+        }
+    } else {
+        NSLog(@"[ERROR] Unknown table view identifier: %@", tableViewIdentifier);
+    }
 }
 
 @end
 
 @implementation PFCPayloadLibraryTableView
-
-- (void)setParentWindowController:(PFCProfileCreationWindowController *)windowController {
-    NSLog(@"setParentWindowController");
-    [self setWindowController:windowController];
-    NSLog(@"_menuPayloadMenuItem=%@", _menuPayloadMenuItem);
-    for ( NSMenuItem *menuItem in [_menuPayloadMenuItem itemArray] ) {
-        NSLog(@"menuItem=%@", menuItem);
-        [menuItem setTarget:windowController];
-    }
-}
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent {
     NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -1922,8 +1973,13 @@
     if ( row < 0 ) {
         return [super menuForEvent:theEvent];
     }
-    NSLog(@"returning menu: %@", _menuPayloadMenuItem);
-    return _menuPayloadMenuItem;
+    
+    NSString *tableViewIdentifier = [self identifier];
+    NSMenu *menu = [[self menu] copy];
+    [menu setAutoenablesItems:NO];
+    [_delegate validateMenu:menu forTableViewWithIdentifier:tableViewIdentifier row:row];
+    
+    return menu;
 }
 
 @end
