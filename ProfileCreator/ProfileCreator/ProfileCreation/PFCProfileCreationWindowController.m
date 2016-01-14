@@ -35,6 +35,8 @@
         _arrayPayloadLibraryUserPreferences = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryCustom = [[NSMutableArray alloc] init];
         _arraySettings = [[NSMutableArray alloc] init];
+        _payloadLibraryUserPreferencesSettings = [[NSMutableDictionary alloc] init];
+        _payloadLibraryCustomSettings = [[NSMutableDictionary alloc] init];
         
         
         
@@ -209,8 +211,10 @@
                                                                                 options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                                   error:nil];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
+        
         for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
-            NSDictionary *manifestDict = [PFCManifestCreationParser manifestForPlistAtURL:plistURL];
+            NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
+            NSDictionary *manifestDict = [PFCManifestCreationParser manifestForPlistAtURL:plistURL settingsDict:&settingsDict];
             if ( [manifestDict count] != 0 ) {
                 NSString *manifestDomain = manifestDict[@"Domain"] ?: @"";
                 if (
@@ -220,6 +224,8 @@
                 } else {
                     [_arrayPayloadLibraryUserPreferences addObject:manifestDict];
                 }
+                
+                _payloadLibraryUserPreferencesSettings[manifestDomain] = [settingsDict copy];
             } else {
                 NSLog(@"[ERROR] Plist: %@ was empty!", [plistURL lastPathComponent]);
             }
@@ -844,7 +850,7 @@
             // ---------------------------------------------------------------------
             NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewPayloadLibrary selectedRow];
             
-            if ( payloadLibrary == _segmentedControlLibrarySelectedSegment ) {
+            if ( payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment ) {
                 [_tableViewPayloadLibrary beginUpdates];
                 [_arrayPayloadLibrary addObject:cellDict];
                 [_arrayPayloadLibrary sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
@@ -868,7 +874,7 @@
             // -----------------------------------------------------------------------------
             //  If current cell dict was selected, move selection to table view DISABLED
             // -----------------------------------------------------------------------------
-            if ( tableViewMenuEnabledSelectedRow == row && payloadLibrary == _segmentedControlLibrarySelectedSegment ) {
+            if ( tableViewMenuEnabledSelectedRow == row && payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment ) {
                 
                 // ---------------------------------------------------------------------
                 //  Deselect items in table view ENABLED
@@ -991,7 +997,7 @@
             } else {
                 NSMutableDictionary *settingsDict = [_tableViewSettingsSettings[payloadDomain] mutableCopy] ?: [NSMutableDictionary dictionary];
                 settingsDict[@"Selected"] = @YES;
-                settingsDict[@"PayloadLibrary"] = @(_segmentedControlLibrarySelectedSegment);
+                settingsDict[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
                 _tableViewSettingsSettings[payloadDomain] = [settingsDict copy];
             }
         }
@@ -1745,7 +1751,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)tableViewProfilePayloads:(id)sender {
-    
+
     [self saveCurrentSettings];
     
     [_tableViewPayloadLibrary deselectAll:self];
@@ -1810,11 +1816,11 @@
 - (IBAction)segmentedControlLibrary:(id)sender {
     
     NSInteger selectedSegment = [_segmentedControlLibrary selectedSegment];
-    if ( _segmentedControlLibrarySelectedSegment == selectedSegment ) {
+    if ( _segmentedControlPayloadLibrarySelectedSegment == selectedSegment ) {
         return;
     }
     
-    switch (_segmentedControlLibrarySelectedSegment) {
+    switch (_segmentedControlPayloadLibrarySelectedSegment) {
         case 0:
             [self setArrayPayloadLibraryApple:[_arrayPayloadLibrary mutableCopy]];
             break;
@@ -1831,12 +1837,12 @@
             break;
     }
     
-    [self setSegmentedControlLibrarySelectedSegment:selectedSegment];
+    [self setSegmentedControlPayloadLibrarySelectedSegment:selectedSegment];
     
     [_tableViewPayloadLibrary beginUpdates];
     [_arrayPayloadLibrary removeAllObjects];
     
-    switch (_segmentedControlLibrarySelectedSegment) {
+    switch (_segmentedControlPayloadLibrarySelectedSegment) {
         case 0:
             [self setArrayPayloadLibrary:[_arrayPayloadLibraryApple mutableCopy]];
             break;
@@ -1911,7 +1917,6 @@
     
     if ( [manifestDict[@"PlistPath"] length] != 0 ) {
         NSString *filePath = manifestDict[@"PlistPath"] ?: @"";
-        NSLog(@"filePath=%@", filePath);
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
@@ -1924,7 +1929,8 @@
 - (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
     
     [self setClickedPayloadTableViewIdentifier:tableViewIdentifier];
-
+    
+    NSDictionary *manifestDict;
     if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
         if ( 0 <= row && [_arrayProfilePayloads count] <= row ) {
             menu = nil;
@@ -1933,13 +1939,7 @@
         
         [self setTableViewProfilePayloadsClickedRow:row];
         
-        NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
-        NSDictionary *manifestDict = [_arrayProfilePayloads objectAtIndex:row];
-        if ( [manifestDict[@"PlistPath"] length] != 0 ) {
-            [menuItemShowOriginalInFinder setEnabled:YES];
-        } else {
-            [menu removeItem:menuItemShowOriginalInFinder];
-        }
+        manifestDict = [_arrayProfilePayloads objectAtIndex:row];
     } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
         
         if ( 0 <= row && [_arrayPayloadLibrary count] <= row ) {
@@ -1949,16 +1949,17 @@
         
         [self setTableViewPayloadLibraryClickedRow:row];
         
-        // MenuItem "Show Original In Finder"
-        NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
-        NSDictionary *manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
-        if ( [manifestDict[@"PlistPath"] length] != 0 ) {
-            [menuItemShowOriginalInFinder setEnabled:YES];
-        } else {
-            [menu removeItem:menuItemShowOriginalInFinder];
-        }
+        manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
     } else {
         NSLog(@"[ERROR] Unknown table view identifier: %@", tableViewIdentifier);
+    }
+    
+    // MenuItem "Show Original In Finder"
+    NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
+    if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+        [menuItemShowOriginalInFinder setEnabled:YES];
+    } else {
+        [menu removeItem:menuItemShowOriginalInFinder];
     }
 }
 

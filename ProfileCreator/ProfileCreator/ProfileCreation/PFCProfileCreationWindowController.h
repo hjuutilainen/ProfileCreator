@@ -48,14 +48,18 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
 @property (readwrite)        NSInteger tableViewPayloadLibraryClickedRow;
-@property (readwrite)        NSInteger segmentedControlLibrarySelectedSegment;
+@property (readwrite)        NSInteger segmentedControlPayloadLibrarySelectedSegment;
 - (IBAction)tableViewPayloadLibrary:(id)sender;
 - (IBAction)segmentedControlLibrary:(id)sender;
 
 // PayloadLibrary Arrays
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryApple;
+
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryUserPreferences;
+@property (readwrite)        NSMutableDictionary *payloadLibraryUserPreferencesSettings;
+
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryCustom;
+@property (readwrite)        NSMutableDictionary *payloadLibraryCustomSettings;
 
 // SettingsView
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
@@ -63,6 +67,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewSettingsError;
 @property (weak)    IBOutlet NSTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
+
+
 
 - (IBAction)menuItemShowInFinder:(id)sender;
 

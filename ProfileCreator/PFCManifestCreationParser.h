@@ -10,7 +10,7 @@
 
 @interface PFCManifestCreationParser : NSObject
 
-+ (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL;
++ (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict;
 + (NSString *)typeStringFromValue:(id)value;
 
 @end

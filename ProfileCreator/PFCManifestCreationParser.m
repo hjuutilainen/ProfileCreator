@@ -11,13 +11,11 @@
 
 @implementation PFCManifestCreationParser
 
-+ (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL {
++ (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict {
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
-    
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
-    manifestDict[@"PayloadKeys"] = [self manifestSettingsForPlistAtURL:fileURL];
+    manifestDict[@"PayloadKeys"] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
     manifestDict[@"PlistPath"] = [fileURL path];
-    
     return [manifestDict copy];
 }
 
@@ -53,11 +51,11 @@
     return [manifestMenuDict copy];
 }
 
-+ (NSArray *)manifestSettingsForPlistAtURL:(NSURL *)fileURL {
-    return [self arrayFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{}];
++ (NSArray *)manifestArrayForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict {
+    return [self manifestArrayFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{} settingsDict:settingsDict];
 }
 
-+ (NSArray *)arrayFromDict:(NSDictionary *)dict {
++ (NSArray *)manifestArrayFromDict:(NSDictionary *)dict settingsDict:(NSMutableDictionary **)settingsDict {
     NSMutableArray *manifestArray = [[NSMutableArray alloc] init];
     NSArray *dictKeys = [dict allKeys];
     for ( NSString *key in dictKeys ) {
@@ -71,25 +69,30 @@
         manifestDict[@"Enabled"] = @YES;
         manifestDict[@"Key"] = key;
         manifestDict[@"Title"] = key;
+        NSString *identifier = [[NSUUID UUID] UUIDString];
+        manifestDict[@"Identifier"] = identifier;
         id value = dict[key];
         NSString *typeString = [self typeStringFromValue:value];
         if ( [typeString length] != 0 ) {
             manifestDict[@"Type"] = typeString;
             manifestDict[@"CellType"] = [self cellTypeFromTypeString:typeString];
             manifestDict[@"Description"] = @"No Description";
+            
+            NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
+            // Read Settings
             if ( [typeString isEqualToString:@"Array"] ) {
                 manifestDict[@"TableViewColumns"] = [self tableViewColumnsFromArray:value];
-                manifestDict[@"Value"] = value;
+                
+                settingsDict[@"Value"] = value;
             } else if ( [typeString isEqualToString:@"Dict"] ) {
                 manifestDict[@"AvailableValues"] = @[ key ];
-                manifestDict[@"ValueKeys"] = @{ key : [self arrayFromDict:value] };
+                settingsDict[@"ValueKeys"] = @{ key : [self manifestArrayFromDict:value settingsDict:&settingsDict] };
             } else if ( [typeString isEqualToString:@"Boolean"] ) {
-                //manifestDict[@"FontWeight"] = @"Bold";
-                //manifestDict[@"IndentLeft"] = @YES;
-                manifestDict[@"Value"] = value;
+                settingsDict[@"Value"] = value;
             } else {
-                manifestDict[@"Value"] = value;
+                settingsDict[@"Value"] = value;
             }
+            settingsDict[identifier] = settingsDict ?: @{};
         } else {
             NSLog(@"[ERROR] TypeString was empty!");
             continue;

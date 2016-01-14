@@ -433,7 +433,7 @@
         }
     }];
 }
-
+/*
 - (IBAction)buttonOpenFoldera:(id)sender {
     // --------------------------------------------------------------
     //  Setup open dialog for current settings
@@ -471,7 +471,7 @@
         }
     }];
 }
-
+*/
 - (IBAction)buttonCancelSheetProfileName:(id)sender {
     [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
     [_sheetProfileName orderOut:self];
