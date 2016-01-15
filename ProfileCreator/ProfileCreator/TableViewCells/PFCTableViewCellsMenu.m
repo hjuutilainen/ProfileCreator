@@ -115,3 +115,55 @@
 } // cellViewHeight
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewMenuLibrary
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation CellViewMenuLibrary
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
+    
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView menuTitle] setStringValue:menuDict[@"Title"] ?: @""];
+        
+    // ---------------------------------------------------------------------
+    //  Icon
+    // ---------------------------------------------------------------------
+    NSImage *icon = [[NSBundle mainBundle] imageForResource:menuDict[@"IconName"]];
+    if ( icon ) {
+        [[cellView menuIcon] setImage:icon];
+    } else {
+        NSURL *iconURL = [NSURL fileURLWithPath:menuDict[@"IconPath"] ?: @""];
+        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
+            NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
+            if ( icon ) {
+                [[cellView menuIcon] setImage:icon];
+            }
+        }
+        
+        iconURL = [NSURL fileURLWithPath:menuDict[@"IconPathBundle"] ?: @""];
+        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
+            NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
+            if ( icon ) {
+                [[cellView menuIcon] setImage:icon];
+            }
+        }
+    }
+    
+    return cellView;
+} // populateCellViewMenu:menuDict:row
+
++ (CGFloat)cellViewHeight {
+    return 44.0;
+} // cellViewHeight
+
+@end

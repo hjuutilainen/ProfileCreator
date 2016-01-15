@@ -37,3 +37,16 @@
 - (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row sender:(id)sender;
 + (CGFloat)cellViewHeight;
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewMenuLibrary
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@interface CellViewMenuLibrary : NSTableCellView
+@property (weak) IBOutlet NSTextField *menuTitle;
+@property (weak) IBOutlet NSImageView *menuIcon;
+- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
++ (CGFloat)cellViewHeight;
+@end

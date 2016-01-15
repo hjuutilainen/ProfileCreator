@@ -54,11 +54,21 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (IBAction)tableViewPayloadLibrary:(id)sender;
 - (IBAction)segmentedControlLibrary:(id)sender;
 
-// PayloadLibrary Arrays
+// PayloadLibraryApple
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryApple;
+@property (readwrite)        BOOL isSearchingPayloadLibraryApple;
+@property (readwrite)        NSString *searchStringPayloadLibraryApple;
+
+// PayloadLibraryUserPreferences
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryUserPreferences;
+@property (readwrite)        BOOL isSearchingPayloadLibraryUserPreferences;
+@property (readwrite)        NSString *searchStringPayloadLibraryUserPreferences;
 @property (readwrite)        NSMutableDictionary *payloadLibraryUserPreferencesSettings;
+
+// PayladLibraryCustom
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryCustom;
+@property (readwrite)        BOOL isSearchingPayloadLibraryCustom;
+@property (readwrite)        NSString *searchStringPayloadLibraryCustom;
 @property (readwrite)        NSMutableDictionary *payloadLibraryCustomSettings;
 
 // SettingsView
@@ -73,7 +83,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (IBAction)buttonPopOverSettings:(id)sender;
 
 // LibraryViewLower
-@property BOOL isSearching;
 @property (weak) IBOutlet NSSearchField *searchFieldProfileLibrary;
 - (IBAction)searchFieldProfileLibrary:(id)sender;
 

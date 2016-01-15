@@ -581,9 +581,9 @@
             NSString *cellType = menuDict[@"CellType"];
             
             if ( [cellType isEqualToString:@"Menu"] ) {
-                CellViewMenu *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenu" owner:self];
+                CellViewMenuLibrary *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenuLibrary" owner:self];
                 [cellView setIdentifier:nil];
-                return [cellView populateCellViewMenu:cellView menuDict:menuDict errorCount:nil row:row];
+                return [cellView populateCellViewMenuLibrary:cellView menuDict:menuDict errorCount:nil row:row];
             } else {
                 NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
@@ -678,11 +678,10 @@
         } else if ( [cellType isEqualToString:@"TableView"] ) {
             return 212;
         }
-    } else if (
-               [[tableView identifier] isEqualToString:@"TableViewMenuEnabled"] ||
-               [[tableView identifier] isEqualToString:@"TableViewMenuDisabled"]
-               ) {
-        return 44;
+    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuEnabled"] ) {
+        return 42;
+    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuDisabled"] ) {
+        return 32;
     }
     return 1;
 } // tableView:heightOfRow
@@ -868,7 +867,7 @@
                 NSMutableArray *arrayPayloadLibrarySource = [self arrayForPayloadLibrary:payloadLibrary];
                 [arrayPayloadLibrarySource addObject:cellDict];
                 [arrayPayloadLibrarySource sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-                [self savePayloadLibraryArray:arrayPayloadLibrarySource payloadLibrary:payloadLibrary];
+                [self saveArray:arrayPayloadLibrarySource forPayloadLibrary:payloadLibrary];
             }
             
             // -----------------------------------------------------------------------------
@@ -1841,47 +1840,23 @@
         return;
     }
     
-    switch (_segmentedControlPayloadLibrarySelectedSegment) {
-        case 0:
-            [self setArrayPayloadLibraryApple:[_arrayPayloadLibrary mutableCopy]];
-            break;
-            
-        case 1:
-            [self setArrayPayloadLibraryUserPreferences:[_arrayPayloadLibrary mutableCopy]];
-            break;
-            
-        case 2:
-            [self setArrayPayloadLibraryCustom:[_arrayPayloadLibrary mutableCopy]];
-            break;
-        default:
-            NSLog(@"Unknown!");
-            break;
+    if ( ! [self isSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment] ) {
+        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
     }
     
     [self setSegmentedControlPayloadLibrarySelectedSegment:selectedSegment];
     
-    [_tableViewPayloadLibrary beginUpdates];
-    [_arrayPayloadLibrary removeAllObjects];
-    
-    switch (_segmentedControlPayloadLibrarySelectedSegment) {
-        case 0:
-            [self setArrayPayloadLibrary:[_arrayPayloadLibraryApple mutableCopy]];
-            break;
-            
-        case 1:
-            [self setArrayPayloadLibrary:[_arrayPayloadLibraryUserPreferences mutableCopy]];
-            break;
-            
-        case 2:
-            [self setArrayPayloadLibrary:[_arrayPayloadLibraryCustom mutableCopy]];
-            break;
-        default:
-            NSLog(@"Unknown!");
-            break;
+    if ( [self isSearchingPayloadLibrary:selectedSegment] ) {
+        [_searchFieldProfileLibrary setStringValue:[self searchStringForPayloadLibrary:selectedSegment] ?: @""];
+        [self searchFieldProfileLibrary:nil];
+    } else {
+        [_searchFieldProfileLibrary setStringValue:@""];
+        [_tableViewPayloadLibrary beginUpdates];
+        [_arrayPayloadLibrary removeAllObjects];
+        [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:selectedSegment]];
+        [_tableViewPayloadLibrary reloadData];
+        [_tableViewPayloadLibrary endUpdates];
     }
-    
-    [_tableViewPayloadLibrary reloadData];
-    [_tableViewPayloadLibrary endUpdates];
     
     if ( _tableViewPayloadLibrarySelectedRow != -1 && _tableViewPayloadLibrarySelectedRowSegment == selectedSegment ) {
         [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
@@ -1890,15 +1865,15 @@
 
 - (NSMutableArray *)arrayForPayloadLibrary:(NSInteger )payloadLibrary {
     switch (payloadLibrary) {
-        case 0:
+        case kPFCPayloadLibraryApple:
             return [_arrayPayloadLibraryApple mutableCopy];
             break;
             
-        case 1:
+        case kPFCPayloadLibraryUserPreferences:
             return [_arrayPayloadLibraryUserPreferences mutableCopy];
             break;
             
-        case 2:
+        case kPFCPayloadLibraryCustom:
             return [_arrayPayloadLibraryCustom mutableCopy];
             break;
         default:
@@ -1908,17 +1883,17 @@
     }
 }
 
-- (void)savePayloadLibraryArray:(NSMutableArray *)arrayPayloadLibrary payloadLibrary:(NSInteger)payloadLibrary {
+- (void)saveArray:(NSMutableArray *)arrayPayloadLibrary forPayloadLibrary:(NSInteger)payloadLibrary {
     switch (payloadLibrary) {
-        case 0:
+        case kPFCPayloadLibraryApple:
             [self setArrayPayloadLibraryApple:[arrayPayloadLibrary mutableCopy]];
             break;
             
-        case 1:
+        case kPFCPayloadLibraryUserPreferences:
             [self setArrayPayloadLibraryUserPreferences:[arrayPayloadLibrary mutableCopy]];
             break;
             
-        case 2:
+        case kPFCPayloadLibraryCustom:
             [self setArrayPayloadLibraryCustom:[arrayPayloadLibrary mutableCopy]];
             break;
         default:
@@ -1927,19 +1902,125 @@
     }
 }
 
+// Search Field
+- (void)restoreSearchForPayloadLibrary:(NSInteger)payloadLibrary {
+    [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:payloadLibrary]];
+    [self setIsSearchingPayloadLibrary:payloadLibrary isSearching:NO];
+    [self setSearchStringForPayloadLibrary:payloadLibrary searchString:nil];
+}
+
+- (void)setSearchStringForPayloadLibrary:(NSInteger)payloadLibrary searchString:(NSString *)searchString {
+    switch (payloadLibrary) {
+        case kPFCPayloadLibraryApple:
+            [self setSearchStringPayloadLibraryApple:searchString];
+            break;
+            
+        case kPFCPayloadLibraryUserPreferences:
+            [self setSearchStringPayloadLibraryUserPreferences:searchString];
+            break;
+            
+        case kPFCPayloadLibraryCustom:
+            [self setSearchStringPayloadLibraryCustom:searchString];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (NSString *)searchStringForPayloadLibrary:(NSInteger)payloadLibrary {
+    switch (payloadLibrary) {
+        case kPFCPayloadLibraryApple:
+            return _searchStringPayloadLibraryApple;
+            break;
+            
+        case kPFCPayloadLibraryUserPreferences:
+            return _searchStringPayloadLibraryUserPreferences;
+            break;
+            
+        case kPFCPayloadLibraryCustom:
+            return _searchStringPayloadLibraryCustom;
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+}
+
+- (BOOL)isSearchingPayloadLibrary:(NSInteger)payloadLibrary {
+    switch (payloadLibrary) {
+        case kPFCPayloadLibraryApple:
+            return _isSearchingPayloadLibraryApple;
+            break;
+            
+        case kPFCPayloadLibraryUserPreferences:
+            return _isSearchingPayloadLibraryUserPreferences;
+            break;
+            
+        case kPFCPayloadLibraryCustom:
+            return _isSearchingPayloadLibraryCustom;
+            break;
+            
+        default:
+            return NO;
+            break;
+    }
+}
+
+- (void)setIsSearchingPayloadLibrary:(NSInteger)payloadLibrary isSearching:(BOOL)isSearching {
+    switch (payloadLibrary) {
+        case kPFCPayloadLibraryApple:
+            [self setIsSearchingPayloadLibraryApple:isSearching];
+            break;
+            
+        case kPFCPayloadLibraryUserPreferences:
+            [self setIsSearchingPayloadLibraryUserPreferences:isSearching];
+            break;
+            
+        case kPFCPayloadLibraryCustom:
+            [self setIsSearchingPayloadLibraryCustom:isSearching];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (IBAction)searchFieldProfileLibrary:(id)sender {
     
-    if ( !_isSearching ) {
-        [self setIsSearching:YES];
-        [self savePayloadLibraryArray:_arrayPayloadLibrary payloadLibrary:[_segmentedControlLibrary selectedSegment]];
+    switch (_segmentedControlPayloadLibrarySelectedSegment) {
+        case kPFCPayloadLibraryApple:
+            if ( !_isSearchingPayloadLibraryApple ) {
+                [self setIsSearchingPayloadLibraryApple:YES];
+                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryApple];
+            }
+            break;
+            
+        case kPFCPayloadLibraryUserPreferences:
+            if ( !_isSearchingPayloadLibraryUserPreferences ) {
+                [self setIsSearchingPayloadLibraryUserPreferences:YES];
+                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryUserPreferences];
+            }
+            break;
+            
+        case kPFCPayloadLibraryCustom:
+            if ( !_isSearchingPayloadLibraryCustom ) {
+                [self setIsSearchingPayloadLibraryCustom:YES];
+                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryCustom];
+            }
+            break;
+            
+        default:
+            break;
     }
     
     NSString *searchString = [_searchFieldProfileLibrary stringValue];
-    NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:[_segmentedControlLibrary selectedSegment]];
     if ( ![searchString length] ) {
-        [self setIsSearching:NO];
-        [self setArrayPayloadLibrary:currentPayloadLibrary];
+        [self restoreSearchForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
     } else {
+        [self setSearchStringForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment searchString:[searchString copy]];
+        NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
         NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"Title CONTAINS[cd] %@", searchString];
         NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
         [self setArrayPayloadLibrary:matchedObjects];
