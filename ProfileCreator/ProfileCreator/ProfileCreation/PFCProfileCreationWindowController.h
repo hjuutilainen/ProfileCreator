@@ -47,6 +47,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
+@property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRowSegment;
 @property (readwrite)        NSInteger tableViewPayloadLibraryClickedRow;
 @property (readwrite)        NSInteger segmentedControlPayloadLibrarySelectedSegment;
 - (IBAction)tableViewPayloadLibrary:(id)sender;

@@ -1519,13 +1519,21 @@
         //  Save current settings in menu dict
         // ---------------------------------------------------------------------
         if ( 0 <= _tableViewPayloadLibrarySelectedRow ) {
-            NSMutableDictionary *currentMenuDict = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
+            
+            NSMutableArray *selectedSegmentArray;
+            if ( _tableViewPayloadLibrarySelectedRowSegment == [_segmentedControlLibrary selectedSegment] ) {
+                selectedSegmentArray = _arrayPayloadLibrary;
+            } else {
+                selectedSegmentArray = [self arrayForPayloadLibrary:_tableViewPayloadLibrarySelectedRowSegment];
+            }
+            
+            NSMutableDictionary *currentMenuDict = [[selectedSegmentArray objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
             if ( [_tableViewSettingsCurrentSettings count] != 0 ) {
                 NSString *menuDomain = currentMenuDict[@"Domain"];
                 _tableViewSettingsSettings[menuDomain] = [_tableViewSettingsCurrentSettings copy];
             }
             currentMenuDict[@"SavedSettings"] = [_arraySettings copy];
-            [_arrayPayloadLibrary replaceObjectAtIndex:_tableViewPayloadLibrarySelectedRow withObject:[currentMenuDict copy]];
+            [selectedSegmentArray replaceObjectAtIndex:_tableViewPayloadLibrarySelectedRow withObject:[currentMenuDict copy]];
         }
     } else {
         //NSLog(@"No settings selected!");
@@ -1789,6 +1797,7 @@
     [_tableViewProfilePayloads deselectAll:self];
     [self setTableViewProfilePayloadsSelectedRow:-1];
     [self setTableViewPayloadLibrarySelectedRow:[_tableViewPayloadLibrary selectedRow]];
+    [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlLibrary selectedSegment]];
     
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
@@ -1862,6 +1871,9 @@
     [_tableViewPayloadLibrary reloadData];
     [_tableViewPayloadLibrary endUpdates];
     
+    if ( _tableViewPayloadLibrarySelectedRow != -1 && _tableViewPayloadLibrarySelectedRowSegment == selectedSegment ) {
+        [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
+    }
 }
 
 - (NSMutableArray *)arrayForPayloadLibrary:(NSInteger )payloadLibrary {
