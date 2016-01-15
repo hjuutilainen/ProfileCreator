@@ -12,6 +12,7 @@
 #import "PFCManifestCreationParser.h"
 #import "PFCController.h"
 #import "PFCPayloadVerification.h"
+#import "PFCSplitViewPayloadLibrary.h"
 
 @interface PFCProfileCreationWindowController ()
 
@@ -38,9 +39,6 @@
         _payloadLibraryUserPreferencesSettings = [[NSMutableDictionary alloc] init];
         _payloadLibraryCustomSettings = [[NSMutableDictionary alloc] init];
         
-        
-        
-        
         _tableViewSettingsSettings = [profileDict[@"Config"][@"Settings"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _tableViewSettingsCurrentSettings = [[NSMutableDictionary alloc] init];
         
@@ -63,8 +61,16 @@
     [self removeObserver:self forKeyPath:@"profileName" context:nil];
 } // dealloc
 
+
+//- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
+    // Works fine, but can't click the buttons
+    //return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
+//}
+
 - (void)windowDidLoad {
     [super windowDidLoad];
+    
+    
     
     // Setup Main Window
     [[self window] setBackgroundColor:[NSColor whiteColor]];

@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 -(void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
 @end
 
-@interface PFCProfileCreationWindowController : NSWindowController <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate>
+@interface PFCProfileCreationWindowController : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate>
 
 // Window
 @property BOOL windowShouldClose;
@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // PayloadLibrary
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySuperview;
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySplitView;
+@property (weak)    IBOutlet NSView *viewPayloadLibraryMenu;
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadLibrary;
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
