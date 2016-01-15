@@ -2,8 +2,7 @@
 //  PFCProfileCreationWindowController.h
 //  ProfileCreator
 //
-//  Created by Erik Berglund on 2015-12-07.
-//  Copyright © 2015 Erik Berglund. All rights reserved.
+//  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -29,7 +28,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 
 // Random
 @property NSString *selectedPayloadTableViewIdentifier;
-@property NSString *clickedPayloadTableViewIdentifier;
 
 // ProfilePayloads
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
@@ -37,7 +35,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewProfilePayloads;
 @property (readwrite)        NSMutableArray *arrayProfilePayloads;
 @property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
-@property (readwrite)        NSInteger tableViewProfilePayloadsClickedRow;
 - (IBAction)tableViewProfilePayloads:(id)sender;
 
 // PayloadLibrary
@@ -49,10 +46,13 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRowSegment;
-@property (readwrite)        NSInteger tableViewPayloadLibraryClickedRow;
 @property (readwrite)        NSInteger segmentedControlPayloadLibrarySelectedSegment;
 - (IBAction)tableViewPayloadLibrary:(id)sender;
 - (IBAction)segmentedControlLibrary:(id)sender;
+
+// PayloadLibraryFooter
+@property (weak)    IBOutlet NSSearchField *searchFieldProfileLibrary;
+- (IBAction)searchFieldProfileLibrary:(id)sender;
 
 // PayloadLibraryApple
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryApple;
@@ -78,51 +78,49 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
 
-// SettingsViewLower
-@property (weak) IBOutlet NSPopover *popOverSettings;
+// SettingsViewFooter
+@property (weak)    IBOutlet NSPopover *popOverSettings;
+@property (weak)    IBOutlet NSButton *buttonCancel;
+@property (weak)    IBOutlet NSButton *buttonSave;
 - (IBAction)buttonPopOverSettings:(id)sender;
+- (IBAction)buttonCancel:(id)sender;
+- (IBAction)buttonSave:(id)sender;
 
-// LibraryViewLower
-@property (weak) IBOutlet NSSearchField *searchFieldProfileLibrary;
-- (IBAction)searchFieldProfileLibrary:(id)sender;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// PayloadItemsContextMeny
+@property (readwrite)        NSString *clickedPayloadTableViewIdentifier;
+@property (readwrite)        NSInteger clickedPayloadTableViewRow;
 - (IBAction)menuItemShowInFinder:(id)sender;
+
+// SheetProfileName
+@property (strong)  IBOutlet NSWindow *sheetProfileName;
+@property (weak)    IBOutlet NSTextField *textFieldSheetProfileName;
+@property (weak)    IBOutlet NSButton *buttonSaveSheetProfileName;
+- (IBAction)buttonCancelSheetProfileName:(id)sender;
+- (IBAction)buttonSaveSheetProfileName:(id)sender;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @property NSString *profileName;
 @property int profileType;
 @property NSArray *customMenu;
 @property BOOL advancedSettings;
-@property (strong) IBOutlet NSWindow *sheetProfileName;
-@property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
-- (IBAction)buttonCancelSheetProfileName:(id)sender;
-@property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
-- (IBAction)buttonSaveSheetProfileName:(id)sender;
 @property id parentObject;
 @property BOOL columnMenuEnabledHidden;
 @property NSDictionary *profileDict;
 @property NSMutableDictionary *tableViewSettingsSettings;
 @property NSMutableDictionary *tableViewSettingsCurrentSettings;
 @property BOOL columnSettingsEnabledHidden;
-
-@property (weak) IBOutlet NSButton *buttonCancel;
-- (IBAction)buttonCancel:(id)sender;
-
-@property (weak) IBOutlet NSButton *buttonSave;
-- (IBAction)buttonSave:(id)sender;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -143,7 +141,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark Class PFCPayloadLibraryTableView
+#pragma mark Class: PFCPayloadLibraryTableView
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface PFCPayloadLibraryTableView : NSTableView

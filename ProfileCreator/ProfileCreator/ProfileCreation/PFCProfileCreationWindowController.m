@@ -122,6 +122,16 @@
     [_arrayProfilePayloads addObjectsFromArray:_customMenu];
 } // setupMenuProfilesCustom
 
+- (NSArray *)arrayForTableView:(NSString *)tableViewIdentifier {
+    if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+        return [_arrayProfilePayloads copy];
+    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+        return [_arrayPayloadLibrary copy];
+    } else {
+        return nil;
+    }
+} // arrayForTableView
+
 - (void)setupManifestLibraryApple:(NSArray *)enabledPayloadDomains {
     
     NSError *error = nil;
@@ -1902,145 +1912,184 @@
     }
 }
 
-// Search Field
-- (void)restoreSearchForPayloadLibrary:(NSInteger)payloadLibrary {
-    [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:payloadLibrary]];
-    [self setIsSearchingPayloadLibrary:payloadLibrary isSearching:NO];
-    [self setSearchStringForPayloadLibrary:payloadLibrary searchString:nil];
-}
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PayloadLibrary Search Field
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (IBAction)searchFieldProfileLibrary:(id)sender {
+    
+    // -------------------------------------------------------------------------------------------------
+    //  Check if this is the beginning of a search, if so save the complete array before removing items
+    // -------------------------------------------------------------------------------------------------
+    if ( ! [self isSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment] ) {
+        [self setIsSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment isSearching:YES];
+        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+    }
+    
+    NSString *searchString = [_searchFieldProfileLibrary stringValue];
+    [_tableViewPayloadLibrary beginUpdates];
+    if ( ! [searchString length] ) {
+        
+        // ---------------------------------------------------------------------
+        //  If user pressed (x) or deleted the search, restore the whole array
+        // ---------------------------------------------------------------------
+        [self restoreSearchForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+    } else {
+        
+        // ---------------------------------------------------------------------
+        //  If this is a search, store the search string if user changes segment
+        // ---------------------------------------------------------------------
+        [self setSearchStringForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment searchString:[searchString copy]];
+        
+        // ---------------------------------------------------------------------
+        //  Get the whole array for the current segment to filter
+        // ---------------------------------------------------------------------
+        NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+        
+        // FIXME - Should add a setting to choose what the search should match. A pull down menu with some predicate choices like all, keys, settings (default), title, type etc.
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"Title CONTAINS[cd] %@", searchString];
+        
+        // ------------------------------------------------------------------------
+        //  Filter the array and update the content array with the matched results
+        // ------------------------------------------------------------------------
+        NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
+        [self setArrayPayloadLibrary:matchedObjects];
+    }
+    
+    [_tableViewPayloadLibrary reloadData];
+    [_tableViewPayloadLibrary endUpdates];
+} // searchFieldProfileLibrary
 
 - (void)setSearchStringForPayloadLibrary:(NSInteger)payloadLibrary searchString:(NSString *)searchString {
     switch (payloadLibrary) {
         case kPFCPayloadLibraryApple:
             [self setSearchStringPayloadLibraryApple:searchString];
             break;
-            
         case kPFCPayloadLibraryUserPreferences:
             [self setSearchStringPayloadLibraryUserPreferences:searchString];
             break;
-            
         case kPFCPayloadLibraryCustom:
             [self setSearchStringPayloadLibraryCustom:searchString];
             break;
-            
         default:
             break;
     }
-}
+} // setSearchStringForPayloadLibrary:searchString
 
 - (NSString *)searchStringForPayloadLibrary:(NSInteger)payloadLibrary {
     switch (payloadLibrary) {
         case kPFCPayloadLibraryApple:
             return _searchStringPayloadLibraryApple;
             break;
-            
         case kPFCPayloadLibraryUserPreferences:
             return _searchStringPayloadLibraryUserPreferences;
             break;
-            
         case kPFCPayloadLibraryCustom:
             return _searchStringPayloadLibraryCustom;
             break;
-            
         default:
             return nil;
             break;
     }
-}
+} // searchStringForPayloadLibrary
 
-- (BOOL)isSearchingPayloadLibrary:(NSInteger)payloadLibrary {
-    switch (payloadLibrary) {
-        case kPFCPayloadLibraryApple:
-            return _isSearchingPayloadLibraryApple;
-            break;
-            
-        case kPFCPayloadLibraryUserPreferences:
-            return _isSearchingPayloadLibraryUserPreferences;
-            break;
-            
-        case kPFCPayloadLibraryCustom:
-            return _isSearchingPayloadLibraryCustom;
-            break;
-            
-        default:
-            return NO;
-            break;
-    }
-}
+- (void)restoreSearchForPayloadLibrary:(NSInteger)payloadLibrary {
+    [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:payloadLibrary]];
+    [self setIsSearchingPayloadLibrary:payloadLibrary isSearching:NO];
+    [self setSearchStringForPayloadLibrary:payloadLibrary searchString:nil];
+} // restoreSearchForPayloadLibrary
 
 - (void)setIsSearchingPayloadLibrary:(NSInteger)payloadLibrary isSearching:(BOOL)isSearching {
     switch (payloadLibrary) {
         case kPFCPayloadLibraryApple:
             [self setIsSearchingPayloadLibraryApple:isSearching];
             break;
-            
         case kPFCPayloadLibraryUserPreferences:
             [self setIsSearchingPayloadLibraryUserPreferences:isSearching];
             break;
-            
         case kPFCPayloadLibraryCustom:
             [self setIsSearchingPayloadLibraryCustom:isSearching];
             break;
-            
         default:
             break;
     }
-}
+} // setIsSearchingPayloadLibrary:isSearching
 
-- (IBAction)searchFieldProfileLibrary:(id)sender {
-    
-    switch (_segmentedControlPayloadLibrarySelectedSegment) {
+- (BOOL)isSearchingPayloadLibrary:(NSInteger)payloadLibrary {
+    switch (payloadLibrary) {
         case kPFCPayloadLibraryApple:
-            if ( !_isSearchingPayloadLibraryApple ) {
-                [self setIsSearchingPayloadLibraryApple:YES];
-                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryApple];
-            }
+            return _isSearchingPayloadLibraryApple;
             break;
-            
         case kPFCPayloadLibraryUserPreferences:
-            if ( !_isSearchingPayloadLibraryUserPreferences ) {
-                [self setIsSearchingPayloadLibraryUserPreferences:YES];
-                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryUserPreferences];
-            }
+            return _isSearchingPayloadLibraryUserPreferences;
             break;
-            
         case kPFCPayloadLibraryCustom:
-            if ( !_isSearchingPayloadLibraryCustom ) {
-                [self setIsSearchingPayloadLibraryCustom:YES];
-                [self saveArray:_arrayPayloadLibrary forPayloadLibrary:kPFCPayloadLibraryCustom];
-            }
+            return _isSearchingPayloadLibraryCustom;
             break;
-            
         default:
+            return NO;
             break;
     }
-    
-    NSString *searchString = [_searchFieldProfileLibrary stringValue];
-    if ( ![searchString length] ) {
-        [self restoreSearchForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
-    } else {
-        [self setSearchStringForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment searchString:[searchString copy]];
-        NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"Title CONTAINS[cd] %@", searchString];
-        NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
-        [self setArrayPayloadLibrary:matchedObjects];
-    }
-    [_tableViewPayloadLibrary reloadData];
-}
+} // isSearchingPayloadLibrary:payloadLibrary
 
-- (IBAction)menuItemShowInFinder:(id)sender {
-    NSError *error = nil;
-    NSDictionary *manifestDict;
-    if ( [_clickedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
-        manifestDict = [_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsClickedRow];
-    } else if ( [_clickedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
-        manifestDict = [_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibraryClickedRow];
-    } else {
-        NSLog(@"[ERROR] Unknown table view identifier: %@", _clickedPayloadTableViewIdentifier);
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PayloadMenu Context Menu
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
+    
+    // ---------------------------------------------------------------------
+    //  Store which TableView and row the user right clicked on.
+    // ---------------------------------------------------------------------
+    [self setClickedPayloadTableViewIdentifier:tableViewIdentifier];
+    [self setClickedPayloadTableViewRow:row];
+    
+    NSArray *tableViewArray = [self arrayForTableView:tableViewIdentifier];
+    
+    // ----------------------------------------------------------------------------------------
+    //  Sanity check so that row isn't less than 0 and that it's within the count of the array
+    // ----------------------------------------------------------------------------------------
+    if ( 0 <= row && [tableViewArray count] <= row ) {
+        menu = nil;
         return;
     }
     
+    NSDictionary *manifestDict = [tableViewArray objectAtIndex:row];
+    
+    // -------------------------------------------------------------------------------
+    //  MenuItem - "Show Original In Finder"
+    //  Remove this menu item unless key 'PlistPath' is set in the manifest
+    // -------------------------------------------------------------------------------
+    NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
     if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+        [menuItemShowOriginalInFinder setEnabled:YES];
+    } else {
+        [menu removeItem:menuItemShowOriginalInFinder];
+    }
+} // validateMenu:forTableViewWithIdentifier:row
+
+- (IBAction)menuItemShowInFinder:(id)sender {
+    
+    NSArray *tableViewArray = [self arrayForTableView:_clickedPayloadTableViewIdentifier];
+    
+    // ----------------------------------------------------------------------------------------
+    //  Sanity check so that row isn't less than 0 and that it's within the count of the array
+    // ----------------------------------------------------------------------------------------
+    if ( 0 <= _clickedPayloadTableViewRow && [tableViewArray count] <= _clickedPayloadTableViewRow ) {
+        return;
+    }
+    
+    NSDictionary *manifestDict = [tableViewArray objectAtIndex:_clickedPayloadTableViewRow];
+    
+    // ----------------------------------------------------------------------------------------
+    //  If key 'PlistPath' is set, check if it's a valid path. If it is, open it in Finder
+    // ----------------------------------------------------------------------------------------
+    if ( [manifestDict[@"PlistPath"] length] != 0 ) {
+        NSError *error = nil;
         NSString *filePath = manifestDict[@"PlistPath"] ?: @"";
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
@@ -2049,50 +2098,23 @@
             NSLog(@"[ERROR] %@", [error localizedDescription]);
         }
     }
-}
-
-- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
-    
-    [self setClickedPayloadTableViewIdentifier:tableViewIdentifier];
-    
-    NSDictionary *manifestDict;
-    if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
-        if ( 0 <= row && [_arrayProfilePayloads count] <= row ) {
-            menu = nil;
-            return;
-        }
-        
-        [self setTableViewProfilePayloadsClickedRow:row];
-        
-        manifestDict = [_arrayProfilePayloads objectAtIndex:row];
-    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
-        
-        if ( 0 <= row && [_arrayPayloadLibrary count] <= row ) {
-            menu = nil;
-            return;
-        }
-        
-        [self setTableViewPayloadLibraryClickedRow:row];
-        
-        manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
-    } else {
-        NSLog(@"[ERROR] Unknown table view identifier: %@", tableViewIdentifier);
-    }
-    
-    // MenuItem "Show Original In Finder"
-    NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
-    if ( [manifestDict[@"PlistPath"] length] != 0 ) {
-        [menuItemShowOriginalInFinder setEnabled:YES];
-    } else {
-        [menu removeItem:menuItemShowOriginalInFinder];
-    }
-}
+} // menuItemShowInFinder
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Class: PFCPayloadLibraryTableView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 
 @implementation PFCPayloadLibraryTableView
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent {
+    
+    // ------------------------------------------------------------------------------
+    //  Get what row in the TableView the mouse is pointing at when the user clicked
+    // ------------------------------------------------------------------------------
     NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSInteger row = [self rowAtPoint:mousePoint];
     
@@ -2100,12 +2122,23 @@
         return [super menuForEvent:theEvent];
     }
     
+    // ----------------------------------------------------------------------------------------
+    //  Get what table view responded when the user clicked
+    // ----------------------------------------------------------------------------------------
     NSString *tableViewIdentifier = [self identifier];
+    
+    // ----------------------------------------------------------------------------------------
+    //  Create an instance of the context menu bound to the TableView's menu outlet
+    // ----------------------------------------------------------------------------------------
     NSMenu *menu = [[self menu] copy];
     [menu setAutoenablesItems:NO];
+    
+    // -----------------------------------------------------------------------------------------------------------
+    //  Send menu to delegate for validation to add, enable and disable menu items depending on TableView and row
+    // -----------------------------------------------------------------------------------------------------------
     [_delegate validateMenu:menu forTableViewWithIdentifier:tableViewIdentifier row:row];
     
     return menu;
-}
+} // menuForEvent
 
 @end
