@@ -63,8 +63,8 @@
 
 
 //- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
-    // Works fine, but can't click the buttons
-    //return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
+// Works fine, but can't click the buttons
+//return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
 //}
 
 - (void)windowDidLoad {
@@ -111,7 +111,6 @@
     [self setTableViewPayloadLibrarySelectedRow:-1];
     [_tableViewPayloadLibrary setTableViewMenuDelegate:self];
     [_tableViewPayloadLibrary reloadData];
-    
 } // initializeMenu
 
 - (void)setupMenuProfilesCustom {
@@ -158,7 +157,7 @@
                     ) {
                     [_arrayProfilePayloads addObject:manifestDict];
                 } else {
-                    [_arrayPayloadLibrary addObject:manifestDict];
+                    [_arrayPayloadLibraryApple addObject:manifestDict];
                 }
             } else {
                 NSLog(@"[ERROR] Manifest %@ was empty!", [manifestURL lastPathComponent]);
@@ -169,7 +168,7 @@
         //  Sort menu arrays
         // ---------------------------------------------------------------------
         [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-        [_arrayPayloadLibrary sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+        [_arrayPayloadLibraryApple sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         
         // ---------------------------------------------------------------------
         //  Find index of menu item com.apple.general
@@ -188,6 +187,9 @@
         } else {
             NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
         }
+        
+        // Set this here, shoudl move to it's own action in intialize insted
+        [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
     } else {
         NSLog(@"[ERROR] %@", [error localizedDescription]);
     }
@@ -1769,7 +1771,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)tableViewProfilePayloads:(id)sender {
-
+    
     [self saveCurrentSettings];
     
     [_tableViewPayloadLibrary deselectAll:self];
@@ -1923,6 +1925,26 @@
             NSLog(@"Unknown!");
             break;
     }
+}
+
+- (IBAction)searchFieldProfileLibrary:(id)sender {
+    
+    if ( !_isSearching ) {
+        [self setIsSearching:YES];
+        [self savePayloadLibraryArray:_arrayPayloadLibrary payloadLibrary:[_segmentedControlLibrary selectedSegment]];
+    }
+    
+    NSString *searchString = [_searchFieldProfileLibrary stringValue];
+    NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:[_segmentedControlLibrary selectedSegment]];
+    if ( ![searchString length] ) {
+        [self setIsSearching:NO];
+        [self setArrayPayloadLibrary:currentPayloadLibrary];
+    } else {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"Title CONTAINS[cd] %@", searchString];
+        NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
+        [self setArrayPayloadLibrary:matchedObjects];
+    }
+    [_tableViewPayloadLibrary reloadData];
 }
 
 - (IBAction)menuItemShowInFinder:(id)sender {

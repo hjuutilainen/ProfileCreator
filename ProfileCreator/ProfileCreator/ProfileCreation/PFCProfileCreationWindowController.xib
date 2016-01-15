@@ -12,6 +12,7 @@
                 <outlet property="buttonSave" destination="7jo-gD-GtE" id="NFW-E9-chR"/>
                 <outlet property="buttonSaveSheetProfileName" destination="RpK-cU-ZHv" id="lAc-vT-gjB"/>
                 <outlet property="popOverSettings" destination="T5w-2R-PdB" id="xsu-Cj-QtK"/>
+                <outlet property="searchFieldProfileLibrary" destination="VqJ-dj-rcK" id="ULl-4f-mT8"/>
                 <outlet property="segmentedControlLibrary" destination="DY8-Yz-ALj" id="8Yb-wT-A8t"/>
                 <outlet property="sheetProfileName" destination="vmu-y3-Ojw" id="nm6-hb-dfg"/>
                 <outlet property="tableViewPayloadLibrary" destination="dRl-rc-zHl" id="Wto-ry-sAW"/>
@@ -77,11 +78,14 @@
                                         <subviews>
                                             <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VqJ-dj-rcK">
                                                 <rect key="frame" x="4" y="4" width="262" height="19"/>
-                                                <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" focusRingType="none" usesSingleLineMode="YES" bezelStyle="round" id="t8E-0u-gD1">
+                                                <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" focusRingType="none" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="t8E-0u-gD1">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </searchFieldCell>
+                                                <connections>
+                                                    <action selector="searchFieldProfileLibrary:" target="-2" id="ekv-QT-0sI"/>
+                                                </connections>
                                             </searchField>
                                         </subviews>
                                         <constraints>
