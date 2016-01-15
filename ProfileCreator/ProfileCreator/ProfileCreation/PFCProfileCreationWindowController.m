@@ -1758,6 +1758,10 @@
     }
 }
 
+- (IBAction)buttonPopOverSettings:(id)sender {
+    [_popOverSettings showRelativeToRect:[sender bounds] ofView:sender preferredEdge:NSMinYEdge];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark IBActions NEW

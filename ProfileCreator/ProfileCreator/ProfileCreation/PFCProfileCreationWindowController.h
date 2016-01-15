@@ -71,6 +71,9 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSMutableArray *arraySettings;
 
 
+// SettingsViewLower
+@property (weak) IBOutlet NSPopover *popOverSettings;
+- (IBAction)buttonPopOverSettings:(id)sender;
 
 - (IBAction)menuItemShowInFinder:(id)sender;
 
