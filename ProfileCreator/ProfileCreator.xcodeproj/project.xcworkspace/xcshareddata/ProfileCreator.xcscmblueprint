@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "0EF3B7A2C679B22983F283F313546CFAA3FABB5E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "052C711CE0E3690EBD023F88A3E5A07395A35CE0" : 0,
+    "0EF3B7A2C679B22983F283F313546CFAA3FABB5E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "35CB98E6-DBF6-4483-B870-284187C4CB35",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "052C711CE0E3690EBD023F88A3E5A07395A35CE0" : "ProfileCreator\/RFOverlayScrollView\/",
+    "0EF3B7A2C679B22983F283F313546CFAA3FABB5E" : "ProfileCreator\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ProfileCreator",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ProfileCreator\/ProfileCreator.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rheinfabrik\/RFOverlayScrollView",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "052C711CE0E3690EBD023F88A3E5A07395A35CE0"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ProfileCreator\/ProfileCreator.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0EF3B7A2C679B22983F283F313546CFAA3FABB5E"
+    }
+  ]
+}

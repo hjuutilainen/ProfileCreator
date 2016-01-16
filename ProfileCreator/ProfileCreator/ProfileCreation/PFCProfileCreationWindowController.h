@@ -29,13 +29,20 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // Random
 @property NSString *selectedPayloadTableViewIdentifier;
 
+// ProfileHeader
+@property (weak)    IBOutlet NSView *viewProfileHeaderSplitView;
+@property (weak)    IBOutlet NSView *viewProfileHeader;
+@property (weak)    IBOutlet NSTextField *textFieldProfileName;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintProfileHeaderHeight;
+@property (readwrite)        BOOL profileHeaderHidden;
+
 // ProfilePayloads
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
 @property (weak)    IBOutlet NSView *viewProfilePayloadsSplitView;
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewProfilePayloads;
 @property (readwrite)        NSMutableArray *arrayProfilePayloads;
 @property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
-- (IBAction)tableViewProfilePayloads:(id)sender;
+- (IBAction)selectTableViewProfilePayloads:(id)sender;
 
 // PayloadLibrary
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySuperview;
@@ -47,8 +54,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRowSegment;
 @property (readwrite)        NSInteger segmentedControlPayloadLibrarySelectedSegment;
-- (IBAction)tableViewPayloadLibrary:(id)sender;
-- (IBAction)segmentedControlLibrary:(id)sender;
+- (IBAction)selectTableViewPayloadLibrary:(id)sender;
+- (IBAction)selectSegmentedControlLibrary:(id)sender;
 
 // PayloadLibraryFooter
 @property (weak)    IBOutlet NSSearchField *searchFieldProfileLibrary;
@@ -70,6 +77,14 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        BOOL isSearchingPayloadLibraryCustom;
 @property (readwrite)        NSString *searchStringPayloadLibraryCustom;
 @property (readwrite)        NSMutableDictionary *payloadLibraryCustomSettings;
+
+// SettingsViewHeader
+@property (weak)    IBOutlet NSView *viewSettingsHeaderSplitView;
+@property (weak)    IBOutlet NSView *viewSettingsHeader;
+@property (weak)    IBOutlet NSImageView *imageViewSettingsHeaderIcon;
+@property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
+@property (readwrite)        BOOL settingsHeaderHidden;
 
 // SettingsView
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
@@ -134,7 +149,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (void)selectFile:(NSButton *)button;
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
-- (void)initializeTableViewMenu;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end

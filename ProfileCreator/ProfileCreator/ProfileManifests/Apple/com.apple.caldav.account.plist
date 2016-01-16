@@ -14,7 +14,7 @@
 	<string>MenuIconCalendar.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Calendar.app/Contents/Resources/App.icns</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Identifier</key>

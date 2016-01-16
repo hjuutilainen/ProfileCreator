@@ -61,6 +61,8 @@
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
+		53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D795601C4AF865006B19E9 /* RFOverlayScroller.m */; };
+		53D795641C4AF865006B19E9 /* RFOverlayScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D795621C4AF865006B19E9 /* RFOverlayScrollView.m */; };
 		53E012931C3D33DC00136221 /* PFCPayloadVerification.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E012921C3D33DC00136221 /* PFCPayloadVerification.m */; };
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */; };
@@ -157,6 +159,10 @@
 		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.scep.plist; sourceTree = "<group>"; };
 		53C7339E1C1F396800119C71 /* MenuIconSCEP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSCEP.png; sourceTree = "<group>"; };
+		53D7955F1C4AF865006B19E9 /* RFOverlayScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RFOverlayScroller.h; path = ../RFOverlayScrollView/RFOverlayScrollView/RFOverlayScroller.h; sourceTree = "<group>"; };
+		53D795601C4AF865006B19E9 /* RFOverlayScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RFOverlayScroller.m; path = ../RFOverlayScrollView/RFOverlayScrollView/RFOverlayScroller.m; sourceTree = "<group>"; };
+		53D795611C4AF865006B19E9 /* RFOverlayScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RFOverlayScrollView.h; path = ../RFOverlayScrollView/RFOverlayScrollView/RFOverlayScrollView.h; sourceTree = "<group>"; };
+		53D795621C4AF865006B19E9 /* RFOverlayScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RFOverlayScrollView.m; path = ../RFOverlayScrollView/RFOverlayScrollView/RFOverlayScrollView.m; sourceTree = "<group>"; };
 		53E012911C3D33DC00136221 /* PFCPayloadVerification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCPayloadVerification.h; sourceTree = "<group>"; };
 		53E012921C3D33DC00136221 /* PFCPayloadVerification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCPayloadVerification.m; sourceTree = "<group>"; };
 		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.passcode.plist; sourceTree = "<group>"; };
@@ -263,6 +269,7 @@
 		536FC5101C15EEDE00B1D7CF = {
 			isa = PBXGroup;
 			children = (
+				53D7955E1C4AF849006B19E9 /* Submodules */,
 				536FC51B1C15EEDE00B1D7CF /* ProfileCreator */,
 				5341D3221C15F2910014F5A7 /* ProfileCreation */,
 				532B6C4E1C17277100297025 /* ProfileManifest */,
@@ -341,6 +348,17 @@
 				538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */,
 			);
 			name = FileInfoProcessors;
+			sourceTree = "<group>";
+		};
+		53D7955E1C4AF849006B19E9 /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				53D7955F1C4AF865006B19E9 /* RFOverlayScroller.h */,
+				53D795601C4AF865006B19E9 /* RFOverlayScroller.m */,
+				53D795611C4AF865006B19E9 /* RFOverlayScrollView.h */,
+				53D795621C4AF865006B19E9 /* RFOverlayScrollView.m */,
+			);
+			name = Submodules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -459,9 +477,11 @@
 			files = (
 				532974ED1C22B21300191C5C /* PFCManifestCreationParser.m in Sources */,
 				5341D3261C15F3500014F5A7 /* PFCProfileCreationWindowController.m in Sources */,
+				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
 				536213041C43D1C500C6C8BF /* PFCSplitViewPayloadLibrary.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
+				53D795641C4AF865006B19E9 /* RFOverlayScrollView.m in Sources */,
 				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,

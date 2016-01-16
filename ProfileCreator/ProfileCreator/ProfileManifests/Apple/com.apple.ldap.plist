@@ -12,7 +12,7 @@
 	<string>LDAP</string>
 	<key>IconName</key>
 	<string>MenuIconLDAP.png</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Identifier</key>

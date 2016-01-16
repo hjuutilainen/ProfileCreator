@@ -14,7 +14,7 @@
 + (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict {
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
-    manifestDict[@"PayloadKeys"] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
+    manifestDict[@"ManifestContent"] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
     manifestDict[@"PlistPath"] = [fileURL path];
     return [manifestDict copy];
 }

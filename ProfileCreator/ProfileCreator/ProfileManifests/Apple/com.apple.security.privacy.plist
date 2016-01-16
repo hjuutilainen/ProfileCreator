@@ -12,7 +12,7 @@
 	<string>Security &amp; Privacy</string>
 	<key>IconName</key>
 	<string>MenuIconSecurityPrivacy.png</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>CellType</key>

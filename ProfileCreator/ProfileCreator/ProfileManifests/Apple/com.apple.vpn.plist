@@ -12,7 +12,7 @@
 	<string>VPN</string>
 	<key>IconName</key>
 	<string>MenuIconVPN.png</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Required</key>

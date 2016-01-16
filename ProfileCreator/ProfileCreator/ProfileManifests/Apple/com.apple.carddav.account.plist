@@ -14,7 +14,7 @@
 	<string>MenuIconContacts.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Contacts.app/Contents/Resources/vCard.icns</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Identifier</key>

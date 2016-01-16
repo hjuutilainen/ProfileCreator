@@ -114,7 +114,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[@"PayloadKeys"] settingsDict:settingsDict];
+        NSDictionary *settingsInfo = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[@"ManifestContent"] settingsDict:settingsDict];
         if ( [settingsInfo count] != 0 ) {
             NSArray *warnings = settingsInfo[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {
@@ -132,7 +132,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        [self createPayloadFromManifestArray:manifestDict[@"PayloadKeys"] settingsDict:settingsDict payloadArray:&payloadArray];
+        [self createPayloadFromManifestArray:manifestDict[@"ManifestContent"] settingsDict:settingsDict payloadArray:&payloadArray];
     }
     
     NSUInteger idx = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
@@ -173,7 +173,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[@"PayloadKeys"] settingsDict:settingsDict];
+        NSDictionary *settingsInfo = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[@"ManifestContent"] settingsDict:settingsDict];
         if ( [settingsInfo count] != 0 ) {
             NSArray *warnings = settingsInfo[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {
@@ -202,7 +202,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        [self createPayloadFromManifestArray:manifestDict[@"PayloadKeys"] settingsDict:settingsDict payloadArray:&payloadArray];
+        [self createPayloadFromManifestArray:manifestDict[@"ManifestContent"] settingsDict:settingsDict payloadArray:&payloadArray];
     }
     
     NSUInteger idx = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {

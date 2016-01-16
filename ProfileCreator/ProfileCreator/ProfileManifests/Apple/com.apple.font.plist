@@ -14,7 +14,7 @@
 	<string>MenuIconFont.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Font Book.app/Contents/Resources/appicon.icns</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Identifier</key>

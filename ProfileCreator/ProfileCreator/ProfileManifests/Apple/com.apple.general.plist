@@ -16,7 +16,7 @@
 	<string>General</string>
 	<key>IconName</key>
 	<string>MenuIconGeneral.png</string>
-	<key>PayloadKeys</key>
+	<key>ManifestContent</key>
 	<array>
 		<dict>
 			<key>Identifier</key>
