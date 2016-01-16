@@ -1,10 +1,19 @@
-# NOTE - This application is still being developed. Previews, documentation and further information will be available together with the first Alpha release.
+#### Important - This application is currently in initial development. Previews, documentation and further information will be available together with the first Alpha release.
 
 # ProfileCreator
 OS X Application to create configuration profiles.
 
+# System Requirements
+ProfileCreator requires Mac OS X 10.10 or newer.
+
+# Acknowledgements
+
+ProfileCreator makes use of the following open source components:
+
+* [RFOverlayScrollView](https://github.com/rheinfabrik/RFOverlayScrollView)
+
 # License
-    Copyright 2015 Erik Berglund. All rights reserved.
+    Copyright 2016 Erik Berglund. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
