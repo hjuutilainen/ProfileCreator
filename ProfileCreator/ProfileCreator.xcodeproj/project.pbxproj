@@ -58,6 +58,7 @@
 		537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520041C1B86B100FF3CB0 /* MenuIconXsan.png */; };
 		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
+		538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 538750B61C4C0F4F0003F0EF /* PFCConstants.m */; };
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
@@ -155,6 +156,8 @@
 		537520041C1B86B100FF3CB0 /* MenuIconXsan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconXsan.png; sourceTree = "<group>"; };
 		537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCalendarSubscription.png; sourceTree = "<group>"; };
 		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconDock.png; sourceTree = "<group>"; };
+		538750B51C4C0F4F0003F0EF /* PFCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCConstants.h; sourceTree = "<group>"; };
+		538750B61C4C0F4F0003F0EF /* PFCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCConstants.m; sourceTree = "<group>"; };
 		538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCFileInfoProcessors.h; path = FileInfoProcessors/PFCFileInfoProcessors.h; sourceTree = "<group>"; };
 		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.scep.plist; sourceTree = "<group>"; };
@@ -250,6 +253,8 @@
 				5341D3231C15F3500014F5A7 /* PFCProfileCreationWindowController.h */,
 				5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */,
 				5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */,
+				538750B51C4C0F4F0003F0EF /* PFCConstants.h */,
+				538750B61C4C0F4F0003F0EF /* PFCConstants.m */,
 				532974EB1C22B21300191C5C /* PFCManifestCreationParser.h */,
 				532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */,
 				53E012911C3D33DC00136221 /* PFCPayloadVerification.h */,
@@ -490,6 +495,7 @@
 				53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */,
 				5341D3171C15EFB00014F5A7 /* PFCController.m in Sources */,
 				53E012931C3D33DC00136221 /* PFCPayloadVerification.m in Sources */,
+				538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

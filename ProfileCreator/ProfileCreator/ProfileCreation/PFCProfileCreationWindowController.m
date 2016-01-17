@@ -10,14 +10,21 @@
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
 #import "PFCManifestCreationParser.h"
+#import "PFCConstants.h"
 #import "PFCController.h"
 #import "PFCPayloadVerification.h"
 #import "PFCSplitViewPayloadLibrary.h"
 
-@interface PFCProfileCreationWindowController ()
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Constants
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCTableViewIdentifierPayloadProfile = @"TableViewIdentifierPayloadProfile";
+NSString *const PFCTableViewIdentifierPayloadLibrary = @"TableViewIdentifierPayloadLibrary";
+NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPayloadSettings";
 
-@end
-
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Implementation
+////////////////////////////////////////////////////////////////////////////////
 @implementation PFCProfileCreationWindowController
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,12 +37,13 @@
     self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
     if (self != nil) {
         
-        _arrayProfilePayloads = [[NSMutableArray alloc] init];
+        _arrayPayloadProfile = [[NSMutableArray alloc] init];
         _arrayPayloadLibrary = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryApple = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryUserPreferences = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryCustom = [[NSMutableArray alloc] init];
         _arraySettings = [[NSMutableArray alloc] init];
+        
         _payloadLibraryUserPreferencesSettings = [[NSMutableDictionary alloc] init];
         _payloadLibraryCustomSettings = [[NSMutableDictionary alloc] init];
         
@@ -58,7 +66,6 @@
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
-    [self removeObserver:self forKeyPath:@"profileName" context:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,20 +79,29 @@
     
     // Setup Main Window
     [[self window] setBackgroundColor:[NSColor whiteColor]];
-    [self insertSubview:_viewProfilePayloadsSuperview inSuperview:_viewProfilePayloadsSplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
-    [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
-    [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
-    [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
-    [self insertSubview:_viewProfileHeader inSuperview:_viewProfileHeaderSplitView cTop:0 cBottom:0 cRight:0 cLeft:0];
+    
+    // Add content views
+    [self insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    
+    // Add header views
+    [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    [self insertSubview:_viewPayloadHeader inSuperview:_viewPayloadHeaderSplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    
+    // Add error views
+    [self insertSubview:_viewSettingsError inSuperview:_viewSettingsSuperView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+    [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
     
     // Setup KVO observers
-    [self addObserver:self forKeyPath:@"profileName" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
     
     // Setup TableViews
     [self setupTableViews];
-    
-    [self showProfileHeader];
+    [_viewPayloadLibraryNoMatches setHidden:NO];
+    [_viewSettingsError setHidden:NO];
+    [self showPayloadHeader];
     [self setProfileName:_profileDict[@"Config"][@"Name"] ?: @"Profile"];
 } // windowDidLoad
 
@@ -161,11 +177,11 @@
     [self setupManifestLibraryApple:[enabledPayloadDomains copy]];
     [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
     
-    [self selectTableViewProfilePayloads:nil];
-    [self setTableViewProfilePayloadsSelectedRow:-1];
-    [_tableViewProfilePayloads setTableViewMenuDelegate:self];
-    [[_tableViewProfilePayloads layer] setBorderWidth:0.0f];
-    [_tableViewProfilePayloads reloadData];
+    [self selectTableViewPayloadProfile:nil];
+    [self setTableViewPayloadProfileSelectedRow:-1];
+    [_tableViewPayloadProfile setTableViewMenuDelegate:self];
+    [[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
+    [_tableViewPayloadProfile reloadData];
     
     [self selectTableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
@@ -180,7 +196,7 @@
     
     NSError *error = nil;
     
-    [_arrayProfilePayloads removeAllObjects];
+    [_arrayPayloadProfile removeAllObjects];
     [_arrayPayloadLibrary removeAllObjects];
     
     // ---------------------------------------------------------------------
@@ -209,7 +225,7 @@
                     [enabledPayloadDomains containsObject:manifestDomain] ||
                     [manifestDomain isEqualToString:@"com.apple.general"]
                     ) {
-                    [_arrayProfilePayloads addObject:[manifestDict copy]];
+                    [_arrayPayloadProfile addObject:[manifestDict copy]];
                 } else {
                     [_arrayPayloadLibraryApple addObject:[manifestDict copy]];
                 }
@@ -221,13 +237,13 @@
         // ---------------------------------------------------------------------
         //  Sort menu arrays
         // ---------------------------------------------------------------------
-        [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+        [_arrayPayloadProfile sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         [_arrayPayloadLibraryApple sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         
         // ---------------------------------------------------------------------
         //  Find index of menu item com.apple.general
         // ---------------------------------------------------------------------
-        NSUInteger idx = [_arrayProfilePayloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
         }];
         
@@ -235,9 +251,9 @@
         //  Move menu item com.apple.general to the top of the menu array
         // ---------------------------------------------------------------------
         if (idx != NSNotFound) {
-            NSDictionary *generalSettingsDict = [_arrayProfilePayloads objectAtIndex:idx];
-            [_arrayProfilePayloads removeObjectAtIndex:idx];
-            [_arrayProfilePayloads insertObject:generalSettingsDict atIndex:0];
+            NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
+            [_arrayPayloadProfile removeObjectAtIndex:idx];
+            [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
         } else {
             NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
         }
@@ -282,7 +298,7 @@
                 if (
                     [enabledPayloadDomains containsObject:manifestDomain]
                     ) {
-                    [_arrayProfilePayloads addObject:manifestDict];
+                    [_arrayPayloadProfile addObject:manifestDict];
                 } else {
                     [_arrayPayloadLibraryUserPreferences addObject:manifestDict];
                 }
@@ -296,13 +312,13 @@
         // ---------------------------------------------------------------------
         //  Sort menu arrays
         // ---------------------------------------------------------------------
-        [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+        [_arrayPayloadProfile sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
         
         // ---------------------------------------------------------------------
         //  Find index of menu item com.apple.general
         // ---------------------------------------------------------------------
-        NSUInteger idx = [_arrayProfilePayloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
         }];
         
@@ -310,9 +326,9 @@
         //  Move menu item com.apple.general to the top of the menu array
         // ---------------------------------------------------------------------
         if (idx != NSNotFound) {
-            NSDictionary *generalSettingsDict = [_arrayProfilePayloads objectAtIndex:idx];
-            [_arrayProfilePayloads removeObjectAtIndex:idx];
-            [_arrayProfilePayloads insertObject:generalSettingsDict atIndex:0];
+            NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
+            [_arrayPayloadProfile removeObjectAtIndex:idx];
+            [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
         } else {
             NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
         }
@@ -320,29 +336,42 @@
 }
 
 
-- (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview cTop:(int)cTop cBottom:(int)cBottom cRight:(int)cRight cLeft:(int)cLeft {
+- (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview cTop:(int)cTop cBottom:(int)cBottom cRight:(int)cRight cLeft:(int)cLeft hidden:(BOOL)hidden {
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     
     NSArray *constraintsArray;
-    NSString *constraintLeft = [NSString stringWithFormat:@"-(%d)-", cLeft ?: 0];
-    NSString *constraintRight = [NSString stringWithFormat:@"-(%d)-", cRight ?: 0];
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|%@[subview]%@|", constraintLeft, constraintRight]
+    /*
+     NSString *constraintLeft = [NSString stringWithFormat:@"-(%d)-", cLeft ?: 0];
+     NSString *constraintRight = [NSString stringWithFormat:@"-(%d)-", cRight ?: 0];
+     constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|%@[subview]%@|", constraintLeft, constraintRight]
+     options:0
+     metrics:nil
+     views:NSDictionaryOfVariableBindings(subview)];
+     */
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(subview)];
     [superview addConstraints:constraintsArray];
     
-    NSString *constraintTop = [NSString stringWithFormat:@"-(%d)-", cTop ?: 0];
-    NSString *constraintBottom = [NSString stringWithFormat:@"-(%d)-", cBottom ?: 0];
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|%@[subview]%@|", constraintTop, constraintBottom]
+    /*
+     NSString *constraintTop = [NSString stringWithFormat:@"-(%d)-", cTop ?: 0];
+     NSString *constraintBottom = [NSString stringWithFormat:@"-(%d)-", cBottom ?: 0];
+     constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|%@[subview]%@|", constraintTop, constraintBottom]
+     options:0
+     metrics:nil
+     views:NSDictionaryOfVariableBindings(subview)];
+     */
+    
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(subview)];
     [superview addConstraints:constraintsArray];
     [superview setHidden:NO];
-    [subview setHidden:NO];
+    [subview setHidden:hidden];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,13 +383,49 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *)change context:(void *) __unused context {
     if ( [keyPath isEqualToString:@"advancedSettings"] ) {
         [self updateTableColumnsSettings];
-    } else if ( [keyPath isEqualToString:@"profileName"] ) {
-        NSString *newProfileName = change[@"new"];
-        if ( [newProfileName length] != 0 ) {
-            [[self window] setTitle:newProfileName];
-        }
     }
 } // observeValueForKeyPath:ofObject:change:context
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark NSSPlitView Delegate Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    if ( splitView == _splitViewPayload && dividerIndex == 0 ) {
+        return proposedMaximumPosition - 96;
+    } else {
+        return proposedMaximumPosition;
+    }
+} // splitView:constrainMaxCoordinate:ofSubviewAt
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    if ( splitView == _splitViewPayload && dividerIndex == 0 ) {
+        return proposedMinimumPosition + 88;
+    } else {
+        return proposedMinimumPosition;
+    }
+} // splitView:constrainMinCoordinate:ofSubviewAt
+
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
+    if ( splitView == _splitViewPayload && subview == _viewPayloadLibrarySplitView ) {
+        return YES;
+    }
+    return NO;
+} // splitView:canCollapseSubview
+
+- (void)splitViewDidResizeSubviews:(NSNotification *)notification {
+    id splitView = [notification object];
+    if ( splitView == _splitViewPayload ) {
+        if ( [_splitViewPayload isSubviewCollapsed:[[_splitViewPayload subviews] objectAtIndex:1]] ) {
+            [self hidePayloadFooter];
+        } else if ( _payloadLibraryCollapsed ) {
+            [self showPayloadFooter];
+
+        }
+    }
+} // splitViewDidResizeSubviews
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -369,9 +434,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    if ( [[tableView identifier] isEqualToString:@"TableViewMenuEnabled"] ) {
-        return (NSInteger)[_arrayProfilePayloads count];
-    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuDisabled"] ) {
+    if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
+        return (NSInteger)[_arrayPayloadProfile count];
+    } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         return (NSInteger)[_arrayPayloadLibrary count];
     } else if ( [[tableView identifier] isEqualToString:@"TableViewSettings"] ) {
         return (NSInteger)[_arraySettings count];
@@ -566,23 +631,23 @@
                 return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict settingDict:cellSettingsDict row:row sender:self];
             }
         }
-    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+    } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         
         // ---------------------------------------------------------------------
         //  Verify the menu array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ( [_arrayProfilePayloads count] < row || [_arrayProfilePayloads count] == 0 ) {
+        if ( [_arrayPayloadProfile count] < row || [_arrayPayloadProfile count] == 0 ) {
             return nil;
         }
         
         NSString *tableColumnIdentifier = [tableColumn identifier];
-        NSDictionary *menuDict = _arrayProfilePayloads[(NSUInteger)row];
+        NSDictionary *menuDict = _arrayPayloadProfile[(NSUInteger)row];
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = menuDict[@"CellType"];
             
             NSDictionary *manifestSettings;
-            if ( _tableViewProfilePayloadsSelectedRow == -1 && _tableViewPayloadLibrarySelectedRow == -1 ) {
+            if ( _tableViewPayloadProfileSelectedRow == -1 && _tableViewPayloadLibrarySelectedRow == -1 ) {
                 NSDictionary *domain = menuDict[@"Domain"];
                 manifestSettings = _tableViewSettingsSettings[domain];
             } else {
@@ -606,7 +671,7 @@
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
             return [cellView populateCellViewEnabled:cellView menuDict:menuDict row:row sender:self];
         }
-    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+    } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         
         // ---------------------------------------------------------------------
         //  Verify the menu array isn't empty, if so stop here
@@ -621,14 +686,14 @@
             NSString *cellType = menuDict[@"CellType"];
             
             if ( [cellType isEqualToString:@"Menu"] ) {
-                CellViewMenuLibrary *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenuLibrary" owner:self];
+                CellViewMenuLibrary *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuLibrary" owner:self];
                 [cellView setIdentifier:nil];
                 return [cellView populateCellViewMenuLibrary:cellView menuDict:menuDict errorCount:nil row:row];
             } else {
                 NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
-            CellViewMenuEnabled *cellView = [_tableViewProfilePayloads makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
+            CellViewMenuEnabled *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
             return [cellView populateCellViewEnabled:cellView menuDict:menuDict row:row sender:self];
         }
     }
@@ -718,9 +783,9 @@
         } else if ( [cellType isEqualToString:@"TableView"] ) {
             return 212;
         }
-    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuEnabled"] ) {
+    } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         return 42;
-    } else if ( [[tableView identifier] isEqualToString:@"TableViewMenuDisabled"] ) {
+    } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         return 32;
     }
     return 1;
@@ -733,9 +798,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)arrayForTableViewWithIdentifier:(NSString *)tableViewIdentifier {
-    if ( [tableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
-        return [_arrayProfilePayloads copy];
-    } else if ( [tableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+    if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
+        return [_arrayPayloadProfile copy];
+    } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         return [_arrayPayloadLibrary copy];
     } else {
         return nil;
@@ -792,10 +857,10 @@
 } // updateTableColumnsSettings
 
 - (void)updatePayloadErrorCount {
-    if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
-        if ( 0 <= _tableViewProfilePayloadsSelectedRow && _tableViewProfilePayloadsSelectedRow <= [_arrayProfilePayloads count] ) {
-            NSInteger columnIndex = [_tableViewProfilePayloads columnWithIdentifier:@"ColumnMenu"];
-            [_tableViewProfilePayloads reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewProfilePayloadsSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
+    if ( [_selectedPayloadTableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
+        if ( 0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count] ) {
+            NSInteger columnIndex = [_tableViewPayloadProfile columnWithIdentifier:@"ColumnMenu"];
+            [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadProfileSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
         }
     }
 }
@@ -946,31 +1011,31 @@
         // ---------------------------------------------------------------------
         //  Check if checbox is in table view menu ENABLED
         // ---------------------------------------------------------------------
-        if ( ( row < [_arrayProfilePayloads count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewProfilePayloads viewAtColumn:[_tableViewProfilePayloads columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
+        if ( ( row < [_arrayPayloadProfile count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewPayloadProfile viewAtColumn:[_tableViewPayloadProfile columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
             // ---------------------------------------------------------------------
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
-            NSDictionary *cellDict = [_arrayProfilePayloads objectAtIndex:row];
+            NSDictionary *cellDict = [_arrayPayloadProfile objectAtIndex:row];
             NSString *payloadDomain = cellDict[@"Domain"];
             NSInteger payloadLibrary = [_tableViewSettingsSettings[payloadDomain][@"PayloadLibrary"] integerValue];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu ENABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewProfilePayloads selectedRow];
-            [_tableViewProfilePayloads beginUpdates];
-            [_arrayProfilePayloads removeObjectAtIndex:(NSUInteger)row];
-            [_tableViewProfilePayloads reloadData];
-            [_tableViewProfilePayloads endUpdates];
+            NSInteger tableViewPayloadProfileSelectedRow = [_tableViewPayloadProfile selectedRow];
+            [_tableViewPayloadProfile beginUpdates];
+            [_arrayPayloadProfile removeObjectAtIndex:(NSUInteger)row];
+            [_tableViewPayloadProfile reloadData];
+            [_tableViewPayloadProfile endUpdates];
             
             // ----------------------------------------------------------------------
             //  If current cell dict wasn't selected, restore selection after reload
             // ----------------------------------------------------------------------
-            if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuEnabledSelectedRow != row ) {
-                NSInteger selectedRow = ( row < tableViewMenuEnabledSelectedRow ) ? ( tableViewMenuEnabledSelectedRow - 1 ) : tableViewMenuEnabledSelectedRow;
-                [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
-                [self setTableViewProfilePayloadsSelectedRow:selectedRow];
+            if ( 0 <= tableViewPayloadProfileSelectedRow && tableViewPayloadProfileSelectedRow != row ) {
+                NSInteger selectedRow = ( row < tableViewPayloadProfileSelectedRow ) ? ( tableViewPayloadProfileSelectedRow - 1 ) : tableViewPayloadProfileSelectedRow;
+                [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [self setTableViewPayloadProfileSelectedRow:selectedRow];
             }
             
             // ---------------------------------------------------------------------
@@ -994,7 +1059,7 @@
             // -----------------------------------------------------------------------------
             //  If item in table view DISABLED was selected, restore selection after reload
             // -----------------------------------------------------------------------------
-            if ( 0 <= tableViewPayloadLibrarySelectedRow && tableViewMenuEnabledSelectedRow != row ) {
+            if ( 0 <= tableViewPayloadLibrarySelectedRow && tableViewPayloadProfileSelectedRow != row ) {
                 [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
                 [self setTableViewPayloadLibrarySelectedRow:tableViewPayloadLibrarySelectedRow];
             }
@@ -1002,13 +1067,13 @@
             // -----------------------------------------------------------------------------
             //  If current cell dict was selected, move selection to table view DISABLED
             // -----------------------------------------------------------------------------
-            if ( tableViewMenuEnabledSelectedRow == row && payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment ) {
+            if ( tableViewPayloadProfileSelectedRow == row && payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment ) {
                 
                 // ---------------------------------------------------------------------
                 //  Deselect items in table view ENABLED
                 // ---------------------------------------------------------------------
-                [_tableViewProfilePayloads deselectAll:self];
-                [self setTableViewProfilePayloadsSelectedRow:-1];
+                [_tableViewPayloadProfile deselectAll:self];
+                [self setTableViewPayloadProfileSelectedRow:-1];
                 
                 // ---------------------------------------------------------------------
                 //  Find index of moved cell dict and select it
@@ -1048,7 +1113,7 @@
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu DISABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuDisabledSelectedRow = [_tableViewPayloadLibrary selectedRow];
+            NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewPayloadLibrary selectedRow];
             [_tableViewPayloadLibrary beginUpdates];
             [_arrayPayloadLibrary removeObjectAtIndex:(NSUInteger)row];
             [_tableViewPayloadLibrary reloadData];
@@ -1057,8 +1122,8 @@
             // ----------------------------------------------------------------------
             //  If current cell dict wasn't selected, restore selection after reload
             // ----------------------------------------------------------------------
-            if ( 0 <= tableViewMenuDisabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
-                NSInteger selectedRow = ( row < tableViewMenuDisabledSelectedRow ) ? ( tableViewMenuDisabledSelectedRow - 1 ) : tableViewMenuDisabledSelectedRow;
+            if ( 0 <= tableViewPayloadLibrarySelectedRow && tableViewPayloadLibrarySelectedRow != row ) {
+                NSInteger selectedRow = ( row < tableViewPayloadLibrarySelectedRow ) ? ( tableViewPayloadLibrarySelectedRow - 1 ) : tableViewPayloadLibrarySelectedRow;
                 [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
                 [self setTableViewPayloadLibrarySelectedRow:selectedRow];
             }
@@ -1066,25 +1131,25 @@
             // ---------------------------------------------------------------------
             //  Add the cell dict to table view menu ENABLED
             // ---------------------------------------------------------------------
-            NSInteger tableViewMenuEnabledSelectedRow = [_tableViewProfilePayloads selectedRow];
-            [_tableViewProfilePayloads beginUpdates];
-            [_arrayProfilePayloads addObject:cellDict];
-            [_arrayProfilePayloads sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
-            [_tableViewProfilePayloads reloadData];
-            [_tableViewProfilePayloads endUpdates];
+            NSInteger tableViewPayloadProfileSelectedRow = [_tableViewPayloadProfile selectedRow];
+            [_tableViewPayloadProfile beginUpdates];
+            [_arrayPayloadProfile addObject:cellDict];
+            [_arrayPayloadProfile sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+            [_tableViewPayloadProfile reloadData];
+            [_tableViewPayloadProfile endUpdates];
             
             // -----------------------------------------------------------------------------
             //  If item in table view ENABLED was selected, restore selection after reload
             // -----------------------------------------------------------------------------
-            if ( 0 <= tableViewMenuEnabledSelectedRow && tableViewMenuDisabledSelectedRow != row ) {
-                [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewMenuEnabledSelectedRow] byExtendingSelection:NO];
-                [self setTableViewProfilePayloadsSelectedRow:tableViewMenuEnabledSelectedRow];
+            if ( 0 <= tableViewPayloadProfileSelectedRow && tableViewPayloadLibrarySelectedRow != row ) {
+                [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:tableViewPayloadProfileSelectedRow] byExtendingSelection:NO];
+                [self setTableViewPayloadProfileSelectedRow:tableViewPayloadProfileSelectedRow];
             }
             
             // ---------------------------------------------------------------------
             //  Find index of menu item com.apple.general
             // ---------------------------------------------------------------------
-            NSUInteger idx = [_arrayProfilePayloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+            NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
                 return [[item objectForKey:@"Domain"] isEqualToString:@"com.apple.general"];
             }];
             
@@ -1092,9 +1157,9 @@
             //  Move menu item com.apple.general to the top of the menu array
             // ---------------------------------------------------------------------
             if ( idx != NSNotFound ) {
-                NSDictionary *generalSettingsDict = [_arrayProfilePayloads objectAtIndex:idx];
-                [_arrayProfilePayloads removeObjectAtIndex:idx];
-                [_arrayProfilePayloads insertObject:generalSettingsDict atIndex:0];
+                NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
+                [_arrayPayloadProfile removeObjectAtIndex:idx];
+                [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
             } else {
                 NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
             }
@@ -1102,7 +1167,7 @@
             // -----------------------------------------------------------------------------
             //  If current cell dict was selected, move selection to table view ENABLED
             // -----------------------------------------------------------------------------
-            if ( tableViewMenuDisabledSelectedRow == row ) {
+            if ( tableViewPayloadLibrarySelectedRow == row ) {
                 
                 // ---------------------------------------------------------------------
                 //  Deselect items in table view DISABLED
@@ -1113,12 +1178,12 @@
                 // ---------------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // ---------------------------------------------------------------------
-                NSUInteger row = [_arrayProfilePayloads indexOfObject:cellDict];
+                NSUInteger row = [_arrayPayloadProfile indexOfObject:cellDict];
                 if ( row != NSNotFound ) {
-                    [_tableViewProfilePayloads selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                    [[self window] makeFirstResponder:_tableViewProfilePayloads];
-                    [self setTableViewProfilePayloadsSelectedRow:row];
-                    [self setSelectedPayloadTableViewIdentifier:[_tableViewProfilePayloads identifier]];
+                    [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                    [[self window] makeFirstResponder:_tableViewPayloadProfile];
+                    [self setTableViewPayloadProfileSelectedRow:row];
+                    [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadProfile identifier]];
                 }
                 
                 _tableViewSettingsCurrentSettings[@"Selected"] = @YES;
@@ -1133,26 +1198,6 @@
         NSLog(@"[ERROR] Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
     }
 } // checkboxMenuEnabled
-
-- (void)showSettingsHeader {
-    [_constraintSettingsHeaderHeight setConstant:47.0f];
-    [self setSettingsHeaderHidden:NO];
-}
-
-- (void)showProfileHeader {
-    [_constraintProfileHeaderHeight setConstant:47.0f];
-    [self setProfileHeaderHidden:NO];
-}
-
-- (void)hideSettingsHeader {
-    [_constraintSettingsHeaderHeight setConstant:0.0f];
-    [self setSettingsHeaderHidden:YES];
-}
-
-- (void)hideProfileHeader {
-    [_constraintProfileHeaderHeight setConstant:0.0f];
-    [self setProfileHeaderHidden:NO];
-}
 
 - (void)checkbox:(NSButton *)checkbox {
     
@@ -1517,13 +1562,13 @@
             }
             
             if ( [combinedSettings count] != 0 ) {
-                /*
+                
                 // ---------------------------------------------------------------------
                 //  Add padding row to top of table view
                 // ---------------------------------------------------------------------
                 [combinedSettings insertObject:@{ @"CellType" : @"Padding",
                                                   @"Enabled" : @YES } atIndex:0];
-                */
+                
                 // ---------------------------------------------------------------------
                 //  Add padding row to end of table view
                 // ---------------------------------------------------------------------
@@ -1534,6 +1579,8 @@
     }
     return [combinedSettings copy];
 } // settingsForMenuItem
+
+
 
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
     
@@ -1638,22 +1685,22 @@
 } // updateSubKeysForDict:valueString:row
 
 - (void)saveCurrentSettings {
-    if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuEnabled"] ) {
+    if ( [_selectedPayloadTableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         
         // ---------------------------------------------------------------------
         //  Save current settings in menu dict
         // ---------------------------------------------------------------------
-        if ( 0 <= _tableViewProfilePayloadsSelectedRow ) {
-            NSMutableDictionary *currentMenuDict = [[_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsSelectedRow] mutableCopy];
+        if ( 0 <= _tableViewPayloadProfileSelectedRow ) {
+            NSMutableDictionary *currentMenuDict = [[_arrayPayloadProfile objectAtIndex:_tableViewPayloadProfileSelectedRow] mutableCopy];
             if ( [_tableViewSettingsCurrentSettings count] != 0 ) {
                 NSString *menuDomain = currentMenuDict[@"Domain"];
                 _tableViewSettingsSettings[menuDomain] = [_tableViewSettingsCurrentSettings copy];
             }
             currentMenuDict[@"SavedSettings"] = [_arraySettings copy];
-            [_arrayProfilePayloads replaceObjectAtIndex:_tableViewProfilePayloadsSelectedRow withObject:[currentMenuDict copy]];
+            [_arrayPayloadProfile replaceObjectAtIndex:_tableViewPayloadProfileSelectedRow withObject:[currentMenuDict copy]];
         }
         
-    } else if ( [_selectedPayloadTableViewIdentifier isEqualToString:@"TableViewMenuDisabled"] ) {
+    } else if ( [_selectedPayloadTableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         
         // ---------------------------------------------------------------------
         //  Save current settings in menu dict
@@ -1661,7 +1708,7 @@
         if ( 0 <= _tableViewPayloadLibrarySelectedRow ) {
             
             NSMutableArray *selectedSegmentArray;
-            if ( _tableViewPayloadLibrarySelectedRowSegment == [_segmentedControlLibrary selectedSegment] ) {
+            if ( _tableViewPayloadLibrarySelectedRowSegment == [_segmentedControlPayloadLibrary selectedSegment] ) {
                 selectedSegmentArray = _arrayPayloadLibrary;
             } else {
                 selectedSegmentArray = [self arrayForPayloadLibrary:_tableViewPayloadLibrarySelectedRowSegment];
@@ -1808,6 +1855,85 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark UI Updates
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)showSettingsHeader {
+    [_constraintSettingsHeaderHeight setConstant:47.0f];
+    [self setSettingsHeaderHidden:NO];
+} // showSettingsHeader
+
+- (void)hideSettingsHeader {
+    [_constraintSettingsHeaderHeight setConstant:0.0f];
+    [self setSettingsHeaderHidden:YES];
+} // hideSettingsHeader
+
+- (void)showPayloadHeader {
+    [_constraintPayloadHeaderHeight setConstant:47.0f];
+    [self setPayloadHeaderHidden:NO];
+} // showProfileHeader
+
+- (void)hidePayloadHeader {
+    [_constraintPayloadHeaderHeight setConstant:0.0f];
+    [self setPayloadHeaderHidden:NO];
+} // hideProfileHeader
+
+- (void)showPayloadFooter {
+    [self setPayloadLibraryCollapsed:YES];
+    [_viewPayloadFooterSearch setHidden:NO];
+    [_linePayloadLibraryMenuTop setHidden:NO];
+    [_linePayloadLibraryMenuBottom setHidden:NO];
+    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+} // showProfileFooter
+
+- (void)hidePayloadFooter {
+    [self setPayloadLibraryCollapsed:YES];
+    [_viewPayloadFooterSearch setHidden:YES];
+    [_linePayloadLibraryMenuTop setHidden:YES];
+    [_linePayloadLibraryMenuBottom setHidden:YES];
+    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadFooterSuperview cTop:0 cBottom:0 cRight:0 cLeft:0 hidden:NO];
+} // hideProfileFooter
+
+- (void)uncollapsePayloadLibrary {
+    
+    // -------------------------------------------------------------------------
+    //  Get the instances, frames and sizes of the subviews
+    // -------------------------------------------------------------------------
+    NSView *profilePayloads  = [[_splitViewPayload subviews] objectAtIndex:0];
+    NSRect profilePayloadsFrame = [profilePayloads frame];
+    
+    NSView *payloadLibrary = [[_splitViewPayload subviews] objectAtIndex:1];
+    NSRect payloadLibraryFrame = [payloadLibrary frame];
+    
+    CGFloat dividerThickness = [_splitViewPayload dividerThickness];
+    
+    // -------------------------------------------------------------------------
+    //  Calculate new sizes for the subviews
+    // -------------------------------------------------------------------------
+    profilePayloadsFrame.size.height = ( profilePayloadsFrame.size.height - payloadLibraryFrame.size.height - dividerThickness );
+    payloadLibraryFrame.origin.x = profilePayloadsFrame.size.height + dividerThickness;
+    
+    // -------------------------------------------------------------------------
+    //  Set new sizes
+    // -------------------------------------------------------------------------
+    [profilePayloads setFrameSize:profilePayloadsFrame.size];
+    [payloadLibrary setFrame:payloadLibraryFrame];
+    
+    // -------------------------------------------------------------------------
+    //  Update the UI
+    // -------------------------------------------------------------------------
+    [payloadLibrary setHidden:NO];
+    [_splitViewPayload display];
+    
+    // -------------------------------------------------------------------------
+    //  Update the property
+    // -------------------------------------------------------------------------
+    [self setPayloadLibraryCollapsed:NO];
+} // uncollapsePayloadLibrary
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark IBActions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -1879,7 +2005,7 @@
     }
 } // buttonSaveSheetProfileName
 
-- (IBAction)selectTableViewProfilePayloads:(id)sender {
+- (IBAction)selectTableViewPayloadProfile:(id)sender {
     
     // -------------------------------------------------------------------------
     //  Save the current settings before changing payload in the settings view
@@ -1891,7 +2017,7 @@
     // -------------------------------------------------------------------------
     [_tableViewPayloadLibrary deselectAll:self];
     [self setTableViewPayloadLibrarySelectedRow:-1];
-    [self setTableViewProfilePayloadsSelectedRow:[_tableViewProfilePayloads selectedRow]];
+    [self setTableViewPayloadProfileSelectedRow:[_tableViewPayloadProfile selectedRow]];
     
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
@@ -1899,24 +2025,24 @@
     // ----------------------------------------------------------------------------------------
     //  If selection is within the table view, update the settings view. Else leave it empty
     // ----------------------------------------------------------------------------------------
-    if ( 0 <= _tableViewProfilePayloadsSelectedRow && _tableViewProfilePayloadsSelectedRow <= [_arrayProfilePayloads count] ) {
+    if ( 0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count] ) {
         
         // ------------------------------------------------------------------------------------
         //  Update the SelectedTableViewIdentifier with the current TableView identifier
         // ------------------------------------------------------------------------------------
-        [self setSelectedPayloadTableViewIdentifier:[_tableViewProfilePayloads identifier]];
+        [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadProfile identifier]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current settings from the saved settings dict (by using the payload domain)
         // ------------------------------------------------------------------------------------
-        NSMutableDictionary *currentMenuDict = [[_arrayProfilePayloads objectAtIndex:_tableViewProfilePayloadsSelectedRow] mutableCopy];
+        NSMutableDictionary *currentMenuDict = [[_arrayPayloadProfile objectAtIndex:_tableViewPayloadProfileSelectedRow] mutableCopy];
         [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[currentMenuDict[@"Domain"] ?: @""] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
-        NSArray *manifestContentArray = [self manifestContentForMenuItem:_arrayProfilePayloads[_tableViewProfilePayloadsSelectedRow]];
+        NSArray *manifestContentArray = [self manifestContentForMenuItem:_arrayPayloadProfile[_tableViewPayloadProfileSelectedRow]];
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_viewSettingsError setHidden:YES];
@@ -1955,14 +2081,14 @@
     // -------------------------------------------------------------------------
     //  Update the selection properties with the current value
     // -------------------------------------------------------------------------
-    [_tableViewProfilePayloads deselectAll:self];
-    [self setTableViewProfilePayloadsSelectedRow:-1];
+    [_tableViewPayloadProfile deselectAll:self];
+    [self setTableViewPayloadProfileSelectedRow:-1];
     [self setTableViewPayloadLibrarySelectedRow:[_tableViewPayloadLibrary selectedRow]];
-    [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlLibrary selectedSegment]];
+    [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlPayloadLibrary selectedSegment]];
     
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
-
+    
     // ----------------------------------------------------------------------------------------
     //  If selection is within the table view, update the settings view. Else leave it empty
     // ----------------------------------------------------------------------------------------
@@ -1978,7 +2104,7 @@
         // ------------------------------------------------------------------------------------
         NSMutableDictionary *currentMenuDict = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
         [self setTableViewSettingsCurrentSettings:[_tableViewSettingsSettings[currentMenuDict[@"Domain"] ?: @""] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-
+        
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
         //  If the manifest content dict array is empty, show "Error Reading Settings"
@@ -2032,9 +2158,16 @@
     [_tableViewSettings endUpdates];
 }
 
-- (IBAction)selectSegmentedControlLibrary:(id)sender {
+- (IBAction)selectSegmentedControlPayloadLibrary:(id)sender {
     
-    NSInteger selectedSegment = [_segmentedControlLibrary selectedSegment];
+    // -------------------------------------------------------------------------
+    //  If the payload library is collapsed, open it
+    // -------------------------------------------------------------------------
+    if ( _payloadLibraryCollapsed ) {
+        [self uncollapsePayloadLibrary];
+    }
+    
+    NSInteger selectedSegment = [_segmentedControlPayloadLibrary selectedSegment];
     
     // -------------------------------------------------------------------------
     //  If the selected segment already is selected, stop here
@@ -2058,10 +2191,10 @@
     //  If a search is NOT saved, restore the whole segment array instead
     // --------------------------------------------------------------------------------------------
     if ( [self isSearchingPayloadLibrary:selectedSegment] ) {
-        [_searchFieldProfileLibrary setStringValue:[self searchStringForPayloadLibrary:selectedSegment] ?: @""];
-        [self searchFieldProfileLibrary:nil];
+        [_searchFieldPayloadLibrary setStringValue:[self searchStringForPayloadLibrary:selectedSegment] ?: @""];
+        [self searchFieldPayloadLibrary:nil];
     } else {
-        [_searchFieldProfileLibrary setStringValue:@""];
+        [_searchFieldPayloadLibrary setStringValue:@""];
         [_tableViewPayloadLibrary beginUpdates];
         [_arrayPayloadLibrary removeAllObjects];
         [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:selectedSegment]];
@@ -2083,7 +2216,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (IBAction)searchFieldProfileLibrary:(id)sender {
+- (IBAction)searchFieldPayloadLibrary:(id)sender {
     
     // -------------------------------------------------------------------------------------------------
     //  Check if this is the beginning of a search, if so save the complete array before removing items
@@ -2093,7 +2226,7 @@
         [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
     }
     
-    NSString *searchString = [_searchFieldProfileLibrary stringValue];
+    NSString *searchString = [_searchFieldPayloadLibrary stringValue];
     [_tableViewPayloadLibrary beginUpdates];
     if ( ! [searchString length] ) {
         
@@ -2125,7 +2258,7 @@
     
     [_tableViewPayloadLibrary reloadData];
     [_tableViewPayloadLibrary endUpdates];
-} // searchFieldProfileLibrary
+} // searchFieldPayloadLibrary
 
 - (void)setSearchStringForPayloadLibrary:(NSInteger)payloadLibrary searchString:(NSString *)searchString {
     switch (payloadLibrary) {
@@ -2201,7 +2334,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark PayloadMenu Context Menu
+#pragma mark Payload Context Menu
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 

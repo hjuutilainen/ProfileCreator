@@ -6,12 +6,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "RFOverlayScrollView.h"
+#import "PFCSplitViewPayloadLibrary.h"
 @class PFCPayloadLibraryTableView;
 
 typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
     /** Profile Library Apple **/
     kPFCPayloadLibraryApple,
-    /** Profile Library /User/Library/Preferences **/
+    /** Profile Library ~/Library/Preferences **/
     kPFCPayloadLibraryUserPreferences,
     /** Profile Library Custom **/
     kPFCPayloadLibraryCustom
@@ -23,43 +25,73 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 
 @interface PFCProfileCreationWindowController : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate>
 
-// Window
+// -------------------------------------------------------------------------
+//  Unsorted
+// -------------------------------------------------------------------------
+@property NSArray *customMenu;
+@property BOOL advancedSettings;
+@property id parentObject;
+@property BOOL columnMenuEnabledHidden;
+@property BOOL columnSettingsEnabledHidden;
+@property NSMutableDictionary *tableViewSettingsSettings;
+@property NSMutableDictionary *tableViewSettingsCurrentSettings;
+
+// -------------------------------------------------------------------------
+//  Window
+// -------------------------------------------------------------------------
 @property BOOL windowShouldClose;
 
-// Random
+// -------------------------------------------------------------------------
+//  General
+// -------------------------------------------------------------------------
+@property int profileType;
+@property NSDictionary *profileDict;
+
+// -------------------------------------------------------------------------
+//  Payload
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet PFCSplitViewPayloadLibrary *splitViewPayload;
 @property NSString *selectedPayloadTableViewIdentifier;
 
-// ProfileHeader
-@property (weak)    IBOutlet NSView *viewProfileHeaderSplitView;
-@property (weak)    IBOutlet NSView *viewProfileHeader;
+// -------------------------------------------------------------------------
+//  Payload Header
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewPayloadHeaderSplitView;
+@property (weak)    IBOutlet NSView *viewPayloadHeader;
 @property (weak)    IBOutlet NSTextField *textFieldProfileName;
-@property (strong)  IBOutlet NSLayoutConstraint *constraintProfileHeaderHeight;
-@property (readwrite)        BOOL profileHeaderHidden;
+@property (readwrite)        NSString *profileName;
+@property (readwrite)        BOOL payloadHeaderHidden;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintPayloadHeaderHeight;
 
-// ProfilePayloads
-@property (weak)    IBOutlet NSView *viewProfilePayloadsSuperview;
-@property (weak)    IBOutlet NSView *viewProfilePayloadsSplitView;
-@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewProfilePayloads;
-@property (readwrite)        NSMutableArray *arrayProfilePayloads;
-@property (readwrite)        NSInteger tableViewProfilePayloadsSelectedRow;
-- (IBAction)selectTableViewProfilePayloads:(id)sender;
+// -------------------------------------------------------------------------
+//  PayloadProfile
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewPayloadProfileSuperview;
+@property (weak)    IBOutlet NSView *viewPayloadProfileSplitView;
+@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadProfile;
+@property (readwrite)        NSMutableArray *arrayPayloadProfile;
+@property (readwrite)        NSInteger tableViewPayloadProfileSelectedRow;
+- (IBAction)selectTableViewPayloadProfile:(id)sender;
 
-// PayloadLibrary
+// -------------------------------------------------------------------------
+//  PayloadLibrary
+// -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySuperview;
+@property (weak)    IBOutlet RFOverlayScrollView *viewPayloadLibraryScrollView;
 @property (weak)    IBOutlet NSView *viewPayloadLibrarySplitView;
 @property (weak)    IBOutlet NSView *viewPayloadLibraryMenu;
+@property (weak)    IBOutlet NSView *viewPayloadLibraryMenuSuperview;
+@property (weak)    IBOutlet NSBox *linePayloadLibraryMenuTop;
+@property (weak)    IBOutlet NSBox *linePayloadLibraryMenuBottom;
+@property (weak)    IBOutlet NSView *viewPayloadLibraryNoMatches;
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadLibrary;
-@property (weak)    IBOutlet NSSegmentedControl *segmentedControlLibrary;
+@property (weak)    IBOutlet NSSegmentedControl *segmentedControlPayloadLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRow;
 @property (readwrite)        NSInteger tableViewPayloadLibrarySelectedRowSegment;
 @property (readwrite)        NSInteger segmentedControlPayloadLibrarySelectedSegment;
 - (IBAction)selectTableViewPayloadLibrary:(id)sender;
-- (IBAction)selectSegmentedControlLibrary:(id)sender;
-
-// PayloadLibraryFooter
-@property (weak)    IBOutlet NSSearchField *searchFieldProfileLibrary;
-- (IBAction)searchFieldProfileLibrary:(id)sender;
+- (IBAction)selectSegmentedControlPayloadLibrary:(id)sender;
 
 // PayloadLibraryApple
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryApple;
@@ -78,22 +110,37 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSString *searchStringPayloadLibraryCustom;
 @property (readwrite)        NSMutableDictionary *payloadLibraryCustomSettings;
 
-// SettingsViewHeader
+// -------------------------------------------------------------------------
+//  PayloadFooter
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewPayloadFooterSuperview;
+@property (weak)    IBOutlet NSView *viewPayloadFooterSearch;
+@property (weak)    IBOutlet NSSearchField *searchFieldPayloadLibrary;
+@property (readwrite)        BOOL payloadLibraryCollapsed;
+- (IBAction)searchFieldPayloadLibrary:(id)sender;
+
+// -------------------------------------------------------------------------
+//  SettingsHeader
+// -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView *viewSettingsHeaderSplitView;
 @property (weak)    IBOutlet NSView *viewSettingsHeader;
 @property (weak)    IBOutlet NSImageView *imageViewSettingsHeaderIcon;
 @property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
-@property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 @property (readwrite)        BOOL settingsHeaderHidden;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 
-// SettingsView
+// -------------------------------------------------------------------------
+//  Settings
+// -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
 @property (weak)    IBOutlet NSView *viewSettingsSplitView;
 @property (weak)    IBOutlet NSView *viewSettingsError;
-@property (weak)    IBOutlet NSTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
+@property (weak)    IBOutlet NSTableView *tableViewSettings;
 
-// SettingsViewFooter
+// -------------------------------------------------------------------------
+//  SettingsFooter
+// -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSPopover *popOverSettings;
 @property (weak)    IBOutlet NSButton *buttonCancel;
 @property (weak)    IBOutlet NSButton *buttonSave;
@@ -101,41 +148,21 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (IBAction)buttonCancel:(id)sender;
 - (IBAction)buttonSave:(id)sender;
 
-// PayloadItemsContextMeny
+// -------------------------------------------------------------------------
+//  Payload Context Menu
+// -------------------------------------------------------------------------
 @property (readwrite)        NSString *clickedPayloadTableViewIdentifier;
 @property (readwrite)        NSInteger clickedPayloadTableViewRow;
 - (IBAction)menuItemShowInFinder:(id)sender;
 
-// SheetProfileName
+// -------------------------------------------------------------------------
+//  Sheet - Profile Name
+// -------------------------------------------------------------------------
 @property (strong)  IBOutlet NSWindow *sheetProfileName;
 @property (weak)    IBOutlet NSTextField *textFieldSheetProfileName;
 @property (weak)    IBOutlet NSButton *buttonSaveSheetProfileName;
 - (IBAction)buttonCancelSheetProfileName:(id)sender;
 - (IBAction)buttonSaveSheetProfileName:(id)sender;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@property NSString *profileName;
-@property int profileType;
-@property NSArray *customMenu;
-@property BOOL advancedSettings;
-@property id parentObject;
-@property BOOL columnMenuEnabledHidden;
-@property NSDictionary *profileDict;
-@property NSMutableDictionary *tableViewSettingsSettings;
-@property NSMutableDictionary *tableViewSettingsCurrentSettings;
-@property BOOL columnSettingsEnabledHidden;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
