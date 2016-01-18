@@ -9,8 +9,31 @@
 #import <Foundation/Foundation.h>
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark CellType
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCCellTypeCheckbox;
+extern NSString *const PFCCellTypeCheckboxNoDescription;
+extern NSString *const PFCCellTypeDatePickerNoTitle;
+extern NSString *const PFCCellTypeFile;
+extern NSString *const PFCCellTypePadding;
+extern NSString *const PFCCellTypePopUpButton;
+extern NSString *const PFCCellTypePopUpButtonLeft;
+extern NSString *const PFCCellTypePopUpButtonNoTitle;
+extern NSString *const PFCCellTypeSegmentedControl;
+extern NSString *const PFCCellTypeTableView;
+extern NSString *const PFCCellTypeTextField;
+extern NSString *const PFCCellTypeTextFieldCheckbox;
+extern NSString *const PFCCellTypeTextFieldDaysHoursNoTitle;
+extern NSString *const PFCCellTypeTextFieldHostPort;
+extern NSString *const PFCCellTypeTextFieldHostPortCheckbox;
+extern NSString *const PFCCellTypeTextFieldNoTitle;
+extern NSString *const PFCCellTypeTextFieldNumber;
+extern NSString *const PFCCellTypeTextFieldNumberLeft;
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCManifestKeyAllowedFileTypes;
 extern NSString *const PFCManifestKeyAllowMultiplePayloads;
 extern NSString *const PFCManifestKeyAvailableValues;
 extern NSString *const PFCManifestKeyButtonTitle;
@@ -61,3 +84,26 @@ extern NSString *const PFCManifestKeyToolTipDescription;
 extern NSString *const PFCManifestKeyUnit;
 extern NSString *const PFCManifestKeyValueKeys;
 extern NSString *const PFCManifestKeyValueKeysShared;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark RuntimeManifestKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCRuntimeManifestKeyValuePlistPath;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Other
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCDefaultProfileName;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark ProfileTemplateKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCProfileTemplateKeyName;
+extern NSString *const PFCProfileTemplateKeyPath;
+extern NSString *const PFCProfileTemplateKeySettings;
+extern NSString *const PFCProfileTemplateKeyUUID;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark SettingsKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCSettingsKeySelected;

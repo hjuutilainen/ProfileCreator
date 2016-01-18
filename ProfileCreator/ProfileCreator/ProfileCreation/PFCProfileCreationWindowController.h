@@ -33,8 +33,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property id parentObject;
 @property BOOL columnMenuEnabledHidden;
 @property BOOL columnSettingsEnabledHidden;
-@property NSMutableDictionary *tableViewSettingsSettings;
-@property NSMutableDictionary *tableViewSettingsCurrentSettings;
 
 // -------------------------------------------------------------------------
 //  Window
@@ -46,6 +44,12 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 @property int profileType;
 @property NSDictionary *profileDict;
+
+// -------------------------------------------------------------------------
+//  Settings
+// -------------------------------------------------------------------------
+@property NSMutableDictionary *settingsProfile;
+@property NSMutableDictionary *settingsManifest;
 
 // -------------------------------------------------------------------------
 //  Payload

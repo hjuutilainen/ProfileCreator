@@ -1112,7 +1112,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *) __unused change context:(void *) __unused context {
     if ( ( _sender != nil && [_cellIdentifier length] != 0 ) && ( [keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"] )) {
         int seconds = ( ( [_stepperValueRemovalIntervalDays intValue] * 86400 ) + ( [_stepperValueRemovalIntervalHours intValue] * 60 ) );
-        NSMutableDictionary *settingsDict = [[(PFCProfileCreationWindowController *)_sender tableViewSettingsCurrentSettings] mutableCopy];
+        NSMutableDictionary *settingsDict = [[(PFCProfileCreationWindowController *)_sender settingsManifest] mutableCopy];
         if ( seconds == 0 ) {
             [settingsDict removeObjectForKey:_cellIdentifier];
         } else {
@@ -1120,7 +1120,7 @@
             cellDict[@"Value"] = @(seconds);
             settingsDict[_cellIdentifier] = cellDict;
         }
-        [(PFCProfileCreationWindowController *)_sender setTableViewSettingsCurrentSettings:settingsDict];
+        [(PFCProfileCreationWindowController *)_sender setSettingsManifest:settingsDict];
     }
 } // observeValueForKeyPath
 

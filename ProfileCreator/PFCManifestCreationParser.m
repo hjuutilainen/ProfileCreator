@@ -14,8 +14,8 @@
 + (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict {
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
-    manifestDict[@"ManifestContent"] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
-    manifestDict[@"PlistPath"] = [fileURL path];
+    manifestDict[PFCManifestKeyManifestContent] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
+    manifestDict[PFCRuntimeManifestKeyValuePlistPath] = [fileURL path];
     return [manifestDict copy];
 }
 
@@ -151,6 +151,29 @@
     if ( [valueClass isEqualTo:[@(YES) class]] )        return @"Boolean";
     if ( [valueClass isEqualTo:[@(0) class]] ) {
         CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
+        
+        /*
+         Use the CFNumberTypes to determine what number type the value is.
+         
+         kCFNumberSInt8Type     = 1,
+         kCFNumberSInt16Type    = 2,
+         kCFNumberSInt32Type    = 3,
+         kCFNumberSInt64Type    = 4,
+         kCFNumberFloat32Type   = 5,
+         kCFNumberFloat64Type   = 6,
+         kCFNumberCharType      = 7,
+         kCFNumberShortType     = 8,
+         kCFNumberIntType       = 9,
+         kCFNumberLongType      = 10,
+         kCFNumberLongLongType  = 11,
+         kCFNumberFloatType     = 12,
+         kCFNumberDoubleType    = 13,
+         kCFNumberCFIndexType   = 14,
+         kCFNumberNSIntegerType = 15,
+         kCFNumberCGFloatType   = 16,
+         kCFNumberMaxType       = 16
+         */
+        
         if ( numberType <= 4 )                          return @"Integer";
         if ( 5 <= numberType && numberType <= 6 )       return @"Float";
         

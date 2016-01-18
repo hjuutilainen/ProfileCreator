@@ -102,13 +102,13 @@
                 continue;
             }
             
-            NSString *name = profileDict[@"Name"];
+            NSString *name = profileDict[PFCProfileTemplateKeyName];
             if ( [name length] == 0 ) {
                 NSLog(@"[ERROR] Profile doesn't contain a name!");
                 continue;
             }
             
-            NSDictionary *savedProfileDict = @{ @"Path" : [profileURL path],
+            NSDictionary *savedProfileDict = @{ PFCProfileTemplateKeyPath : [profileURL path],
                                                 @"Config" : profileDict };
             
             // FIXME - Add sanity checking to see if this actually is a profile save
@@ -146,7 +146,7 @@
         NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
         
         if (
-            [inputText isEqualToString:@"Untitled..."] ||
+            [inputText isEqualToString:PFCDefaultProfileName] ||
             [inputText isEqualToString:profileCurrentName] ||
             [inputText length] == 0 ) {
             [_buttonSaveSheetProfileName setEnabled:NO];

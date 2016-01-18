@@ -253,13 +253,13 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-1046.5" y="-882"/>
+            <point key="canvasLocation" x="-873.5" y="-809"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="379" height="91"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="ZPH-fG-Mc4">
                 <rect key="frame" x="0.0" y="0.0" width="379" height="91"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -419,7 +419,7 @@ Gw
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gKk-4E-1ez">
-                                                        <rect key="frame" x="156" y="13" width="4" height="17"/>
+                                                        <rect key="frame" x="151" y="13" width="4" height="17"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" id="M4n-4f-Cve">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -433,7 +433,7 @@ Gw
                                                     <constraint firstItem="8AR-UY-uoK" firstAttribute="top" secondItem="VM5-7Z-mbt" secondAttribute="top" constant="6" id="I4j-UE-BQA"/>
                                                     <constraint firstAttribute="bottom" secondItem="8AR-UY-uoK" secondAttribute="bottom" constant="4" id="M14-6z-JWo"/>
                                                     <constraint firstItem="8YS-F8-JbL" firstAttribute="leading" secondItem="8AR-UY-uoK" secondAttribute="trailing" constant="6" id="Mo2-vx-Xtp"/>
-                                                    <constraint firstAttribute="trailing" secondItem="gKk-4E-1ez" secondAttribute="trailing" constant="8" id="RY0-RP-GRY"/>
+                                                    <constraint firstAttribute="trailing" secondItem="gKk-4E-1ez" secondAttribute="trailing" constant="13" id="RY0-RP-GRY"/>
                                                     <constraint firstItem="8AR-UY-uoK" firstAttribute="leading" secondItem="VM5-7Z-mbt" secondAttribute="leading" constant="2" id="e5c-Mh-58i"/>
                                                     <constraint firstItem="zcs-w7-L8L" firstAttribute="leading" secondItem="8YS-F8-JbL" secondAttribute="leading" id="irF-Wu-cC6"/>
                                                     <constraint firstItem="8YS-F8-JbL" firstAttribute="top" secondItem="VM5-7Z-mbt" secondAttribute="top" constant="7" id="ixg-ge-nex"/>
@@ -514,7 +514,7 @@ Gw
                 <constraint firstAttribute="trailing" secondItem="cfv-5T-W6x" secondAttribute="trailing" id="SKT-aj-Qm8"/>
                 <constraint firstItem="cfv-5T-W6x" firstAttribute="top" secondItem="WTy-Uf-bja" secondAttribute="top" id="pGm-XX-pjI"/>
             </constraints>
-            <point key="canvasLocation" x="-1861" y="-933.5"/>
+            <point key="canvasLocation" x="-1766" y="-1196.5"/>
         </customView>
         <customView focusRingType="none" id="Zf9-0g-a6x">
             <rect key="frame" x="0.0" y="0.0" width="194" height="115"/>
@@ -527,7 +527,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierPayloadLibrary" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl" customClass="PFCPayloadLibraryTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="194" height="88"/>
+                                <rect key="frame" x="0.0" y="0.0" width="190" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -607,7 +607,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="511" height="1483"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings">
+                            <tableView identifier="TableViewIdentifierPayloadSettings" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings">
                                 <rect key="frame" x="0.0" y="0.0" width="510.5" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2095,7 +2095,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="198" height="27"/>
             <subviews>
                 <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pFH-O0-wrl">
-                    <rect key="frame" x="16.5" y="3" width="165" height="20"/>
+                    <rect key="frame" x="17" y="3" width="165" height="20"/>
                     <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="VP9-1H-PzM">
                         <font key="font" metaFont="smallSystem"/>
                         <segments>

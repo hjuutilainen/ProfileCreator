@@ -9,8 +9,31 @@
 #import "PFCConstants.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark CellType
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCCellTypeCheckbox = @"Checkbox";
+NSString *const PFCCellTypeCheckboxNoDescription = @"CheckboxNoDescription";
+NSString *const PFCCellTypeDatePickerNoTitle = @"DatePickerNoTitle";
+NSString *const PFCCellTypeFile = @"File";
+NSString *const PFCCellTypePadding = @"Padding";
+NSString *const PFCCellTypePopUpButton = @"PopUpButton";
+NSString *const PFCCellTypePopUpButtonLeft = @"PopUpButtonLeft";
+NSString *const PFCCellTypePopUpButtonNoTitle = @"PopUpButtonNoTitle";
+NSString *const PFCCellTypeSegmentedControl = @"SegmentedControl";
+NSString *const PFCCellTypeTableView = @"TableView";
+NSString *const PFCCellTypeTextField = @"TextField";
+NSString *const PFCCellTypeTextFieldCheckbox = @"TextFieldCheckbox";
+NSString *const PFCCellTypeTextFieldDaysHoursNoTitle = @"TextFieldDaysHoursNoTitle";
+NSString *const PFCCellTypeTextFieldHostPort = @"TextFieldHostPort";
+NSString *const PFCCellTypeTextFieldHostPortCheckbox = @"TextFieldHostPortCheckbox";
+NSString *const PFCCellTypeTextFieldNoTitle = @"TextFieldNoTitle";
+NSString *const PFCCellTypeTextFieldNumber = @"TextFieldNumber";
+NSString *const PFCCellTypeTextFieldNumberLeft = @"TextFieldNumberLeft";
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCManifestKeyAllowedFileTypes = @"AllowedFileTypes";
 NSString *const PFCManifestKeyAllowMultiplePayloads = @"AllowMultiplePayloads";
 NSString *const PFCManifestKeyAvailableValues = @"AvailableValues";
 NSString *const PFCManifestKeyButtonTitle = @"ButtonTitle";
@@ -61,3 +84,26 @@ NSString *const PFCManifestKeyToolTipDescription = @"ToolTipDescription";
 NSString *const PFCManifestKeyUnit = @"Unit";
 NSString *const PFCManifestKeyValueKeys = @"ValueKeys";
 NSString *const PFCManifestKeyValueKeysShared = @"ValueKeysShared";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Other
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCRuntimeManifestKeyValuePlistPath = @"PlistPath";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Other
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCDefaultProfileName = @"Untitled...";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark ProfileTemplateKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCProfileTemplateKeyName = @"Name";
+NSString *const PFCProfileTemplateKeyPath = @"Path";
+NSString *const PFCProfileTemplateKeySettings = @"Settings";
+NSString *const PFCProfileTemplateKeyUUID = @"UUID";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark SettingsKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCSettingsKeySelected = @"Selected";
