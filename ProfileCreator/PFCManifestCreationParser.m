@@ -15,7 +15,7 @@
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
     manifestDict[PFCManifestKeyManifestContent] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
-    manifestDict[PFCRuntimeManifestKeyPlistPath] = [fileURL path];
+    manifestDict[PFCRuntimeKeyPlistPath] = [fileURL path];
     return [manifestDict copy];
 } // manifestForPlistAtURL
 

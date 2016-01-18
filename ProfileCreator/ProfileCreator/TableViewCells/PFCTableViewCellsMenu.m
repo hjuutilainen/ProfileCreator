@@ -56,10 +56,6 @@
     return cellView;
 } // populateCellViewMenu:manifestDict:row
 
-+ (CGFloat)cellViewHeight {
-    return 44.0;
-} // cellViewHeight
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,10 +92,6 @@
     return cellView;
 } // populateCellViewEnabled:manifestDict:row
 
-+ (CGFloat)cellViewHeight {
-    return 44.0;
-} // cellViewHeight
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,9 +123,5 @@
     
     return cellView;
 } // populateCellViewMenu:manifestDict:row
-
-+ (CGFloat)cellViewHeight {
-    return 44.0;
-} // cellViewHeight
 
 @end

@@ -116,6 +116,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewPayloadFooterSuperview;
 @property (weak)    IBOutlet NSView *viewPayloadFooterSearch;
 @property (weak)    IBOutlet NSSearchField *searchFieldPayloadLibrary;
+@property (readwrite)        BOOL searchNoMatchesHidden;
 @property (readwrite)        BOOL payloadLibraryCollapsed;
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
 
@@ -127,6 +128,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSImageView *imageViewSettingsHeaderIcon;
 @property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
 @property (readwrite)        BOOL settingsHeaderHidden;
+@property (readwrite)        BOOL settingsErrorHidden;
 @property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 
 // -------------------------------------------------------------------------

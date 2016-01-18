@@ -51,32 +51,33 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Profile Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="196" y="240" width="683" height="432"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="contentRect" x="196" y="240" width="683" height="415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" focusRingType="none" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="683" height="432"/>
+                <rect key="frame" x="0.0" y="0.0" width="683" height="415"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <splitView focusRingType="none" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tba-0L-UoO">
-                        <rect key="frame" x="0.0" y="0.0" width="683" height="432"/>
+                        <rect key="frame" x="0.0" y="0.0" width="683" height="415"/>
                         <subviews>
                             <customView id="OG7-EL-V6w">
-                                <rect key="frame" x="0.0" y="0.0" width="270" height="432"/>
+                                <rect key="frame" x="0.0" y="0.0" width="270" height="415"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <splitView dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="9Ys-zS-lNa" customClass="PFCSplitViewPayloadLibrary">
-                                        <rect key="frame" x="0.0" y="27" width="270" height="357"/>
+                                        <rect key="frame" x="0.0" y="27" width="270" height="340"/>
                                         <subviews>
                                             <customView focusRingType="none" fixedFrame="YES" id="KbT-sv-zbF">
-                                                <rect key="frame" x="0.0" y="0.0" width="270" height="186"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="270" height="177"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             </customView>
                                             <customView focusRingType="none" fixedFrame="YES" id="dOs-pi-DS9">
-                                                <rect key="frame" x="0.0" y="187" width="270" height="170"/>
+                                                <rect key="frame" x="0.0" y="178" width="270" height="162"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             </customView>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="ddp-sA-mkB"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="190" id="kwg-C9-6NW"/>
                                         </constraints>
                                         <holdingPriorities>
@@ -130,7 +131,7 @@
                                         </constraints>
                                     </customView>
                                     <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="U4g-OS-daw">
-                                        <rect key="frame" x="0.0" y="384" width="270" height="48"/>
+                                        <rect key="frame" x="0.0" y="367" width="270" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="oEk-Je-Fmr"/>
                                         </constraints>
@@ -150,7 +151,7 @@
                                 </constraints>
                             </customView>
                             <customView focusRingType="none" id="br8-H4-LSq">
-                                <rect key="frame" x="271" y="0.0" width="412" height="432"/>
+                                <rect key="frame" x="271" y="0.0" width="412" height="415"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="qlw-Ff-Rb2">
@@ -205,10 +206,10 @@ Gw
                                         </constraints>
                                     </customView>
                                     <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="iSH-YF-Ulb">
-                                        <rect key="frame" x="0.0" y="27" width="412" height="357"/>
+                                        <rect key="frame" x="0.0" y="27" width="412" height="340"/>
                                     </customView>
                                     <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="mpn-sh-Jgw">
-                                        <rect key="frame" x="0.0" y="384" width="412" height="48"/>
+                                        <rect key="frame" x="0.0" y="367" width="412" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="hWv-vi-8Yc"/>
                                         </constraints>
@@ -253,13 +254,13 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-873.5" y="-809"/>
+            <point key="canvasLocation" x="-1870.5" y="-840.5"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="379" height="91"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="ZPH-fG-Mc4">
                 <rect key="frame" x="0.0" y="0.0" width="379" height="91"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -2133,6 +2134,11 @@ Gw
                 <constraint firstAttribute="bottom" secondItem="CZ0-F1-m54" secondAttribute="bottom" id="tue-qk-iXj"/>
             </constraints>
             <point key="canvasLocation" x="-1383" y="-1260.5"/>
+        </customView>
+        <customView id="4eE-RT-voR">
+            <rect key="frame" x="0.0" y="0.0" width="542" height="525"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <point key="canvasLocation" x="-1036" y="-844.5"/>
         </customView>
     </objects>
     <resources>

@@ -87,9 +87,12 @@ extern NSString *const PFCManifestKeyValueKeys;
 extern NSString *const PFCManifestKeyValueKeysShared;
 
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark RuntimeManifestKeys
+#pragma mark RuntimeKeys
 ////////////////////////////////////////////////////////////////////////////////
-extern NSString *const PFCRuntimeManifestKeyPlistPath;
+extern NSString *const PFCRuntimeKeyPlistPath;
+extern NSString *const PFCRuntimeKeyProfileEditor;
+extern NSString *const PFCRuntimeKeyProfileExporter;
+extern NSString *const PFCRuntimeKeyPath;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other
@@ -100,7 +103,6 @@ extern NSString *const PFCDefaultProfileName;
 #pragma mark ProfileTemplateKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCProfileTemplateKeyName;
-extern NSString *const PFCProfileTemplateKeyPath;
 extern NSString *const PFCProfileTemplateKeySettings;
 extern NSString *const PFCProfileTemplateKeyUUID;
 

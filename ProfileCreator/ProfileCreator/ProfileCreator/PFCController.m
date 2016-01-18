@@ -107,7 +107,7 @@
                 continue;
             }
             
-            NSDictionary *savedProfileDict = @{ PFCProfileTemplateKeyPath : [profileURL path],
+            NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
                                                 @"Config" : profileDict };
             
             // FIXME - Add sanity checking to see if this actually is a profile save
@@ -354,8 +354,8 @@
 
 - (void)createProfile {
     
-    NSMutableDictionary *profileDict = [@{ @"Path" : [PFCController newProfilePath],
-                                           @"Config" : @{ @"Name" : @"Untitled..." }} mutableCopy];
+    NSMutableDictionary *profileDict = [@{ PFCRuntimeKeyPath : [PFCController newProfilePath],
+                                           @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName }} mutableCopy];
     
     PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
     if ( controller ) {

@@ -112,7 +112,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ---------------------------------------------------------------------
     //  Add error views to content views
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewSettingsError inSuperview:_viewSettingsSuperView hidden:NO];
+    [self insertSubview:_viewSettingsError inSuperview:_viewSettingsSplitView hidden:NO];
     [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:NO];
     
     // FIXME - Temporary for testing
@@ -1559,7 +1559,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 - (NSArray *)manifestContentForMenuItem:(NSDictionary *)manifestDict {
     NSMutableArray *combinedSettings = [[NSMutableArray alloc] init];
     if ( [manifestDict count] != 0 ) {
-        NSArray *settings = manifestDict[@"ManifestContent"];
+        NSArray *settings = manifestDict[PFCManifestKeyManifestContent];
         
         for ( NSDictionary *setting in settings ) {
             NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
@@ -1572,14 +1572,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             // ---------------------------------------------------------------------
             //  Add padding row to top of table view
             // ---------------------------------------------------------------------
-            [combinedSettings insertObject:@{ @"CellType" : @"Padding",
-                                              @"Enabled" : @YES } atIndex:0];
+            [combinedSettings insertObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
+                                              PFCManifestKeyEnabled  : @YES } atIndex:0];
             
             // ---------------------------------------------------------------------
             //  Add padding row to end of table view
             // ---------------------------------------------------------------------
-            [combinedSettings addObject:@{ @"CellType" : @"Padding",
-                                           @"Enabled" : @YES }];
+            [combinedSettings addObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
+                                           PFCManifestKeyEnabled  : @YES }];
         }
     }
     return [combinedSettings copy];
@@ -1698,7 +1698,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // -------------------------------------------------------------------------
     //  Check if there's a path saved for the profile
     // -------------------------------------------------------------------------
-    NSString *profilePath = _profileDict[PFCProfileTemplateKeyPath];
+    NSString *profilePath = _profileDict[PFCRuntimeKeyPath];
     if ( [profilePath length] == 0 ) {
         return NO;
     }
@@ -1747,7 +1747,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ----------------------------------------------------------------------------
     //  Get the path to this profile template, or if never saved create a new path
     // ----------------------------------------------------------------------------
-    NSString *profilePath = _profileDict[PFCProfileTemplateKeyPath];
+    NSString *profilePath = _profileDict[PFCRuntimeKeyPath];
     if ( [profilePath length] == 0 ) {
         profilePath = [PFCController newProfilePath];
     }
@@ -1879,6 +1879,30 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_linePayloadLibraryMenuBottom setHidden:YES];
     [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadFooterSuperview hidden:NO];
 } // hidePayloadFooter
+
+- (void)showSettingsError {
+    [self setSettingsErrorHidden:NO];
+    [_viewSettingsSuperView setHidden:YES];
+    [_viewSettingsError setHidden:NO];
+} // showSettingsError
+
+- (void)hideSettingsError {
+    [self setSettingsErrorHidden:YES];
+    [_viewSettingsError setHidden:YES];
+    [_viewSettingsSuperView setHidden:NO];
+} // hideSettingsError
+
+- (void)showSearchNoMatches {
+    [self setSearchNoMatchesHidden:NO];
+    [_viewPayloadLibraryNoMatches setHidden:NO];
+    [_viewPayloadLibraryScrollView setHidden:YES];
+} // showSearchNoMatches
+
+- (void)hideSearchNoMatches {
+    [self setSearchNoMatchesHidden:YES];
+    [_viewPayloadLibraryNoMatches setHidden:YES];
+    [_viewPayloadLibraryScrollView setHidden:NO];
+} // hideSearchNoMatches
 
 - (void)collapsePayloadLibrary {
     // FIXME - Write this for when opening an imported profile or locally installed profile
@@ -2044,16 +2068,31 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
             }
+            
+            if ( ! _settingsErrorHidden ) {
+                [self hideSettingsError];
+            }
         } else {
             if ( ! _settingsHeaderHidden ) {
                 [self hideSettingsHeader];
             }
-            [_viewSettingsError setHidden:NO];
+            
+            if ( _settingsErrorHidden ) {
+                [self showSettingsError];
+            }
         }
     } else {
         if ( ! _settingsHeaderHidden ) {
             [self hideSettingsHeader];
         }
+        
+        if ( ! _settingsErrorHidden ) {
+            [self hideSettingsError];
+        }
+        
+        // ---------------------------------------------------------------------
+        //  Unset the SelectedTableViewIdentifier
+        // ---------------------------------------------------------------------
         [self setSelectedPayloadTableViewIdentifier:nil];
     }
     
@@ -2112,21 +2151,33 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
             }
+            
+            if ( ! _settingsErrorHidden ) {
+                [self hideSettingsError];
+            }
         } else {
             if ( ! _settingsHeaderHidden ) {
                 [self hideSettingsHeader];
             }
-            [_viewSettingsError setHidden:NO];
+            
+            if ( _settingsErrorHidden ) {
+                [self showSettingsError];
+            }
         }
     } else {
         if ( ! _settingsHeaderHidden ) {
             [self hideSettingsHeader];
         }
         
+        if ( ! _settingsErrorHidden ) {
+            [self hideSettingsError];
+        }
+        
         // ---------------------------------------------------------------------
         //  Unset the SelectedTableViewIdentifier
         // ---------------------------------------------------------------------
         [self setSelectedPayloadTableViewIdentifier:nil];
+        
     }
     
     [_tableViewSettings reloadData];
@@ -2169,6 +2220,9 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         [_searchFieldPayloadLibrary setStringValue:[self searchStringForPayloadLibrary:selectedSegment] ?: @""];
         [self searchFieldPayloadLibrary:nil];
     } else {
+        if ( ! _searchNoMatchesHidden ) {
+            [self hideSearchNoMatches];
+        }
         [_searchFieldPayloadLibrary setStringValue:@""];
         [_tableViewPayloadLibrary beginUpdates];
         [_arrayPayloadLibrary removeAllObjects];
@@ -2209,6 +2263,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  If user pressed (x) or deleted the search, restore the whole array
         // ---------------------------------------------------------------------
         [self restoreSearchForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+        
+        if ( ! _searchNoMatchesHidden ) {
+            [self hideSearchNoMatches];
+        }
     } else {
         
         // ---------------------------------------------------------------------
@@ -2229,6 +2287,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ------------------------------------------------------------------------
         NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
         [self setArrayPayloadLibrary:matchedObjects];
+        
+        // ------------------------------------------------------------------------
+        //  If no matches were found, show text "No Matches" in payload library
+        // ------------------------------------------------------------------------
+        if ( [matchedObjects count] == 0 && _searchNoMatchesHidden ) {
+            [self showSearchNoMatches];
+        } else if ( [matchedObjects count] != 0 && ! _searchNoMatchesHidden ) {
+            [self hideSearchNoMatches];
+        }
     }
     
     [_tableViewPayloadLibrary reloadData];
@@ -2337,7 +2404,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Remove this menu item unless runtime key 'PlistPath' is set in the manifest
     // -------------------------------------------------------------------------------
     NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
-    if ( [manifestDict[PFCRuntimeManifestKeyPlistPath] length] != 0 ) {
+    if ( [manifestDict[PFCRuntimeKeyPlistPath] length] != 0 ) {
         [menuItemShowOriginalInFinder setEnabled:YES];
     } else {
         [menu removeItem:menuItemShowOriginalInFinder];
@@ -2360,9 +2427,9 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ----------------------------------------------------------------------------------------
     //  If key 'PlistPath' is set, check if it's a valid path. If it is, open it in Finder
     // ----------------------------------------------------------------------------------------
-    if ( [manifestDict[PFCRuntimeManifestKeyPlistPath] length] != 0 ) {
+    if ( [manifestDict[PFCRuntimeKeyPlistPath] length] != 0 ) {
         NSError *error = nil;
-        NSString *filePath = manifestDict[PFCRuntimeManifestKeyPlistPath] ?: @"";
+        NSString *filePath = manifestDict[PFCRuntimeKeyPlistPath] ?: @"";
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
