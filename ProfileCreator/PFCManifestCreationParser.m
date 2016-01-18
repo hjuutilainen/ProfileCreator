@@ -15,20 +15,20 @@
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
     manifestDict[PFCManifestKeyManifestContent] = [self manifestArrayForPlistAtURL:fileURL settingsDict:settingsDict];
-    manifestDict[PFCRuntimeManifestKeyValuePlistPath] = [fileURL path];
+    manifestDict[PFCRuntimeManifestKeyPlistPath] = [fileURL path];
     return [manifestDict copy];
-}
+} // manifestForPlistAtURL
 
 + (NSDictionary *)manifestMenuForPlistAtURL:(NSURL *)fileURL {
-    NSMutableDictionary *manifestMenuDict = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     
-    manifestMenuDict[@"CellType"] = @"Menu";
-    manifestMenuDict[@"Description"] = @"Not Configured";
+    manifestDict[PFCManifestKeyCellType] = @"Menu";
+    manifestDict[PFCManifestKeyDescription] = @"Not Configured";
     
     NSString *domain = [[fileURL lastPathComponent] stringByDeletingPathExtension] ?: @"";
     if ( [domain length] != 0 ) {
-        manifestMenuDict[@"Domain"] = domain;
-        manifestMenuDict[@"Title"] = domain;
+        manifestDict[PFCManifestKeyDomain] = domain;
+        manifestDict[PFCManifestKeyTitle] = domain;
         
         NSError *error = nil;
         NSURL *bundleURL = [(__bridge NSArray *)(LSCopyApplicationURLsForBundleIdentifier((__bridge CFStringRef _Nonnull)(domain), NULL)) firstObject];
@@ -37,56 +37,64 @@
             if ( bundle != nil ) {
                 NSString *bundleName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
                 if ( [bundleName length] != 0 ) {
-                    manifestMenuDict[@"Title"] = bundleName;
+                    manifestDict[PFCManifestKeyTitle] = bundleName;
                 }
                 
                 NSImage *bundleIcon = [[NSWorkspace sharedWorkspace] iconForFile:[bundleURL path]];
                 if ( bundleIcon ) {
-                    manifestMenuDict[@"IconPathBundle"] = [bundleURL path];
+                    manifestDict[PFCManifestKeyIconPathBundle] = [bundleURL path];
                 }
             }
         }
     }
     
-    return [manifestMenuDict copy];
+    return [manifestDict copy];
 }
 
 + (NSArray *)manifestArrayForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary **)settingsDict {
     return [self manifestArrayFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{} settingsDict:settingsDict];
-}
+} // manifestArrayForPlistAtURL:settingsDict
 
 + (NSArray *)manifestArrayFromDict:(NSDictionary *)dict settingsDict:(NSMutableDictionary **)settingsDict {
     NSMutableArray *manifestArray = [[NSMutableArray alloc] init];
     NSArray *dictKeys = [dict allKeys];
     for ( NSString *key in dictKeys ) {
-        if ( @YES ) { // For a setting to allow ALL keys to be seen
-            if ( [self isAppleKey:key] ) {
-                //NSLog(@"%@ is an Apple key, ignoring...", key);
+        
+        NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
+        
+        // FIXME - Add preference for hiding certain keys
+        // Check if user disabled all key hiding
+        if ( @YES ) {
+            
+            // FIXME - Should probably add this as a key like "Hidden" instead of excluding so the user can show hidden keys later.
+            // Like: manifestDict[PFCManifestKeyHidden] = @([self hideKey:key]);
+            if ( [self hideKey:key] ) {
                 continue;
             }
         }
-        NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
-        manifestDict[@"Enabled"] = @YES;
-        manifestDict[@"Key"] = key;
-        manifestDict[@"Title"] = key;
+        
         NSString *identifier = [[NSUUID UUID] UUIDString];
-        manifestDict[@"Identifier"] = identifier;
+        manifestDict[PFCManifestKeyIdentifier] = identifier;
+        manifestDict[PFCManifestKeyEnabled] = @YES;
+        manifestDict[PFCManifestKeyPayloadKey] = key;
+        manifestDict[PFCManifestKeyTitle] = key;
+        
         id value = dict[key];
         NSString *typeString = [self typeStringFromValue:value];
         if ( [typeString length] != 0 ) {
-            manifestDict[@"Type"] = typeString;
-            manifestDict[@"CellType"] = [self cellTypeFromTypeString:typeString];
-            manifestDict[@"Description"] = @"No Description";
+            manifestDict[PFCManifestKeyPayloadValueType] = typeString;
+            manifestDict[PFCManifestKeyCellType] = [self cellTypeFromTypeString:typeString];
+            manifestDict[PFCManifestKeyDescription] = @"No Description";
             
             NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
+            
             // Read Settings
             if ( [typeString isEqualToString:@"Array"] ) {
-                manifestDict[@"TableViewColumns"] = [self tableViewColumnsFromArray:value];
-                
+                manifestDict[PFCManifestKeyTableViewColumns] = [self tableViewColumnsFromArray:value];
                 settingsDict[@"Value"] = value;
             } else if ( [typeString isEqualToString:@"Dict"] ) {
-                manifestDict[@"AvailableValues"] = @[ key ];
-                settingsDict[@"ValueKeys"] = @{ key : [self manifestArrayFromDict:value settingsDict:&settingsDict] };
+                manifestDict[PFCManifestKeyAvailableValues] = @[ key ];
+                manifestDict[PFCManifestKeyValueKeys] = @{ key : [self manifestArrayFromDict:value settingsDict:&settingsDict] };
             } else if ( [typeString isEqualToString:@"Boolean"] ) {
                 settingsDict[@"Value"] = value;
             } else {
@@ -101,49 +109,39 @@
     }
     
     return [manifestArray copy];
-}
+} // manifestArrayFromDict:settingsDict
 
 + (NSArray *)tableViewColumnsFromArray:(NSArray *)array {
     NSMutableArray *tableViewColumns = [[NSMutableArray alloc] init];
     NSString *typeString = [self typeStringFromValue:[array firstObject]];
     if ( [typeString isEqualToString:@"String"] ) {
-        [tableViewColumns addObject:@{ @"CellType" : [self cellTypeFromTypeString:typeString] }];
+        [tableViewColumns addObject:@{ PFCManifestKeyCellType : [self cellTypeFromTypeString:typeString] }];
     }
     return [tableViewColumns copy];
-}
+} // tableViewColumnsFromArray
 
-+ (BOOL)isAppleKey:(NSString *)key {
-    NSArray *appleKeys = @[
++ (BOOL)hideKey:(NSString *)key {
+    
+    // FIXME - Move keysToHide to plist and write preferences.
+    // This should be a user setting under preferences.
+    // List all "default" disabled, and user can override by adding their own or disable some or all hiding
+    
+    NSArray *keysToHide = @[
                            @"NSWindow Frame",
                            @"NSNavPanelExpandedSizeForOpenMode",
                            @"NSNavPanelExpandedSizeForSaveMode",
                            @"NSNavPanelExpandedStateForSaveMode",
                            @"NSNavLastRootDirectory"
                            ];
-    __block BOOL isAppleKey = NO;
-    [appleKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    __block BOOL hideKey = NO;
+    [keysToHide enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ( [key hasPrefix:obj] ) {
-            isAppleKey = YES;
+            hideKey = YES;
             *stop = YES;
         }
     }];
-    return isAppleKey;
-}
-
-+ (NSDictionary *)dictFromDict:(NSDictionary *)dict {
-    NSMutableDictionary *returnDict = [[NSMutableDictionary alloc] init];
-    
-    
-    
-    return [returnDict copy];
-}
-
-+ (NSDictionary *)dictFromArray:(NSArray *)array {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    
-    
-    return [dict copy];
-}
+    return hideKey;
+} // hideKey
 
 + (NSString *)typeStringFromValue:(id)value {
     id valueClass = [value class];
@@ -185,7 +183,7 @@
     if ( [value isKindOfClass:[NSDate class]] )         return @"Date";
     if ( [value isKindOfClass:[NSData class]] )         return @"Data";
     return @"Unknown";
-}
+} // typeStringFromValue
 
 + (NSString *)cellTypeFromTypeString:(NSString *)typeString {
     if ( [typeString isEqualToString:@"String"] )   return @"TextField";
@@ -197,6 +195,6 @@
     if ( [typeString isEqualToString:@"Date"] )     return @"TextFieldDate";
     if ( [typeString isEqualToString:@"Data"] )     return @"File";
     return @"Unknown";
-}
+} // cellTypeFromTypeString
 
 @end

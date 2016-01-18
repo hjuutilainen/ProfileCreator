@@ -1967,7 +1967,7 @@ Gw
             <point key="canvasLocation" x="-457" y="-319"/>
         </customView>
         <customView focusRingType="none" id="Tw1-BX-GRa">
-            <rect key="frame" x="0.0" y="0.0" width="423" height="48"/>
+            <rect key="frame" x="0.0" y="0.0" width="423" height="47"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lfW-a3-D7Q">
@@ -1987,16 +1987,16 @@ Gw
                 <imageView focusRingType="none" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="iww-aM-jdR">
                     <rect key="frame" x="15" y="7" width="34" height="34"/>
                     <constraints>
+                        <constraint firstAttribute="height" constant="34" id="OHU-kp-nXB"/>
                         <constraint firstAttribute="width" secondItem="iww-aM-jdR" secondAttribute="height" multiplier="1:1" id="sPm-Fp-fiP"/>
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" focusRingType="none" alignment="left" imageScaling="proportionallyDown" image="MenuIconAccessibility" id="Y1h-4F-sd3"/>
                 </imageView>
             </subviews>
             <constraints>
-                <constraint firstItem="iww-aM-jdR" firstAttribute="top" secondItem="Tw1-BX-GRa" secondAttribute="top" constant="7" id="8f1-cZ-7us"/>
+                <constraint firstItem="iww-aM-jdR" firstAttribute="top" secondItem="Tw1-BX-GRa" secondAttribute="top" constant="6" id="8f1-cZ-7us"/>
                 <constraint firstItem="iww-aM-jdR" firstAttribute="leading" secondItem="Tw1-BX-GRa" secondAttribute="leading" constant="15" id="9i5-Yc-vHI"/>
                 <constraint firstItem="liF-VU-ZNy" firstAttribute="leading" secondItem="Tw1-BX-GRa" secondAttribute="leading" constant="10" id="ZnW-zm-REp"/>
-                <constraint firstItem="liF-VU-ZNy" firstAttribute="top" secondItem="iww-aM-jdR" secondAttribute="bottom" constant="6" id="cgz-Ir-DzM"/>
                 <constraint firstAttribute="trailing" secondItem="liF-VU-ZNy" secondAttribute="trailing" constant="10" id="kXU-CJ-trt"/>
                 <constraint firstItem="lfW-a3-D7Q" firstAttribute="leading" secondItem="iww-aM-jdR" secondAttribute="trailing" constant="7" id="mvd-XG-La7"/>
                 <constraint firstAttribute="trailing" secondItem="lfW-a3-D7Q" secondAttribute="trailing" constant="20" symbolic="YES" id="pX0-1q-HBn"/>

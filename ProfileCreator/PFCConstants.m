@@ -50,6 +50,7 @@ NSString *const PFCManifestKeyFileInfoProcessor = @"FileInfoProcessor";
 NSString *const PFCManifestKeyFilePrompt = @"FilePrompt";
 NSString *const PFCManifestKeyIconName = @"IconName";
 NSString *const PFCManifestKeyIconPath = @"IconPath";
+NSString *const PFCManifestKeyIconPathBundle = @"IconPathBundle";
 NSString *const PFCManifestKeyIdentifier = @"Identifier";
 NSString *const PFCManifestKeyIndent = @"Indent";
 NSString *const PFCManifestKeyIndentLeft = @"IndentLeft";
@@ -88,7 +89,7 @@ NSString *const PFCManifestKeyValueKeysShared = @"ValueKeysShared";
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other
 ////////////////////////////////////////////////////////////////////////////////
-NSString *const PFCRuntimeManifestKeyValuePlistPath = @"PlistPath";
+NSString *const PFCRuntimeManifestKeyPlistPath = @"PlistPath";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other

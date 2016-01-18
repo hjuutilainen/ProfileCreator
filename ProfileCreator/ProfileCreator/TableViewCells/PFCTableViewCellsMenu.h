@@ -22,7 +22,7 @@
 @property (weak) IBOutlet NSTextField *menuTitle;
 @property (weak) IBOutlet NSTextField *menuDescription;
 @property (weak) IBOutlet NSImageView *menuIcon;
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
 + (CGFloat)cellViewHeight;
 @end
 
@@ -34,7 +34,7 @@
 
 @interface CellViewMenuEnabled : NSTableCellView
 @property (weak) IBOutlet NSButton *menuCheckbox;
-- (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row sender:(id)sender;
+- (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView manifestDict:(NSDictionary *)manifestDict row:(NSInteger)row sender:(id)sender;
 + (CGFloat)cellViewHeight;
 @end
 
@@ -47,6 +47,6 @@
 @interface CellViewMenuLibrary : NSTableCellView
 @property (weak) IBOutlet NSTextField *menuTitle;
 @property (weak) IBOutlet NSImageView *menuIcon;
-- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
+- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
 + (CGFloat)cellViewHeight;
 @end

@@ -14,6 +14,7 @@
 #import "PFCController.h"
 #import "PFCPayloadVerification.h"
 #import "PFCSplitViewPayloadLibrary.h"
+#import "PFCManifestTools.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -59,16 +60,16 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         _payloadLibraryUserPreferencesSettings = [[NSMutableDictionary alloc] init];
         _payloadLibraryCustomSettings = [[NSMutableDictionary alloc] init];
         
-        // FIXME - Rework how settings are stored and saved, and rename accordingly when done.
+        // ---------------------------------------------------------------------
+        //  Initialize Settings
+        // ---------------------------------------------------------------------
         _settingsProfile = [profileDict[@"Config"][PFCProfileTemplateKeySettings] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _settingsManifest = [[NSMutableDictionary alloc] init];
         
         // ---------------------------------------------------------------------
-        //  Initialize BOOLs
+        //  Initialize BOOLs (for clarity)
         // ---------------------------------------------------------------------
         _advancedSettings = NO;
-        _columnMenuEnabledHidden = YES;
-        _columnSettingsEnabledHidden = YES;
         _windowShouldClose = NO;
     }
     return self;
@@ -322,7 +323,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     } else {
         NSLog(@"[ERROR] %@", [error localizedDescription]);
     }
-} // setupMenu
+} // setupManifestLibraryApple
 
 - (void)setupManifestLibraryUserLibrary:(NSArray *)enabledPayloadDomains {
     
@@ -373,7 +374,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ---------------------------------------------------------------------
         [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
     }
-}
+} // setupManifestLibraryUserLibrary
 
 
 - (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
@@ -687,13 +688,13 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
                 [cellView setIdentifier:nil];
-                return [cellView populateCellViewMenu:cellView menuDict:manifestDict errorCount:errorCount row:row];
+                return [cellView populateCellViewMenu:cellView manifestDict:manifestDict errorCount:errorCount row:row];
             } else {
                 NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
-            return [cellView populateCellViewEnabled:cellView menuDict:manifestDict row:row sender:self];
+            return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict row:row sender:self];
         }
     } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         
@@ -712,13 +713,13 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             if ( [cellType isEqualToString:@"Menu"] ) {
                 CellViewMenuLibrary *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuLibrary" owner:self];
                 [cellView setIdentifier:nil];
-                return [cellView populateCellViewMenuLibrary:cellView menuDict:manifestDict errorCount:nil row:row];
+                return [cellView populateCellViewMenuLibrary:cellView manifestDict:manifestDict errorCount:nil row:row];
             } else {
                 NSLog(@"[ERROR] Unknown CellType: %@", cellType);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
-            return [cellView populateCellViewEnabled:cellView menuDict:manifestDict row:row sender:self];
+            return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict row:row sender:self];
         }
     }
     return nil;
@@ -1582,9 +1583,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         }
     }
     return [combinedSettings copy];
-} // settingsForMenuItem
-
-
+} // manifestContentForMenuItem
 
 - (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
     
@@ -2037,10 +2036,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_viewSettingsError setHidden:YES];
             [_textFieldSettingsHeaderTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [[NSBundle mainBundle] imageForResource:manifestDict[PFCManifestKeyIconName]];
+            NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
             }
+            
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
             }
@@ -2059,7 +2059,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
-}
+} // selectTableViewPayloadProfile
 
 - (IBAction)selectTableViewPayloadLibrary:(id)sender {
     
@@ -2104,26 +2104,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_viewSettingsError setHidden:YES];
             [_textFieldSettingsHeaderTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [[NSBundle mainBundle] imageForResource:manifestDict[PFCManifestKeyIconName]];
+            NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
-            } else {
-                NSURL *iconURL = [NSURL fileURLWithPath:manifestDict[PFCManifestKeyIconPath] ?: @""];
-                if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-                    NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-                    if ( icon ) {
-                        [_imageViewSettingsHeaderIcon setImage:icon];
-                    }
-                }
-                
-                iconURL = [NSURL fileURLWithPath:manifestDict[@"IconPathBundle"] ?: @""];
-                if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-                    NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
-                    if ( icon ) {
-                        [_imageViewSettingsHeaderIcon setImage:icon];
-                    }
-                }
             }
+            
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
             }
@@ -2146,7 +2131,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
-}
+} // selectTableViewPayloadLibrary
 
 - (IBAction)selectSegmentedControlPayloadLibrary:(id)sender {
     
@@ -2349,10 +2334,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     // -------------------------------------------------------------------------------
     //  MenuItem - "Show Original In Finder"
-    //  Remove this menu item unless key 'PlistPath' is set in the manifest
+    //  Remove this menu item unless runtime key 'PlistPath' is set in the manifest
     // -------------------------------------------------------------------------------
     NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
-    if ( [manifestDict[PFCRuntimeManifestKeyValuePlistPath] length] != 0 ) {
+    if ( [manifestDict[PFCRuntimeManifestKeyPlistPath] length] != 0 ) {
         [menuItemShowOriginalInFinder setEnabled:YES];
     } else {
         [menu removeItem:menuItemShowOriginalInFinder];
@@ -2375,9 +2360,9 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ----------------------------------------------------------------------------------------
     //  If key 'PlistPath' is set, check if it's a valid path. If it is, open it in Finder
     // ----------------------------------------------------------------------------------------
-    if ( [manifestDict[PFCRuntimeManifestKeyValuePlistPath] length] != 0 ) {
+    if ( [manifestDict[PFCRuntimeManifestKeyPlistPath] length] != 0 ) {
         NSError *error = nil;
-        NSString *filePath = manifestDict[PFCRuntimeManifestKeyValuePlistPath] ?: @"";
+        NSString *filePath = manifestDict[PFCRuntimeManifestKeyPlistPath] ?: @"";
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];

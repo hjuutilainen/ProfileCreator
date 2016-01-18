@@ -50,6 +50,7 @@ extern NSString *const PFCManifestKeyFileInfoProcessor;
 extern NSString *const PFCManifestKeyFilePrompt;
 extern NSString *const PFCManifestKeyIconName;
 extern NSString *const PFCManifestKeyIconPath;
+extern NSString *const PFCManifestKeyIconPathBundle;
 extern NSString *const PFCManifestKeyIdentifier;
 extern NSString *const PFCManifestKeyIndent;
 extern NSString *const PFCManifestKeyIndentLeft;
@@ -88,7 +89,7 @@ extern NSString *const PFCManifestKeyValueKeysShared;
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark RuntimeManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
-extern NSString *const PFCRuntimeManifestKeyValuePlistPath;
+extern NSString *const PFCRuntimeManifestKeyPlistPath;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other

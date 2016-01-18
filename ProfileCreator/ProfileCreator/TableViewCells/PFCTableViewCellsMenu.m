@@ -8,6 +8,8 @@
 
 #import "PFCTableViewCellsMenu.h"
 #import "PFCProfileCreationWindowController.h"
+#import "PFCConstants.h"
+#import "PFCManifestTools.h"
 
 @implementation PFCTableViewMenuCells
 @end
@@ -24,7 +26,7 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
     
     if ( errorCount != nil ) {
         NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
@@ -36,39 +38,23 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView menuTitle] setStringValue:menuDict[@"Title"] ?: @""];
+    [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView menuDescription] setStringValue:menuDict[@"Description"] ?: @""];
+    [[cellView menuDescription] setStringValue:manifestDict[PFCManifestKeyDescription] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [[NSBundle mainBundle] imageForResource:menuDict[@"IconName"]];
+    NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
     if ( icon ) {
         [[cellView menuIcon] setImage:icon];
-    } else {
-        NSURL *iconURL = [NSURL fileURLWithPath:menuDict[@"IconPath"] ?: @""];
-        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-            NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-            if ( icon ) {
-                [[cellView menuIcon] setImage:icon];
-            }
-        }
-        
-        iconURL = [NSURL fileURLWithPath:menuDict[@"IconPathBundle"] ?: @""];
-        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-            NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
-            if ( icon ) {
-                [[cellView menuIcon] setImage:icon];
-            }
-        }
     }
     
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellViewMenu:manifestDict:row
 
 + (CGFloat)cellViewHeight {
     return 44.0;
@@ -88,17 +74,17 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView menuDict:(NSDictionary *)menuDict row:(NSInteger)row sender:(id)sender {
+- (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView manifestDict:(NSDictionary *)manifestDict row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setState:[menuDict[@"Enabled"] boolValue]];
+    [[cellView menuCheckbox] setState:[manifestDict[PFCManifestKeyEnabled] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setHidden:[menuDict[@"Required"] boolValue]];
+    [[cellView menuCheckbox] setHidden:[manifestDict[PFCManifestKeyRequired] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -108,7 +94,7 @@
     [[cellView menuCheckbox] setTag:row];
     
     return cellView;
-} // populateCellViewEnabled:menuDict:row
+} // populateCellViewEnabled:manifestDict:row
 
 + (CGFloat)cellViewHeight {
     return 44.0;
@@ -128,39 +114,23 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView menuDict:(NSDictionary *)menuDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
+- (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView menuTitle] setStringValue:menuDict[@"Title"] ?: @""];
+    [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
         
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [[NSBundle mainBundle] imageForResource:menuDict[@"IconName"]];
+    NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
     if ( icon ) {
         [[cellView menuIcon] setImage:icon];
-    } else {
-        NSURL *iconURL = [NSURL fileURLWithPath:menuDict[@"IconPath"] ?: @""];
-        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-            NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-            if ( icon ) {
-                [[cellView menuIcon] setImage:icon];
-            }
-        }
-        
-        iconURL = [NSURL fileURLWithPath:menuDict[@"IconPathBundle"] ?: @""];
-        if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
-            NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
-            if ( icon ) {
-                [[cellView menuIcon] setImage:icon];
-            }
-        }
     }
     
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellViewMenu:manifestDict:row
 
 + (CGFloat)cellViewHeight {
     return 44.0;

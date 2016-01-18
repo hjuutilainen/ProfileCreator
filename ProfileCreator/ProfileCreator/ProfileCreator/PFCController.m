@@ -15,7 +15,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark Initialization
+#pragma mark Init/Dealloc
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,6 @@
 } // init
 
 + (NSURL *)profileCreatorFolder:(NSInteger)folder {
-    
     switch (folder) {
         case kPFCFolderUserApplicationSupport:
         {
@@ -472,6 +471,7 @@
     }];
 }
 */
+
 - (IBAction)buttonCancelSheetProfileName:(id)sender {
     [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
     [_sheetProfileName orderOut:self];

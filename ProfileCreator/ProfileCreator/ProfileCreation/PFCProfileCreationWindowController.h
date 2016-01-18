@@ -28,11 +28,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 //  Unsorted
 // -------------------------------------------------------------------------
-@property NSArray *customMenu;
 @property BOOL advancedSettings;
 @property id parentObject;
-@property BOOL columnMenuEnabledHidden;
-@property BOOL columnSettingsEnabledHidden;
 
 // -------------------------------------------------------------------------
 //  Window
@@ -42,7 +39,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 //  General
 // -------------------------------------------------------------------------
-@property int profileType;
 @property NSDictionary *profileDict;
 
 // -------------------------------------------------------------------------
