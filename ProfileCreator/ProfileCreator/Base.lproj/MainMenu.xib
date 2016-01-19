@@ -684,7 +684,7 @@
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdD-fF-vyN" customClass="RFOverlayScrollView">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="250"/>
-                                <clipView key="contentView" id="ZX0-ay-R3n">
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="ZX0-ay-R3n">
                                     <rect key="frame" x="1.5" y="0.5" width="148" height="248"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -796,7 +796,7 @@
             </view>
             <point key="canvasLocation" x="508" y="315"/>
         </window>
-        <customView id="JCg-7c-7Ab">
+        <customView focusRingType="none" id="JCg-7c-7Ab">
             <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
@@ -813,7 +813,7 @@
                 <constraint firstItem="WoF-R4-1Xt" firstAttribute="centerY" secondItem="JCg-7c-7Ab" secondAttribute="centerY" id="LZR-bQ-j0S"/>
                 <constraint firstItem="WoF-R4-1Xt" firstAttribute="centerX" secondItem="JCg-7c-7Ab" secondAttribute="centerX" id="vHd-4M-0hF"/>
             </constraints>
-            <point key="canvasLocation" x="530" y="880.5"/>
+            <point key="canvasLocation" x="-65" y="176.5"/>
         </customView>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="nJh-e2-HNR">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>

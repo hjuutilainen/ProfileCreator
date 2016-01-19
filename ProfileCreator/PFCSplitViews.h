@@ -1,5 +1,5 @@
 //
-//  PFCSplitViewPayloadLibrary.h
+//  PFCSplitViews.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund on 2016-01-11.
@@ -8,9 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCSplitViewPayloadLibrary : NSSplitView
-
+@interface PFCSplitViewWindow : NSSplitView
 @property(readonly, copy) NSColor *dividerColor;
 @property(readonly) CGFloat dividerThickness;
+@end
 
+@interface PFCSplitViewPayloadLibrary : NSSplitView
+@property(readonly, copy) NSColor *dividerColor;
+@property(readonly) CGFloat dividerThickness;
 @end

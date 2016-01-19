@@ -194,7 +194,7 @@
 
 - (void)removeControllerForProfileDictWithName:(NSString *)name {
     NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return [item[@"Config"][@"Name"] isEqualToString:name];
+        return [item[@"Config"][PFCProfileTemplateKeyName] isEqualToString:name];
     }];
     
     if ( idx != NSNotFound ) {

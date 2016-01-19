@@ -6,8 +6,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PFCCustomViews.h"
 #import "RFOverlayScrollView.h"
-#import "PFCSplitViewPayloadLibrary.h"
+#import "PFCSplitViews.h"
 @class PFCPayloadLibraryTableView;
 
 typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
@@ -35,6 +36,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 //  Window
 // -------------------------------------------------------------------------
 @property BOOL windowShouldClose;
+@property (weak) IBOutlet NSSplitView *splitViewWindow;
 
 // -------------------------------------------------------------------------
 //  General
@@ -59,9 +61,9 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewPayloadHeaderSplitView;
 @property (weak)    IBOutlet NSView *viewPayloadHeader;
 @property (weak)    IBOutlet NSTextField *textFieldProfileName;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintPayloadHeaderHeight;
 @property (readwrite)        NSString *profileName;
 @property (readwrite)        BOOL payloadHeaderHidden;
-@property (strong)  IBOutlet NSLayoutConstraint *constraintPayloadHeaderHeight;
 
 // -------------------------------------------------------------------------
 //  PayloadProfile
@@ -116,9 +118,13 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewPayloadFooterSuperview;
 @property (weak)    IBOutlet NSView *viewPayloadFooterSearch;
 @property (weak)    IBOutlet NSSearchField *searchFieldPayloadLibrary;
+@property (weak)    IBOutlet NSButton *buttonAdd;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintSearchFieldLeading;
 @property (readwrite)        BOOL searchNoMatchesHidden;
-@property (readwrite)        BOOL payloadLibraryCollapsed;
+@property (readwrite)        BOOL buttonAddHidden;
+@property (readwrite)        BOOL payloadLibrarySplitViewCollapsed;
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
+- (IBAction)buttonAdd:(id)sender;
 
 // -------------------------------------------------------------------------
 //  SettingsHeader
@@ -127,9 +133,9 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewSettingsHeader;
 @property (weak)    IBOutlet NSImageView *imageViewSettingsHeaderIcon;
 @property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 @property (readwrite)        BOOL settingsHeaderHidden;
 @property (readwrite)        BOOL settingsErrorHidden;
-@property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 
 // -------------------------------------------------------------------------
 //  Settings
@@ -137,8 +143,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
 @property (weak)    IBOutlet NSView *viewSettingsSplitView;
 @property (weak)    IBOutlet NSView *viewSettingsError;
-@property (readwrite)        NSMutableArray *arraySettings;
 @property (weak)    IBOutlet NSTableView *tableViewSettings;
+@property (readwrite)        NSMutableArray *arraySettings;
 
 // -------------------------------------------------------------------------
 //  SettingsFooter
@@ -146,9 +152,30 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSPopover *popOverSettings;
 @property (weak)    IBOutlet NSButton *buttonCancel;
 @property (weak)    IBOutlet NSButton *buttonSave;
+@property (weak)    IBOutlet NSButton *buttonToggleInfo;
 - (IBAction)buttonPopOverSettings:(id)sender;
 - (IBAction)buttonCancel:(id)sender;
 - (IBAction)buttonSave:(id)sender;
+- (IBAction)buttonToggleInfo:(id)sender;
+
+// -------------------------------------------------------------------------
+//  InfoHeader
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewInfoHeaderSplitView;
+@property (weak)    IBOutlet PFCViewInfo *viewInfoHeader;
+
+// -------------------------------------------------------------------------
+//  Info
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewInfoSplitView;
+@property (weak)    IBOutlet PFCViewInfo *viewInfo;
+@property (readwrite)        BOOL infoSplitViewCollapsed;
+
+
+// -------------------------------------------------------------------------
+//  InfoFooter
+// -------------------------------------------------------------------------
+@property (weak) IBOutlet NSView *viewInfoFooterSplitView;
 
 // -------------------------------------------------------------------------
 //  Payload Context Menu

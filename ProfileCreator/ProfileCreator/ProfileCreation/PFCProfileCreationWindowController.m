@@ -13,7 +13,7 @@
 #import "PFCConstants.h"
 #import "PFCController.h"
 #import "PFCPayloadVerification.h"
-#import "PFCSplitViewPayloadLibrary.h"
+#import "PFCSplitViews.h"
 #import "PFCManifestTools.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,85 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 #pragma mark Implementation
 ////////////////////////////////////////////////////////////////////////////////
 @implementation PFCProfileCreationWindowController
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Temporary/Testing
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+// FIXME - All of these could possible move to it's own class to clean up this window controller and make the available to other parts if needed
+
+//- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
+// Works fine, but can't click the buttons
+//return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
+//}
+
+- (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
+    
+    // ---------------------------------------------------------------------
+    //  Set allowed date units to year, month and day
+    // ---------------------------------------------------------------------
+    unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+    
+    // ---------------------------------------------------------------------
+    //  Use calendar US
+    // ---------------------------------------------------------------------
+    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
+    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
+    
+    // ---------------------------------------------------------------------
+    //  Remove all components except the allowed date units
+    // ---------------------------------------------------------------------
+    NSDateComponents* components = [calendarUS components:allowedUnits fromDate:futureDate];
+    NSDate* date = [calendarUS dateFromComponents:components];
+    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
+    
+    // ---------------------------------------------------------------------
+    //  Calculate the date interval
+    // ---------------------------------------------------------------------
+    NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
+    
+    // ---------------------------------------------------------------------
+    //  Create date formatter to create the date in spelled out string format
+    // ---------------------------------------------------------------------
+    NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+    [dateComponentsFormatter setAllowedUnits:allowedUnits];
+    [dateComponentsFormatter setMaximumUnitCount:3];
+    [dateComponentsFormatter setUnitsStyle:NSDateComponentsFormatterUnitsStyleFull];
+    [dateComponentsFormatter setCalendar:calendarUS];
+    
+    return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
+} // dateIntervalFromNowToDate
+
+- (NSArray *)manifestContentForMenuItem:(NSDictionary *)manifestDict {
+    NSMutableArray *combinedSettings = [[NSMutableArray alloc] init];
+    if ( [manifestDict count] != 0 ) {
+        NSArray *settings = manifestDict[PFCManifestKeyManifestContent];
+        
+        for ( NSDictionary *setting in settings ) {
+            NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
+            combinedSettingDict[@"Enabled"] = @YES;
+            [combinedSettings addObject:[combinedSettingDict copy]];
+        }
+        
+        if ( [combinedSettings count] != 0 ) {
+            
+            // ---------------------------------------------------------------------
+            //  Add padding row to top of table view
+            // ---------------------------------------------------------------------
+            [combinedSettings insertObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
+                                              PFCManifestKeyEnabled  : @YES } atIndex:0];
+            
+            // ---------------------------------------------------------------------
+            //  Add padding row to end of table view
+            // ---------------------------------------------------------------------
+            [combinedSettings addObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
+                                           PFCManifestKeyEnabled  : @YES }];
+        }
+    }
+    return [combinedSettings copy];
+} // manifestContentForMenuItem
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -70,6 +149,9 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  Initialize BOOLs (for clarity)
         // ---------------------------------------------------------------------
         _advancedSettings = NO;
+        _buttonAddHidden = YES;
+        _settingsErrorHidden = YES;
+        _searchNoMatchesHidden = YES;
         _windowShouldClose = NO;
     }
     return self;
@@ -102,12 +184,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
     [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
     [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
+    [self insertSubview:_viewInfo inSuperview:_viewInfoSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add header views to window
     // ---------------------------------------------------------------------
     [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
     [self insertSubview:_viewPayloadHeader inSuperview:_viewPayloadHeaderSplitView hidden:NO];
+    [self insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add error views to content views
@@ -133,7 +217,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ---------------------------------------------------------------------
     //  Initialize property 'profileName'
     // ---------------------------------------------------------------------
-    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Profile"];
+    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
 } // windowDidLoad
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -246,6 +330,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_tableViewPayloadLibrary reloadData];
     
     [self hideSettingsHeader];
+    
+    [self collapseSplitViewInfo];
 } // setupTableViews
 
 - (void)sortArrayPayloadProfile {
@@ -382,13 +468,13 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     
-    NSArray *constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
+    NSArray *constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|"
                                                                         options:0
                                                                         metrics:nil
                                                                           views:NSDictionaryOfVariableBindings(subview)];
     [superview addConstraints:constraintsArray];
     
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[subview]-0-|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(subview)];
@@ -415,35 +501,65 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)view {
+    if ( splitView == _splitViewWindow ) {
+        if ( view == [_splitViewWindow subviews][1] ) {
+            return YES;
+        }
+        return NO;
+    }
+    return YES;
+} // splitView:shouldAdjustSizeOfSubview
+
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
     if ( splitView == _splitViewPayload && dividerIndex == 0 ) {
         return proposedMaximumPosition - 96;
-    } else {
-        return proposedMaximumPosition;
+    } else if ( splitView == _splitViewWindow ) {
+        if ( dividerIndex == 0 ) {
+            return proposedMaximumPosition - 510;
+        } else if ( dividerIndex == 1 ) {
+            return proposedMaximumPosition - 190;
+        }
     }
+    
+    return proposedMaximumPosition;
 } // splitView:constrainMaxCoordinate:ofSubviewAt
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
     if ( splitView == _splitViewPayload && dividerIndex == 0 ) {
         return proposedMinimumPosition + 88;
-    } else {
-        return proposedMinimumPosition;
+    } else if ( splitView == _splitViewWindow ) {
+        if ( dividerIndex == 0 ) {
+            return  proposedMinimumPosition + 190;
+        } else if ( dividerIndex == 1 ) {
+            return proposedMinimumPosition + 510;
+        }
     }
+    return proposedMinimumPosition;
 } // splitView:constrainMinCoordinate:ofSubviewAt
 
 - (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
-    if ( splitView == _splitViewPayload && subview == _viewPayloadLibrarySplitView ) {
+    if (
+        ( splitView == _splitViewPayload && subview == _viewPayloadLibrarySplitView ) ||
+        ( splitView == _splitViewWindow && subview == [[_splitViewWindow subviews] lastObject] ) ) {
         return YES;
     }
     return NO;
 } // splitView:canCollapseSubview
 
+- (BOOL)splitView:(NSSplitView *)splitView shouldHideDividerAtIndex:(NSInteger)dividerIndex {
+    if ( splitView == _splitViewWindow && dividerIndex == 1 ) {
+        return [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ;
+    }
+    return NO;
+} // splitView:shouldHideDividerAtIndex
+
 - (void)splitViewDidResizeSubviews:(NSNotification *)notification {
     id splitView = [notification object];
     if ( splitView == _splitViewPayload ) {
-        if ( [_splitViewPayload isSubviewCollapsed:[[_splitViewPayload subviews] objectAtIndex:1]] ) {
+        if ( [_splitViewPayload isSubviewCollapsed:[_splitViewPayload subviews][1]] ) {
             [self hidePayloadFooter];
-        } else if ( _payloadLibraryCollapsed ) {
+        } else if ( _payloadLibrarySplitViewCollapsed ) {
             [self showPayloadFooter];
             
         }
@@ -867,11 +983,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark TableView CellView Actions
+#pragma mark TableView Update Methods
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)updateTableColumnsSettings {
+    
+    // FIXME - This is just some tests, shoudl be able to select more columns, and more columns need to be added for different properties like supported versions etc
+    
     for ( NSTableColumn *column in [_tableViewSettings tableColumns] ) {
         if ( [[column identifier] isEqualToString:@"ColumnSettingsEnabled"] ) {
             [column setHidden:!_advancedSettings];
@@ -881,27 +1000,124 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
 } // updateTableColumnsSettings
 
-- (void)updatePayloadErrorCount {
+- (void)updatePayloadMenuItem {
     if ( [_selectedPayloadTableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         if ( 0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count] ) {
             NSInteger columnIndex = [_tableViewPayloadProfile columnWithIdentifier:@"ColumnMenu"];
             [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadProfileSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
         }
     }
-} // updatePayloadErrorCount
+} // updatePayloadMenuItem
+
+- (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
+    
+    // FIXME - This generates some graphical bugs, and should be redesigned to not happen IN the reloadData (while adding the views) step, but before adding the views.
+    
+    __block BOOL updatedTableView = NO;
+    
+    // ---------------------------------------------------------------------
+    //  Handle sub keys
+    // ---------------------------------------------------------------------
+    NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
+    if ( [valueKeys count] != 0 ) {
+        
+        // ---------------------------------------------------------------------
+        //  Remove any previous sub keys
+        // ---------------------------------------------------------------------
+        __block NSArray *parentKeyArray;
+        if ( row < [_arraySettings count] ) {
+            NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_arraySettings count]-(row + 1))];
+            [[_arraySettings copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                //NSLog(@"idx=%lu", (unsigned long)idx);
+                //NSLog(@"obj=%@", obj);
+                
+                // ----------------------------------------------------------------------
+                //  Check if parent key exist in value keys (if it's added by the caller)
+                // ----------------------------------------------------------------------
+                if ( valueKeys[obj[@"ParentKey"]] != nil ) {
+                    
+                    parentKeyArray = valueKeys[obj[@"ParentKey"]];
+                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                        //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                        //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                        [_arraySettings removeObjectAtIndex:(row + 1)];
+                        updatedTableView = YES;
+                    }
+                } else {
+                    
+                    // ----------------------------------------------------------------------------------------
+                    //  Check if parent key exist in parents value keys (if it's added by the caller's parent)
+                    // ----------------------------------------------------------------------------------------
+                    // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
+                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
+                        for ( NSDictionary *parentKeyDict in parentKeyArray ) {
+                            if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
+                                //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
+                                //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
+                                [_arraySettings removeObjectAtIndex:(row + 1)];
+                                updatedTableView = YES;
+                                return;
+                            }
+                            
+                        }
+                    }
+                    *stop = YES;
+                }
+            }];
+        }
+        
+        // ---------------------------------------------------------------------------
+        //  If selected object (valueString) in dict valueKeys is not an array, stop.
+        // ---------------------------------------------------------------------------
+        if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] ) {
+            return updatedTableView;
+        }
+        
+        // ---------------------------------------------------------------------
+        //  Check if any sub keys exist for selected value
+        // ---------------------------------------------------------------------
+        NSArray *valueKeyArray = [valueKeys[valueString] mutableCopy] ?: @[];
+        if ( ! [parentKeyArray ?: @[] isEqualToArray:valueKeyArray] ) {
+            for ( NSDictionary *valueDict in valueKeyArray ) {
+                if ( [valueDict count] == 0 ) {
+                    continue;
+                }
+                
+                NSMutableDictionary *mutableValueDict;
+                if ( [valueDict[@"SharedKey"] length] != 0 ) {
+                    NSString *sharedKey = valueDict[@"SharedKey"];
+                    NSDictionary *valueKeysShared = cellDict[@"ValueKeysShared"];
+                    if ( [valueKeysShared count] != 0 ) {
+                        mutableValueDict = valueKeysShared[sharedKey];
+                    } else {
+                        NSLog(@"Shared Key is defined, but no ValueKeysShared dict was found!");
+                        continue;
+                    }
+                } else {
+                    mutableValueDict = [valueDict mutableCopy];
+                }
+                
+                row++;
+                // ---------------------------------------------------------------------
+                //  Add sub key to table view below setting
+                // ---------------------------------------------------------------------
+                mutableValueDict[@"ParentKey"] = valueString;
+                //NSLog(@"[DEBUG] Adding row: %ld", row);
+                //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
+                [_arraySettings insertObject:[mutableValueDict copy] atIndex:row];
+                updatedTableView = YES;
+            }
+        }
+    }
+    
+    return updatedTableView;
+} // updateSubKeysForDict:valueString:row
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TableView CellView Actions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-// FIXME - All of these could possible move to it's own class to clean up this window controller and make the available to other parts if needed
-
-//- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
-// Works fine, but can't click the buttons
-//return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
-//}
 
 - (void)controlTextDidChange:(NSNotification *)sender {
     
@@ -1016,7 +1232,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
     
     _settingsManifest[identifier] = [settingsDict copy];
-    [self updatePayloadErrorCount];
+    [self updatePayloadMenuItem];
 } // controlTextDidChange
 
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
@@ -1519,174 +1735,6 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
 } // segmentedControl
 
-- (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
-    
-    // ---------------------------------------------------------------------
-    //  Set allowed date units to year, month and day
-    // ---------------------------------------------------------------------
-    unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-    
-    // ---------------------------------------------------------------------
-    //  Use calendar US
-    // ---------------------------------------------------------------------
-    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
-    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
-    
-    // ---------------------------------------------------------------------
-    //  Remove all components except the allowed date units
-    // ---------------------------------------------------------------------
-    NSDateComponents* components = [calendarUS components:allowedUnits fromDate:futureDate];
-    NSDate* date = [calendarUS dateFromComponents:components];
-    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
-    
-    // ---------------------------------------------------------------------
-    //  Calculate the date interval
-    // ---------------------------------------------------------------------
-    NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
-    
-    // ---------------------------------------------------------------------
-    //  Create date formatter to create the date in spelled out string format
-    // ---------------------------------------------------------------------
-    NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-    [dateComponentsFormatter setAllowedUnits:allowedUnits];
-    [dateComponentsFormatter setMaximumUnitCount:3];
-    [dateComponentsFormatter setUnitsStyle:NSDateComponentsFormatterUnitsStyleFull];
-    [dateComponentsFormatter setCalendar:calendarUS];
-    
-    return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
-} // dateIntervalFromNowToDate
-
-- (NSArray *)manifestContentForMenuItem:(NSDictionary *)manifestDict {
-    NSMutableArray *combinedSettings = [[NSMutableArray alloc] init];
-    if ( [manifestDict count] != 0 ) {
-        NSArray *settings = manifestDict[PFCManifestKeyManifestContent];
-        
-        for ( NSDictionary *setting in settings ) {
-            NSMutableDictionary *combinedSettingDict = [setting mutableCopy];
-            combinedSettingDict[@"Enabled"] = @YES;
-            [combinedSettings addObject:[combinedSettingDict copy]];
-        }
-        
-        if ( [combinedSettings count] != 0 ) {
-            
-            // ---------------------------------------------------------------------
-            //  Add padding row to top of table view
-            // ---------------------------------------------------------------------
-            [combinedSettings insertObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
-                                              PFCManifestKeyEnabled  : @YES } atIndex:0];
-            
-            // ---------------------------------------------------------------------
-            //  Add padding row to end of table view
-            // ---------------------------------------------------------------------
-            [combinedSettings addObject:@{ PFCManifestKeyCellType : PFCCellTypePadding,
-                                           PFCManifestKeyEnabled  : @YES }];
-        }
-    }
-    return [combinedSettings copy];
-} // manifestContentForMenuItem
-
-- (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row {
-    
-    __block BOOL updatedTableView = NO;
-    
-    // ---------------------------------------------------------------------
-    //  Handle sub keys
-    // ---------------------------------------------------------------------
-    NSDictionary *valueKeys = cellDict[@"ValueKeys"] ?: @{};
-    if ( [valueKeys count] != 0 ) {
-        
-        // ---------------------------------------------------------------------
-        //  Remove any previous sub keys
-        // ---------------------------------------------------------------------
-        __block NSArray *parentKeyArray;
-        if ( row < [_arraySettings count] ) {
-            NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange((row + 1), [_arraySettings count]-(row + 1))];
-            [[_arraySettings copy] enumerateObjectsAtIndexes:indexes options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                //NSLog(@"idx=%lu", (unsigned long)idx);
-                //NSLog(@"obj=%@", obj);
-                
-                // ----------------------------------------------------------------------
-                //  Check if parent key exist in value keys (if it's added by the caller)
-                // ----------------------------------------------------------------------
-                if ( valueKeys[obj[@"ParentKey"]] != nil ) {
-                    
-                    parentKeyArray = valueKeys[obj[@"ParentKey"]];
-                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
-                        //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
-                        //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
-                        [_arraySettings removeObjectAtIndex:(row + 1)];
-                        updatedTableView = YES;
-                    }
-                } else {
-                    
-                    // ----------------------------------------------------------------------------------------
-                    //  Check if parent key exist in parents value keys (if it's added by the caller's parent)
-                    // ----------------------------------------------------------------------------------------
-                    // FIXME - This implementation is flawed, only reaches second level of nesting, should remove all nesting not limited to level
-                    if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] || ! [parentKeyArray isEqualToArray:valueKeys[valueString]] ) {
-                        for ( NSDictionary *parentKeyDict in parentKeyArray ) {
-                            if ( parentKeyDict[@"ValueKeys"][obj[@"ParentKey"]] != nil ) {
-                                //NSLog(@"[DEBUG] Removing row: %ld", (row + 1));
-                                //NSLog(@"[DEBUG] Removing dict: %@", [_tableViewSettingsItemsEnabled objectAtIndex:(row + 1)]);
-                                [_arraySettings removeObjectAtIndex:(row + 1)];
-                                updatedTableView = YES;
-                                return;
-                            }
-                            
-                        }
-                    }
-                    *stop = YES;
-                }
-            }];
-        }
-        
-        // ---------------------------------------------------------------------------
-        //  If selected object (valueString) in dict valueKeys is not an array, stop.
-        // ---------------------------------------------------------------------------
-        if ( ! [[valueKeys[valueString] class] isSubclassOfClass:[NSArray class]] ) {
-            return updatedTableView;
-        }
-        
-        // ---------------------------------------------------------------------
-        //  Check if any sub keys exist for selected value
-        // ---------------------------------------------------------------------
-        NSArray *valueKeyArray = [valueKeys[valueString] mutableCopy] ?: @[];
-        if ( ! [parentKeyArray ?: @[] isEqualToArray:valueKeyArray] ) {
-            for ( NSDictionary *valueDict in valueKeyArray ) {
-                if ( [valueDict count] == 0 ) {
-                    continue;
-                }
-                
-                NSMutableDictionary *mutableValueDict;
-                if ( [valueDict[@"SharedKey"] length] != 0 ) {
-                    NSString *sharedKey = valueDict[@"SharedKey"];
-                    NSDictionary *valueKeysShared = cellDict[@"ValueKeysShared"];
-                    if ( [valueKeysShared count] != 0 ) {
-                        mutableValueDict = valueKeysShared[sharedKey];
-                    } else {
-                        NSLog(@"Shared Key is defined, but no ValueKeysShared dict was found!");
-                        continue;
-                    }
-                } else {
-                    mutableValueDict = [valueDict mutableCopy];
-                }
-                
-                row++;
-                // ---------------------------------------------------------------------
-                //  Add sub key to table view below setting
-                // ---------------------------------------------------------------------
-                mutableValueDict[@"ParentKey"] = valueString;
-                //NSLog(@"[DEBUG] Adding row: %ld", row);
-                //NSLog(@"[DEBUG] Adding dict: %@", [mutableValueDict copy]);
-                [_arraySettings insertObject:[mutableValueDict copy] atIndex:row];
-                updatedTableView = YES;
-            }
-        }
-    }
-    
-    return updatedTableView;
-} // updateSubKeysForDict:valueString:row
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Saving
@@ -1845,7 +1893,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)showSettingsHeader {
-    [_constraintSettingsHeaderHeight setConstant:47.0f];
+    [_constraintSettingsHeaderHeight setConstant:48.0f];
     [self setSettingsHeaderHidden:NO];
 } // showSettingsHeader
 
@@ -1855,7 +1903,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // hideSettingsHeader
 
 - (void)showPayloadHeader {
-    [_constraintPayloadHeaderHeight setConstant:47.0f];
+    [_constraintPayloadHeaderHeight setConstant:48.0f];
     [self setPayloadHeaderHidden:NO];
 } // showPayloadHeader
 
@@ -1865,7 +1913,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // hidePayloadHeader
 
 - (void)showPayloadFooter {
-    [self setPayloadLibraryCollapsed:YES];
+    [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:NO];
     [_linePayloadLibraryMenuTop setHidden:NO];
     [_linePayloadLibraryMenuBottom setHidden:NO];
@@ -1873,7 +1921,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // showPayloadFooter
 
 - (void)hidePayloadFooter {
-    [self setPayloadLibraryCollapsed:YES];
+    [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:YES];
     [_linePayloadLibraryMenuTop setHidden:YES];
     [_linePayloadLibraryMenuBottom setHidden:YES];
@@ -1903,6 +1951,30 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_viewPayloadLibraryNoMatches setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:NO];
 } // hideSearchNoMatches
+
+- (void)showButtonAdd {
+    [self setButtonAddHidden:NO];
+    [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
+    [_constraintSearchFieldLeading setConstant:26.0f];
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext* context) {
+        context.duration = 0.5 ;
+        context.allowsImplicitAnimation = YES ;
+        [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
+    } completionHandler:nil];
+    [_buttonAdd setHidden:NO];
+} // showButtonAdd
+
+- (void)hideButtonAdd {
+    [self setButtonAddHidden:YES];
+    [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
+    [_constraintSearchFieldLeading setConstant:5.0f];
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext* context) {
+        context.duration = 0.5 ;
+        context.allowsImplicitAnimation = YES ;
+        [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
+    } completionHandler:nil];
+    [_buttonAdd setHidden:YES];
+} // hideButtonAdd
 
 - (void)collapsePayloadLibrary {
     // FIXME - Write this for when opening an imported profile or locally installed profile
@@ -1942,14 +2014,92 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // -------------------------------------------------------------------------
     //  Update the property
     // -------------------------------------------------------------------------
-    [self setPayloadLibraryCollapsed:NO];
+    [self setPayloadLibrarySplitViewCollapsed:NO];
 } // uncollapsePayloadLibrary
+
+- (void)collapseSplitViewInfo {
+    
+    // -------------------------------------------------------------------------
+    //  Get the instances, frames and sizes of the subviews
+    // -------------------------------------------------------------------------
+    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+    NSView *viewCenter  = [[_splitViewWindow subviews] objectAtIndex:1];
+    NSRect viewCenterFrame = [viewCenter frame];
+    
+    NSRect splitViewWindowFrame = [_splitViewWindow frame];
+    
+    
+    [viewInfo setHidden:YES];
+    
+    [viewCenter setFrameSize:NSMakeSize(splitViewWindowFrame.size.width,viewCenterFrame.size.height)];
+    [_splitViewWindow display];
+    
+    [self setInfoSplitViewCollapsed:YES];
+} // collapseSplitViewInfo
+
+- (void)uncollapseSplitViewInfo {
+    
+    // -------------------------------------------------------------------------
+    //  Get the instances, frames and sizes of the subviews
+    // -------------------------------------------------------------------------
+    NSView *viewCenter  = [[_splitViewWindow subviews] objectAtIndex:1];
+    NSRect viewCenterFrame = [viewCenter frame];
+    
+    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+    NSRect viewInfoFrame = [viewInfo frame];
+    
+    CGFloat dividerThickness = [_splitViewPayload dividerThickness];
+    
+    // -------------------------------------------------------------------------
+    //  Calculate new sizes for the subviews
+    // -------------------------------------------------------------------------
+    viewCenterFrame.size.height = ( viewCenterFrame.size.height - viewInfoFrame.size.height - dividerThickness );
+    viewInfoFrame.origin.x = viewCenterFrame.size.height + dividerThickness;
+    
+    // -------------------------------------------------------------------------
+    //  Set new sizes
+    // -------------------------------------------------------------------------
+    [viewCenter setFrameSize:viewCenterFrame.size];
+    [viewInfo setFrame:viewInfoFrame];
+    
+    // -------------------------------------------------------------------------
+    //  Update the UI
+    // -------------------------------------------------------------------------
+    [viewInfo setHidden:NO];
+    [_splitViewWindow display];
+    
+    // -------------------------------------------------------------------------
+    //  Update the property
+    // -------------------------------------------------------------------------
+    [self setInfoSplitViewCollapsed:NO];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark IBActions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
+
+- (IBAction)buttonAdd:(id)sender {
+    
+    // --------------------------------------------------------------
+    //  Setup open dialog
+    // --------------------------------------------------------------
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    [openPanel setTitle:@"Select Files"];
+    [openPanel setPrompt:@"Select"];
+    [openPanel setCanChooseFiles:YES];
+    [openPanel setCanChooseDirectories:NO];
+    [openPanel setCanCreateDirectories:NO];
+    [openPanel setAllowsMultipleSelection:YES];
+    
+    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+        if ( result == NSModalResponseOK ) {
+            NSArray *selectedURLs = [openPanel URLs];
+            NSLog(@"selectedURLs=%@", selectedURLs);
+        }
+    }];
+} // buttonAdd
 
 - (IBAction)buttonCancel:(id)sender {
     [[self window] performClose:self];
@@ -1982,6 +2132,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
 } // buttonSave
 
+- (IBAction)buttonToggleInfo:(id)sender {
+    if ( [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
+        [self uncollapseSplitViewInfo];
+    } else {
+        [self collapseSplitViewInfo];
+    }
+} // buttonToggleInfo
+
 - (IBAction)buttonSaveSheetProfileName:(id)sender {
     
     // -----------------------------------------------------------------------------------------
@@ -1992,19 +2150,26 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //          -(void)renameProfileWithIdentifier: or -(void)renameProfileWithDomain
     if ( [_parentObject respondsToSelector:@selector(renameProfileWithName:newName:)] ) {
         
+        NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
+        
         // -----------------------------------------------------------------------------------------
         //  Call -(void)renameProfileWithName:newName to rename profile in the main menu
         // -----------------------------------------------------------------------------------------
-        [_parentObject renameProfileWithName:PFCDefaultProfileName newName:[_textFieldSheetProfileName stringValue]];
+        [_parentObject renameProfileWithName:PFCDefaultProfileName newName:newName];
         
         // -----------------------------------------------------------------------------------------
         //  Update the profile dict stored in this window controller with the same name
         // -----------------------------------------------------------------------------------------
         NSMutableDictionary *profileDict = [_profileDict mutableCopy];
         NSMutableDictionary *configDict = [_profileDict[@"Config"] mutableCopy];
-        configDict[PFCProfileTemplateKeyName] = [_textFieldSheetProfileName stringValue];
+        configDict[PFCProfileTemplateKeyName] = newName;
         profileDict[@"Config"] = [configDict copy];
         [self setProfileDict:[profileDict copy]];
+        
+        // -----------------------------------------------------------------------------------------
+        //  Update the profile name property (Profile Name TextField in the Profile Editor Window)
+        // -----------------------------------------------------------------------------------------
+        [self setProfileName:newName];
         
         [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
         [_sheetProfileName orderOut:self];
@@ -2189,7 +2354,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // -------------------------------------------------------------------------
     //  If the payload library is collapsed, open it
     // -------------------------------------------------------------------------
-    if ( _payloadLibraryCollapsed ) {
+    if ( _payloadLibrarySplitViewCollapsed ) {
         [self uncollapsePayloadLibrary];
     }
     
@@ -2200,6 +2365,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // -------------------------------------------------------------------------
     if ( _segmentedControlPayloadLibrarySelectedSegment == selectedSegment ) {
         return;
+    }
+    
+    // --------------------------------------------------------------------------
+    //  If the selected segment can add items, show button add, else hide button
+    // --------------------------------------------------------------------------
+    if ( selectedSegment == kPFCPayloadLibraryCustom && _buttonAddHidden ) {
+        [self showButtonAdd];
+    } else if ( selectedSegment != 2 && ! _buttonAddHidden ) {
+        [self hideButtonAdd];
     }
     
     // --------------------------------------------------------------------------------------------
