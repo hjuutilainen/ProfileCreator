@@ -9,7 +9,9 @@
 #import "PFCCustomViews.h"
 #import "RFOverlayScrollView.h"
 #import "PFCSplitViews.h"
+#import "PFCProfileCreationInfoView.h"
 @class PFCPayloadLibraryTableView;
+@class PFCSettingsTableView;
 
 typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
     /** Profile Library Apple **/
@@ -20,11 +22,24 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
     kPFCPayloadLibraryCustom
 };
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Protocol: PFCPayloadLibraryTableViewDelegate
+////////////////////////////////////////////////////////////////////////////////
 @protocol PFCPayloadLibraryTableViewDelegate <NSObject>
 -(void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
 @end
 
-@interface PFCProfileCreationWindowController : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate>
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark Protocol: PFCSettingsTableViewDelegate
+////////////////////////////////////////////////////////////////////////////////
+@protocol PFCSettingsTableViewDelegate <NSObject>
+- (void)didClickRow:(NSInteger)row;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark PFCProfileCreationWindowController
+////////////////////////////////////////////////////////////////////////////////
+@interface PFCProfileCreationWindowController : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate, PFCSettingsTableViewDelegate, PFCProfileCreationInfoDelegate>
 
 // -------------------------------------------------------------------------
 //  Unsorted
@@ -35,25 +50,28 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 //  Window
 // -------------------------------------------------------------------------
-@property BOOL windowShouldClose;
-@property (weak) IBOutlet NSSplitView *splitViewWindow;
+@property (weak)    IBOutlet NSSplitView *splitViewWindow;
+@property                    BOOL windowShouldClose;
 
 // -------------------------------------------------------------------------
 //  General
 // -------------------------------------------------------------------------
-@property NSDictionary *profileDict;
+@property                    NSDictionary *profileDict;
 
 // -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
-@property NSMutableDictionary *settingsProfile;
-@property NSMutableDictionary *settingsManifest;
+@property                    NSMutableDictionary *settingsProfile;
+@property                    NSMutableDictionary *settingsManifest;
+@property                    NSMutableDictionary *settingsLocal;
+@property                    NSMutableDictionary *settingsLocalManifest;
+@property                    BOOL showSettingsLocal;
 
 // -------------------------------------------------------------------------
 //  Payload
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet PFCSplitViewPayloadLibrary *splitViewPayload;
-@property NSString *selectedPayloadTableViewIdentifier;
+@property                    NSString *selectedPayloadTableViewIdentifier;
 
 // -------------------------------------------------------------------------
 //  Payload Header
@@ -104,13 +122,11 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryUserPreferences;
 @property (readwrite)        BOOL isSearchingPayloadLibraryUserPreferences;
 @property (readwrite)        NSString *searchStringPayloadLibraryUserPreferences;
-@property (readwrite)        NSMutableDictionary *payloadLibraryUserPreferencesSettings;
 
 // PayladLibraryCustom
 @property (readwrite)        NSMutableArray *arrayPayloadLibraryCustom;
 @property (readwrite)        BOOL isSearchingPayloadLibraryCustom;
 @property (readwrite)        NSString *searchStringPayloadLibraryCustom;
-@property (readwrite)        NSMutableDictionary *payloadLibraryCustomSettings;
 
 // -------------------------------------------------------------------------
 //  PayloadFooter
@@ -120,11 +136,15 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSSearchField *searchFieldPayloadLibrary;
 @property (weak)    IBOutlet NSButton *buttonAdd;
 @property (strong)  IBOutlet NSLayoutConstraint *constraintSearchFieldLeading;
+@property (weak)    IBOutlet NSMenu *menuButtonAdd;
 @property (readwrite)        BOOL searchNoMatchesHidden;
 @property (readwrite)        BOOL buttonAddHidden;
 @property (readwrite)        BOOL payloadLibrarySplitViewCollapsed;
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
 - (IBAction)buttonAdd:(id)sender;
+- (IBAction)menuItemAddMobileconfig:(id)sender;
+- (IBAction)menuItemAddPlist:(id)sender;
+
 
 // -------------------------------------------------------------------------
 //  SettingsHeader
@@ -143,7 +163,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
 @property (weak)    IBOutlet NSView *viewSettingsSplitView;
 @property (weak)    IBOutlet NSView *viewSettingsError;
-@property (weak)    IBOutlet NSTableView *tableViewSettings;
+@property (weak)    IBOutlet PFCSettingsTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
 
 // -------------------------------------------------------------------------
@@ -168,14 +188,15 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 //  Info
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView *viewInfoSplitView;
-@property (weak)    IBOutlet PFCViewInfo *viewInfo;
+@property (weak)    IBOutlet PFCViewInfo *viewInfoNoSelection;
+@property (strong)           PFCProfileCreationInfoView *viewInfoController;
 @property (readwrite)        BOOL infoSplitViewCollapsed;
 
 
 // -------------------------------------------------------------------------
 //  InfoFooter
 // -------------------------------------------------------------------------
-@property (weak) IBOutlet NSView *viewInfoFooterSplitView;
+@property (weak)    IBOutlet NSView *viewInfoFooterSplitView;
 
 // -------------------------------------------------------------------------
 //  Payload Context Menu
@@ -215,5 +236,14 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface PFCPayloadLibraryTableView : NSTableView
-@property id <PFCPayloadLibraryTableViewDelegate>tableViewMenuDelegate;
+@property id <PFCPayloadLibraryTableViewDelegate>tableViewDelegate;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Class: PFCSettingsTableView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface PFCSettingsTableView : NSTableView
+@property id <PFCSettingsTableViewDelegate>tableViewDelegate;
 @end

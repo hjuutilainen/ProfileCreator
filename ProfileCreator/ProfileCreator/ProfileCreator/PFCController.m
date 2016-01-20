@@ -74,12 +74,12 @@
     [_viewTableViewProfilesSuperview addSubview:_viewNoProfiles positioned:NSWindowAbove relativeTo:nil];
     [_viewNoProfiles setTranslatesAutoresizingMaskIntoConstraints:NO];
     NSArray *constraintsArray;
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[_viewNoProfiles]-|"
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"|[_viewNoProfiles]|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(_viewNoProfiles)];
     [_viewTableViewProfilesSuperview addConstraints:constraintsArray];
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_viewNoProfiles]-|"
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_viewNoProfiles]|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(_viewNoProfiles)];
@@ -248,7 +248,6 @@
     NSMenuItem *menuItemExport = [[NSMenuItem alloc] initWithTitle:@"Export" action:@selector(exportProfile) keyEquivalent:@""];
     [menuItemExport setTarget:self];
     [_menuAdvancedOptions addItem:menuItemExport];
-    
 }
 
 - (void)renameProfile {

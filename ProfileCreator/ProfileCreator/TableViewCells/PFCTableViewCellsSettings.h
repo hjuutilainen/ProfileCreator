@@ -30,7 +30,7 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
-- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 - (void)showRequired:(BOOL)show;
 @end
 
@@ -47,7 +47,7 @@
 @property (weak) IBOutlet NSTextField *settingUnit;
 @property (weak) IBOutlet NSStepper *settingStepper;
 @property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
-- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
-- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 - (void)showRequired:(BOOL)show;
 @end
 
@@ -75,7 +75,7 @@
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextField;
-- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextFieldHost;
 @property (weak) IBOutlet NSTextField *settingTextFieldPort;
-- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTemplates : NSTableCellView
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-- (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-- (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +135,7 @@
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@
 @property (weak) IBOutlet NSTextField *settingTextField;
 @property (weak) IBOutlet NSStepper *settingStepper;
 @property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
-- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +162,7 @@
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
-- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@
 @interface CellViewSettingsCheckboxNoDescription : NSTableCellView
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSButton *settingCheckbox;
-- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsEnabled : NSTableCellView
 @property (weak) IBOutlet NSButton *settingEnabled;
-- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,13 +197,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark CellViewSettingsDatePicker
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsDatePicker : NSTableCellView
+@property (weak) IBOutlet NSTextField *settingTitle;
+@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSDatePicker *settingDatePicker;
+- (CellViewSettingsDatePicker *)populateCellViewDatePicker:(CellViewSettingsDatePicker *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellViewSettingsDatePickerNoTitle
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsDatePickerNoTitle : NSTableCellView
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
 @property (weak) IBOutlet NSTextField *settingDescription;
-- (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +232,7 @@
 @property (weak) IBOutlet NSStepper *settingStepperDays;
 @property (weak) IBOutlet NSTextField *settingHours;
 @property (weak) IBOutlet NSStepper *settingStepperHours;
-- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +242,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTableView : NSTableCellView <NSTableViewDataSource, NSTableViewDelegate>
 @property id sender;
-@property NSInteger senderRow;
+@property NSString *senderIdentifier;
 @property NSMutableArray *tableViewContent;
 @property NSDictionary *tableViewColumnCellViews;
 @property (weak) IBOutlet NSTextField *settingTitle;
@@ -239,7 +251,7 @@
 @property (weak) IBOutlet NSSegmentedControl *settingSegmentedControlButton;
 - (IBAction)segmentedControlButton:(id)sender;
 - (void)popUpButtonSelection:(id)sender;
-- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,7 +274,7 @@
 @property (weak) IBOutlet NSTextField *settingFileDescriptionLabel3;
 @property (weak) IBOutlet NSTextField *settingFileDescription3;
 @property (weak) IBOutlet NSImageView *settingFileIcon;
-- (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -272,7 +284,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsSegmentedControl : NSTableCellView
 @property (weak) IBOutlet NSSegmentedControl *settingSegmentedControl;
-- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -287,6 +299,6 @@
 @property (weak) IBOutlet NSTextField *settingDescription;
 @property (weak) IBOutlet NSTextField *settingTextFieldHost;
 @property (weak) IBOutlet NSTextField *settingTextFieldPort;
-- (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 - (void)showRequired:(BOOL)show;
 @end

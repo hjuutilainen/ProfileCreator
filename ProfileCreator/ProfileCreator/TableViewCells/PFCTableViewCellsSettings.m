@@ -10,6 +10,7 @@
 #import "PFCProfileCreationWindowController.h"
 #import "PFCTableViewCellsSettingsTableView.h"
 #import "PFCFileInfoProcessors.h"
+#import "PFCConstants.h"
 
 @implementation PFCTableViewCellsSettings
 @end
@@ -36,19 +37,19 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextField *)populateCellViewTextField:(CellViewSettingsTextField *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
-    BOOL optional = [manifestDict[@"Optional"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
+    BOOL optional = [manifest[@"Optional"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -58,15 +59,17 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settingDict[@"Value"] ?: @"";
+    NSString *value = settings[@"Value"] ?: @"";
     if ( [value length] == 0 ) {
-        if ( [manifestDict[@"DefaultValue"] length] != 0 ) {
-            value = manifestDict[@"DefaultValue"] ?: @"";
+        if ( [manifest[@"DefaultValue"] length] != 0 ) {
+            value = manifest[@"DefaultValue"] ?: @"";
+        } else if ( [settingsLocal[@"Value"] length] != 0 ) {
+            value = settingsLocal[@"Value"] ?: @"";
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -76,8 +79,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValue"] length] != 0 ) {
-        [[cellView settingTextField] setPlaceholderString:manifestDict[@"PlaceholderValue"] ?: @""];
+    if ( [manifest[@"PlaceholderValue"] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:manifest[@"PlaceholderValue"] ?: @""];
     } else if ( required ) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
     } else if ( optional ) {
@@ -89,7 +92,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[self toolTipWithKey:manifestDict[@"PayloadKey"] type:@"String" required:required description:manifestDict[@"ToolTipDescription"]]];
+    [cellView setToolTip:[self toolTipWithKey:manifest[@"PayloadKey"] type:@"String" required:required description:manifest[@"ToolTipDescription"]]];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -106,7 +109,7 @@
     }
     
     return cellView;
-} // populateCellViewTextField:settingDict:row
+} // populateCellViewTextField:settings:row
 
 - (void)showRequired:(BOOL)show {
     if ( show ) {
@@ -145,18 +148,18 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldNumber *)populateCellViewSettingsTextFieldNumber:(CellViewSettingsTextFieldNumber *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -166,41 +169,43 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Unit
     // ---------------------------------------------------------------------
-    [[cellView settingUnit] setStringValue:manifestDict[@"ValueUnit"] ?: @""];
+    [[cellView settingUnit] setStringValue:manifest[@"ValueUnit"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settingDict[@"Value"] ?: @0;
+    NSNumber *value = settings[@"Value"];
     if ( value == nil ) {
-        if ( manifestDict[@"DefaultValue"] != nil ) {
-            value = manifestDict[@"DefaultValue"] ?: @0;
+        if ( manifest[@"DefaultValue"] != nil ) {
+            value = manifest[@"DefaultValue"];
+        } else if ( settingsLocal[@"Value"] != nil ) {
+            value = settingsLocal[@"Value"];
         }
     }
     [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:[value stringValue]];
+    [[cellView settingTextField] setStringValue:[value ?: @0 stringValue]];
     [[cellView settingTextField] setTag:row];
     
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
-    [[cellView settingNumberFormatter] setMinimum:manifestDict[@"MinValue"] ?: @0];
-    [[cellView settingStepper] setMinValue:[manifestDict[@"MinValue"] doubleValue] ?: 0.0];
+    [[cellView settingNumberFormatter] setMinimum:manifest[@"MinValue"] ?: @0];
+    [[cellView settingStepper] setMinValue:[manifest[@"MinValue"] doubleValue] ?: 0.0];
     
-    [[cellView settingNumberFormatter] setMaximum:manifestDict[@"MaxValue"] ?: @99999];
-    [[cellView settingStepper] setMaxValue:[manifestDict[@"MinValue"] doubleValue] ?: 99999.0];
+    [[cellView settingNumberFormatter] setMaximum:manifest[@"MaxValue"] ?: @99999];
+    [[cellView settingStepper] setMaxValue:[manifest[@"MinValue"] doubleValue] ?: 99999.0];
     
     // ---------------------------------------------------------------------
     //  Stepper
     // ---------------------------------------------------------------------
     [[cellView settingStepper] setValueWraps:NO];
     if ( _stepperValue == nil ) {
-        [self setStepperValue:settingDict[@"Value"] ?: @0];
+        [self setStepperValue:value];
     }
     [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
@@ -212,7 +217,7 @@
     [[cellView settingStepper] setEnabled:enabled];
     
     return cellView;
-} // populateCellViewTextField:settingDict:row
+} // populateCellViewTextField:settings:row
 
 @end
 
@@ -228,32 +233,40 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-
-    BOOL required = [manifestDict[@"Required"] boolValue];
-    BOOL optional = [manifestDict[@"Optional"] boolValue];
+- (CellViewSettingsTextFieldNoTitle *)populateCellViewTextFieldNoTitle:(CellViewSettingsTextFieldNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    BOOL required = [manifest[@"Required"] boolValue];
+    BOOL optional = [manifest[@"Optional"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingTextField] setStringValue:settingDict[@"Value"] ?: @""];
+    NSString *value = settings[@"Value"] ?: @"";
+    if ( [value length] == 0 ) {
+        if ( [manifest[@"DefaultValue"] length] != 0 ) {
+            value = manifest[@"DefaultValue"] ?: @"";
+        } else if ( [settingsLocal[@"Value"] length] != 0 ) {
+            value = settingsLocal[@"Value"] ?: @"";
+        }
+    }
     [[cellView settingTextField] setDelegate:sender];
+    [[cellView settingTextField] setStringValue:value];
     [[cellView settingTextField] setTag:row];
     
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValue"] length] != 0 ) {
-        [[cellView settingTextField] setPlaceholderString:manifestDict[@"PlaceholderValue"] ?: @""];
+    if ( [manifest[@"PlaceholderValue"] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:manifest[@"PlaceholderValue"] ?: @""];
     } else if ( required ) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
     } else if ( optional ) {
@@ -265,7 +278,7 @@
     // ---------------------------------------------------------------------
     //  Indent
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"Indent"] boolValue] ) {
+    if ( [manifest[@"Indent"] boolValue] ) {
         [[cellView constraintLeading] setConstant:16];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -277,7 +290,7 @@
     [[cellView settingTextField] setEnabled:enabled];
     
     return cellView;
-} // populateCellViewTextField:settingDict:row
+} // populateCellViewTextField:settings:row
 
 - (void)showRequired:(BOOL)show {
     if ( show ) {
@@ -302,27 +315,31 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifestDict[@"Title"] ?: @""];
+    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  ValueCheckbox
     // ---------------------------------------------------------------------
-    if ( settingDict[@"ValueCheckbox"] != nil ) {
-        [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
-    } else {
-        [cellView setCheckboxState:[manifestDict[@"DefaultValueCheckbox"] boolValue]];
+    BOOL checkboxState = NO;
+    if ( settings[@"ValueCheckbox"] != nil ) {
+        checkboxState = [settings[@"ValueCheckbox"] boolValue];
+    } else if ( manifest[@"DefaultValueCheckbox"] ) {
+        checkboxState = [manifest[@"DefaultValueCheckbox"] boolValue];
+    } else if ( settingsLocal[@"ValueCheckbox"] ) {
+        checkboxState = [settingsLocal[@"ValueCheckbox"] boolValue];
     }
+    [[cellView settingCheckbox] setState:checkboxState];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -334,15 +351,17 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  ValueTextField
     // ---------------------------------------------------------------------
-    NSString *value = settingDict[@"ValueTextField"] ?: @"";
+    NSString *value = settings[@"ValueTextField"] ?: @"";
     if ( [value length] == 0 ) {
-        if ( [manifestDict[@"DefaultValueTextField"] length] != 0 ) {
-            value = manifestDict[@"DefaultValueTextField"] ?: @"";
+        if ( [manifest[@"DefaultValueTextField"] length] != 0 ) {
+            value = manifest[@"DefaultValueTextField"] ?: @"";
+        } else if ( [settingsLocal[@"ValueTextField"] length] != 0 ) {
+            value = settingsLocal[@"ValueTextField"] ?: @"";
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -352,8 +371,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value TextField
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValueTextField"] length] != 0 ) {
-        [[cellView settingTextField] setPlaceholderString:manifestDict[@"PlaceholderValueTextField"] ?: @""];
+    if ( [manifest[@"PlaceholderValueTextField"] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:manifest[@"PlaceholderValueTextField"] ?: @""];
     } else if ( required ) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
     } else {
@@ -372,7 +391,7 @@
     [[cellView settingCheckbox] setEnabled:enabled];
     
     return cellView;
-} // populateCellViewTextField:settingDict:row
+} // populateCellViewTextField:settings:row
 
 @end
 
@@ -387,42 +406,46 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldHostPortCheckbox *)populateCellViewSettingsTextFieldHostPortCheckbox:(CellViewSettingsTextFieldHostPortCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
     BOOL requiredHost;
-    if ( manifestDict[@"RequiredHost"] != nil ) {
-        requiredHost = [manifestDict[@"RequiredHost"] boolValue];
+    if ( manifest[@"RequiredHost"] != nil ) {
+        requiredHost = [manifest[@"RequiredHost"] boolValue];
     } else {
-        requiredHost = [manifestDict[@"Required"] boolValue];
+        requiredHost = [manifest[@"Required"] boolValue];
     }
     
     BOOL requiredPort;
-    if ( manifestDict[@"RequiredPort"] != nil ) {
-        requiredPort = [manifestDict[@"RequiredPort"] boolValue];
+    if ( manifest[@"RequiredPort"] != nil ) {
+        requiredPort = [manifest[@"RequiredPort"] boolValue];
     } else {
-        requiredPort = [manifestDict[@"Required"] boolValue];
+        requiredPort = [manifest[@"Required"] boolValue];
     }
     
     BOOL enabled = YES;
-    if ( ( ! requiredHost || ! requiredPort ) && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ( ! requiredHost || ! requiredPort ) && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
-    BOOL optional = [manifestDict[@"Optional"] boolValue];
+    BOOL optional = [manifest[@"Optional"] boolValue];
     
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifestDict[@"Title"] ?: @""];
+    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  ValueCheckbox
     // ---------------------------------------------------------------------
-    if ( settingDict[@"ValueCheckbox"] != nil ) {
-        [cellView setCheckboxState:[settingDict[@"ValueCheckbox"] boolValue]];
-    } else {
-        [cellView setCheckboxState:[manifestDict[@"DefaultValueCheckbox"] boolValue]];
+    BOOL checkboxState = NO;
+    if ( settings[@"ValueCheckbox"] != nil ) {
+        checkboxState = [settings[@"ValueCheckbox"] boolValue];
+    } else if ( manifest[@"DefaultValueCheckbox"] ) {
+        checkboxState = [manifest[@"DefaultValueCheckbox"] boolValue];
+    } else if ( settingsLocal[@"ValueCheckbox"] ) {
+        checkboxState = [settingsLocal[@"ValueCheckbox"] boolValue];
     }
+    [[cellView settingCheckbox] setState:checkboxState];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -434,15 +457,17 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value Host
     // ---------------------------------------------------------------------
-    NSString *valueHost = settingDict[@"ValueHost"] ?: @"";
+    NSString *valueHost = settings[@"ValueHost"] ?: @"";
     if ( [valueHost length] == 0 ) {
-        if ( [manifestDict[@"DefaultValueHost"] length] != 0 ) {
-            valueHost = manifestDict[@"DefaultValueHost"] ?: @"";
+        if ( [manifest[@"DefaultValueHost"] length] != 0 ) {
+            valueHost = manifest[@"DefaultValueHost"] ?: @"";
+        } else if ( [settingsLocal[@"ValueHost"] length] != 0 ) {
+            valueHost = settingsLocal[@"ValueHost"] ?: @"";
         }
     }
     [[cellView settingTextFieldHost] setDelegate:sender];
@@ -452,8 +477,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValueHost"] length] != 0 ) {
-        [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValueHost"] ?: @""];
+    if ( [manifest[@"PlaceholderValueHost"] length] != 0 ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:manifest[@"PlaceholderValueHost"] ?: @""];
     } else if ( requiredHost ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
     } else if ( optional ) {
@@ -465,10 +490,12 @@
     // ---------------------------------------------------------------------
     //  Value Port
     // ---------------------------------------------------------------------
-    NSString *valuePort = settingDict[@"ValuePort"] ?: @"";
+    NSString *valuePort = settings[@"ValuePort"] ?: @"";
     if ( [valuePort length] == 0 ) {
-        if ( [manifestDict[@"DefaultValuePort"] length] != 0 ) {
-            valuePort = manifestDict[@"DefaultValuePort"] ?: @"";
+        if ( [manifest[@"DefaultValuePort"] length] != 0 ) {
+            valuePort = manifest[@"DefaultValuePort"] ?: @"";
+        } else if ( [settingsLocal[@"ValuePort"] length] != 0 ) {
+            valuePort = settingsLocal[@"ValuePort"] ?: @"";
         }
     }
     [[cellView settingTextFieldPort] setDelegate:sender];
@@ -478,8 +505,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValuePort"] length] != 0 ) {
-        [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValuePort"] ?: @""];
+    if ( [manifest[@"PlaceholderValuePort"] length] != 0 ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:manifest[@"PlaceholderValuePort"] ?: @""];
     } else if ( requiredPort ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Req"];
     } else {
@@ -501,7 +528,7 @@
     [[cellView settingTextFieldPort] setEnabled:enabled];
     
     return cellView;
-} // populateCellViewSettingsTextFieldHostPort:settingDict:row
+} // populateCellViewSettingsTextFieldHostPort:settings:row
 
 @end
 
@@ -516,14 +543,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
-    [[cellView settingPopUpButton] addItemsWithTitles:manifestDict[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: manifestDict[@"DefaultValue"]];
+    [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
+    [[cellView settingPopUpButton] selectItemWithTitle:settings[@"Value"] ?: manifest[@"DefaultValue"]];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -531,9 +558,9 @@
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
-        
+    
     return cellView;
-} // populateCellViewPopUp:settingDict:row
+} // populateCellViewPopUp:settings:row
 
 @end
 
@@ -548,18 +575,18 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsPopUp *)populateCellViewPopUp:(CellViewSettingsPopUp *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -569,14 +596,26 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
-    [[cellView settingPopUpButton] addItemsWithTitles:manifestDict[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: manifestDict[@"DefaultValue"]];
+    [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
+    NSString *selectedItem;
+    if ( [settings[@"Value"] length] != 0 ) {
+        selectedItem = settings[@"Value"];
+    } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
+        selectedItem = manifest[@"DefaultValue"];
+    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
+        selectedItem = settingsLocal[@"Value"];
+    }
+    if ( [selectedItem length] != 0 ) {
+        [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
+    } else if ( [[[cellView settingPopUpButton] itemArray] count] != 0 ) {
+        [[cellView settingPopUpButton] selectItemAtIndex:0];
+    }
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -593,14 +632,14 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifestDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
             [[sender tableViewSettings] reloadData];
         }
     }
     
     return cellView;
-} // populateCellViewPopUp:settingDict:row
+} // populateCellViewPopUp:settings:row
 
 @end
 
@@ -615,25 +654,37 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsPopUpNoTitle *)populateCellViewSettingsPopUpNoTitle:(CellViewSettingsPopUpNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
-    [[cellView settingPopUpButton] addItemsWithTitles:manifestDict[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: manifestDict[@"DefaultValue"]];
+    [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
+    NSString *selectedItem;
+    if ( [settings[@"Value"] length] != 0 ) {
+        selectedItem = settings[@"Value"];
+    } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
+        selectedItem = manifest[@"DefaultValue"];
+    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
+        selectedItem = settingsLocal[@"Value"];
+    }
+    if ( [selectedItem length] != 0 ) {
+        [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
+    } else if ( [[[cellView settingPopUpButton] itemArray] count] != 0 ) {
+        [[cellView settingPopUpButton] selectItemAtIndex:0];
+    }
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -643,7 +694,7 @@
     // ---------------------------------------------------------------------
     //  Indent
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"Indent"] boolValue] ) {
+    if ( [manifest[@"Indent"] boolValue] ) {
         [[cellView constraintLeading] setConstant:16];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -659,14 +710,14 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifestDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
             [[sender tableViewSettings] reloadData];
         }
     }
     
     return cellView;
-} // populateCellViewSettingsPopUpNoTitle:settingDict:row
+} // populateCellViewSettingsPopUpNoTitle:settings:row
 
 @end
 
@@ -681,18 +732,18 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsPopUpLeft *)populateCellViewSettingsPopUpLeft:(CellViewSettingsPopUpLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -702,14 +753,26 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
-    [[cellView settingPopUpButton] addItemsWithTitles:manifestDict[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settingDict[@"Value"] ?: manifestDict[@"DefaultValue"]];
+    [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
+    NSString *selectedItem;
+    if ( [settings[@"Value"] length] != 0 ) {
+        selectedItem = settings[@"Value"];
+    } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
+        selectedItem = manifest[@"DefaultValue"];
+    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
+        selectedItem = settingsLocal[@"Value"];
+    }
+    if ( [selectedItem length] != 0 ) {
+        [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
+    } else if ( [[[cellView settingPopUpButton] itemArray] count] != 0 ) {
+        [[cellView settingPopUpButton] selectItemAtIndex:0];
+    }
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -726,14 +789,14 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifestDict valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
+    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
             [[sender tableViewSettings] reloadData];
         }
     }
     
     return cellView;
-} // populateCellViewPopUp:settingDict:row
+} // populateCellViewPopUp:settings:row
 
 @end
 
@@ -748,18 +811,18 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -769,26 +832,28 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settingDict[@"Value"] ?: @0;
+    NSNumber *value = settings[@"Value"];
     if ( value == nil ) {
-        if ( manifestDict[@"DefaultValue"] != nil ) {
-            value = manifestDict[@"DefaultValue"] ?: @0;
+        if ( manifest[@"DefaultValue"] != nil ) {
+            value = manifest[@"DefaultValue"];
+        } else if ( settingsLocal[@"Value"] != nil ) {
+            value = settingsLocal[@"Value"];
         }
     }
     [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:[value stringValue]];
+    [[cellView settingTextField] setStringValue:[value ?: @0 stringValue]];
     [[cellView settingTextField] setTag:row];
     
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( manifestDict[@"PlaceholderValue"] != nil ) {
-        [[cellView settingTextField] setPlaceholderString:[manifestDict[@"PlaceholderValue"] stringValue] ?: @""];
+    if ( manifest[@"PlaceholderValue"] != nil ) {
+        [[cellView settingTextField] setPlaceholderString:[manifest[@"PlaceholderValue"] stringValue] ?: @""];
     } else if ( required ) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
     } else {
@@ -798,24 +863,24 @@
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
-    [[cellView settingNumberFormatter] setMinimum:manifestDict[@"MinValue"] ?: @0];
-    [[cellView settingStepper] setMinValue:[manifestDict[@"MinValue"] doubleValue] ?: 0.0];
+    [[cellView settingNumberFormatter] setMinimum:manifest[@"MinValue"] ?: @0];
+    [[cellView settingStepper] setMinValue:[manifest[@"MinValue"] doubleValue] ?: 0.0];
     
-    [[cellView settingNumberFormatter] setMaximum:manifestDict[@"MaxValue"] ?: @99999];
-    [[cellView settingStepper] setMaxValue:[manifestDict[@"MinValue"] doubleValue] ?: 99999.0];
+    [[cellView settingNumberFormatter] setMaximum:manifest[@"MaxValue"] ?: @99999];
+    [[cellView settingStepper] setMaxValue:[manifest[@"MinValue"] doubleValue] ?: 99999.0];
     
     // ---------------------------------------------------------------------
     //  Stepper
     // ---------------------------------------------------------------------
     [[cellView settingStepper] setValueWraps:NO];
     if ( _stepperValue == nil ) {
-        [self setStepperValue:settingDict[@"Value"] ?: @0];
+        [self setStepperValue:settings[@"Value"] ?: @0];
     }
     [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     
     return cellView;
-} // populateCellViewTextField:settingDict:row
+} // populateCellViewTextField:settings:row
 
 @end
 
@@ -830,27 +895,31 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifestDict[@"Title"] ?: @""];
+    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    if ( settingDict[@"Value"] != nil ) {
-        [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
-    } else {
-        [[cellView settingCheckbox] setState:[manifestDict[@"DefaultValue"] boolValue]];
+    BOOL checkboxState = NO;
+    if ( settings[@"Value"] != nil ) {
+        checkboxState = [settings[@"Value"] boolValue];
+    } else if ( manifest[@"DefaultValue"] ) {
+        checkboxState = [manifest[@"DefaultValue"] boolValue];
+    } else if ( settingsLocal[@"Value"] ) {
+        checkboxState = [settingsLocal[@"Value"] boolValue];
     }
+    [[cellView settingCheckbox] setState:checkboxState];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -867,14 +936,14 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Indent
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"IndentLeft"] boolValue] ) {
+    if ( [manifest[@"IndentLeft"] boolValue] ) {
         [[cellView constraintLeading] setConstant:102];
-    } else if ( [manifestDict[@"Indent"] boolValue] ) {
+    } else if ( [manifest[@"Indent"] boolValue] ) {
         [[cellView constraintLeading] setConstant:16];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -883,14 +952,14 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifestDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row] ) {
+    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:manifest valueString:checkboxState ? @"True" : @"False" row:row] ) {
             [[sender tableViewSettings] reloadData];
         }
     }
     
     return cellView;
-} // populateCellViewCheckbox:settingDict:row
+} // populateCellViewCheckbox:settings:row
 
 @end
 
@@ -905,19 +974,19 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifestDict[@"Title"] ?: @""];
-    if ( [manifestDict[@"FontWeight"] isEqualToString:@"Bold"] ) {
+    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
+    if ( [manifest[@"FontWeight"] isEqualToString:@"Bold"] ) {
         [[cellView settingCheckbox] setFont:[NSFont boldSystemFontOfSize:13]];
     } else {
         [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
@@ -926,12 +995,15 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    if ( settingDict[@"Value"] != nil ) {
-        [[cellView settingCheckbox] setState:[settingDict[@"Value"] boolValue]];
-    } else {
-        [[cellView settingCheckbox] setState:[manifestDict[@"DefaultValue"] boolValue]];
+    BOOL checkboxState = NO;
+    if ( settings[@"Value"] != nil ) {
+        checkboxState = [settings[@"Value"] boolValue];
+    } else if ( manifest[@"DefaultValue"] ) {
+        checkboxState = [manifest[@"DefaultValue"] boolValue];
+    } else if ( settingsLocal[@"Value"] ) {
+        checkboxState = [settingsLocal[@"Value"] boolValue];
     }
-    
+    [[cellView settingCheckbox] setState:checkboxState];
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
@@ -940,7 +1012,7 @@
     // ---------------------------------------------------------------------
     //  Indent
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"Indent"] boolValue] ) {
+    if ( [manifest[@"Indent"] boolValue] ) {
         [[cellView constraintLeading] setConstant:16];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -956,14 +1028,14 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifestDict valueString:[settingDict[@"Value"] boolValue] ? @"True" : @"False" row:row] ) {
+    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
+        if ( [sender updateSubKeysForDict:manifest valueString:checkboxState ? @"True" : @"False" row:row] ) {
             [[sender tableViewSettings] reloadData];
         }
     }
     
     return cellView;
-} // populateCellViewCheckboxNoDescription:settingDict:row
+} // populateCellViewCheckboxNoDescription:settings:row
 
 @end
 
@@ -978,20 +1050,20 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
     BOOL required = NO;
-    if ( manifestDict[@"Required"] != nil ) {
-        required = [manifestDict[@"Required"] boolValue];
-    } else if ( manifestDict[@"RequiredHost"] != nil ) {
-        required = [manifestDict[@"RequiredHost"] boolValue];
-    } else if ( manifestDict[@"RequiredPort"] != nil ) {
-        required = [manifestDict[@"RequiredPort"] boolValue];
+    if ( manifest[@"Required"] != nil ) {
+        required = [manifest[@"Required"] boolValue];
+    } else if ( manifest[@"RequiredHost"] != nil ) {
+        required = [manifest[@"RequiredHost"] boolValue];
+    } else if ( manifest[@"RequiredPort"] != nil ) {
+        required = [manifest[@"RequiredPort"] boolValue];
     }
     
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
@@ -1012,7 +1084,7 @@
     [[cellView settingEnabled] setTag:row];
     
     return cellView;
-} // populateCellViewEnabled:settingDict:row
+} // populateCellViewEnabled:settings:row
 
 @end
 
@@ -1029,27 +1101,33 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewSettingsDatePickerNoTitle
+#pragma mark CellViewSettingsDatePicker
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewSettingsDatePickerNoTitle
+@implementation CellViewSettingsDatePicker
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsDatePicker *)populateCellViewDatePicker:(CellViewSettingsDatePicker *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView settingDatePicker] setDateValue:settingDict[@"Value"] ?: [NSDate date]];
+    NSDate *date;
+    if ( settings[@"Value"] != nil ) {
+        date = settings[@"Value"] ?: [NSDate date];
+    } else {
+        date = settingsLocal[@"Value"] ?: [NSDate date];
+    }
+    [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
     [[cellView settingDatePicker] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1081,7 +1159,71 @@
     [[cellView settingDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
     
     return cellView;
-} // populateCellViewCheckbox:settingDict:row
+} // populateCellViewDatePicker
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsDatePickerNoTitle
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsDatePickerNoTitle
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    BOOL required = [manifest[@"Required"] boolValue];
+    BOOL enabled = YES;
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSDate *date;
+    if ( settings[@"Value"] != nil ) {
+        date = settings[@"Value"] ?: [NSDate date];
+    } else {
+        date = settingsLocal[@"Value"] ?: [NSDate date];
+    }
+    [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
+    [[cellView settingDatePicker] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Set minimum value selectable to tomorrow
+    // ---------------------------------------------------------------------
+    // FIXME - The time is set to 23:00, should probably investigate the format
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+    [offsetComponents setDay:1];
+    NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
+    [[cellView settingDatePicker] setMinDate:dateTomorrow];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    //[[cellView settingDatePicker] setEnabled:enabled];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingDatePicker] setAction:@selector(datePickerSelection:)];
+    [[cellView settingDatePicker] setTarget:sender];
+    [[cellView settingDatePicker] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
+    [[cellView settingDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+    
+    return cellView;
+} // populateCellViewCheckbox:settings:row
 
 @end
 
@@ -1124,19 +1266,24 @@
     }
 } // observeValueForKeyPath
 
-- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldDaysHoursNoTitle *)populateCellViewSettingsTextFieldDaysHoursNoTitle:(CellViewSettingsTextFieldDaysHoursNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     [self setSender:sender];
-    [self setCellIdentifier:manifestDict[@"Identifier"] ?: @""];
+    [self setCellIdentifier:manifest[@"Identifier"] ?: @""];
     
     if ( _stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil ) {
-        NSNumber *seconds = settingDict[@"Value"] ?: @0;
+        NSNumber *seconds;
+        if ( settings[@"Value"] != nil ) {
+            seconds = settings[@"Value"] ?: @0;
+        } else {
+            seconds = settingsLocal[@"Value"] ?: @0;
+        }
         
         NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
         [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
@@ -1241,7 +1388,7 @@
         return nil;
     }
     
-    NSDictionary *settingDict = _tableViewContent[(NSUInteger)row];
+    NSDictionary *settings = _tableViewContent[(NSUInteger)row];
     NSString *tableColumnIdentifier = [tableColumn identifier];
     NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnIdentifier];
     NSString *cellType = tableColumnCellViewDict[@"CellType"];
@@ -1249,11 +1396,11 @@
     if ( [cellType isEqualToString:@"TextField"] ) {
         CellViewTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewTextField" owner:self];
         [cellView setIdentifier:nil];
-        return [cellView populateCellViewTextField:cellView settingDict:settingDict[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+        return [cellView populateCellViewTextField:cellView settingDict:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
     } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
         CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
         [cellView setIdentifier:nil];
-        return [cellView populateCellViewPopUpButton:cellView settingDict:settingDict[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+        return [cellView populateCellViewPopUpButton:cellView settingDict:settings[tableColumnIdentifier]  columnIdentifier:[tableColumn identifier] row:row sender:self];
     }
     
     return nil;
@@ -1271,10 +1418,13 @@
 } // insertRowInTableView
 
 - (void)updateTableViewSavedContent {
-    if ( _sender && _senderRow ) {
-        NSMutableDictionary *cellDict = [[[(PFCProfileCreationWindowController *)_sender arraySettings] objectAtIndex:(NSUInteger)_senderRow] mutableCopy];
-        cellDict[@"TableViewContent"] = [_tableViewContent copy];
-        [[(PFCProfileCreationWindowController *)_sender arraySettings] replaceObjectAtIndex:(NSUInteger)_senderRow withObject:cellDict];
+    if ( _sender && [_senderIdentifier length] != 0 ) {
+        NSMutableDictionary *settings = [[(PFCProfileCreationWindowController *)_sender settingsManifest][_senderIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        NSLog(@"settingsRetrieved=%@", settings);
+        settings[@"TableViewContent"] = [_tableViewContent copy];
+        NSLog(@"settingsToSave=%@", settings);
+        [(PFCProfileCreationWindowController *)_sender settingsManifest][_senderIdentifier] = [settings mutableCopy];
+        NSLog(@"settingsAfterSave=%@", [(PFCProfileCreationWindowController *)_sender settingsManifest][_senderIdentifier]);
     }
 }
 
@@ -1372,25 +1522,29 @@
     }
 }
 
-- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
-    
+- (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal sender:(id)sender {
+    NSLog(@"settingsLocal=%@", settingsLocal);
     if ( ! _tableViewContent ) {
-        _tableViewContent = [settingDict[@"TableViewContent"] mutableCopy] ?: [[NSMutableArray alloc] init];
+        if ( [settings[@"TableViewContent"] count] != 0 ) {
+            _tableViewContent = [settings[@"TableViewContent"] mutableCopy] ?: [[NSMutableArray alloc] init];
+        } else {
+            _tableViewContent = [settingsLocal[@"TableViewContent"] mutableCopy] ?: [[NSMutableArray alloc] init];
+        }
     }
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     [self setSender:sender];
-    [self setSenderRow:row];
+    [self setSenderIdentifier:manifest[@"Identifier"]];
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -1400,7 +1554,7 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  TableColumn set DataSource and Delegate to self
@@ -1416,7 +1570,7 @@
     }
     
     NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
-    NSArray *tableColumnsArray = manifestDict[@"TableViewColumns"] ?: @[];
+    NSArray *tableColumnsArray = manifest[@"TableViewColumns"] ?: @[];
     for ( NSDictionary *tableColumnDict in tableColumnsArray ) {
         NSString *tableColumnTitle = tableColumnDict[@"Title"] ?: @"";
         NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnTitle];
@@ -1521,18 +1675,18 @@
     
 }
 
-- (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsFile *)populateCellViewSettingsFile:(CellViewSettingsFile *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifestDict[@"Required"] boolValue];
+    BOOL required = [manifest[@"Required"] boolValue];
     BOOL enabled = YES;
-    if ( ! required && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ! required && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -1542,12 +1696,12 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Button Title
     // ---------------------------------------------------------------------
-    NSString *buttonTitle = manifestDict[@"ButtonTitle"] ?: @"";
+    NSString *buttonTitle = manifest[@"ButtonTitle"] ?: @"";
     [[cellView settingButtonAdd] setEnabled:enabled];
     if ( [buttonTitle length] != 0 ) {
         [[cellView settingButtonAdd] setTitle:buttonTitle];
@@ -1563,7 +1717,7 @@
     // ---------------------------------------------------------------------
     //  File View Prompt Message
     // ---------------------------------------------------------------------
-    [[cellView settingFileViewPrompt] setStringValue:manifestDict[@"FilePrompt"] ?: @""];
+    [[cellView settingFileViewPrompt] setStringValue:manifest[@"FilePrompt"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Add Border to file view
@@ -1576,7 +1730,7 @@
     // ---------------------------------------------------------------------
     //  Show prompt if no file is selected
     // ---------------------------------------------------------------------
-    if ( [settingDict[@"FilePath"] length] == 0 ) {
+    if ( [settings[@"FilePath"] length] == 0 ) {
         [[cellView settingFileViewPrompt] setHidden:NO];
         [[cellView settingFileIcon] setHidden:YES];
         [[cellView settingFileTitle] setHidden:YES];
@@ -1593,7 +1747,7 @@
     //  Check that file exist
     // ---------------------------------------------------------------------
     NSError *error = nil;
-    NSURL *fileURL = [NSURL fileURLWithPath:settingDict[@"FilePath"]];
+    NSURL *fileURL = [NSURL fileURLWithPath:settings[@"FilePath"]];
     if ( ! [fileURL checkResourceIsReachableAndReturnError:&error] ) {
         NSLog(@"%@", [error localizedDescription]);
     }
@@ -1611,8 +1765,8 @@
     // ---------------------------------------------------------------------
     if ( [fileURL checkResourceIsReachableAndReturnError:nil] ) {
         
-        if ( manifestDict[@"FileInfoProcessor"] != nil ) {
-            [self setInfoForFileAtURL:fileURL withFileInfoProcessor:manifestDict[@"FileInfoProcessor"]];
+        if ( manifest[@"FileInfoProcessor"] != nil ) {
+            [self setInfoForFileAtURL:fileURL withFileInfoProcessor:manifest[@"FileInfoProcessor"]];
         } else {
             
             // ---------------------------------------------------------------------
@@ -1643,7 +1797,7 @@
     [[cellView settingFileTitle] setHidden:NO];
     
     return cellView;
-} // populateCellViewSettingsFile:settingDict:row
+} // populateCellViewSettingsFile:settings:row
 
 @end
 
@@ -1658,7 +1812,7 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
     //  Reset Segmented Control
@@ -1668,7 +1822,7 @@
     // ---------------------------------------------------------------------
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
-    NSArray *availableSelections = manifestDict[@"AvailableValues"] ?: @[];
+    NSArray *availableSelections = manifest[@"AvailableValues"] ?: @[];
     [[cellView settingSegmentedControl] setSegmentCount:[availableSelections count]];
     [availableSelections enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [[cellView settingSegmentedControl] setLabel:obj forSegment:idx];
@@ -1677,7 +1831,7 @@
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setSelected:YES forSegment:[settingDict[@"Value"] integerValue] ?: 0];
+    [[cellView settingSegmentedControl] setSelected:YES forSegment:[settings[@"Value"] integerValue] ?: 0];
     
     // ---------------------------------------------------------------------
     //  Segmented Control Action
@@ -1689,11 +1843,11 @@
     // ---------------------------------------------------------------------
     //  Update sub keys
     // ---------------------------------------------------------------------
-    NSDictionary *valueKeys = manifestDict[@"ValueKeys"] ?: @{};
+    NSDictionary *valueKeys = manifest[@"ValueKeys"] ?: @{};
     if ( [valueKeys count] != 0 ) {
         NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
         if ( [selectedSegment length] != 0 ) {
-            if ( [sender updateSubKeysForDict:manifestDict valueString:selectedSegment row:row] ) {
+            if ( [sender updateSubKeysForDict:manifest valueString:selectedSegment row:row] ) {
                 [[sender tableViewSettings] beginUpdates];
                 [[sender tableViewSettings] reloadData];
                 [[sender tableViewSettings] endUpdates];
@@ -1719,33 +1873,33 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifestDict:(NSDictionary *)manifestDict settingDict:(NSDictionary *)settingDict row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsTextFieldHostPort *)populateCellViewSettingsTextFieldHostPort:(CellViewSettingsTextFieldHostPort *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
     BOOL requiredHost;
-    if ( manifestDict[@"RequiredHost"] != nil ) {
-        requiredHost = [manifestDict[@"RequiredHost"] boolValue];
+    if ( manifest[@"RequiredHost"] != nil ) {
+        requiredHost = [manifest[@"RequiredHost"] boolValue];
     } else {
-        requiredHost = [manifestDict[@"Required"] boolValue];
+        requiredHost = [manifest[@"Required"] boolValue];
     }
     
     BOOL requiredPort;
-    if ( manifestDict[@"RequiredPort"] != nil ) {
-        requiredPort = [manifestDict[@"RequiredPort"] boolValue];
+    if ( manifest[@"RequiredPort"] != nil ) {
+        requiredPort = [manifest[@"RequiredPort"] boolValue];
     } else {
-        requiredPort = [manifestDict[@"Required"] boolValue];
+        requiredPort = [manifest[@"Required"] boolValue];
     }
     
     BOOL enabled = YES;
-    if ( ( ! requiredHost || ! requiredPort ) && settingDict[@"Enabled"] != nil ) {
-        enabled = [settingDict[@"Enabled"] boolValue];
+    if ( ( ! requiredHost || ! requiredPort ) && settings[@"Enabled"] != nil ) {
+        enabled = [settings[@"Enabled"] boolValue];
     }
     
-    BOOL optional = [manifestDict[@"Optional"] boolValue];
+    BOOL optional = [manifest[@"Optional"] boolValue];
     
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifestDict[@"Title"] ?: @""];
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
     if ( enabled ) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -1755,15 +1909,17 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestDict[@"Description"] ?: @""];
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Value Host
     // ---------------------------------------------------------------------
-    NSString *valueHost = settingDict[@"ValueHost"] ?: @"";
+    NSString *valueHost = settings[@"ValueHost"] ?: @"";
     if ( [valueHost length] == 0 ) {
-        if ( [manifestDict[@"DefaultValueHost"] length] != 0 ) {
-            valueHost = manifestDict[@"DefaultValueHost"] ?: @"";
+        if ( [manifest[@"DefaultValueHost"] length] != 0 ) {
+            valueHost = manifest[@"DefaultValueHost"] ?: @"";
+        } else if ( [settingsLocal[@"ValueHost"] length] != 0 ) {
+            valueHost = settingsLocal[@"ValueHost"] ?: @"";
         }
     }
     [[cellView settingTextFieldHost] setDelegate:sender];
@@ -1773,8 +1929,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValueHost"] length] != 0 ) {
-        [[cellView settingTextFieldHost] setPlaceholderString:manifestDict[@"PlaceholderValueHost"] ?: @""];
+    if ( [manifest[@"PlaceholderValueHost"] length] != 0 ) {
+        [[cellView settingTextFieldHost] setPlaceholderString:manifest[@"PlaceholderValueHost"] ?: @""];
     } else if ( requiredHost ) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
     } else if ( optional ) {
@@ -1786,10 +1942,12 @@
     // ---------------------------------------------------------------------
     //  Value Port
     // ---------------------------------------------------------------------
-    NSString *valuePort = settingDict[@"ValuePort"] ?: @"";
+    NSString *valuePort = settings[@"ValuePort"] ?: @"";
     if ( [valuePort length] == 0 ) {
-        if ( [manifestDict[@"DefaultValuePort"] length] != 0 ) {
-            valuePort = manifestDict[@"DefaultValuePort"] ?: @"";
+        if ( [manifest[@"DefaultValuePort"] length] != 0 ) {
+            valuePort = manifest[@"DefaultValuePort"] ?: @"";
+        } else if ( [settingsLocal[@"ValuePort"] length] != 0 ) {
+            valuePort = settingsLocal[@"ValuePort"] ?: @"";
         }
     }
     [[cellView settingTextFieldPort] setDelegate:sender];
@@ -1799,8 +1957,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [manifestDict[@"PlaceholderValuePort"] length] != 0 ) {
-        [[cellView settingTextFieldPort] setPlaceholderString:manifestDict[@"PlaceholderValuePort"] ?: @""];
+    if ( [manifest[@"PlaceholderValuePort"] length] != 0 ) {
+        [[cellView settingTextFieldPort] setPlaceholderString:manifest[@"PlaceholderValuePort"] ?: @""];
     } else if ( requiredPort ) {
         [[cellView settingTextFieldPort] setPlaceholderString:@"Req"];
     } else {
@@ -1823,7 +1981,7 @@
     }
     
     return cellView;
-} // populateCellViewSettingsTextFieldHostPort:settingDict:row
+} // populateCellViewSettingsTextFieldHostPort:settings:row
 
 - (void)showRequired:(BOOL)show {
     if ( show ) {

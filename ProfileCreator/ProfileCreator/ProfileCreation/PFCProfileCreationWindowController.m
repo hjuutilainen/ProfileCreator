@@ -15,6 +15,7 @@
 #import "PFCPayloadVerification.h"
 #import "PFCSplitViews.h"
 #import "PFCManifestTools.h"
+#import "PFCProfileCreationInfoView.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -134,16 +135,12 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         _arraySettings = [[NSMutableArray alloc] init];
         
         // ---------------------------------------------------------------------
-        //  Initialize Dicts
-        // ---------------------------------------------------------------------
-        _payloadLibraryUserPreferencesSettings = [[NSMutableDictionary alloc] init];
-        _payloadLibraryCustomSettings = [[NSMutableDictionary alloc] init];
-        
-        // ---------------------------------------------------------------------
         //  Initialize Settings
         // ---------------------------------------------------------------------
         _settingsProfile = [profileDict[@"Config"][PFCProfileTemplateKeySettings] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _settingsManifest = [[NSMutableDictionary alloc] init];
+        _settingsLocal = [[NSMutableDictionary alloc] init];
+        _settingsLocalManifest = [[NSMutableDictionary alloc] init];
         
         // ---------------------------------------------------------------------
         //  Initialize BOOLs (for clarity)
@@ -153,12 +150,19 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         _settingsErrorHidden = YES;
         _searchNoMatchesHidden = YES;
         _windowShouldClose = NO;
+        _showSettingsLocal = YES;
+        
+        // ---------------------------------------------------------------------
+        //  Initialize Classes
+        // ---------------------------------------------------------------------
+        _viewInfoController = [[PFCProfileCreationInfoView alloc] initWithDelegate:self];
     }
     return self;
 } // init
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
+    [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,40 +188,33 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
     [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
     [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
-    [self insertSubview:_viewInfo inSuperview:_viewInfoSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add header views to window
     // ---------------------------------------------------------------------
     [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
     [self insertSubview:_viewPayloadHeader inSuperview:_viewPayloadHeaderSplitView hidden:NO];
+    [self insertSubview:[_viewInfoController view] inSuperview:_viewInfoSplitView hidden:YES];
     [self insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add error views to content views
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewSettingsError inSuperview:_viewSettingsSplitView hidden:NO];
-    [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:NO];
-    
-    // FIXME - Temporary for testing
-    [_viewPayloadLibraryNoMatches setHidden:NO];
-    [_viewSettingsError setHidden:NO];
+    [self insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
+    [self insertSubview:_viewSettingsError inSuperview:_viewSettingsSplitView hidden:YES];
+    [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     
     // ---------------------------------------------------------------------
     //  Register KVO observers
     // ---------------------------------------------------------------------
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
     
     // ---------------------------------------------------------------------
-    //  Setup TableViews
+    //  Perform Initial Setup
     // ---------------------------------------------------------------------
-    [self setupTableViews];
-    [self showPayloadHeader];
+    [self initialSetup];
     
-    // ---------------------------------------------------------------------
-    //  Initialize property 'profileName'
-    // ---------------------------------------------------------------------
-    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
 } // windowDidLoad
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -286,10 +283,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)setupTableViews {
+- (void)initialSetup {
     
     // FIXME - Comment this
     [self updateTableColumnsSettings];
+    
+    // ---------------------------------------------------------------------
+    //  Initialize property 'profileName'
+    // ---------------------------------------------------------------------
+    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
     
     // ------------------------------------------------------------------------------------------
     //  Populate (NSMutableArray)enabledPayloadDomains with all manifest domains that's selected
@@ -310,27 +312,38 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
     [self sortArrayPayloadProfile];
     
-    
     // ---------------------------------------------------------------------
-    //  TableView Payload Profile
+    //  Setup TableView Payload Profile
     // ---------------------------------------------------------------------
     [self selectTableViewPayloadProfile:nil];
     [self setTableViewPayloadProfileSelectedRow:-1];
-    [_tableViewPayloadProfile setTableViewMenuDelegate:self];
+    [_tableViewPayloadProfile setTableViewDelegate:self];
     [[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
     [_tableViewPayloadProfile reloadData];
     
     // ---------------------------------------------------------------------
-    //  TableView Payload Library
+    //  Setup TableView Payload Library
     // ---------------------------------------------------------------------
     [self selectTableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
-    [_tableViewPayloadLibrary setTableViewMenuDelegate:self];
+    [_tableViewPayloadLibrary setTableViewDelegate:self];
     [[_tableViewPayloadLibrary layer] setBorderWidth:0.0f];
     [_tableViewPayloadLibrary reloadData];
     
+    // ---------------------------------------------------------------------
+    //  Setup TableView Settings
+    // ---------------------------------------------------------------------
+    [_tableViewSettings setTableViewDelegate:self];
+    
+    // ---------------------------------------------------------------------
+    //  Setup Headers
+    // ---------------------------------------------------------------------
+    [self showPayloadHeader];
     [self hideSettingsHeader];
     
+    // ---------------------------------------------------------------------
+    //  Setup Main SplitView
+    // ---------------------------------------------------------------------
     [self collapseSplitViewInfo];
 } // setupTableViews
 
@@ -438,7 +451,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         
         for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
             NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
-            NSDictionary *manifestDict = [PFCManifestCreationParser manifestForPlistAtURL:plistURL settingsDict:&settingsDict];
+            NSDictionary *manifestDict = [PFCManifestCreationParser manifestForPlistAtURL:plistURL settingsDict:settingsDict];
             if ( [manifestDict count] != 0 ) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
                 if (
@@ -448,8 +461,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else {
                     [_arrayPayloadLibraryUserPreferences addObject:manifestDict];
                 }
-                
-                _payloadLibraryUserPreferencesSettings[manifestDomain] = [settingsDict copy];
+
+                _settingsLocal[manifestDomain] = settingsDict;
             } else {
                 NSLog(@"[ERROR] Plist: %@ was empty!", [plistURL lastPathComponent]);
             }
@@ -467,14 +480,13 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    
-    NSArray *constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|"
+    NSArray *constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
                                                                         options:0
                                                                         metrics:nil
                                                                           views:NSDictionaryOfVariableBindings(subview)];
     [superview addConstraints:constraintsArray];
     
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[subview]-0-|"
+    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
                                                                options:0
                                                                metrics:nil
                                                                  views:NSDictionaryOfVariableBindings(subview)];
@@ -492,6 +504,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *)change context:(void *) __unused context {
     if ( [keyPath isEqualToString:@"advancedSettings"] ) {
         [self updateTableColumnsSettings];
+    } else if ( [keyPath isEqualToString:@"showSettingsLocal"] ) {
+        [_tableViewSettings beginUpdates];
+        [_tableViewSettings reloadData];
+        [_tableViewSettings endUpdates];
     }
 } // observeValueForKeyPath:ofObject:change:context
 
@@ -614,7 +630,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 
             } else {
                 NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-                NSDictionary *cellSettingsDict = _settingsManifest[identifier];
+                NSDictionary *userSettingsDict = _settingsManifest[identifier];
+                NSDictionary *localSettingsDict;
+                if ( _showSettingsLocal ) {
+                    localSettingsDict = _settingsLocalManifest[identifier];
+                }
                 
                 // ---------------------------------------------------------------------
                 //  TextField
@@ -622,7 +642,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 if ( [cellType isEqualToString:PFCCellTypeTextField] ) {
                     CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewTextField:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewTextField:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldHostPort
@@ -630,7 +650,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ) {
                     CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldNoTitle
@@ -638,7 +658,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ) {
                     CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewTextFieldNoTitle:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewTextFieldNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  PopUpButton
@@ -646,7 +666,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
                     CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewPopUp:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewPopUp:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  Checkbox
@@ -654,7 +674,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
                     CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsCheckbox:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  DatePickerNoTitle
@@ -662,7 +682,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ) {
                     CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewDatePickerNoTitle:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewDatePickerNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldDaysHoursNoTitle
@@ -670,7 +690,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
                     CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TableView
@@ -678,7 +698,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
                     CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTableView:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTableView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  File
@@ -686,7 +706,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
                     CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsFile:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsFile:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  SegmentedControl
@@ -694,7 +714,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
                     CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  CheckboxNoDescription
@@ -702,7 +722,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
                     CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsCheckboxNoDescription:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsCheckboxNoDescription:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  PopUpButtonNoTitle
@@ -710,7 +730,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
                     CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpNoTitle:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsPopUpNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldNumber
@@ -718,7 +738,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumber] ) {
                     CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldNumber:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldNumber:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldCheckbox
@@ -726,7 +746,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ) {
                     CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldCheckbox:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldHostPortCheckbox
@@ -734,7 +754,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
                     CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  PopUpButtonLeft
@@ -742,7 +762,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
                     CellViewSettingsPopUpLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpLeft:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsPopUpLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  TextFieldNumberLeft
@@ -750,7 +770,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
                     CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                 }
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
@@ -766,10 +786,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 
                 NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
                 NSDictionary *cellSettingsDict = _settingsManifest[identifier];
+                NSDictionary *localSettingsDict;
+                if ( _showSettingsLocal ) {
+                    localSettingsDict = _settingsLocalManifest[identifier];
+                }
                 
                 CellViewSettingsEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsEnabled" owner:self];
                 [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewEnabled:cellView manifestDict:manifestContentDict settingDict:cellSettingsDict row:row sender:self];
+                return [cellView populateCellViewEnabled:cellView manifest:manifestContentDict settings:cellSettingsDict settingsLocal:localSettingsDict row:row sender:self];
             }
         }
     } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
@@ -2082,24 +2106,45 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 
 - (IBAction)buttonAdd:(id)sender {
     
-    // --------------------------------------------------------------
-    //  Setup open dialog
-    // --------------------------------------------------------------
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setTitle:@"Select Files"];
-    [openPanel setPrompt:@"Select"];
-    [openPanel setCanChooseFiles:YES];
-    [openPanel setCanChooseDirectories:NO];
-    [openPanel setCanCreateDirectories:NO];
-    [openPanel setAllowsMultipleSelection:YES];
+    // -------------------------------------------------------------------------
+    //  Get the size of the button clicked
+    // -------------------------------------------------------------------------
+    NSRect frame = [(NSButton *)sender frame];
     
-    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-        if ( result == NSModalResponseOK ) {
-            NSArray *selectedURLs = [openPanel URLs];
-            NSLog(@"selectedURLs=%@", selectedURLs);
-        }
-    }];
+    // -------------------------------------------------------------------------
+    //  Calculate where the will have it's origin (-5 pixels below button)
+    // -------------------------------------------------------------------------
+    NSPoint menuOrigin = [[(NSButton *)sender superview] convertPoint:NSMakePoint(frame.origin.x, frame.origin.y-5)
+                                                               toView:nil];
+    
+    // -------------------------------------------------------------------------
+    //  Create the event for popUpButton (NSLeftMouseDown)
+    // -------------------------------------------------------------------------
+    NSEvent *event =  [NSEvent mouseEventWithType:NSLeftMouseDown
+                                         location:menuOrigin
+                                    modifierFlags:0
+                                        timestamp:0
+                                     windowNumber:[[(NSButton *)sender window] windowNumber]
+                                          context:[[(NSButton *)sender window] graphicsContext]
+                                      eventNumber:0
+                                       clickCount:1
+                                         pressure:1];
+    
+    // -------------------------------------------------------------------------
+    //  Show context menu
+    // -------------------------------------------------------------------------
+    [NSMenu popUpContextMenu:_menuButtonAdd withEvent:event forView:(NSButton *)sender];
 } // buttonAdd
+
+- (IBAction)menuItemAddMobileconfig:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"mobileconfig!");
+}
+
+- (IBAction)menuItemAddPlist:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"plist!");
+}
 
 - (IBAction)buttonCancel:(id)sender {
     [[self window] performClose:self];
@@ -2213,9 +2258,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ------------------------------------------------------------------------------------
         //  Load the current settings from the saved settings dict (by using the payload domain)
         // ------------------------------------------------------------------------------------
-        NSMutableDictionary *manifestDict = [[_arrayPayloadProfile objectAtIndex:_tableViewPayloadProfileSelectedRow] mutableCopy];
-        [self setSettingsManifest:[_settingsProfile[manifestDict[PFCManifestKeyDomain] ?: @""] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-        
+        NSMutableDictionary *manifest = [[_arrayPayloadProfile objectAtIndex:_tableViewPayloadProfileSelectedRow] mutableCopy];
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+        [self setSettingsManifest:[_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
         //  If the manifest content dict array is empty, show "Error Reading Settings"
@@ -2224,8 +2271,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_viewSettingsError setHidden:YES];
-            [_textFieldSettingsHeaderTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
+            [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+            NSImage *icon = [PFCManifestTools iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
             }
@@ -2236,6 +2283,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             
             if ( ! _settingsErrorHidden ) {
                 [self hideSettingsError];
+            }
+            
+            if ( ! [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
+                [_viewInfoController updateInfoForManifestDict:manifest];
             }
         } else {
             if ( ! _settingsHeaderHidden ) {
@@ -2296,8 +2347,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ------------------------------------------------------------------------------------
         //  Load the current settings from the saved settings dict (by using the payload domain)
         // ------------------------------------------------------------------------------------
-        NSMutableDictionary *manifestDict = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
-        [self setSettingsManifest:[_settingsProfile[manifestDict[PFCManifestKeyDomain] ?: @""] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        NSMutableDictionary *manifest = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+        [self setSettingsManifest:[_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
@@ -2307,8 +2360,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_viewSettingsError setHidden:YES];
-            [_textFieldSettingsHeaderTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
+            [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+            NSImage *icon = [PFCManifestTools iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
             }
@@ -2319,6 +2372,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             
             if ( ! _settingsErrorHidden ) {
                 [self hideSettingsError];
+            }
+            
+            if ( ! [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
+                [_viewInfoController updateInfoForManifestDict:manifest];
             }
         } else {
             if ( ! _settingsHeaderHidden ) {
@@ -2339,10 +2396,9 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         }
         
         // ---------------------------------------------------------------------
-        //  Unset the SelectedTableViewIdentifier
+        //  Unset the SelectedTableViewIdentifier and SelectedManifest
         // ---------------------------------------------------------------------
         [self setSelectedPayloadTableViewIdentifier:nil];
-        
     }
     
     [_tableViewSettings reloadData];
@@ -2613,6 +2669,32 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
 } // menuItemShowInFinder
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Info View
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)didClickRow:(NSInteger)row {
+    
+    // ----------------------------------------------------------------------------------------
+    //  Sanity check so that row isn't less than 0 and that it's within the count of the array
+    // ----------------------------------------------------------------------------------------
+    if ( row < 0 || [_arraySettings count] < row ) {
+        return;
+    }
+    
+    if ( ! [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
+        [_viewInfoNoSelection setHidden:YES];
+        [[_viewInfoController view] setHidden:NO];
+        [_viewInfoController updateInfoForManifestContentDict:_arraySettings[row]];
+    }
+} // didClickRow
+
+- (void)updateInfoViewView:(NSString *)viewIdentifier {
+    NSLog(@"viewIdentifier=%@", viewIdentifier);
+}
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2653,5 +2735,28 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     return menu;
 } // menuForEvent
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Class: PFCSettingsTableView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation PFCSettingsTableView
+
+- (void)mouseDown:(NSEvent *)theEvent {
+
+    NSPoint globalLocation = [theEvent locationInWindow];
+    NSPoint localLocation = [self convertPoint:globalLocation fromView:nil];
+    NSInteger clickedRow = [self rowAtPoint:localLocation];
+    
+    [super mouseDown:theEvent];
+    
+    if (clickedRow != -1) {
+        [_delegate didClickRow:clickedRow];
+    }
+}
 
 @end
