@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewTextField : NSTableCellView
 @property NSString *columnIdentifier;
-- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,5 +29,27 @@
 @interface CellViewPopUpButton : NSTableCellView
 @property NSString *columnIdentifier;
 @property (weak) IBOutlet NSPopUpButton *popUpButton;
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settingDict:(NSDictionary *)settingDict columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewCheckbox : NSTableCellView
+@property NSString *columnIdentifier;
+@property (weak) IBOutlet NSButton *checkbox;
+- (CellViewCheckbox *)populateCellViewCheckbox:(CellViewCheckbox *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewTextFieldNumber
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewTextFieldNumber : NSTableCellView
+@property NSString *columnIdentifier;
+@property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
+- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
 @end

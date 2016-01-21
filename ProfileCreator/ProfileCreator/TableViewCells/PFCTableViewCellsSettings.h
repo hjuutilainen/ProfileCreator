@@ -251,6 +251,7 @@
 @property (weak) IBOutlet NSSegmentedControl *settingSegmentedControlButton;
 - (IBAction)segmentedControlButton:(id)sender;
 - (void)popUpButtonSelection:(id)sender;
+- (void)checkbox:(NSButton *)checkbox;
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal sender:(id)sender;
 @end
 
@@ -284,7 +285,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsSegmentedControl : NSTableCellView
 @property (weak) IBOutlet NSSegmentedControl *settingSegmentedControl;
-- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

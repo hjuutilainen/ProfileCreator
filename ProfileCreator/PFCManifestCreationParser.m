@@ -191,7 +191,7 @@
         }
         [manifestArray addObject:[manifestDict copy]];
     }
-
+    
     return [manifestArray copy];
 } // manifestArrayFromDict:settingsDict
 
@@ -234,6 +234,44 @@
         for ( NSString *string in array ) {
             [tableViewContent addObject:@{ columnTitle : @{ @"Value" : string } }];
         }
+        
+        settings[@"TableViewContent"] = [tableViewContent copy];
+    } else if ( [typeString isEqualToString:@"Dict"] ) {
+        
+        
+        // -----------------------------------------------------------------------------
+        //  FIXME - This assumes that all dicts in the array look the same. Should fix.
+        //  Add the manifest settings to describe the tableview columns
+        // -----------------------------------------------------------------------------
+        NSDictionary *templateDict = [array firstObject];
+        for ( NSString *key in [templateDict allKeys] ) {
+            NSString *valueTypeString = [self typeStringFromValue:templateDict[key]];
+            [tableViewColumns addObject:@{
+                                          PFCManifestKeyTitle : key,
+                                          PFCManifestKeyCellType : [self cellTypeFromTypeString:valueTypeString]
+                                          }];
+        }
+        
+        // -----------------------------------------------------------------------------
+        //  Add all current settings to the "TableViewContent" array
+        // -----------------------------------------------------------------------------
+        NSMutableArray *tableViewContent = [[NSMutableArray alloc] init];
+        for ( NSDictionary *dict in array ) {
+            NSMutableDictionary *contentDict = [[NSMutableDictionary alloc] init];
+            for ( NSString *key in [dict allKeys] ) {
+                NSString *valueTypeString = [self typeStringFromValue:dict[key]];
+                if ( [valueTypeString isEqualToString:@"String"] ) {
+                    contentDict[key] = @{ @"Value" : dict[key] };
+                } else if ( [valueTypeString isEqualToString:@"Boolean"] ) {
+                    contentDict[key] = @{ @"Value" : dict[key] };
+                } else {
+                    //NSLog(@"key=%@", dict[key]);
+                }
+            }
+            
+            [tableViewContent addObject:[contentDict copy]];
+        }
+        
         settings[@"TableViewContent"] = [tableViewContent copy];
     }
     return [tableViewColumns copy];
@@ -248,15 +286,16 @@
     // -------------------------------------------------------------------------
     
     NSArray *keysToHide = @[
-                           @"NSWindow",
-                           @"NSNavPanelExpandedSizeForOpenMode",
-                           @"NSNavPanelExpandedSizeForSaveMode",
-                           @"NSNavPanelExpandedStateForSaveMode",
-                           @"NSNavLastRootDirectory",
-                           @"NSSplitView",
-                           @"NSOutlineView",
-                           @"NSTableView"
-                           ];
+                            @"NSWindow",
+                            @"NSNavPanelExpandedSizeForOpenMode",
+                            @"NSNavPanelExpandedSizeForSaveMode",
+                            @"NSNavPanelExpandedStateForSaveMode",
+                            @"NSNavLastRootDirectory",
+                            @"NSSplitView",
+                            @"NSOutlineView",
+                            @"NSTableView",
+                            @"NSToolbar"
+                            ];
     
     __block BOOL hideKey = NO;
     [keysToHide enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

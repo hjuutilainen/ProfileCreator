@@ -1396,11 +1396,19 @@
     if ( [cellType isEqualToString:@"TextField"] ) {
         CellViewTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewTextField" owner:self];
         [cellView setIdentifier:nil];
-        return [cellView populateCellViewTextField:cellView settingDict:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+        return [cellView populateCellViewTextField:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
     } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
         CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
         [cellView setIdentifier:nil];
-        return [cellView populateCellViewPopUpButton:cellView settingDict:settings[tableColumnIdentifier]  columnIdentifier:[tableColumn identifier] row:row sender:self];
+        return [cellView populateCellViewPopUpButton:cellView settings:settings[tableColumnIdentifier]  columnIdentifier:[tableColumn identifier] row:row sender:self];
+    } else if ( [cellType isEqualToString:@"Checkbox"] ) {
+        CellViewCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewCheckbox" owner:self];
+        [cellView setIdentifier:nil];
+        return [cellView populateCellViewCheckbox:cellView settings:settings[tableColumnIdentifier]  columnIdentifier:[tableColumn identifier] row:row sender:self];
+    } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
+        CellViewTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewTextFieldNumber" owner:self];
+        [cellView setIdentifier:nil];
+        return [cellView populateCellViewTextFieldNumber:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
     }
     
     return nil;
@@ -1521,6 +1529,46 @@
         [_settingTableView endUpdates];
     }
 }
+
+- (void)checkbox:(NSButton *)checkbox {
+    
+    // ---------------------------------------------------------------------
+    //  Get checkbox's row in the table view
+    // ---------------------------------------------------------------------
+    NSNumber *buttonTag = @([checkbox tag]);
+    if ( buttonTag == nil ) {
+        NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
+        return;
+    }
+    NSInteger row = [buttonTag integerValue];
+    
+    NSString *columnIdentifier = [(CellViewCheckbox *)[checkbox superview] columnIdentifier];
+    
+    // ---------------------------------------------------------------------
+    //  Another verification this is a CellViewSettingsPopUp popup button
+    // ---------------------------------------------------------------------
+    if ( checkbox == [(CellViewCheckbox *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] checkbox] ) {
+        
+        // ---------------------------------------------------------------------
+        //  Save selection
+        // ---------------------------------------------------------------------
+        BOOL state = [checkbox state];
+        NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
+        NSMutableDictionary *columnDict = cellDict[columnIdentifier];
+        columnDict[@"Value"] = @(state);
+        cellDict[columnIdentifier] = columnDict;
+        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        [self updateTableViewSavedContent];
+        
+        // ---------------------------------------------------------------------
+        //  Add subkeys for selected title
+        // ---------------------------------------------------------------------
+        [_settingTableView beginUpdates];
+        [_settingTableView reloadData];
+        [_settingTableView endUpdates];
+    }
+} // checkbox
+
 
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal sender:(id)sender {
     NSLog(@"settingsLocal=%@", settingsLocal);
@@ -1812,7 +1860,7 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (CellViewSettingsSegmentedControl *)populateCellViewSettingsSegmentedControl:(CellViewSettingsSegmentedControl *)cellView manifest:(NSDictionary *)manifest row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------
     //  Reset Segmented Control
@@ -1831,7 +1879,7 @@
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setSelected:YES forSegment:[settings[@"Value"] integerValue] ?: 0];
+    [[cellView settingSegmentedControl] setSelected:YES forSegment:[manifest[@"Value"] integerValue] ?: 0];
     
     // ---------------------------------------------------------------------
     //  Segmented Control Action

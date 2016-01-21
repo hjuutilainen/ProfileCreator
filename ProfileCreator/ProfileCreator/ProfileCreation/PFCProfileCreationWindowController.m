@@ -714,7 +714,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
                     CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifest:manifestContentDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  CheckboxNoDescription
@@ -955,6 +955,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
     return 1;
 } // tableView:heightOfRow
+
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
+    if ( [tableView isEqualTo:_tableViewPayloadLibrary] ) {
+        [self selectTableViewPayloadLibraryRow:row];
+    } else if ( [tableView isEqualTo:_tableViewPayloadProfile] ) {
+        [self selectTableViewPayloadProfileRow:row];
+    }
+    return YES;
+} // tableView:shouldSelectRow
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2229,7 +2238,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // buttonSaveSheetProfileName
 
 - (IBAction)selectTableViewPayloadProfile:(id)sender {
-    
+    [self selectTableViewPayloadProfileRow:[_tableViewPayloadProfile selectedRow]];
+} // selectTableViewPayloadProfile
+
+- (void)selectTableViewPayloadProfileRow:(NSInteger)row {
+
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
     // -----------------------------------------------------------------------------------
@@ -2314,10 +2327,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
-} // selectTableViewPayloadProfile
+} // selectTableViewPayloadProfileRow
 
 - (IBAction)selectTableViewPayloadLibrary:(id)sender {
-    
+    [self selectTableViewPayloadLibraryRow:[_tableViewPayloadLibrary selectedRow]];
+} // selectTableViewPayloadLibrary
+
+- (void)selectTableViewPayloadLibraryRow:(NSInteger)row {
+
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
     // -----------------------------------------------------------------------------------
@@ -2328,7 +2345,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // -------------------------------------------------------------------------
     [_tableViewPayloadProfile deselectAll:self];
     [self setTableViewPayloadProfileSelectedRow:-1];
-    [self setTableViewPayloadLibrarySelectedRow:[_tableViewPayloadLibrary selectedRow]];
+    [self setTableViewPayloadLibrarySelectedRow:row];
     [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlPayloadLibrary selectedSegment]];
     
     [_tableViewSettings beginUpdates];
@@ -2403,7 +2420,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
-} // selectTableViewPayloadLibrary
+} // selectTableViewPayloadLibraryRow
 
 - (IBAction)selectSegmentedControlPayloadLibrary:(id)sender {
     
