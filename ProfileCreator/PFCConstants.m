@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCCellTypeCheckbox = @"Checkbox";
 NSString *const PFCCellTypeCheckboxNoDescription = @"CheckboxNoDescription";
+NSString *const PFCCellTypeDatePicker = @"DatePicker";
 NSString *const PFCCellTypeDatePickerNoTitle = @"DatePickerNoTitle";
 NSString *const PFCCellTypeFile = @"File";
 NSString *const PFCCellTypePadding = @"Padding";

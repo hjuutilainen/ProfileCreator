@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCCellTypeCheckbox;
 extern NSString *const PFCCellTypeCheckboxNoDescription;
+extern NSString *const PFCCellTypeDatePicker;
 extern NSString *const PFCCellTypeDatePickerNoTitle;
 extern NSString *const PFCCellTypeFile;
 extern NSString *const PFCCellTypePadding;

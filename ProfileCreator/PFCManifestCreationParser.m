@@ -210,9 +210,14 @@
     NSString *typeString = [self typeStringFromValue:[array firstObject]];
     
     // -------------------------------------------------------------------------
-    //  Array content: String
+    //  Array content:  String
+    //                  Integer
+    //                  Float
     // -------------------------------------------------------------------------
-    if ( [typeString isEqualToString:@"String"] ) {
+    if (
+        [typeString isEqualToString:@"String"] ||
+        [typeString isEqualToString:@"Integer"] ||
+        [typeString isEqualToString:@"Float"] ) {
         
         // ---------------------------------------------------------------------
         //  Create a unique columen title
@@ -236,6 +241,10 @@
         }
         
         settings[@"TableViewContent"] = [tableViewContent copy];
+        
+        // -------------------------------------------------------------------------
+        //  Array content: Dict
+        // -------------------------------------------------------------------------
     } else if ( [typeString isEqualToString:@"Dict"] ) {
         
         
@@ -356,7 +365,7 @@
     if ( [typeString isEqualToString:@"Float"] )    return PFCCellTypeTextFieldNumber;
     if ( [typeString isEqualToString:@"Array"] )    return PFCCellTypeTableView;
     if ( [typeString isEqualToString:@"Dict"] )     return PFCCellTypeSegmentedControl;
-    if ( [typeString isEqualToString:@"Date"] )     return PFCCellTypeDatePickerNoTitle;
+    if ( [typeString isEqualToString:@"Date"] )     return PFCCellTypeDatePicker;
     if ( [typeString isEqualToString:@"Data"] )     return PFCCellTypeFile;
     return @"Unknown";
 } // cellTypeFromTypeString

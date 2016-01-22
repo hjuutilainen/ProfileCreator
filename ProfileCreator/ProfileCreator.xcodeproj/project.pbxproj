@@ -33,6 +33,7 @@
 		5341D3271C15F3500014F5A7 /* PFCProfileCreationWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */; };
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
+		53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53597D8A1C5268C50062AADC /* PFCManifestParser.m */; };
 		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
 		535B07BC1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535B07BA1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m */; };
@@ -133,6 +134,8 @@
 		5341D3241C15F3500014F5A7 /* PFCProfileCreationWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileCreationWindowController.m; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.m; sourceTree = "<group>"; };
 		5341D3251C15F3500014F5A7 /* PFCProfileCreationWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileCreationWindowController.xib; path = ProfileCreator/ProfileCreation/PFCProfileCreationWindowController.xib; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.carddav.account.plist; sourceTree = "<group>"; };
+		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCManifestParser.h; sourceTree = "<group>"; };
+		53597D8A1C5268C50062AADC /* PFCManifestParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCManifestParser.m; sourceTree = "<group>"; };
 		5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.plist; path = ProfileCreator/ProfileManifests/Apple/com.apple.security.privacy.plist; sourceTree = "<group>"; };
 		5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconSecurityPrivacy.png; sourceTree = "<group>"; };
 		535B07B91C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCProfileExportPayloadViewController.h; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 				53FEC8011C4E114000C96596 /* PFCCustomViews.m */,
 				538750B51C4C0F4F0003F0EF /* PFCConstants.h */,
 				538750B61C4C0F4F0003F0EF /* PFCConstants.m */,
+				53597D891C5268C50062AADC /* PFCManifestParser.h */,
+				53597D8A1C5268C50062AADC /* PFCManifestParser.m */,
 				532974EB1C22B21300191C5C /* PFCManifestCreationParser.h */,
 				532974EC1C22B21300191C5C /* PFCManifestCreationParser.m */,
 				53E012911C3D33DC00136221 /* PFCPayloadVerification.h */,
@@ -510,6 +515,7 @@
 				53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */,
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
+				53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */,
 				53FEC8021C4E114000C96596 /* PFCCustomViews.m in Sources */,
 				535B07BC1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m in Sources */,
 				532746401C3C53A30030CD95 /* PFCProfileExportWindowController.m in Sources */,

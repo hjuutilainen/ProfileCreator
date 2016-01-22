@@ -203,6 +203,7 @@
 @interface CellViewSettingsDatePicker : NSTableCellView
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingDateDescription;
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
 - (CellViewSettingsDatePicker *)populateCellViewDatePicker:(CellViewSettingsDatePicker *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
@@ -214,7 +215,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsDatePickerNoTitle : NSTableCellView
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
-@property (weak) IBOutlet NSTextField *settingDescription;
+@property (weak) IBOutlet NSTextField *settingDateDescription;
 - (CellViewSettingsDatePickerNoTitle *)populateCellViewDatePickerNoTitle:(CellViewSettingsDatePickerNoTitle *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 

@@ -129,6 +129,8 @@
 			<string>Designates the full email address for the account. If not present in the payload, the device prompts for this string during profile installation</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>AE77F33C-6FA1-4181-AAB7-7F53D8489A84</string>
 			<key>CellType</key>
 			<string>SegmentedControl</string>
 			<key>AvailableValues</key>

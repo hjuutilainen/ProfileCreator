@@ -61,11 +61,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
-@property                    NSMutableDictionary *settingsProfile;
-@property                    NSMutableDictionary *settingsManifest;
-@property                    NSMutableDictionary *settingsLocal;
-@property                    NSMutableDictionary *settingsLocalManifest;
-@property                    BOOL showSettingsLocal;
+@property                    NSDictionary *selectedManifest;
 
 // -------------------------------------------------------------------------
 //  Payload
@@ -155,16 +151,24 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
 @property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 @property (readwrite)        BOOL settingsHeaderHidden;
-@property (readwrite)        BOOL settingsErrorHidden;
 
 // -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView *viewSettingsSuperView;
 @property (weak)    IBOutlet NSView *viewSettingsSplitView;
-@property (weak)    IBOutlet NSView *viewSettingsError;
+@property (weak)    IBOutlet NSView *viewSettingsStatus;
+@property (weak)    IBOutlet NSProgressIndicator *progressIndicatorSettingsStatusLoading;
+@property (weak)    IBOutlet NSTextField *textFieldSettingsStatus;
 @property (weak)    IBOutlet PFCSettingsTableView *tableViewSettings;
 @property (readwrite)        NSMutableArray *arraySettings;
+@property (readwrite)        NSMutableDictionary *settingsProfile;
+@property (readwrite)        NSMutableDictionary *settingsManifest;
+@property (readwrite)        NSMutableDictionary *settingsLocal;
+@property (readwrite)        NSMutableDictionary *settingsLocalManifest;
+@property (readwrite)        BOOL showSettingsLocal;
+@property (readwrite)        BOOL settingsStatusLoading;
+@property (readwrite)        BOOL settingsStatusHidden;
 
 // -------------------------------------------------------------------------
 //  SettingsFooter
@@ -225,7 +229,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
 - (void)selectFile:(NSButton *)button;
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
-- (BOOL)updateSubKeysForDict:(NSDictionary *)cellDict valueString:(NSString *)valueString row:(NSInteger)row;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end

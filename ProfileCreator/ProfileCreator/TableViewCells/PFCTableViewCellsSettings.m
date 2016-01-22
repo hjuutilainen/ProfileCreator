@@ -629,15 +629,6 @@
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
     
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
-            [[sender tableViewSettings] reloadData];
-        }
-    }
-    
     return cellView;
 } // populateCellViewPopUp:settings:row
 
@@ -706,15 +697,6 @@
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
-            [[sender tableViewSettings] reloadData];
-        }
-    }
     
     return cellView;
 } // populateCellViewSettingsPopUpNoTitle:settings:row
@@ -785,15 +767,6 @@
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifest valueString:[[cellView settingPopUpButton] titleOfSelectedItem] row:row] ) {
-            [[sender tableViewSettings] reloadData];
-        }
-    }
     
     return cellView;
 } // populateCellViewPopUp:settings:row
@@ -949,15 +922,6 @@
         [[cellView constraintLeading] setConstant:8];
     }
     
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifest valueString:checkboxState ? @"True" : @"False" row:row] ) {
-            [[sender tableViewSettings] reloadData];
-        }
-    }
-    
     return cellView;
 } // populateCellViewCheckbox:settings:row
 
@@ -1024,15 +988,6 @@
     [[cellView settingCheckbox] setAction:@selector(checkbox:)];
     [[cellView settingCheckbox] setTarget:sender];
     [[cellView settingCheckbox] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"ValueKeys"] ?: @{} count] != 0 ) {
-        if ( [sender updateSubKeysForDict:manifest valueString:checkboxState ? @"True" : @"False" row:row] ) {
-            [[sender tableViewSettings] reloadData];
-        }
-    }
     
     return cellView;
 } // populateCellViewCheckboxNoDescription:settings:row
@@ -1119,6 +1074,21 @@
     }
     
     // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
+    if ( enabled ) {
+        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    } else {
+        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
+    
+    // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     NSDate *date;
@@ -1156,7 +1126,7 @@
     //  Description
     // ---------------------------------------------------------------------
     NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-    [[cellView settingDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+    [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
     
     return cellView;
 } // populateCellViewDatePicker
@@ -1220,7 +1190,7 @@
     //  Description
     // ---------------------------------------------------------------------
     NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-    [[cellView settingDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+    [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
     
     return cellView;
 } // populateCellViewCheckbox:settings:row
@@ -1571,7 +1541,6 @@
 
 
 - (CellViewSettingsTableView *)populateCellViewSettingsTableView:(CellViewSettingsTableView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal sender:(id)sender {
-    NSLog(@"settingsLocal=%@", settingsLocal);
     if ( ! _tableViewContent ) {
         if ( [settings[@"TableViewContent"] count] != 0 ) {
             _tableViewContent = [settings[@"TableViewContent"] mutableCopy] ?: [[NSMutableArray alloc] init];
@@ -1887,23 +1856,6 @@
     [[cellView settingSegmentedControl] setAction:@selector(segmentedControl:)];
     [[cellView settingSegmentedControl] setTarget:sender];
     [[cellView settingSegmentedControl] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Update sub keys
-    // ---------------------------------------------------------------------
-    NSDictionary *valueKeys = manifest[@"ValueKeys"] ?: @{};
-    if ( [valueKeys count] != 0 ) {
-        NSString *selectedSegment = [[cellView settingSegmentedControl] labelForSegment:[[cellView settingSegmentedControl] selectedSegment]];
-        if ( [selectedSegment length] != 0 ) {
-            if ( [sender updateSubKeysForDict:manifest valueString:selectedSegment row:row] ) {
-                [[sender tableViewSettings] beginUpdates];
-                [[sender tableViewSettings] reloadData];
-                [[sender tableViewSettings] endUpdates];
-            }
-        } else {
-            NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", [cellView settingSegmentedControl]);
-        }
-    }
     
     return cellView;
 }

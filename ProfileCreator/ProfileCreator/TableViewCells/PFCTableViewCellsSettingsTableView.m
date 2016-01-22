@@ -156,14 +156,27 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[@"Value"] ?: @"";
-    if ( [value length] == 0 ) {
-        if ( [settings[@"DefaultValue"] length] != 0 ) {
-            value = settings[@"DefaultValue"] ?: @"";
+    NSString *value;
+    if ( settings[@"Value"] != nil ) {
+        if ( [[settings[@"Value"] class] isSubclassOfClass:[NSString class]] ) {
+            value = settings[@"Value"] ?: @"";
+        } else if ( [[settings[@"Value"] class] isSubclassOfClass:[@(0) class]] ) {
+            value = [settings[@"Value"] stringValue] ?: @"";
         }
     }
+
+    if ( [value length] == 0 ) {
+        if ( settings[@"DefaultValue"] != nil ) {
+            if ( [[settings[@"DefaultValue"] class] isSubclassOfClass:[NSString class]] ) {
+                value = settings[@"DefaultValue"] ?: @"";
+            } else if ( [[settings[@"DefaultValue"] class] isSubclassOfClass:[@(0) class]] ) {
+                value = [settings[@"DefaultValue"] stringValue] ?: @"";
+            }
+        }
+    }
+    
     [[cellView textField] setDelegate:sender];
-    [[cellView textField] setStringValue:value];
+    [[cellView textField] setStringValue:value ?: @""];
     [[cellView textField] setTag:row];
     
     // ---------------------------------------------------------------------
