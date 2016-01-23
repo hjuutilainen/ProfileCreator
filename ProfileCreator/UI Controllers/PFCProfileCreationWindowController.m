@@ -461,7 +461,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         
         for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
             NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
-            NSDictionary *manifestDict = [[PFCManifestParser sharedParser] manifestForPlistAtURL:plistURL settingsDict:settingsDict];
+            NSDictionary *manifestDict = [[PFCManifestParser sharedParser] manifestFromPlistAtURL:plistURL settings:settingsDict];
             if ( [manifestDict count] != 0 ) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
                 if (
@@ -837,7 +837,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 manifestSettings = _settingsManifest;
             }
             
-            NSDictionary *errorDict = [[PFCManifestParser sharedParser] verifyManifest:manifestDict[PFCManifestKeyManifestContent] settingsDict:manifestSettings];
+            NSDictionary *errorDict = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[PFCManifestKeyManifestContent] settings:manifestSettings];
             NSNumber *errorCount;
             if ( [errorDict count] != 0 ) {
                 errorCount = @([errorDict[@"Error"] count]);
@@ -1087,7 +1087,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Create and array of manifest content dicts originating from the current manifest content dict
     //  This means either just the current dict, or any subDicts depending on the current user selection
     // --------------------------------------------------------------------------------------------------
-    NSArray *manifestContentSubset = [[PFCManifestParser sharedParser] arrayForManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil];
+    NSArray *manifestContentSubset = [[PFCManifestParser sharedParser] arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil];
     
     if ( [manifestContentSubset count] == 0 ) {
         NSLog(@"[ERROR] Nothing returned from arrayForManifestContentDict!");
@@ -2303,7 +2303,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:manifest];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayForManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
@@ -2408,7 +2408,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayForManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];

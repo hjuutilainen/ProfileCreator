@@ -29,18 +29,18 @@
 // -------------------------------------------------------------
 //  TableView arrays from Manifest
 // -------------------------------------------------------------
-- (NSArray *)arrayForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal;
-- (NSArray *)arrayForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys;
+- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal;
+- (NSArray *)arrayFromManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys;
 
 // -------------------------------------------------------------
-//  Manifest from property list
+//  Create Manifest
 // -------------------------------------------------------------
-- (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary *)settingsDict;
+- (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings;
 
 // -------------------------------------------------------------
-//  Manifest verification
+//  Verify Manifest
 // -------------------------------------------------------------
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+- (NSDictionary *)verifyManifestContent:(NSArray *)ManifestContent settings:(NSDictionary *)settings;
+- (NSDictionary *)verifyManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings;
 
 @end

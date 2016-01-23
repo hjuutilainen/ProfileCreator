@@ -125,7 +125,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifest:manifestDict[@"ManifestContent"] settingsDict:settingsDict];
+        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
         if ( [settingsInfo count] != 0 ) {
             NSArray *warnings = settingsInfo[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {
@@ -184,7 +184,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifest:manifestDict[@"ManifestContent"] settingsDict:settingsDict];
+        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
         if ( [settingsInfo count] != 0 ) {
             NSArray *warnings = settingsInfo[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {

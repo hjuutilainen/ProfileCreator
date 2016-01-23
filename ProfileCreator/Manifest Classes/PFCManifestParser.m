@@ -45,15 +45,15 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)arrayForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal {
+- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for ( NSDictionary *manifestContentDict in manifestContent ) {
-        [array addObjectsFromArray:[self arrayForManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
+        [array addObjectsFromArray:[self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
     }
     return [array copy];
-} // arrayForManifestContent:settings:settingsLocal
+} // arrayFromManifestContent:settings:settingsLocal
 
-- (NSArray *)arrayForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
+- (NSArray *)arrayFromManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     
     // ------------------------------------------------------------------------------------------------------
@@ -364,7 +364,7 @@
             // -----------------------------------------------------------------
             //  Add any subkeys the current manifest content dict contains
             // -----------------------------------------------------------------
-            [array addObjectsFromArray:[self arrayForManifestContentDict:mutableValueDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
+            [array addObjectsFromArray:[self arrayFromManifestContentDict:mutableValueDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
         }
         
         // -----------------------------------------------------------------------------------------------------------
@@ -382,18 +382,18 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary *)settingsDict {
+- (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings {
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     
     // ---------------------------------------------------------------------
-    //  Create Manifest Menu
+    //  Create Manifest Root
     // ---------------------------------------------------------------------
-    [manifestDict addEntriesFromDictionary:[self manifestMenuForPlistAtURL:fileURL]];
+    [manifestDict addEntriesFromDictionary:[self manifestRootFromPlistAtURL:fileURL]];
     
     // ---------------------------------------------------------------------
     //  Create Manifest Content
     // ---------------------------------------------------------------------
-    manifestDict[PFCManifestKeyManifestContent] = [self manifestContentForPlistAtURL:fileURL settingsDict:settingsDict];
+    manifestDict[PFCManifestKeyManifestContent] = [self manifestContentFromPlistAtURL:fileURL settings:settings];
     
     // ---------------------------------------------------------------------
     //  Add path to source plist
@@ -408,7 +408,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)manifestMenuForPlistAtURL:(NSURL *)fileURL {
+- (NSDictionary *)manifestRootFromPlistAtURL:(NSURL *)fileURL {
     
     NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     
@@ -465,11 +465,11 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)manifestContentForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary *)settingsDict {
-    return [self manifestContentArrayFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{} settingsDict:settingsDict];
-} // manifestArrayForPlistAtURL:settingsDict
+- (NSArray *)manifestContentFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings {
+    return [self manifestContentFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{} settingsDict:settings];
+} // manifestContentFromPlistAtURL:settingsDict
 
-- (NSArray *)manifestContentArrayFromDict:(NSDictionary *)dict settingsDict:(NSMutableDictionary *)settingsDict {
+- (NSArray *)manifestContentFromDict:(NSDictionary *)dict settingsDict:(NSMutableDictionary *)settingsDict {
     NSMutableArray *manifestArray = [[NSMutableArray alloc] init];
     
     // -----------------------------------------------------------------------------------------
@@ -535,7 +535,7 @@
                 // -------------------------------------------------------------
             } else if ( [typeString isEqualToString:@"Dict"] ) {
                 manifestDict[PFCManifestKeyAvailableValues] = @[ key ];
-                manifestDict[PFCManifestKeyValueKeys] = @{ key : [self manifestContentArrayFromDict:value settingsDict:identifierSettingsDict] };
+                manifestDict[PFCManifestKeyValueKeys] = @{ key : [self manifestContentFromDict:value settingsDict:identifierSettingsDict] };
                 
                 // -------------------------------------------------------------
                 //  All other types just store their values in "Value"
@@ -662,13 +662,13 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict {
+- (NSDictionary *)verifyManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings {
     NSMutableArray *errorDict = [NSMutableArray array];
-    for ( NSDictionary *payloadDict in manifestArray ) {
-        if ( payloadDict[@"PayloadValue"] || payloadDict[@"SharedKey"] ) {
+    for ( NSDictionary *manifestContentDict in manifestContent ) {
+        if ( manifestContentDict[@"PayloadValue"] || manifestContentDict[@"SharedKey"] ) {
             continue;
         }
-        NSDictionary *report = [[PFCManifestParser sharedParser] verifyCellDict:payloadDict settingsDict:settingsDict];
+        NSDictionary *report = [self verifyManifestContentDict:manifestContentDict settings:settings];
         if ( [report count] != 0 ) {
             [errorDict addObject:report];
         }
@@ -677,70 +677,46 @@
     return [self combinedDictFromArray:errorDict];
 }
 
-- (NSDictionary *)combinedDictFromArray:(NSArray *)array {
-    
-    NSMutableArray *error = [NSMutableArray array];
-    NSMutableArray *warning = [NSMutableArray array];
-    
-    for ( NSDictionary *dict in array ) {
-        if ( [dict[@"Error"] count] != 0 ) {
-            [error addObjectsFromArray:dict[@"Error"]];
-        }
-        if ( [dict[@"Warning"] count] != 0 ) {
-            [warning addObjectsFromArray:dict[@"Warning"]];
-        }
-    }
-    
-    NSMutableDictionary *returnDict = [NSMutableDictionary dictionary];
-    if ( [warning count] != 0 ) {
-        returnDict[@"Warning"] = [warning copy];
-    }
-    if ( [error count] != 0 ) {
-        returnDict[@"Error"] = [error copy];
-    }
-    
-    return returnDict;
-}
-
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
-    NSString *cellType = cellDict[@"CellType"];
+- (NSDictionary *)verifyManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
+    NSString *cellType = manifestContentDict[@"CellType"];
     if ( [cellType isEqualToString:@"TextField"] ) {
-        return [self verifyCellTypeTextField:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextField:manifestContentDict settings:settings];
     } else if ( [cellType isEqualToString:@"TextFieldCheckbox"] ) {
-        return [self verifyCellTypeTextFieldCheckbox:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldCheckbox:manifestContentDict settings:settings];
     } else if ( [cellType isEqualToString:@"TextFieldDaysHoursNoTitle"] ) {
-        return [self verifyCellTypeTextFieldDaysHoursNoTitle:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldDaysHoursNoTitle:manifestContentDict settings:settings];
     } else if ( [cellType isEqualToString:@"TextFieldHostPort"] ) {
-        return [self verifyCellTypeTextFieldHostPort:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldHostPort:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"TextFieldHostPortCheckbox"] ) {
-        return [self verifyCellTypeTextFieldHostPortCheckbox:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldHostPortCheckbox:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"TextFieldNoTitle"] ) {
-        return [self verifyCellTypeTextField:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextField:manifestContentDict settings:settings];
     } else if ( [cellType isEqualToString:@"TextFieldNumber"] ) {
-        return [self verifyCellTypeTextFieldNumber:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldNumber:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"TextFieldNumberLeft"] ) {
-        return [self verifyCellTypeTextFieldNumber:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeTextFieldNumber:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"Checkbox"] ) {
-        return [self verifyCellTypeCheckbox:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"CheckboxNoDescription"] ) {
-        return [self verifyCellTypeCheckbox:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"DatePickerNoTitle"] ) {
         
     } else if ( [cellType isEqualToString:@"File"] ) {
-        return [self verifyCellTypeFile:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeFile:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
-        return [self verifyCellTypePopUpButton:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"PopUpButtonLeft"] ) {
-        return [self verifyCellTypePopUpButton:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"PopUpButtonNoTitle"] ) {
-        return [self verifyCellTypePopUpButton:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"SegmentedControl"] ) {
-        return [self verifyCellTypeSegmentedControl:cellDict settingsDict:settingsDict];
+        return [self verifyCellTypeSegmentedControl:manifestContentDict settingsDict:settings];
     } else if ( [cellType isEqualToString:@"TableView"] ) {
         
+    } else if ( [cellType length] != 0 ) {
+        //NSLog(@"[ERROR] Unknown CellType: %@ for Identifier: %@", cellType, manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
     } else {
-        NSLog(@"[ERROR] Unknown CellType: %@", cellType);
-        NSLog(@"[ERROR] cellDict: %@", cellDict);
+        //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
     
     return @{};
@@ -752,25 +728,25 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)verifyCellTypeTextField:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
+- (NSDictionary *)verifyCellTypeTextField:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     
-    NSString *identifier = cellDict[@"Identifier"];
-    NSDictionary *settings = settingsDict[identifier];
-    if ( [settings count] == 0 ) {
+    NSString *identifier = manifestContentDict[@"Identifier"];
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
-    BOOL required = [cellDict[@"Required"] boolValue];
-    NSString *value = settings[@"Value"];
+    BOOL required = [manifestContentDict[@"Required"] boolValue];
+    NSString *value = contentDictSettings[@"Value"];
     if ( [value length] == 0 ) {
-        value = settings[@"DefaultValue"];
+        value = contentDictSettings[@"DefaultValue"];
     }
     
     if ( required && [value length] == 0 ) {
         return @{
                  @"Error" : @[@{
                                   @"Message" : @"",
-                                  @"Identifier" : cellDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : cellDict[@"PayloadKey"] ?: @"Unknown"
+                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
+                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
                                   }]
                  };
     }
@@ -778,24 +754,24 @@
     return nil;
 }
 
-- (NSDictionary *)verifyCellTypeTextFieldCheckbox:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
-    NSString *identifier = cellDict[@"Identifier"];
-    NSDictionary *settings = settingsDict[identifier];
-    if ( [settings count] == 0 ) {
+- (NSDictionary *)verifyCellTypeTextFieldCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
+    NSString *identifier = manifestContentDict[@"Identifier"];
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
-    BOOL required = [cellDict[@"Required"] boolValue];
-    NSString *value = settings[@"ValueTextField"];
+    BOOL required = [manifestContentDict[@"Required"] boolValue];
+    NSString *value = contentDictSettings[@"ValueTextField"];
     if ( [value length] == 0 ) {
-        value = settings[@"DefaultValueTextField"];
+        value = contentDictSettings[@"DefaultValueTextField"];
     }
     
     if ( required && [value length] == 0 ) {
         return @{
                  @"Error" : @[@{
                                   @"Message" : @"",
-                                  @"Identifier" : cellDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : cellDict[@"PayloadKey"] ?: @"Unknown"
+                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
+                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
                                   }]
                  };
     }
@@ -803,24 +779,24 @@
     return nil;
 }
 
-- (NSDictionary *)verifyCellTypeTextFieldDaysHoursNoTitle:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
-    NSString *identifier = cellDict[@"Identifier"];
-    NSDictionary *settings = settingsDict[identifier];
-    if ( [settings count] == 0 ) {
+- (NSDictionary *)verifyCellTypeTextFieldDaysHoursNoTitle:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
+    NSString *identifier = manifestContentDict[@"Identifier"];
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
-    BOOL required = [cellDict[@"Required"] boolValue];
-    NSNumber *value = settings[@"Value"];
+    BOOL required = [manifestContentDict[@"Required"] boolValue];
+    NSNumber *value = contentDictSettings[@"Value"];
     if ( value == nil ) {
-        value = settings[@"DefaultValue"];
+        value = contentDictSettings[@"DefaultValue"];
     }
     
     if ( required && value == nil ) {
         return @{
                  @"Error" : @[@{
                                   @"Message" : @"",
-                                  @"Identifier" : cellDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : cellDict[@"PayloadKey"] ?: @"Unknown"
+                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
+                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
                                   }]
                  };
     }
@@ -976,7 +952,7 @@
     NSString *checkboxState = [settingsDict[@"Value"] boolValue] ? @"True" : @"False";
     NSDictionary *valueKeys = cellDict[@"ValueKeys"];
     if ( valueKeys[checkboxState] ) {
-        return [self verifyManifest:valueKeys[checkboxState] settingsDict:settingsDict];
+        return [self verifyManifestContent:valueKeys[checkboxState] settings:settingsDict];
     }
     
     return nil;
@@ -1063,7 +1039,7 @@
     
     NSDictionary *valueKeys = cellDict[@"ValueKeys"];
     if ( valueKeys[selectedItem] ) {
-        return [self verifyManifest:valueKeys[selectedItem] settingsDict:settingsDict];
+        return [self verifyManifestContent:valueKeys[selectedItem] settings:settingsDict];
     }
     
     return nil;
@@ -1073,7 +1049,7 @@
     NSMutableArray *reports = [NSMutableArray array];
     NSDictionary *valueKeys = cellDict[@"ValueKeys"];
     for ( NSString *selection in cellDict[@"AvailableValues"] ?: @[] ) {
-        NSDictionary *reportDict = [self verifyManifest:valueKeys[selection] settingsDict:settingsDict];
+        NSDictionary *reportDict = [self verifyManifestContent:valueKeys[selection] settings:settingsDict];
         if ( [reportDict count] != 0 ) {
             [reports addObject:reportDict];
         }
@@ -1081,5 +1057,35 @@
     return [self combinedDictFromArray:reports];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Verify Manifest Utility Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSDictionary *)combinedDictFromArray:(NSArray *)array {
+    
+    NSMutableArray *error = [NSMutableArray array];
+    NSMutableArray *warning = [NSMutableArray array];
+    
+    for ( NSDictionary *dict in array ) {
+        if ( [dict[@"Error"] count] != 0 ) {
+            [error addObjectsFromArray:dict[@"Error"]];
+        }
+        if ( [dict[@"Warning"] count] != 0 ) {
+            [warning addObjectsFromArray:dict[@"Warning"]];
+        }
+    }
+    
+    NSMutableDictionary *returnDict = [NSMutableDictionary dictionary];
+    if ( [warning count] != 0 ) {
+        returnDict[@"Warning"] = [warning copy];
+    }
+    if ( [error count] != 0 ) {
+        returnDict[@"Error"] = [error copy];
+    }
+    
+    return returnDict;
+}
 
 @end
