@@ -2239,7 +2239,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // selectTableViewPayloadProfile
 
 - (void)selectTableViewPayloadProfileRow:(NSInteger)row {
-
+    
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
     // -----------------------------------------------------------------------------------
@@ -2256,11 +2256,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_arraySettings removeAllObjects];
     
     // -------------------------------------------------------------------------
-    //  Show loading spinner after 0.4 seconds (if view hasn't already loaded
-    //  FIXME - This isn't working atm
+    //  Show loading spinner after x.x seconds (if view hasn't already loaded)
+    //  FIXME - This isn't working atm, and probably should do the loading in a background thread as well
     // -------------------------------------------------------------------------
+    /*
     [self setSettingsStatusLoading:YES];
-    [self performSelector:@selector(showSettingsLoading) withObject:nil afterDelay:0.4];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSelector:@selector(showSettingsLoading) withObject:nil afterDelay:0.4];
+    });
+     */
     
     // ----------------------------------------------------------------------------------------
     //  If selection is within the table view, update the settings view. Else leave it empty
@@ -2344,7 +2348,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // selectTableViewPayloadLibrary
 
 - (void)selectTableViewPayloadLibraryRow:(NSInteger)row {
-
+    
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
     // -----------------------------------------------------------------------------------
@@ -2362,11 +2366,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_arraySettings removeAllObjects];
     
     // -------------------------------------------------------------------------
-    //  Show loading spinner after 0.4 seconds (if view hasn't already loaded
-    //  FIXME - This isn't working atm
+    //  Show loading spinner after x.x seconds (if view hasn't already loaded)
+    //  FIXME - This isn't working atm, and probably should do the loading in a background thread as well
     // -------------------------------------------------------------------------
+    /*
     [self setSettingsStatusLoading:YES];
-    [self performSelector:@selector(showSettingsLoading) withObject:nil afterDelay:0.1];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSelector:@selector(showSettingsLoading) withObject:nil afterDelay:0.1];
+    });
+     */
     
     // ----------------------------------------------------------------------------------------
     //  If selection is within the table view, update the settings view. Else leave it empty
@@ -2416,7 +2424,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 [self hideSettingsHeader];
             }
             
-            if ( _settingsStatusHidden ) {
+            if ( _settingsStatusHidden || _settingsStatusLoading ) {
                 [self showSettingsError];
             }
         }

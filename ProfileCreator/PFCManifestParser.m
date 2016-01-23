@@ -1,10 +1,21 @@
 //
 //  PFCManifestParser.m
 //  ProfileCreator
+
+//  Created by Erik Berglund.
+//  Copyright (c) 2016 ProfileCreator. All rights reserved.
 //
-//  Created by Erik Berglund on 2016-01-22.
-//  Copyright © 2016 Erik Berglund. All rights reserved.
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 //
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 #import "PFCManifestParser.h"
 #import "PFCConstants.h"
@@ -18,6 +29,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 + (id)sharedParser {
+    // FIXME - Unsure if this has to be a singleton, figured it would be used alot and then not keep alloc/deallocing all the time
     static PFCManifestParser *sharedParser = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -28,7 +40,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark -
+#pragma mark Parse Manifest
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -38,14 +50,15 @@
         [array addObjectsFromArray:[self arrayForManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
     }
     return [array copy];
-} // settingsArrayForManifest:settings
+} // arrayForManifestContent:settings:settingsLocal
 
 - (NSArray *)arrayForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
-    NSLog(@"cellType=%@", cellType);
-    NSLog(@"identifier=%@", manifestContentDict[PFCManifestKeyIdentifier]);
-    NSLog(@"parentKeys=%@", parentKeys);
+    
+    // ------------------------------------------------------------------------------------------------------
+    //  Get current manifest content dict 'CellType' and call the correct method to add any possible subkeys
+    // ------------------------------------------------------------------------------------------------------
+    NSString *cellType = manifestContentDict[PFCManifestKeyCellType] ?: @"";
     if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
         [array addObjectsFromArray:[self arrayFromCellTypeCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
     } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
@@ -84,94 +97,136 @@
         return @[ manifestContentDict ];
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return @[ manifestContentDict ];
+    } else if ( [cellType length] != 0 ) {
+        NSLog(@"[ERROR] Unknown CellType: %@ for Identifier: %@", cellType, manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
     } else {
-        NSLog(@"[ERROR] Unknown CellType: %@", cellType);
+        //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
     
     return [array copy];
-} // arrayFromManifestContentDict:settings
+} // arrayForManifestContentDict:settings:settingsLocal
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellTypes
+#pragma mark Parse ManifestContent Dict CellTypes
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)arrayFromCellTypeCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
     
-    if ( [manifestContentDict[@"ValueKeys"] ?: @{} count] == 0 ) {
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains any 'ValueKeys'. Else stop.
+    // -------------------------------------------------------------------------
+    if ( [manifestContentDict[PFCManifestKeyValueKeys] ?: @{} count] == 0 ) {
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
     if ( [identifier length] == 0 ) {
         return @[ manifestContentDict ];
     }
     
-    NSDictionary *cellSettings = settings[identifier];
-    if ( [cellSettings count] == 0 ) {
-        return @[ manifestContentDict ];
-    }
-    
+    // -------------------------------------------------------------------------
+    //  Get current state of the checkbox
+    // -------------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if ( cellSettings[@"Value"] != nil ) {
-        checkboxState = [cellSettings[@"Value"] boolValue];
-    } else if ( manifestContentDict[@"DefaultValue"] ) {
-        checkboxState = [manifestContentDict[@"DefaultValue"] boolValue];
+    if ( settings[identifier][@"Value"] != nil ) {
+        checkboxState = [settings[identifier][@"Value"] boolValue];
+    } else if ( manifestContentDict[PFCManifestKeyDefaultValue] ) {
+        checkboxState = [manifestContentDict[PFCManifestKeyDefaultValue] boolValue];
     } else if ( settingsLocal[identifier][@"Value"] ) {
         checkboxState = [settingsLocal[identifier][@"Value"] boolValue];
     }
     
+    // -------------------------------------------------------------------------
+    //  Add any subkeys the current manifest content dict contains
+    // -------------------------------------------------------------------------
     NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:manifestContentDict, nil];
     [array addObjectsFromArray:[self arrayFromValueKeysForDict:manifestContentDict value:checkboxState ? @"True" : @"False" settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
     return [array copy];
-} // arrayFromCellTypeCheckbox:settings
+} // arrayFromCellTypeCheckbox:settings:settingsLocal:parentKeys
 
 - (NSArray *)arrayFromCellTypePopUpButton:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
-    NSLog(@"arrayFromCellTypePopUpButton");
-    if ( [manifestContentDict[@"ValueKeys"] ?: @{} count] == 0 || [manifestContentDict[@"AvailableValues"] ?: @[] count] == 0 ) {
+
+    // ----------------------------------------------------------------------------------------------
+    //  Verify this manifest content dict contains any 'ValueKeys' and 'AvailableValues'. Else stop.
+    // ----------------------------------------------------------------------------------------------
+    if ( [manifestContentDict[PFCManifestKeyValueKeys] ?: @{} count] == 0 || [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] count] == 0 ) {
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    NSLog(@"manifestContentDict=%@", manifestContentDict);
     if ( [identifier length] == 0 ) {
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Get current selection of the PopUpButton
+    // -------------------------------------------------------------------------
     NSString *selectedItem;
     if ( [settings[identifier][@"Value"] length] != 0 ) {
         selectedItem = settings[identifier][@"Value"];
-    } else if (  [manifestContentDict[@"DefaultValue"] length] != 0 ) {
-        selectedItem = manifestContentDict[@"DefaultValue"];
+    } else if (  [manifestContentDict[PFCManifestKeyDefaultValue] length] != 0 ) {
+        selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
     } else if (  [settingsLocal[identifier][@"Value"] length] != 0 ) {
         selectedItem = settingsLocal[identifier][@"Value"];
     }
-    NSLog(@"selectedItem=%@", selectedItem);
-    NSArray *availableValues = manifestContentDict[@"AvailableValues"] ?: @[];
+
+    // -------------------------------------------------------------------------
+    //  Verify selection was made and that it exists in 'AvailableValues'
+    //  If not, select first item in 'AvailableValues'
+    // -------------------------------------------------------------------------
+    NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     if ( [selectedItem length] == 0 || ! [availableValues containsObject:selectedItem] ) {
+        NSLog(@"[WARNING] PopUpButton selection is invalid, selecting first available item");
         selectedItem = [availableValues firstObject];
     }
-    NSLog(@"selectedItem=%@", selectedItem);
+
+    // -------------------------------------------------------------------------
+    //  Add any subkeys the current manifest content dict contains
+    // -------------------------------------------------------------------------
     NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:manifestContentDict, nil];
     [array addObjectsFromArray:[self arrayFromValueKeysForDict:manifestContentDict value:selectedItem settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
     return [array copy];
-} // arrayFromCellTypePopUpButton:settings
+} // arrayFromCellTypePopUpButton:settings:settingsLocal:parentKeys
 
 - (NSArray *)arrayFromCellTypeSegmentedControl:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
     
-    if ( [manifestContentDict[@"ValueKeys"] ?: @{} count] == 0 || [manifestContentDict[@"AvailableValues"] ?: @[] count] == 0 ) {
+    // ----------------------------------------------------------------------------------------------
+    //  Verify this manifest content dict contains any 'ValueKeys' and 'AvailableValues'. Else stop.
+    // ----------------------------------------------------------------------------------------------
+    if ( [manifestContentDict[PFCManifestKeyValueKeys] ?: @{} count] == 0 || [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] count] == 0 ) {
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ( [identifier length] == 0 ) {
+        return @[ manifestContentDict ];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get current selection of the SegmentedControl
+    // -------------------------------------------------------------------------
     NSNumber *selectedSegment;
     if ( manifestContentDict[@"Value"] != nil ) {
         selectedSegment = manifestContentDict[@"Value"];
     }
     
-    NSArray *availableValues = manifestContentDict[@"AvailableValues"] ?: @[];
-    
+    // -------------------------------------------------------------------------
+    //  Verify selection was made and that it exists in 'AvailableValues'
+    //  If not, select first item in 'AvailableValues'
+    // -------------------------------------------------------------------------
     NSString *selectedSegmentString;
+    NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     if ( selectedSegment == nil ) {
         selectedSegmentString = [availableValues firstObject];
     } else if ( [selectedSegment intValue] <= [availableValues count] ) {
@@ -180,44 +235,54 @@
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Add any subkeys the current manifest content dict contains
+    // -------------------------------------------------------------------------
     NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:manifestContentDict, nil];
     [array addObjectsFromArray:[self arrayFromValueKeysForDict:manifestContentDict value:selectedSegmentString settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
     return [array copy];
-} // arrayFromCellTypeSegmentedControl:settings
+} // arrayFromCellTypeSegmentedControl:settings:settingsLocal:parentKeys
 
 - (NSArray *)arrayFromCellTypeTextFieldCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
     
-    if ( [manifestContentDict[@"ValueKeys"] ?: @{} count] == 0 ) {
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains any 'ValueKeys'. Else stop.
+    // -------------------------------------------------------------------------
+    if ( [manifestContentDict[PFCManifestKeyValueKeys] ?: @{} count] == 0 ) {
         return @[ manifestContentDict ];
     }
     
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
     if ( [identifier length] == 0 ) {
         return @[ manifestContentDict ];
     }
     
-    NSDictionary *cellSettings = settings[identifier];
-    if ( [cellSettings count] == 0 ) {
-        return @[ manifestContentDict ];
-    }
-    
+    // -------------------------------------------------------------------------
+    //  Get current state of the checkbox
+    // -------------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if ( cellSettings[@"ValueCheckbox"] != nil ) {
-        checkboxState = [cellSettings[@"ValueCheckbox"] boolValue];
-    } else if ( manifestContentDict[@"DefaultValueCheckbox"] ) {
-        checkboxState = [manifestContentDict[@"DefaultValueCheckbox"] boolValue];
+    if ( settings[identifier][@"ValueCheckbox"] != nil ) {
+        checkboxState = [settings[identifier][@"ValueCheckbox"] boolValue];
+    } else if ( manifestContentDict[PFCManifestKeyDefaultValueCheckbox] ) {
+        checkboxState = [manifestContentDict[PFCManifestKeyDefaultValueCheckbox] boolValue];
     } else if ( settingsLocal[identifier][@"ValueCheckbox"] ) {
         checkboxState = [settingsLocal[identifier][@"ValueCheckbox"] boolValue];
     }
     
+    // -------------------------------------------------------------------------
+    //  Add any subkeys the current manifest content dict contains
+    // -------------------------------------------------------------------------
     NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:manifestContentDict, nil];
     [array addObjectsFromArray:[self arrayFromValueKeysForDict:manifestContentDict value:checkboxState ? @"True" : @"False" settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
     return [array copy];
-} // arrayFromCellTypeTextField:settings
+} // arrayFromCellTypeTextFieldCheckbox:settings:settingsLocal:parentKeys
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark 
+#pragma mark Parse ManifestContent Dict SubKeys (ValueKeys)
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -225,14 +290,18 @@
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     
-    NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"] ?: @{};
+    NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
     if ( [valueKeys count] != 0 ) {
         
         // ---------------------------------------------------------------------------
         //  If selected object (valueString) in dict valueKeys is not an array, stop.
         // ---------------------------------------------------------------------------
         if ( ! [[valueKeys[value] class] isSubclassOfClass:[NSArray class]] ) {
-            NSLog(@"Selected value is: %@", [valueKeys[value] class]);
+            /*
+            NSLog(@"[DEBUG] Selected value is: %@", value);
+            NSLog(@"[DEBUG] Selected value class is: %@", [valueKeys[value] class]);
+            NSLog(@"[DEBUG] Available ValueKeys: %@", valueKeys);
+             */
             return @[];
         }
         
@@ -240,7 +309,7 @@
         //  If manifestContentDict doesn't have an identifier, stop.
         //  The identifier is required to be able to remove the dicts when the user changes selection
         // ---------------------------------------------------------------------
-        NSString *identifier = manifestContentDict[@"Identifier"] ?: @"";
+        NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier] ?: @"";
         if ( [identifier length] == 0 ) {
             NSLog(@"[ERROR] No identifier!");
             return @[];
@@ -265,7 +334,7 @@
                 //  Get the shared key dict from the manifest's 'ValueKeysShared'
                 // ---------------------------------------------------------------
                 NSString *sharedKey = valueDict[@"SharedKey"];
-                NSDictionary *valueKeysShared = manifestContentDict[@"ValueKeysShared"];
+                NSDictionary *valueKeysShared = manifestContentDict[PFCManifestKeyValueKeysShared];
                 if ( [valueKeysShared count] != 0 ) {
                     mutableValueDict = valueKeysShared[sharedKey];
                 } else {
@@ -292,7 +361,7 @@
             mutableValueDict[@"ParentKey"] = [parentKeys copy];
             
             // -----------------------------------------------------------------
-            //  Run the current manifest and add
+            //  Add any subkeys the current manifest content dict contains
             // -----------------------------------------------------------------
             [array addObjectsFromArray:[self arrayForManifestContentDict:mutableValueDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys]];
         }
@@ -304,6 +373,6 @@
     }
     
     return [array copy];
-}
+} // arrayFromValueKeysForDict:value:settings:settingsLocal:parentKeys
 
 @end
