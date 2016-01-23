@@ -18,7 +18,8 @@
 //  limitations under the License.
 
 #import "PFCController.h"
-#import "PFCManifestCreationParser.h"
+#import "PFCConstants.h"
+#import "PFCManifestParser.h"
 #import "PFCTableViewCellsProfiles.h"
 #import "PFCProfileExportWindowController.h"
 

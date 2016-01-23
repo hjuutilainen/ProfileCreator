@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface PFCManifestParser : NSObject
 
@@ -27,9 +27,20 @@
 + (id)sharedParser;
 
 // -------------------------------------------------------------
-//  Instance Methods
+//  TableView arrays from Manifest
 // -------------------------------------------------------------
 - (NSArray *)arrayForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal;
 - (NSArray *)arrayForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys;
+
+// -------------------------------------------------------------
+//  Manifest from property list
+// -------------------------------------------------------------
+- (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary *)settingsDict;
+
+// -------------------------------------------------------------
+//  Manifest verification
+// -------------------------------------------------------------
+- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
+- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
 
 @end

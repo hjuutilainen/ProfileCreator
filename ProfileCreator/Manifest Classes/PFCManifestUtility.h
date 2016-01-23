@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCManifestUtility.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -19,10 +19,19 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCManifestUtility : NSObject
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+// -------------------------------------------------------------
+//  Class Methods
+// -------------------------------------------------------------
++ (id)sharedUtility;
+
+// -------------------------------------------------------------
+//  Utility Methods
+// -------------------------------------------------------------
+- (NSImage *)iconForManifest:(NSDictionary *)manifest;
+- (BOOL)hideKey:(NSString *)key;
+- (NSString *)typeStringFromValue:(id)value;
+- (NSString *)cellTypeFromTypeString:(NSString *)typeString;
 
 @end

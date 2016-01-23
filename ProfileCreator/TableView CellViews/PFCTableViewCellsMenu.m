@@ -20,7 +20,7 @@
 #import "PFCTableViewCellsMenu.h"
 #import "PFCProfileCreationWindowController.h"
 #import "PFCConstants.h"
-#import "PFCManifestTools.h"
+#import "PFCManifestUtility.h"
 
 @implementation PFCTableViewMenuCells
 @end
@@ -46,20 +46,20 @@
         [[cellView errorCount] setStringValue:@""];
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Title
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Description
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [[cellView menuDescription] setStringValue:manifestDict[PFCManifestKeyDescription] ?: @""];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Icon
-    // ---------------------------------------------------------------------
-    NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
+    // -------------------------------------------------------------------------
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
     if ( icon ) {
         [[cellView menuIcon] setImage:icon];
     }
@@ -127,7 +127,7 @@
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [PFCManifestTools iconForManifest:manifestDict];
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
     if ( icon ) {
         [[cellView menuIcon] setImage:icon];
     }

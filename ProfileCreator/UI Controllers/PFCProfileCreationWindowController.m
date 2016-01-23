@@ -20,12 +20,10 @@
 #import "PFCProfileCreationWindowController.h"
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
-#import "PFCManifestCreationParser.h"
 #import "PFCConstants.h"
 #import "PFCController.h"
-#import "PFCPayloadVerification.h"
 #import "PFCSplitViews.h"
-#import "PFCManifestTools.h"
+#import "PFCManifestUtility.h"
 #import "PFCProfileCreationInfoView.h"
 #import "PFCManifestParser.h"
 
@@ -463,7 +461,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         
         for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
             NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
-            NSDictionary *manifestDict = [PFCManifestCreationParser manifestForPlistAtURL:plistURL settingsDict:settingsDict];
+            NSDictionary *manifestDict = [[PFCManifestParser sharedParser] manifestForPlistAtURL:plistURL settingsDict:settingsDict];
             if ( [manifestDict count] != 0 ) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
                 if (
@@ -839,7 +837,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 manifestSettings = _settingsManifest;
             }
             
-            NSDictionary *errorDict = [[PFCPayloadVerification sharedInstance] verifyManifest:manifestDict[PFCManifestKeyManifestContent] settingsDict:manifestSettings];
+            NSDictionary *errorDict = [[PFCManifestParser sharedParser] verifyManifest:manifestDict[PFCManifestKeyManifestContent] settingsDict:manifestSettings];
             NSNumber *errorCount;
             if ( [errorDict count] != 0 ) {
                 errorCount = @([errorDict[@"Error"] count]);
@@ -2309,7 +2307,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [PFCManifestTools iconForManifest:manifest];
+            NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
             }
@@ -2414,7 +2412,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
-            NSImage *icon = [PFCManifestTools iconForManifest:manifest];
+            NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
             }
