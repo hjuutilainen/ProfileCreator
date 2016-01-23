@@ -140,7 +140,7 @@
     if ( [value isKindOfClass:[NSDictionary class]] )   return PFCValueTypeDict;
     if ( [value isKindOfClass:[NSDate class]] )         return PFCValueTypeDate;
     if ( [value isKindOfClass:[NSData class]] )         return PFCValueTypeData;
-    return @"Unknown";
+    return PFCValueTypeUnknown;
 } // typeStringFromValue
 
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString {

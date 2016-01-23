@@ -20,6 +20,7 @@
 #import "PFCManifestParser.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
+#import "PFCError.h"
 
 @implementation PFCManifestParser
 
@@ -59,42 +60,118 @@
     //  Get current manifest content dict 'CellType' and call the correct method to add any possible subkeys
     // ------------------------------------------------------------------------------------------------------
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType] ?: @"";
+    
+    // ---------------------------------------------------------------------
+    //  Checkbox
+    // ---------------------------------------------------------------------
     if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
         return [self arrayFromCellTypeCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  CheckboxNoDescription
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
         return [self arrayFromCellTypeCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  DatePicker
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  DatePickerNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  File
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  Padding
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePadding] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButton
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
         return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButtonLeft
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
         return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButtonNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
         return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  SegmentedControl
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
         return [self arrayFromCellTypeSegmentedControl:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  TableView
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextField
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextField] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldCheckbox
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ) {
         return [self arrayFromCellTypeTextFieldCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldDaysHoursNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldHostPort
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldHostPortCheckbox
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
         return [self arrayFromCellTypeTextFieldCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNumber
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumber] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNumberLeft
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return @[ manifestContentDict ];
     } else if ( [cellType length] != 0 ) {
@@ -133,12 +210,12 @@
     //  Get current state of the checkbox
     // -------------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if ( settings[identifier][@"Value"] != nil ) {
-        checkboxState = [settings[identifier][@"Value"] boolValue];
+    if ( settings[identifier][PFCSettingsKeyValue] != nil ) {
+        checkboxState = [settings[identifier][PFCSettingsKeyValue] boolValue];
     } else if ( manifestContentDict[PFCManifestKeyDefaultValue] ) {
         checkboxState = [manifestContentDict[PFCManifestKeyDefaultValue] boolValue];
-    } else if ( settingsLocal[identifier][@"Value"] ) {
-        checkboxState = [settingsLocal[identifier][@"Value"] boolValue];
+    } else if ( settingsLocal[identifier][PFCSettingsKeyValue] ) {
+        checkboxState = [settingsLocal[identifier][PFCSettingsKeyValue] boolValue];
     }
     
     // -------------------------------------------------------------------------
@@ -170,12 +247,12 @@
     //  Get current selection of the PopUpButton
     // -------------------------------------------------------------------------
     NSString *selectedItem;
-    if ( [settings[identifier][@"Value"] length] != 0 ) {
-        selectedItem = settings[identifier][@"Value"];
+    if ( [settings[identifier][PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settings[identifier][PFCSettingsKeyValue];
     } else if (  [manifestContentDict[PFCManifestKeyDefaultValue] length] != 0 ) {
         selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
-    } else if (  [settingsLocal[identifier][@"Value"] length] != 0 ) {
-        selectedItem = settingsLocal[identifier][@"Value"];
+    } else if (  [settingsLocal[identifier][PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settingsLocal[identifier][PFCSettingsKeyValue];
     }
 
     // -------------------------------------------------------------------------
@@ -217,8 +294,8 @@
     //  Get current selection of the SegmentedControl
     // -------------------------------------------------------------------------
     NSNumber *selectedSegment;
-    if ( manifestContentDict[@"Value"] != nil ) {
-        selectedSegment = manifestContentDict[@"Value"];
+    if ( manifestContentDict[PFCSettingsKeyValue] != nil ) {
+        selectedSegment = manifestContentDict[PFCSettingsKeyValue];
     }
     
     // -------------------------------------------------------------------------
@@ -328,12 +405,12 @@
             //  If the key 'SharedKey' is present, the dict array to add is in the 'ValueKeysShared' array
             // --------------------------------------------------------------------------------------------
             NSMutableDictionary *mutableValueDict;
-            if ( [valueDict[@"SharedKey"] length] != 0 ) {
+            if ( [valueDict[PFCManifestKeySharedKey] length] != 0 ) {
                 
                 // ---------------------------------------------------------------
                 //  Get the shared key dict from the manifest's 'ValueKeysShared'
                 // ---------------------------------------------------------------
-                NSString *sharedKey = valueDict[@"SharedKey"];
+                NSString *sharedKey = valueDict[PFCManifestKeySharedKey];
                 NSDictionary *valueKeysShared = manifestContentDict[PFCManifestKeyValueKeysShared];
                 if ( [valueKeysShared count] != 0 ) {
                     mutableValueDict = valueKeysShared[sharedKey];
@@ -414,7 +491,7 @@
     // ---------------------------------------------------------------------
     //  Set the required CellType for the Menu
     // ---------------------------------------------------------------------
-    manifestDict[PFCManifestKeyCellType] = @"Menu";
+    manifestDict[PFCManifestKeyCellType] = PFCCellTypeMenu;
     
     // ---------------------------------------------------------------------
     //  Set the domain to the plist name (without the file extension)
@@ -498,7 +575,6 @@
         // ---------------------------------------------------------------------------------
         NSString *identifier = [[NSUUID UUID] UUIDString];
         manifestDict[PFCManifestKeyIdentifier] = identifier;
-        manifestDict[PFCManifestKeyEnabled] = @YES;
         manifestDict[PFCManifestKeyPayloadKey] = key;
         manifestDict[PFCManifestKeyTitle] = key;
         
@@ -526,13 +602,13 @@
             //
             //  Array - CellType: PFCCellTypeTableView
             // -----------------------------------------------------------------------
-            if ( [typeString isEqualToString:@"Array"] ) {
+            if ( [typeString isEqualToString:PFCValueTypeArray] ) {
                 manifestDict[PFCManifestKeyTableViewColumns] = [self tableViewColumnsFromArray:value settings:identifierSettingsDict];
                 
                 // -------------------------------------------------------------
                 //  Dict - CellType: PFCCellTypeSegmentedControl
                 // -------------------------------------------------------------
-            } else if ( [typeString isEqualToString:@"Dict"] ) {
+            } else if ( [typeString isEqualToString:PFCValueTypeDict] ) {
                 manifestDict[PFCManifestKeyAvailableValues] = @[ key ];
                 manifestDict[PFCManifestKeyValueKeys] = @{ key : [self manifestContentFromDict:value settingsDict:identifierSettingsDict] };
                 
@@ -547,7 +623,7 @@
                 //  Data    - CellType: PFCCellTypeFile
                 // -------------------------------------------------------------
             } else {
-                identifierSettingsDict[@"Value"] = value;
+                identifierSettingsDict[PFCSettingsKeyValue] = value;
             }
             
             // -----------------------------------------------------------------
@@ -584,9 +660,9 @@
     //                  Float
     // -------------------------------------------------------------------------
     if (
-        [typeString isEqualToString:@"String"] ||
-        [typeString isEqualToString:@"Integer"] ||
-        [typeString isEqualToString:@"Float"] ) {
+        [typeString isEqualToString:PFCValueTypeString] ||
+        [typeString isEqualToString:PFCValueTypeInteger] ||
+        [typeString isEqualToString:PFCValueTypeFloat] ) {
         
         // ---------------------------------------------------------------------
         //  Create a unique columen title
@@ -606,7 +682,7 @@
         // ---------------------------------------------------------------------
         NSMutableArray *tableViewContent = [[NSMutableArray alloc] init];
         for ( NSString *string in array ) {
-            [tableViewContent addObject:@{ columnTitle : @{ @"Value" : string } }];
+            [tableViewContent addObject:@{ columnTitle : @{ PFCSettingsKeyValue : string } }];
         }
         
         settings[@"TableViewContent"] = [tableViewContent copy];
@@ -614,7 +690,7 @@
         // -------------------------------------------------------------------------
         //  Array content: Dict
         // -------------------------------------------------------------------------
-    } else if ( [typeString isEqualToString:@"Dict"] ) {
+    } else if ( [typeString isEqualToString:PFCValueTypeDict] ) {
         
         
         // -----------------------------------------------------------------------------
@@ -638,10 +714,10 @@
             NSMutableDictionary *contentDict = [[NSMutableDictionary alloc] init];
             for ( NSString *key in [dict allKeys] ) {
                 NSString *valueTypeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:dict[key]];
-                if ( [valueTypeString isEqualToString:@"String"] ) {
-                    contentDict[key] = @{ @"Value" : dict[key] };
-                } else if ( [valueTypeString isEqualToString:@"Boolean"] ) {
-                    contentDict[key] = @{ @"Value" : dict[key] };
+                if ( [valueTypeString isEqualToString:PFCValueTypeString] ) {
+                    contentDict[key] = @{ PFCSettingsKeyValue : dict[key] };
+                } else if ( [valueTypeString isEqualToString:PFCValueTypeBoolean] ) {
+                    contentDict[key] = @{ PFCSettingsKeyValue : dict[key] };
                 } else {
                     //NSLog(@"key=%@", dict[key]);
                 }
@@ -673,7 +749,7 @@
         //  If manifest content dict contains key 'PayloadValue' or 'SharedKey'. Continue.
         //  These keys are only used in sub dicts to define a value or a link to a shared key.
         // -----------------------------------------------------------------------------------
-        if ( manifestContentDict[@"PayloadValue"] || manifestContentDict[@"SharedKey"] ) {
+        if ( manifestContentDict[PFCManifestKeyPayloadValue] || manifestContentDict[PFCManifestKeySharedKey] ) {
             continue;
         }
         
@@ -695,42 +771,114 @@
     //  Get current manifest content dict 'CellType' and call the correct method for verification
     // -------------------------------------------------------------------------------------------
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType] ?: @"";
+    
+    // ---------------------------------------------------------------------
+    //  Checkbox
+    // ---------------------------------------------------------------------
     if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
         return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
+        
+        // ---------------------------------------------------------------------
+        //  CheckboxNoDescription
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
         return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
+        
+        // ---------------------------------------------------------------------
+        //  DatePicker
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
         
+        // ---------------------------------------------------------------------
+        //  DatePickerNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ) {
         
+        // ---------------------------------------------------------------------
+        //  File
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
         return [self verifyCellTypeFile:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  Padding
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePadding] ) {
         
+        // ---------------------------------------------------------------------
+        //  PopUpButton
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
-        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypePopUpButton:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButtonLeft
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
-        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypePopUpButton:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  PopUpButtonNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
-        return [self verifyCellTypePopUpButton:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypePopUpButton:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  SegmentedControl
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
-        return [self verifyCellTypeSegmentedControl:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypeSegmentedControl:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TableView
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
 
+        // ---------------------------------------------------------------------
+        //  TextField
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextField] ) {
         return [self verifyCellTypeTextField:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldCheckbox
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ) {
         return [self verifyCellTypeTextFieldCheckbox:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldDaysHoursNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
         return [self verifyCellTypeTextFieldDaysHoursNoTitle:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldHostPort
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ) {
         return [self verifyCellTypeTextFieldHostPort:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldHostPortCheckbox
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
         return [self verifyCellTypeTextFieldHostPortCheckbox:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNoTitle
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ) {
         return [self verifyCellTypeTextField:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNumber
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumber] ) {
         return [self verifyCellTypeTextFieldNumber:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextFieldNumberLeft
+        // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return [self verifyCellTypeTextFieldNumber:manifestContentDict settings:settings];
     } else if ( [cellType length] != 0 ) {
@@ -762,20 +910,14 @@
     if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
-    BOOL required = [manifestContentDict[@"Required"] boolValue];
-    NSString *value = contentDictSettings[@"Value"];
+    BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
+    NSString *value = contentDictSettings[PFCSettingsKeyValue];
     if ( [value length] == 0 ) {
-        value = contentDictSettings[@"DefaultValue"];
+        value = contentDictSettings[PFCManifestKeyDefaultValue];
     }
     
     if ( required && [value length] == 0 ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"",
-                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
     return nil;
@@ -802,13 +944,7 @@
     }
     
     if ( required && [value length] == 0 ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"",
-                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
     return nil;
@@ -829,19 +965,13 @@
         //NSLog(@"No settings!");
     }
     BOOL required = [manifestContentDict[@"Required"] boolValue];
-    NSNumber *value = contentDictSettings[@"Value"];
+    NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = contentDictSettings[@"DefaultValue"];
     }
     
     if ( required && value == nil ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"",
-                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
     return nil;
@@ -877,11 +1007,7 @@
     }
     
     if ( requiredHost && [valueHost length] == 0 ) {
-        [array addObject:@{
-                           @"Message" : @"",
-                           @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                           @"PayloadKey" : manifestContentDict[@"PayloadKeyHost"] ?: @"Unknown"
-                           }];
+        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
     }
     
     
@@ -898,15 +1024,11 @@
     }
     
     if ( requiredPort && [valuePort length] == 0 ) {
-        [array addObject:@{
-                           @"Message" : @"",
-                           @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                           @"PayloadKey" : manifestContentDict[@"PayloadKeyPort"] ?: @"Unknown"
-                           }];
+        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
     }
     
     if ( [array count] != 0 ) {
-        return @{ @"Error" : [array copy] };
+        return @{ [@(kPFCSeverityError) stringValue] : [array copy] };
     }
     
     return nil;
@@ -942,11 +1064,7 @@
     }
     
     if ( requiredHost && [valueHost length] == 0 ) {
-        [array addObject:@{
-                           @"Message" : @"",
-                           @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                           @"PayloadKey" : manifestContentDict[@"PayloadKeyHost"] ?: @"Unknown"
-                           }];
+        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
     }
     
     
@@ -963,15 +1081,11 @@
     }
     
     if ( requiredPort && valuePort == nil ) {
-        [array addObject:@{
-                           @"Message" : @"",
-                           @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                           @"PayloadKey" : manifestContentDict[@"PayloadKeyPort"] ?: @"Unknown"
-                           }];
+        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
     }
     
     if ( [array count] != 0 ) {
-        return @{ @"Error" : [array copy] };
+        return @{ [@(kPFCSeverityError) stringValue] : [array copy] };
     }
     
     return nil;
@@ -992,7 +1106,7 @@
         //NSLog(@"No settings!");
     }
     BOOL required = [manifestContentDict[@"Required"] boolValue];
-    NSNumber *value = contentDictSettings[@"Value"];
+    NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = contentDictSettings[@"DefaultValue"];
     }
@@ -1001,13 +1115,7 @@
     NSNumber *maxValue = manifestContentDict[@"MaxValue"];
     
     if ( required && ( value == nil || value <= minValue || maxValue < value ) ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"",
-                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
     return nil;
@@ -1015,7 +1123,7 @@
 
 - (NSDictionary *)verifyCellTypeCheckbox:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
     
-    NSString *checkboxState = [settingsDict[@"Value"] boolValue] ? @"True" : @"False";
+    NSString *checkboxState = [settingsDict[PFCSettingsKeyValue] boolValue] ? @"True" : @"False";
     NSDictionary *valueKeys = cellDict[@"ValueKeys"];
     if ( valueKeys[checkboxState] ) {
         return [self verifyManifestContent:valueKeys[checkboxState] settings:settingsDict];
@@ -1043,13 +1151,7 @@
     NSURL *fileURL = [NSURL fileURLWithPath:filePath ?: @""];
     NSError *error = nil;
     if ( ! [fileURL checkResourceIsReachableAndReturnError:&error] ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : [error localizedDescription] ?: @"",
-                                  @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
     NSArray *allowedFileTypes = manifestContentDict[@"AllowedFileTypes"];
@@ -1067,13 +1169,7 @@
             }];
             
             if ( ! validFileType ) {
-                return @{
-                         @"Error" : @[@{
-                                          @"Message" : @"Invalid File Type",
-                                          @"Identifier" : manifestContentDict[@"Identifier"] ?: @"Unknown",
-                                          @"PayloadKey" : manifestContentDict[@"PayloadKey"] ?: @"Unknown"
-                                          }]
-                         };
+                return [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
             }
         } else {
             NSLog(@"[ERROR] %@", [error localizedDescription]);
@@ -1083,46 +1179,34 @@
     return nil;
 }
 
-- (NSDictionary *)verifyCellTypePopUpButton:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
+- (NSDictionary *)verifyCellTypePopUpButton:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     
-    NSString *selectedItem = settingsDict[@"Value"];
+    NSString *selectedItem = settings[PFCSettingsKeyValue];
     if ( [selectedItem length] == 0 ) {
-        selectedItem = cellDict[@"DefaultValue"];
+        selectedItem = manifestContentDict[@"DefaultValue"];
     }
     
     if ( [selectedItem length] == 0 ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"No selection!",
-                                  @"Identifier" : cellDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : cellDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+        return [PFCError verificationReportWithMessage:@"No Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
-    if ( ! [cellDict[@"AvailableValues"] ?: @[] containsObject:selectedItem] ) {
-        return @{
-                 @"Error" : @[@{
-                                  @"Message" : @"Invalid selection!",
-                                  @"Identifier" : cellDict[@"Identifier"] ?: @"Unknown",
-                                  @"PayloadKey" : cellDict[@"PayloadKey"] ?: @"Unknown"
-                                  }]
-                 };
+    if ( ! [manifestContentDict[@"AvailableValues"] ?: @[] containsObject:selectedItem] ) {
+        return [PFCError verificationReportWithMessage:@"Invalid Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
     }
     
-    NSDictionary *valueKeys = cellDict[@"ValueKeys"];
+    NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"];
     if ( valueKeys[selectedItem] ) {
-        return [self verifyManifestContent:valueKeys[selectedItem] settings:settingsDict];
+        return [self verifyManifestContent:valueKeys[selectedItem] settings:settings];
     }
     
     return nil;
 }
 
-- (NSDictionary *)verifyCellTypeSegmentedControl:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
+- (NSDictionary *)verifyCellTypeSegmentedControl:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     NSMutableArray *array = [NSMutableArray array];
-    NSDictionary *valueKeys = cellDict[@"ValueKeys"];
-    for ( NSString *selection in cellDict[@"AvailableValues"] ?: @[] ) {
-        NSDictionary *verificationReport = [self verifyManifestContent:valueKeys[selection] settings:settingsDict];
+    NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"];
+    for ( NSString *selection in manifestContentDict[@"AvailableValues"] ?: @[] ) {
+        NSDictionary *verificationReport = [self verifyManifestContent:valueKeys[selection] settings:settings];
         if ( [verificationReport count] != 0 ) {
             [array addObject:verificationReport];
         }
@@ -1142,20 +1226,20 @@
     NSMutableArray *warning = [NSMutableArray array];
     
     for ( NSDictionary *dict in array ) {
-        if ( [dict[@"Error"] count] != 0 ) {
-            [error addObjectsFromArray:dict[@"Error"]];
+        if ( [dict[[@(kPFCSeverityError) stringValue]] count] != 0 ) {
+            [error addObjectsFromArray:dict[[@(kPFCSeverityError) stringValue]]];
         }
-        if ( [dict[@"Warning"] count] != 0 ) {
-            [warning addObjectsFromArray:dict[@"Warning"]];
+        if ( [dict[[@(kPFCSeverityWarning) stringValue]] count] != 0 ) {
+            [warning addObjectsFromArray:dict[[@(kPFCSeverityWarning) stringValue]]];
         }
     }
     
     NSMutableDictionary *verificationReport = [NSMutableDictionary dictionary];
     if ( [warning count] != 0 ) {
-        verificationReport[@"Warning"] = [warning copy];
+        verificationReport[[@(kPFCSeverityWarning) stringValue]] = [warning copy];
     }
     if ( [error count] != 0 ) {
-        verificationReport[@"Error"] = [error copy];
+        verificationReport[[@(kPFCSeverityError) stringValue]] = [error copy];
     }
     
     return verificationReport;

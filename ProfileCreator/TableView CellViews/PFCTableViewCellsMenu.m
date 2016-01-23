@@ -39,7 +39,10 @@
 
 - (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
     
-    if ( errorCount != nil ) {
+    // -------------------------------------------------------------------------
+    //  Error Counter
+    // -------------------------------------------------------------------------
+    if ( errorCount != nil && 0 < errorCount ) {
         NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
         [[cellView errorCount] setAttributedStringValue:errorCountString];
     } else {
@@ -86,7 +89,7 @@
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setState:[manifestDict[PFCManifestKeyEnabled] boolValue]];
+    [[cellView menuCheckbox] setState:[manifestDict[PFCSettingsKeyEnabled] boolValue]];
     
     // ---------------------------------------------------------------------
     //  Required

@@ -19,8 +19,26 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCTableViewCellsSettings : NSObject
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@interface CellViewSettingsCheckbox : NSTableCellView
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
+@property (weak) IBOutlet NSButton *settingCheckbox;
+@property (weak) IBOutlet NSTextField *settingDescription;
+- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -162,18 +180,6 @@
 @property (weak) IBOutlet NSStepper *settingStepper;
 @property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
 - (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewSettingsCheckbox
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@interface CellViewSettingsCheckbox : NSTableCellView
-@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
-@property (weak) IBOutlet NSButton *settingCheckbox;
-@property (weak) IBOutlet NSTextField *settingDescription;
-- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

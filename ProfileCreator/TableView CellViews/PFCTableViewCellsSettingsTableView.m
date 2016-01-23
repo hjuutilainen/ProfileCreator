@@ -19,6 +19,7 @@
 
 #import "PFCTableViewCellsSettingsTableView.h"
 #import "PFCTableViewCellsSettings.h"
+#import "PFCConstants.h"
 
 @implementation PFCTableViewCellsSettingsTableView
 @end
@@ -44,7 +45,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[@"Value"] ?: @"";
+    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     if ( [value length] == 0 ) {
         if ( [settings[@"DefaultValue"] length] != 0 ) {
             value = settings[@"DefaultValue"] ?: @"";
@@ -91,7 +92,7 @@
     // ---------------------------------------------------------------------
     [[cellView popUpButton] removeAllItems];
     [[cellView popUpButton] addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
-    [[cellView popUpButton] selectItemWithTitle:settings[@"Value"] ?: settings[@"DefaultValue"]];
+    [[cellView popUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -126,8 +127,8 @@
     //  Value
     // ---------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if ( settings[@"Value"] != nil ) {
-        checkboxState = [settings[@"Value"] boolValue];
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
     } else if ( settings[@"DefaultValue"] ) {
         checkboxState = [settings[@"DefaultValue"] boolValue];
     }
@@ -168,11 +169,11 @@
     //  Value
     // ---------------------------------------------------------------------
     NSString *value;
-    if ( settings[@"Value"] != nil ) {
-        if ( [[settings[@"Value"] class] isSubclassOfClass:[NSString class]] ) {
-            value = settings[@"Value"] ?: @"";
-        } else if ( [[settings[@"Value"] class] isSubclassOfClass:[@(0) class]] ) {
-            value = [settings[@"Value"] stringValue] ?: @"";
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        if ( [[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[NSString class]] ) {
+            value = settings[PFCSettingsKeyValue] ?: @"";
+        } else if ( [[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[@(0) class]] ) {
+            value = [settings[PFCSettingsKeyValue] stringValue] ?: @"";
         }
     }
 

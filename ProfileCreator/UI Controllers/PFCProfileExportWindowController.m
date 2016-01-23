@@ -20,6 +20,8 @@
 #import "PFCProfileExportWindowController.h"
 #import "PFCManifestParser.h"
 #import "PFCController.h"
+#import "PFCConstants.h"
+#import "PFCError.h"
 
 @interface PFCProfileExportWindowController ()
 
@@ -127,12 +129,12 @@
         NSDictionary *settingsDict = selectedDict[manifestDomain];
         NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
         if ( [verificationReport count] != 0 ) {
-            NSArray *warnings = verificationReport[@"Warning"];
+            NSArray *warnings = verificationReport[[@(kPFCSeverityWarning) stringValue]];
             for ( NSDictionary *warningDict in warnings ) {
                 NSLog(@"[WARNING] %@", warningDict);
             }
             
-            NSArray *errors = verificationReport[@"Error"];
+            NSArray *errors = verificationReport[[@(kPFCSeverityError) stringValue]];
             for ( NSDictionary *errorDict in errors ) {
                 NSLog(@"[ERROR] %@", errorDict);
             }
@@ -334,7 +336,7 @@
     }
     
     NSDictionary *settings = settingsDict[identifier] ?: @{};
-    id value = settings[@"Value"];
+    id value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = payloadDict[@"DefaultValue"];
     }
@@ -384,7 +386,7 @@
     
     NSDictionary *settings = settingsDict[identifier] ?: @{};
     
-    id value = settings[@"Value"];
+    id value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = payloadDict[@"DefaultValue"];
     }
@@ -514,14 +516,14 @@
     NSMutableArray *selectedValueArray = [valueKeys[checkboxStateString] mutableCopy];
     
     NSUInteger idxPayloadValue = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"PayloadValue"] ) ? YES : NO;
+        return ( item[PFCManifestKeyPayloadValue] ) ? YES : NO;
     }];
     
     if ( idxPayloadValue != NSNotFound ) {
         NSDictionary *payloadValueDict = [selectedValueArray objectAtIndex:idxPayloadValue];
         [selectedValueArray removeObjectAtIndex:idxPayloadValue];
         
-        id value = payloadValueDict[@"PayloadValue"];
+        id value = payloadValueDict[PFCManifestKeyPayloadValue];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;
@@ -563,14 +565,14 @@
     }
     
     NSUInteger idxSharedKey = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"SharedKey"] ) ? YES : NO;
+        return ( item[PFCManifestKeySharedKey] ) ? YES : NO;
     }];
     
     if ( idxSharedKey != NSNotFound ) {
         NSDictionary *sharedKeyDict = [selectedValueArray objectAtIndex:idxSharedKey];
         [selectedValueArray removeObjectAtIndex:idxSharedKey];
         
-        id value = sharedKeyDict[@"SharedKey"];
+        id value = sharedKeyDict[PFCManifestKeySharedKey];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;
@@ -718,7 +720,7 @@
     }
     
     NSDictionary *settings = settingsDict[identifier] ?: @{};
-    id value = settings[@"Value"];
+    id value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = payloadDict[@"DefaultValue"];
     }
@@ -782,7 +784,7 @@
     }
     
     NSDictionary *settings = settingsDict[identifier] ?: @{};
-    id value = settings[@"Value"];
+    id value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = payloadDict[@"DefaultValue"];
     }
@@ -848,14 +850,14 @@
     NSMutableArray *selectedValueArray = [valueKeys[checkboxStateString] mutableCopy];
     
     NSUInteger idxPayloadValue = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"PayloadValue"] ) ? YES : NO;
+        return ( item[PFCManifestKeyPayloadValue] ) ? YES : NO;
     }];
     
     if ( idxPayloadValue != NSNotFound ) {
         NSDictionary *payloadValueDict = [selectedValueArray objectAtIndex:idxPayloadValue];
         [selectedValueArray removeObjectAtIndex:idxPayloadValue];
         
-        id value = payloadValueDict[@"PayloadValue"];
+        id value = payloadValueDict[PFCManifestKeyPayloadValue];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;
@@ -897,14 +899,14 @@
     }
     
     NSUInteger idxSharedKey = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"SharedKey"] ) ? YES : NO;
+        return ( item[PFCManifestKeySharedKey] ) ? YES : NO;
     }];
     
     if ( idxSharedKey != NSNotFound ) {
         NSDictionary *sharedKeyDict = [selectedValueArray objectAtIndex:idxSharedKey];
         [selectedValueArray removeObjectAtIndex:idxSharedKey];
         
-        id value = sharedKeyDict[@"SharedKey"];
+        id value = sharedKeyDict[PFCManifestKeySharedKey];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;
@@ -944,7 +946,7 @@
     }
     
     NSDictionary *settings = settingsDict[identifier] ?: @{};
-    id value = settings[@"Value"];
+    id value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         value = payloadDict[@"DefaultValue"];
     }
@@ -984,14 +986,14 @@
     NSMutableArray *selectedValueArray = [valueKeys[value] mutableCopy];
 
     NSUInteger idxPayloadValue = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"PayloadValue"] ) ? YES : NO;
+        return ( item[PFCManifestKeyPayloadValue] ) ? YES : NO;
     }];
 
     if ( idxPayloadValue != NSNotFound ) {
         NSDictionary *payloadValueDict = [selectedValueArray objectAtIndex:idxPayloadValue];
         [selectedValueArray removeObjectAtIndex:idxPayloadValue];
     
-        id value = payloadValueDict[@"PayloadValue"];
+        id value = payloadValueDict[PFCManifestKeyPayloadValue];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;
@@ -1033,14 +1035,14 @@
     }
     
     NSUInteger idxSharedKey = [selectedValueArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return ( item[@"SharedKey"] ) ? YES : NO;
+        return ( item[PFCManifestKeySharedKey] ) ? YES : NO;
     }];
     
     if ( idxSharedKey != NSNotFound ) {
         NSDictionary *sharedKeyDict = [selectedValueArray objectAtIndex:idxSharedKey];
         [selectedValueArray removeObjectAtIndex:idxSharedKey];
         
-        id value = sharedKeyDict[@"SharedKey"];
+        id value = sharedKeyDict[PFCManifestKeySharedKey];
         if ( value == nil ) {
             NSLog(@"[ERROR] payload value cannot be nil!");
             return;

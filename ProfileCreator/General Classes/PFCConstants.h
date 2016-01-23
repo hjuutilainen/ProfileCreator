@@ -27,6 +27,7 @@ extern NSString *const PFCCellTypeCheckboxNoDescription;
 extern NSString *const PFCCellTypeDatePicker;
 extern NSString *const PFCCellTypeDatePickerNoTitle;
 extern NSString *const PFCCellTypeFile;
+extern NSString *const PFCCellTypeMenu;
 extern NSString *const PFCCellTypePadding;
 extern NSString *const PFCCellTypePopUpButton;
 extern NSString *const PFCCellTypePopUpButtonLeft;
@@ -70,19 +71,19 @@ extern NSString *const PFCManifestKeyDefaultValuePort;
 extern NSString *const PFCManifestKeyDefaultValueTextField;
 extern NSString *const PFCManifestKeyDescription;
 extern NSString *const PFCManifestKeyDomain;
-extern NSString *const PFCManifestKeyEnabled;
 extern NSString *const PFCManifestKeyFileInfoProcessor;
 extern NSString *const PFCManifestKeyFilePrompt;
+extern NSString *const PFCManifestKeyFontWeight;
 extern NSString *const PFCManifestKeyIconName;
 extern NSString *const PFCManifestKeyIconPath;
 extern NSString *const PFCManifestKeyIconPathBundle;
 extern NSString *const PFCManifestKeyIdentifier;
 extern NSString *const PFCManifestKeyIndent;
 extern NSString *const PFCManifestKeyIndentLeft;
-extern NSString *const PFCManifestKeyOptional;
 extern NSString *const PFCManifestKeyManifestContent;
 extern NSString *const PFCManifestKeyMaxValue;
 extern NSString *const PFCManifestKeyMinValue;
+extern NSString *const PFCManifestKeyOptional;
 extern NSString *const PFCManifestKeyPayloadKey;
 extern NSString *const PFCManifestKeyPayloadKeyCheckbox;
 extern NSString *const PFCManifestKeyPayloadKeyHost;
@@ -104,12 +105,18 @@ extern NSString *const PFCManifestKeyPlaceholderValueTextField;
 extern NSString *const PFCManifestKeyRequired;
 extern NSString *const PFCManifestKeyRequiredHost;
 extern NSString *const PFCManifestKeyRequiredPort;
+extern NSString *const PFCManifestKeySharedKey;
 extern NSString *const PFCManifestKeyTableViewColumns;
 extern NSString *const PFCManifestKeyTitle;
 extern NSString *const PFCManifestKeyToolTipDescription;
 extern NSString *const PFCManifestKeyUnit;
 extern NSString *const PFCManifestKeyValueKeys;
 extern NSString *const PFCManifestKeyValueKeysShared;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark FontWeights
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCFontWeightBold;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark RuntimeKeys
@@ -134,4 +141,10 @@ extern NSString *const PFCProfileTemplateKeyUUID;
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark SettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCSettingsKeyEnabled;
 extern NSString *const PFCSettingsKeySelected;
+extern NSString *const PFCSettingsKeyValue;
+extern NSString *const PFCSettingsKeyValueCheckbox;
+extern NSString *const PFCSettingsKeyValueHost;
+extern NSString *const PFCSettingsKeyValuePort;
+extern NSString *const PFCSettingsKeyValueTextField;

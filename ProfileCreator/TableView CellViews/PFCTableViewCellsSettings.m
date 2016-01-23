@@ -23,8 +23,293 @@
 #import "PFCFileInfoProcessors.h"
 #import "PFCConstants.h"
 
-@implementation PFCTableViewCellsSettings
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsCheckbox
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------------------------
+    //  Get required and enabled state of this cell view
+    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    // ---------------------------------------------------------------------------------------
+    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    
+    BOOL enabled = YES;
+    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Title (of the Checkbox)
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    BOOL checkboxState = NO;
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
+    } else if ( manifest[PFCManifestKeyDefaultValue] ) {
+        checkboxState = [manifest[PFCManifestKeyDefaultValue] boolValue];
+    } else if ( settingsLocal[PFCSettingsKeyValue] ) {
+        checkboxState = [settingsLocal[PFCSettingsKeyValue] boolValue];
+    }
+    [[cellView settingCheckbox] setState:checkboxState];
+    
+    // ---------------------------------------------------------------------
+    //  Indentation
+    // ---------------------------------------------------------------------
+    if ( [manifest[PFCManifestKeyIndentLeft] boolValue] ) {
+        [[cellView constraintLeading] setConstant:102];
+    } else if ( [manifest[PFCManifestKeyIndent] boolValue] ) {
+        [[cellView constraintLeading] setConstant:16];
+    } else {
+        [[cellView constraintLeading] setConstant:8];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
+    [[cellView settingCheckbox] setTarget:sender];
+    [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setEnabled:enabled];
+    
+    return cellView;
+} // populateCellViewSettingsCheckbox:manifest:settings:settingsLocal:row:sender
+
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsCheckboxNoDescription
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsCheckboxNoDescription
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------------------------
+    //  Get required and enabled state of this cell view
+    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    // ---------------------------------------------------------------------------------------
+    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    
+    BOOL enabled = YES;
+    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Title (of the Checkbox)
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  FontWeight of the Title
+    // ---------------------------------------------------------------------
+    if ( [manifest[PFCManifestKeyFontWeight] isEqualToString:PFCFontWeightBold] ) {
+        [[cellView settingCheckbox] setFont:[NSFont boldSystemFontOfSize:13]];
+    } else {
+        [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    BOOL checkboxState = NO;
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
+    } else if ( manifest[PFCManifestKeyDefaultValue] ) {
+        checkboxState = [manifest[PFCManifestKeyDefaultValue] boolValue];
+    } else if ( settingsLocal[PFCSettingsKeyValue] ) {
+        checkboxState = [settingsLocal[PFCSettingsKeyValue] boolValue];
+    }
+    [[cellView settingCheckbox] setState:checkboxState];
+    
+    // ---------------------------------------------------------------------
+    //  Indentation
+    // ---------------------------------------------------------------------
+    if ( [manifest[PFCManifestKeyIndentLeft] boolValue] ) {
+        [[cellView constraintLeading] setConstant:102];
+    } else if ( [manifest[PFCManifestKeyIndent] boolValue] ) {
+        [[cellView constraintLeading] setConstant:16];
+    } else {
+        [[cellView constraintLeading] setConstant:8];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
+    [[cellView settingCheckbox] setTarget:sender];
+    [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setEnabled:enabled];
+    
+    return cellView;
+} // populateCellViewSettingsCheckboxNoDescription:manifest:settings:settingsLocal:row:sender
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsTextFieldCheckbox
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsTextFieldCheckbox
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------------------------
+    //  Get required and enabled state of this cell view
+    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    // ---------------------------------------------------------------------------------------
+    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    
+    BOOL enabled = YES;
+    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Title (of the Checkbox)
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  ValueCheckbox
+    // ---------------------------------------------------------------------
+    BOOL checkboxState = NO;
+    if ( settings[PFCSettingsKeyValueCheckbox] != nil ) {
+        checkboxState = [settings[PFCSettingsKeyValueCheckbox] boolValue];
+    } else if ( manifest[PFCManifestKeyDefaultValueCheckbox] ) {
+        checkboxState = [manifest[PFCManifestKeyDefaultValueCheckbox] boolValue];
+    } else if ( settingsLocal[PFCSettingsKeyValueCheckbox] ) {
+        checkboxState = [settingsLocal[PFCSettingsKeyValueCheckbox] boolValue];
+    }
+    [[cellView settingCheckbox] setState:checkboxState];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
+    [[cellView settingCheckbox] setTarget:sender];
+    [[cellView settingCheckbox] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  ValueTextField
+    // ---------------------------------------------------------------------
+    NSString *valueTextField;
+    if ( [settings[PFCSettingsKeyValueTextField] length] != 0 ) {
+        valueTextField = settings[PFCSettingsKeyValueTextField];
+    } else if ( [manifest[PFCManifestKeyDefaultValueTextField] length] != 0 ) {
+        valueTextField = manifest[PFCManifestKeyDefaultValueTextField];
+    } else if ( [settingsLocal[PFCSettingsKeyValueTextField] length] != 0 ) {
+        valueTextField = settingsLocal[PFCSettingsKeyValueTextField];
+    }
+    [[cellView settingTextField] setStringValue:valueTextField ?: @""];
+    [[cellView settingTextField] setDelegate:sender];
+    [[cellView settingTextField] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Placeholder Value TextField
+    // ---------------------------------------------------------------------
+    if ( [manifest[PFCManifestKeyPlaceholderValueTextField] length] != 0 ) {
+        [[cellView settingTextField] setPlaceholderString:manifest[PFCManifestKeyPlaceholderValueTextField] ?: @""];
+    } else if ( required ) {
+        [[cellView settingTextField] setPlaceholderString:PFCManifestKeyRequired];
+    } else {
+        [[cellView settingTextField] setPlaceholderString:@""];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Bind Checkbox to TextField 'Enabled'
+    // ---------------------------------------------------------------------
+    [[cellView settingTextField] bind:@"enabled" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingCheckbox] bind:@"value" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [[cellView settingCheckbox] setEnabled:enabled];
+    
+    return cellView;
+} // populateCellViewSettingsTextFieldCheckbox:manifest:settings:settingsLocal:row:sender
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -75,12 +360,12 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[@"Value"] ?: @"";
+    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     if ( [value length] == 0 ) {
         if ( [manifest[@"DefaultValue"] length] != 0 ) {
             value = manifest[@"DefaultValue"] ?: @"";
-        } else if ( [settingsLocal[@"Value"] length] != 0 ) {
-            value = settingsLocal[@"Value"] ?: @"";
+        } else if ( [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
+            value = settingsLocal[PFCSettingsKeyValue] ?: @"";
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -190,12 +475,12 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settings[@"Value"];
+    NSNumber *value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         if ( manifest[@"DefaultValue"] != nil ) {
             value = manifest[@"DefaultValue"];
-        } else if ( settingsLocal[@"Value"] != nil ) {
-            value = settingsLocal[@"Value"];
+        } else if ( settingsLocal[PFCSettingsKeyValue] != nil ) {
+            value = settingsLocal[PFCSettingsKeyValue];
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -261,12 +546,12 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[@"Value"] ?: @"";
+    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     if ( [value length] == 0 ) {
         if ( [manifest[@"DefaultValue"] length] != 0 ) {
             value = manifest[@"DefaultValue"] ?: @"";
-        } else if ( [settingsLocal[@"Value"] length] != 0 ) {
-            value = settingsLocal[@"Value"] ?: @"";
+        } else if ( [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
+            value = settingsLocal[PFCSettingsKeyValue] ?: @"";
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -312,97 +597,6 @@
         [_imageViewRequired setHidden:YES];
     }
 }
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewSettingsTextFieldCheckbox
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewSettingsTextFieldCheckbox
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-}
-
-- (CellViewSettingsTextFieldCheckbox *)populateCellViewSettingsTextFieldCheckbox:(CellViewSettingsTextFieldCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
-    BOOL required = [manifest[@"Required"] boolValue];
-    BOOL enabled = YES;
-    if ( ! required && settings[@"Enabled"] != nil ) {
-        enabled = [settings[@"Enabled"] boolValue];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Title (Checkbox)
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  ValueCheckbox
-    // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if ( settings[@"ValueCheckbox"] != nil ) {
-        checkboxState = [settings[@"ValueCheckbox"] boolValue];
-    } else if ( manifest[@"DefaultValueCheckbox"] ) {
-        checkboxState = [manifest[@"DefaultValueCheckbox"] boolValue];
-    } else if ( settingsLocal[@"ValueCheckbox"] ) {
-        checkboxState = [settingsLocal[@"ValueCheckbox"] boolValue];
-    }
-    [[cellView settingCheckbox] setState:checkboxState];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
-    [[cellView settingCheckbox] setTarget:sender];
-    [[cellView settingCheckbox] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  ValueTextField
-    // ---------------------------------------------------------------------
-    NSString *value = settings[@"ValueTextField"] ?: @"";
-    if ( [value length] == 0 ) {
-        if ( [manifest[@"DefaultValueTextField"] length] != 0 ) {
-            value = manifest[@"DefaultValueTextField"] ?: @"";
-        } else if ( [settingsLocal[@"ValueTextField"] length] != 0 ) {
-            value = settingsLocal[@"ValueTextField"] ?: @"";
-        }
-    }
-    [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:value];
-    [[cellView settingTextField] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Placeholder Value TextField
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"PlaceholderValueTextField"] length] != 0 ) {
-        [[cellView settingTextField] setPlaceholderString:manifest[@"PlaceholderValueTextField"] ?: @""];
-    } else if ( required ) {
-        [[cellView settingTextField] setPlaceholderString:@"Required"];
-    } else {
-        [[cellView settingTextField] setPlaceholderString:@""];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Bind Checkbox to TextField 'Enabled'
-    // ---------------------------------------------------------------------
-    [[cellView settingTextField] bind:@"enabled" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingCheckbox] bind:@"value" toObject:self withKeyPath:@"checkboxState" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
-    
-    return cellView;
-} // populateCellViewTextField:settings:row
 
 @end
 
@@ -561,7 +755,7 @@
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
-    [[cellView settingPopUpButton] selectItemWithTitle:settings[@"Value"] ?: manifest[@"DefaultValue"]];
+    [[cellView settingPopUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: manifest[@"DefaultValue"]];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -615,12 +809,12 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
     NSString *selectedItem;
-    if ( [settings[@"Value"] length] != 0 ) {
-        selectedItem = settings[@"Value"];
+    if ( [settings[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settings[PFCSettingsKeyValue];
     } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
         selectedItem = manifest[@"DefaultValue"];
-    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
-        selectedItem = settingsLocal[@"Value"];
+    } else if (  [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
     if ( [selectedItem length] != 0 ) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
@@ -675,12 +869,12 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
     NSString *selectedItem;
-    if ( [settings[@"Value"] length] != 0 ) {
-        selectedItem = settings[@"Value"];
+    if ( [settings[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settings[PFCSettingsKeyValue];
     } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
         selectedItem = manifest[@"DefaultValue"];
-    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
-        selectedItem = settingsLocal[@"Value"];
+    } else if (  [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
     if ( [selectedItem length] != 0 ) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
@@ -754,12 +948,12 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifest[@"AvailableValues"] ?: @[]];
     NSString *selectedItem;
-    if ( [settings[@"Value"] length] != 0 ) {
-        selectedItem = settings[@"Value"];
+    if ( [settings[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settings[PFCSettingsKeyValue];
     } else if (  [manifest[@"DefaultValue"] length] != 0 ) {
         selectedItem = manifest[@"DefaultValue"];
-    } else if (  [settingsLocal[@"Value"] length] != 0 ) {
-        selectedItem = settingsLocal[@"Value"];
+    } else if (  [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
+        selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
     if ( [selectedItem length] != 0 ) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
@@ -797,7 +991,7 @@
 
 - (CellViewSettingsTextFieldNumberLeft *)populateCellViewSettingsTextFieldNumberLeft:(CellViewSettingsTextFieldNumberLeft *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
     
-    BOOL required = [manifest[@"Required"] boolValue];
+    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
     BOOL enabled = YES;
     if ( ! required && settings[@"Enabled"] != nil ) {
         enabled = [settings[@"Enabled"] boolValue];
@@ -821,12 +1015,12 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settings[@"Value"];
+    NSNumber *value = settings[PFCSettingsKeyValue];
     if ( value == nil ) {
         if ( manifest[@"DefaultValue"] != nil ) {
             value = manifest[@"DefaultValue"];
-        } else if ( settingsLocal[@"Value"] != nil ) {
-            value = settingsLocal[@"Value"];
+        } else if ( settingsLocal[PFCSettingsKeyValue] != nil ) {
+            value = settingsLocal[PFCSettingsKeyValue];
         }
     }
     [[cellView settingTextField] setDelegate:sender];
@@ -858,150 +1052,13 @@
     // ---------------------------------------------------------------------
     [[cellView settingStepper] setValueWraps:NO];
     if ( _stepperValue == nil ) {
-        [self setStepperValue:settings[@"Value"] ?: @0];
+        [self setStepperValue:settings[PFCSettingsKeyValue] ?: @0];
     }
     [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     
     return cellView;
 } // populateCellViewTextField:settings:row
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewSettingsCheckbox
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewSettingsCheckbox
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (CellViewSettingsCheckbox *)populateCellViewSettingsCheckbox:(CellViewSettingsCheckbox *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
-    BOOL required = [manifest[@"Required"] boolValue];
-    BOOL enabled = YES;
-    if ( ! required && settings[@"Enabled"] != nil ) {
-        enabled = [settings[@"Enabled"] boolValue];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Title (Checkbox)
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if ( settings[@"Value"] != nil ) {
-        checkboxState = [settings[@"Value"] boolValue];
-    } else if ( manifest[@"DefaultValue"] ) {
-        checkboxState = [manifest[@"DefaultValue"] boolValue];
-    } else if ( settingsLocal[@"Value"] ) {
-        checkboxState = [settingsLocal[@"Value"] boolValue];
-    }
-    [[cellView settingCheckbox] setState:checkboxState];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
-    [[cellView settingCheckbox] setTarget:sender];
-    [[cellView settingCheckbox] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Indent
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"IndentLeft"] boolValue] ) {
-        [[cellView constraintLeading] setConstant:102];
-    } else if ( [manifest[@"Indent"] boolValue] ) {
-        [[cellView constraintLeading] setConstant:16];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
-    
-    return cellView;
-} // populateCellViewCheckbox:settings:row
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewSettingsCheckboxNoDescription
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewSettingsCheckboxNoDescription
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (CellViewSettingsCheckboxNoDescription *)populateCellViewSettingsCheckboxNoDescription:(CellViewSettingsCheckboxNoDescription *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
-    BOOL required = [manifest[@"Required"] boolValue];
-    BOOL enabled = YES;
-    if ( ! required && settings[@"Enabled"] != nil ) {
-        enabled = [settings[@"Enabled"] boolValue];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Title (Checkbox)
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[@"Title"] ?: @""];
-    if ( [manifest[@"FontWeight"] isEqualToString:@"Bold"] ) {
-        [[cellView settingCheckbox] setFont:[NSFont boldSystemFontOfSize:13]];
-    } else {
-        [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if ( settings[@"Value"] != nil ) {
-        checkboxState = [settings[@"Value"] boolValue];
-    } else if ( manifest[@"DefaultValue"] ) {
-        checkboxState = [manifest[@"DefaultValue"] boolValue];
-    } else if ( settingsLocal[@"Value"] ) {
-        checkboxState = [settingsLocal[@"Value"] boolValue];
-    }
-    [[cellView settingCheckbox] setState:checkboxState];
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Indent
-    // ---------------------------------------------------------------------
-    if ( [manifest[@"Indent"] boolValue] ) {
-        [[cellView constraintLeading] setConstant:16];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
-    [[cellView settingCheckbox] setTarget:sender];
-    [[cellView settingCheckbox] setTag:row];
-    
-    return cellView;
-} // populateCellViewCheckboxNoDescription:settings:row
 
 @end
 
@@ -1103,10 +1160,10 @@
     //  Value
     // ---------------------------------------------------------------------
     NSDate *date;
-    if ( settings[@"Value"] != nil ) {
-        date = settings[@"Value"] ?: [NSDate date];
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
     } else {
-        date = settingsLocal[@"Value"] ?: [NSDate date];
+        date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
     }
     [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
     [[cellView settingDatePicker] setTag:row];
@@ -1167,10 +1224,10 @@
     //  Value
     // ---------------------------------------------------------------------
     NSDate *date;
-    if ( settings[@"Value"] != nil ) {
-        date = settings[@"Value"] ?: [NSDate date];
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
     } else {
-        date = settingsLocal[@"Value"] ?: [NSDate date];
+        date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
     }
     [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
     [[cellView settingDatePicker] setTag:row];
@@ -1240,7 +1297,7 @@
             [settingsDict removeObjectForKey:_cellIdentifier];
         } else {
             NSMutableDictionary *cellDict = [settingsDict[_cellIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
-            cellDict[@"Value"] = @(seconds);
+            cellDict[PFCSettingsKeyValue] = @(seconds);
             settingsDict[_cellIdentifier] = cellDict;
         }
         [(PFCProfileCreationWindowController *)_sender setSettingsManifest:settingsDict];
@@ -1260,10 +1317,10 @@
     
     if ( _stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil ) {
         NSNumber *seconds;
-        if ( settings[@"Value"] != nil ) {
-            seconds = settings[@"Value"] ?: @0;
+        if ( settings[PFCSettingsKeyValue] != nil ) {
+            seconds = settings[PFCSettingsKeyValue] ?: @0;
         } else {
-            seconds = settingsLocal[@"Value"] ?: @0;
+            seconds = settingsLocal[PFCSettingsKeyValue] ?: @0;
         }
         
         NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
@@ -1345,7 +1402,7 @@
     if ( [[[textField superview] class] isSubclassOfClass:[CellViewTextField class]] ) {
         if ( textField == [[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] textField] ) {
             NSMutableDictionary *columnDict = cellDict[columnIdentifier];
-            columnDict[@"Value"] = [inputText copy];
+            columnDict[PFCSettingsKeyValue] = [inputText copy];
             cellDict[columnIdentifier] = columnDict;
         } else {
             return;
@@ -1445,9 +1502,9 @@
         NSString *cellType = tableColumnCellViewDict[@"CellType"];
         
         if ( [cellType isEqualToString:@"TextField"] ) {
-            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
+            tableColumnDict[PFCSettingsKeyValue] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
         } else if ( [cellType isEqualToString:@"PopUpButton"] ) {
-            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
+            tableColumnDict[PFCSettingsKeyValue] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
             tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"] ?: @[];
         }
         newRowDict[tableColumnKey] = tableColumnDict;
@@ -1497,7 +1554,7 @@
         NSString *selectedTitle = [popUpButton titleOfSelectedItem];
         NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
-        columnDict[@"Value"] = selectedTitle;
+        columnDict[PFCSettingsKeyValue] = selectedTitle;
         cellDict[columnIdentifier] = columnDict;
         [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
         [self updateTableViewSavedContent];
@@ -1536,7 +1593,7 @@
         BOOL state = [checkbox state];
         NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
-        columnDict[@"Value"] = @(state);
+        columnDict[PFCSettingsKeyValue] = @(state);
         cellDict[columnIdentifier] = columnDict;
         [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
         [self updateTableViewSavedContent];
@@ -1859,7 +1916,7 @@
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setSelected:YES forSegment:[manifest[@"Value"] integerValue] ?: 0];
+    [[cellView settingSegmentedControl] setSelected:YES forSegment:[manifest[PFCSettingsKeyValue] integerValue] ?: 0];
     
     // ---------------------------------------------------------------------
     //  Segmented Control Action
