@@ -103,8 +103,8 @@
 
 - (NSString *)typeStringFromValue:(id)value {
     id valueClass = [value class];
-    if ( [value isKindOfClass:[NSString class]] )       return @"String";
-    if ( [valueClass isEqualTo:[@(YES) class]] )        return @"Boolean";
+    if ( [value isKindOfClass:[NSString class]] )       return PFCValueTypeString;
+    if ( [valueClass isEqualTo:[@(YES) class]] )        return PFCValueTypeBoolean;
     if ( [valueClass isEqualTo:[@(0) class]] ) {
         CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
         
@@ -130,28 +130,28 @@
          kCFNumberMaxType       = 16
          */
         
-        if ( numberType <= 4 )                          return @"Integer";
-        if ( 5 <= numberType && numberType <= 6 )       return @"Float";
+        if ( numberType <= 4 )                          return PFCValueTypeInteger;
+        if ( 5 <= numberType && numberType <= 6 )       return PFCValueTypeFloat;
         
         NSLog(@"[ERROR] Unknown CFNumberType: %ld", numberType);
         return @"Number";
     }
-    if ( [value isKindOfClass:[NSArray class]] )        return @"Array";
-    if ( [value isKindOfClass:[NSDictionary class]] )   return @"Dict";
-    if ( [value isKindOfClass:[NSDate class]] )         return @"Date";
-    if ( [value isKindOfClass:[NSData class]] )         return @"Data";
+    if ( [value isKindOfClass:[NSArray class]] )        return PFCValueTypeArray;
+    if ( [value isKindOfClass:[NSDictionary class]] )   return PFCValueTypeDict;
+    if ( [value isKindOfClass:[NSDate class]] )         return PFCValueTypeDate;
+    if ( [value isKindOfClass:[NSData class]] )         return PFCValueTypeData;
     return @"Unknown";
 } // typeStringFromValue
 
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString {
-    if ( [typeString isEqualToString:@"String"] )   return PFCCellTypeTextField;
-    if ( [typeString isEqualToString:@"Boolean"] )  return PFCCellTypeCheckbox;
-    if ( [typeString isEqualToString:@"Integer"] )  return PFCCellTypeTextFieldNumber;
-    if ( [typeString isEqualToString:@"Float"] )    return PFCCellTypeTextFieldNumber;
-    if ( [typeString isEqualToString:@"Array"] )    return PFCCellTypeTableView;
-    if ( [typeString isEqualToString:@"Dict"] )     return PFCCellTypeSegmentedControl;
-    if ( [typeString isEqualToString:@"Date"] )     return PFCCellTypeDatePicker;
-    if ( [typeString isEqualToString:@"Data"] )     return PFCCellTypeFile;
+    if ( [typeString isEqualToString:PFCValueTypeString] )   return PFCCellTypeTextField;
+    if ( [typeString isEqualToString:PFCValueTypeBoolean] )  return PFCCellTypeCheckbox;
+    if ( [typeString isEqualToString:PFCValueTypeInteger] )  return PFCCellTypeTextFieldNumber;
+    if ( [typeString isEqualToString:PFCValueTypeFloat] )    return PFCCellTypeTextFieldNumber;
+    if ( [typeString isEqualToString:PFCValueTypeArray] )    return PFCCellTypeTableView;
+    if ( [typeString isEqualToString:PFCValueTypeDict] )     return PFCCellTypeSegmentedControl;
+    if ( [typeString isEqualToString:PFCValueTypeDate] )     return PFCCellTypeDatePicker;
+    if ( [typeString isEqualToString:PFCValueTypeData] )     return PFCCellTypeFile;
     return @"Unknown";
 } // cellTypeFromTypeString
 

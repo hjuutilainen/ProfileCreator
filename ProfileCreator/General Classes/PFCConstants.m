@@ -43,6 +43,19 @@ NSString *const PFCCellTypeTextFieldNumber = @"TextFieldNumber";
 NSString *const PFCCellTypeTextFieldNumberLeft = @"TextFieldNumberLeft";
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark ValueType
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCValueTypeArray = @"Array";
+NSString *const PFCValueTypeBoolean = @"Boolean";
+NSString *const PFCValueTypeFloat = @"Float";
+NSString *const PFCValueTypeData = @"Data";
+NSString *const PFCValueTypeDate = @"Date";
+NSString *const PFCValueTypeDict = @"Dict";
+NSString *const PFCValueTypeInteger = @"Integer";
+NSString *const PFCValueTypeString = @"String";
+NSString *const PFCValueTypeUnknown = @"Unknown";
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCManifestKeyAllowedFileTypes = @"AllowedFileTypes";

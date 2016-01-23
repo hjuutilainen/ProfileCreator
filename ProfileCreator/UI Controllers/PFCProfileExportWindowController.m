@@ -125,14 +125,14 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
-        if ( [settingsInfo count] != 0 ) {
-            NSArray *warnings = settingsInfo[@"Warning"];
+        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
+        if ( [verificationReport count] != 0 ) {
+            NSArray *warnings = verificationReport[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {
                 NSLog(@"[WARNING] %@", warningDict);
             }
             
-            NSArray *errors = settingsInfo[@"Error"];
+            NSArray *errors = verificationReport[@"Error"];
             for ( NSDictionary *errorDict in errors ) {
                 NSLog(@"[ERROR] %@", errorDict);
             }
@@ -184,14 +184,14 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *settingsInfo = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
-        if ( [settingsInfo count] != 0 ) {
-            NSArray *warnings = settingsInfo[@"Warning"];
+        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
+        if ( [verificationReport count] != 0 ) {
+            NSArray *warnings = verificationReport[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {
                 NSLog(@"[WARNING] %@", warningDict);
             }
             
-            NSArray *errors = settingsInfo[@"Error"];
+            NSArray *errors = verificationReport[@"Error"];
             for ( NSDictionary *errorDict in errors ) {
                 NSLog(@"[ERROR] %@", errorDict);
             }

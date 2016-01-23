@@ -837,10 +837,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 manifestSettings = _settingsManifest;
             }
             
-            NSDictionary *errorDict = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[PFCManifestKeyManifestContent] settings:manifestSettings];
+            NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[PFCManifestKeyManifestContent] settings:manifestSettings];
             NSNumber *errorCount;
-            if ( [errorDict count] != 0 ) {
-                errorCount = @([errorDict[@"Error"] count]);
+            if ( [verificationReport count] != 0 ) {
+                errorCount = @([verificationReport[@"Error"] count]);
             }
             
             if ( [cellType isEqualToString:@"Menu"] ) {

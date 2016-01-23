@@ -43,6 +43,19 @@ extern NSString *const PFCCellTypeTextFieldNumber;
 extern NSString *const PFCCellTypeTextFieldNumberLeft;
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark ValueType
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCValueTypeArray;
+extern NSString *const PFCValueTypeBoolean;
+extern NSString *const PFCValueTypeFloat;
+extern NSString *const PFCValueTypeData;
+extern NSString *const PFCValueTypeDate;
+extern NSString *const PFCValueTypeDict;
+extern NSString *const PFCValueTypeInteger;
+extern NSString *const PFCValueTypeString;
+extern NSString *const PFCValueTypeUnknown;
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCManifestKeyAllowedFileTypes;
