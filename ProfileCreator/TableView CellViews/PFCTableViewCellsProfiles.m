@@ -1,5 +1,5 @@
 //
-//  PFCFileInfoProcessors.h
+//  PFCTableViewCellsProfiles.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,20 +17,33 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "PFCTableViewCellsProfiles.h"
 
-@interface PFCFileInfoProcessors : NSObject
-
+@implementation PFCTableViewCellsProfiles
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark PFCFileInfoProcessorFont
+#pragma mark CellViewProfile
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-@interface PFCFileInfoProcessorFont : NSObject
-@property NSURL *fileURL;
-- (id)initWithFileURL:(NSURL *)fileURL;
-- (NSDictionary *)fileInfo;
+@implementation CellViewProfile
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewProfile *)populateCellViewProfile:(CellViewProfile *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
+
+    NSDictionary *profileSettingsDict = profileDict[@"Config"];
+
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView textField] setStringValue:profileSettingsDict[@"Name"] ?: @""];
+    
+    return cellView;
+} // populateCellViewMenu:menuDict:row
+
 @end

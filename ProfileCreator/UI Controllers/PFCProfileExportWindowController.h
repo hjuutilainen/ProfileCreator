@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCProfileExportWindowController.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -19,10 +19,21 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCProfileExportWindowController : NSWindowController
+@property (weak) IBOutlet NSTextField *textFieldName;
+@property (weak) IBOutlet NSTextField *textFieldPayloadsCount;
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+@property NSDictionary *profileDict;
+
+@property id parentObject;
+
+@property (weak) IBOutlet NSStackView *stackView;
+
+- (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
+
+@property (weak) IBOutlet NSButton *buttonExport;
+- (IBAction)buttonExport:(id)sender;
+
+- (IBAction)buttonCancel:(id)sender;
 
 @end

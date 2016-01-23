@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCManifestCreationParser.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import "PFCConstants.h"
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCManifestCreationParser : NSObject
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
++ (NSDictionary *)manifestForPlistAtURL:(NSURL *)fileURL settingsDict:(NSMutableDictionary *)settingsDict;
++ (NSString *)typeStringFromValue:(id)value;
 
 @end

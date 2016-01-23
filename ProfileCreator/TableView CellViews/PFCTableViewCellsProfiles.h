@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCTableViewCellsProfiles.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -19,10 +19,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCTableViewCellsProfiles : NSObject
+@end
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewProfile
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 
+@interface CellViewProfile : NSTableCellView
+- (CellViewProfile *)populateCellViewProfile:(CellViewProfile *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
 @end

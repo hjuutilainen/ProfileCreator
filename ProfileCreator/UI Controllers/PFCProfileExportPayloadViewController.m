@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCProfileExportPayloadViewController.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,12 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
+#import "PFCProfileExportPayloadViewController.h"
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCProfileExportPayloadViewController ()
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+@end
+
+@implementation PFCProfileExportPayloadViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do view setup here.
+}
 
 @end

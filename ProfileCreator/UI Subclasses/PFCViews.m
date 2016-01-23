@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCViews.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,12 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
+#import "PFCViews.h"
 
-@interface PFCPayloadVerification : NSObject
-
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
-
+@implementation PFCViewInfo
+- (void)drawRect:(NSRect)aRect {
+    [[NSColor controlColor] set];
+    NSRectFill([self bounds]);
+}
 @end

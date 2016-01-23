@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCSplitViews.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -19,10 +19,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCPayloadVerification : NSObject
+@interface PFCSplitViewWindow : NSSplitView
+@property(readonly, copy) NSColor *dividerColor;
+@property(readonly) CGFloat dividerThickness;
+@end
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
-
+@interface PFCSplitViewPayloadLibrary : NSSplitView
+@property(readonly, copy) NSColor *dividerColor;
+@property(readonly) CGFloat dividerThickness;
 @end

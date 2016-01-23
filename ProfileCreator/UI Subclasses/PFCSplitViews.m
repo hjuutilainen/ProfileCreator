@@ -1,5 +1,5 @@
 //
-//  PFCPayloadVerification.h
+//  PFCSplitViewPayloadLibrary.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,12 +17,38 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
+#import "PFCSplitViews.h"
 
-@interface PFCPayloadVerification : NSObject
+@implementation PFCSplitViewWindow
 
-+ (id)sharedInstance;
-- (NSDictionary *)verifyManifest:(NSArray *)manifestArray settingsDict:(NSDictionary *)settingsDict;
-- (NSDictionary *)verifyCellDict:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict;
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    // Drawing code here.
+}
+
+- (NSColor *)dividerColor {
+    return [NSColor whiteColor];
+}
+
+- (CGFloat) dividerThickness {
+    return (CGFloat)1.0f;
+}
+
+@end
+
+@implementation PFCSplitViewPayloadLibrary
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    // Drawing code here.
+}
+
+- (NSColor *)dividerColor {
+    return [NSColor whiteColor];
+}
+
+- (CGFloat) dividerThickness {
+    return (CGFloat)1.0f;
+}
 
 @end
