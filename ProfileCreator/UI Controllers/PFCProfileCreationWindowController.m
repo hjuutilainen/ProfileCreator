@@ -208,12 +208,18 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     
     // ---------------------------------------------------------------------
+    //  Add profile settings view
+    // ---------------------------------------------------------------------
+    [self insertSubview:_viewProfileSettings inSuperview:_viewSettingsSplitView hidden:YES];
+    
+    // ---------------------------------------------------------------------
     //  Register KVO observers
     // ---------------------------------------------------------------------
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
+    
     // ---------------------------------------------------------------------
     //  Perform Initial Setup
     // ---------------------------------------------------------------------
@@ -350,6 +356,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Setup Main SplitView
     // ---------------------------------------------------------------------
     [self collapseSplitViewInfo];
+    
+    // ---------------------------------------------------------------------
+    //  Setup Profile Settings
+    // ---------------------------------------------------------------------
+    [self setupPopUpButtonOsVersion];
 } // setupTableViews
 
 - (void)sortArrayPayloadProfile {
@@ -494,6 +505,112 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
     }
 } // setupManifestLibraryUserLibrary
+
+- (void)setupPopUpButtonOsVersion {
+    
+    // -------------------------------------------------------------------------
+    //  Create base menu
+    // -------------------------------------------------------------------------
+    NSMenu *menu = [[NSMenu alloc] init];
+    [menu setAutoenablesItems:NO];
+    
+    // -------------------------------------------------------------------------
+    //  MenuItem: Latest
+    // -------------------------------------------------------------------------
+    NSMenuItem *menuItemLatest = [[NSMenuItem alloc] init];
+    [menuItemLatest setTarget:self];
+    [menuItemLatest setTitle:@"Latest"];
+    [menu addItem:menuItemLatest];
+    
+    // -------------------------------------------------------------------------
+    //  MenuItem: Separator
+    // -------------------------------------------------------------------------
+    [menu addItem:[NSMenuItem separatorItem]];
+    
+    // -------------------------------------------------------------------------
+    //  Read OSVersions plist from bundle contents
+    // -------------------------------------------------------------------------
+    NSError *error = nil;
+    NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
+    if ( ! [osVersionsPlistURL checkResourceIsReachableAndReturnError:&error] ) {
+        NSLog(@"[ERROR] %@", [error localizedDescription]);
+        return;
+    }
+    
+    NSDictionary *osVersions = [NSDictionary dictionaryWithContentsOfURL:osVersionsPlistURL];
+    if ( [osVersions count] == 0 ) {
+        NSLog(@"[ERROR] OS Versions dict was empty!");
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Create OS X versions menu and add to popUpButtons for OS X
+    // -------------------------------------------------------------------------
+    NSArray *osVersionsOSX = osVersions[@"OS X"] ?: @[];
+    if ( [osVersionsOSX count] == 0 ) {
+        NSLog(@"[ERROR] OS Versions array for OS X is empty!");
+    } else {
+        
+        NSMenu *menuOSX = [menu copy];
+        NSArray *osxVersionArray;
+        int lastMajorVersion = 0;
+        NSMenuItem *menuItemOSXVersion = [[NSMenuItem alloc] init];
+        [menuItemOSXVersion setTarget:self];
+        for ( NSString *osxVersion in osVersionsOSX ) {
+            
+            // -----------------------------------------------------------------
+            //  Add separator if major version of OS changed
+            // -----------------------------------------------------------------
+            osxVersionArray = [osxVersion componentsSeparatedByString:@"."];
+            if ( 2 <= [osxVersionArray count] ) {
+                int majorVersion = [(NSString *)osxVersionArray[1] intValue];
+                if ( lastMajorVersion != majorVersion ) {
+                    [menuOSX addItem:[NSMenuItem separatorItem]];
+                    lastMajorVersion = majorVersion;
+                }
+            }
+            [menuItemOSXVersion setTitle:osxVersion];
+            [menuOSX addItem:[menuItemOSXVersion copy]];
+        }
+        
+        [_popUpButtonPlatformOSXLowest setMenu:[menuOSX copy]];
+        [_popUpButtonPlatformOSXHighest setMenu:[menuOSX copy]];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Create iOS versions menu and add to popUpButtons for iOS
+    // -------------------------------------------------------------------------
+    NSArray *osVersionsiOS = osVersions[@"iOS"] ?: @[];
+    if ( [osVersionsiOS count] == 0 ) {
+        NSLog(@"[ERROR] OS Versions array for iOS is empty!");
+    } else {
+        
+        NSMenu *menuiOS = [menu copy];
+        NSArray *iosVersionArray;
+        int lastMajorVersion = 0;
+        NSMenuItem *menuItemiOSVersion = [[NSMenuItem alloc] init];
+        [menuItemiOSVersion setTarget:self];
+        for ( NSString *iosVersion in osVersionsiOS ) {
+            
+            // -----------------------------------------------------------------
+            //  Add separator if major version of OS changed
+            // -----------------------------------------------------------------
+            iosVersionArray = [iosVersion componentsSeparatedByString:@"."];
+            if ( 1 <= [iosVersionArray count] ) {
+                int majorVersion = [(NSString *)iosVersionArray[0] intValue];
+                if ( lastMajorVersion != majorVersion ) {
+                    [menuiOS addItem:[NSMenuItem separatorItem]];
+                    lastMajorVersion = majorVersion;
+                }
+            }
+            [menuItemiOSVersion setTitle:iosVersion];
+            [menuiOS addItem:[menuItemiOSVersion copy]];
+        }
+        
+        [_popUpButtonPlatformiOSLowest setMenu:[menuiOS copy]];
+        [_popUpButtonPlatformiOSHighest setMenu:[menuiOS copy]];
+    }
+} // setupPopUpButtonOsVersion
 
 
 - (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
@@ -926,6 +1043,16 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 }
             }
             
+            // ---------------------------------------------------------------------
+            //  It the cell is hidden, change cell background to grey
+            // ---------------------------------------------------------------------
+            if ( manifestContentDict[PFCManifestKeyHidden] != nil ) {
+                if ( [manifestContentDict[PFCManifestKeyHidden] boolValue] ) {
+                    [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
+                    return;
+                }
+            }
+            
             [rowView setBackgroundColor:[NSColor clearColor]];
         }
     }
@@ -1077,14 +1204,33 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_arraySettings removeAllObjects];
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
     NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
-    if ( [manifestContentArray count] != 0 ) {
+    
+    // ------------------------------------------------------------------------------------------
+    //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
+    //          This is not optimal, should add those after the content was calculated
+    // ------------------------------------------------------------------------------------------
+    if ( 3 <= [manifestContentArray count] ) {
         [_arraySettings addObjectsFromArray:manifestContentArray];
-    } else {
-        NSLog(@"manifestContentArray was Empty!");
-        if ( _settingsStatusHidden ) {
-            // FIXME - Should show text like "No Keys Enabled"
-            // Not This -> [self showSettingsError];
+        
+        if ( _settingsHeaderHidden ) {
+            [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+            NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
+            if ( icon ) {
+                [_imageViewSettingsHeaderIcon setImage:icon];
+            }
+            
+            [self showSettingsHeader];
         }
+        
+        if ( ! _settingsStatusHidden || _settingsStatusLoading ) {
+            [self hideSettingsStatus];
+        }
+    } else {
+        if ( ! _settingsHeaderHidden ) {
+            [self hideSettingsHeader];
+        }
+        
+        [self showSettingsNoSettings];
     }
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
@@ -1993,6 +2139,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     if ( _settingsStatusLoading ) {
         [_textFieldSettingsStatus setStringValue:@"Loading Settings"];
         [self setSettingsStatusHidden:NO];
+        [_viewProfileSettings setHidden:YES];
         [_viewSettingsSuperView setHidden:YES];
         [_viewSettingsStatus setHidden:NO];
     }
@@ -2002,14 +2149,33 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [_textFieldSettingsStatus setStringValue:@"Error Loading Settings"];
     [self setSettingsStatusHidden:NO];
     [self setSettingsStatusLoading:NO];
+    [_viewProfileSettings setHidden:YES];
     [_viewSettingsSuperView setHidden:YES];
     [_viewSettingsStatus setHidden:NO];
 } // showSettingsError
+
+- (void)showSettingsNoSettings {
+    [_textFieldSettingsStatus setStringValue:@"No Settings Available"];
+    [self setSettingsStatusHidden:NO];
+    [self setSettingsStatusLoading:NO];
+    [_viewProfileSettings setHidden:YES];
+    [_viewSettingsSuperView setHidden:YES];
+    [_viewSettingsStatus setHidden:NO];
+} // showSettingsNoSettings
+
+- (void)showSettingsProfile {
+    [self setSettingsStatusHidden:NO];
+    [self setSettingsStatusLoading:NO];
+    [_viewProfileSettings setHidden:NO];
+    [_viewSettingsSuperView setHidden:YES];
+    [_viewSettingsStatus setHidden:YES];
+} // showSettingsNoSettings
 
 - (void)hideSettingsStatus {
     [self setSettingsStatusHidden:YES];
     [self setSettingsStatusLoading:NO];
     [_viewSettingsStatus setHidden:YES];
+    [_viewProfileSettings setHidden:YES];
     [_viewSettingsSuperView setHidden:NO];
     [_textFieldSettingsStatus setStringValue:@""];
 } // hideSettingsError
@@ -2339,7 +2505,12 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:manifest];
         NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
-        if ( [manifestContentArray count] != 0 ) {
+        
+        // ------------------------------------------------------------------------------------------
+        //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
+        //          This is not optimal, should add those after the content was calculated
+        // ------------------------------------------------------------------------------------------
+        if ( 3 <= [manifestContentArray count] ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
             NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
@@ -2363,9 +2534,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 [self hideSettingsHeader];
             }
             
-            if ( _settingsStatusHidden ) {
-                [self showSettingsError];
-            }
+            [self showSettingsNoSettings];
         }
     } else {
         if ( ! _settingsHeaderHidden ) {
@@ -2449,7 +2618,12 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
         NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
-        if ( [manifestContentArray count] != 0 ) {
+        
+        // ------------------------------------------------------------------------------------------
+        //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
+        //          This is not optimal, should add those after the content was calculated
+        // ------------------------------------------------------------------------------------------
+        if ( 3 <= [manifestContentArray count] ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
             NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
@@ -2473,9 +2647,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 [self hideSettingsHeader];
             }
             
-            if ( _settingsStatusHidden || _settingsStatusLoading ) {
-                [self showSettingsError];
-            }
+            [self showSettingsNoSettings];
         }
     } else {
         if ( ! _settingsHeaderHidden ) {
@@ -2787,6 +2959,15 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     NSLog(@"viewIdentifier=%@", viewIdentifier);
 }
 
+- (IBAction)checkboxPlatformOSX:(id)sender {
+}
+
+- (IBAction)checkboxPlatformiOS:(id)sender {
+}
+
+- (IBAction)buttonProfileSettings:(id)sender {
+    [self showSettingsProfile];
+}
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

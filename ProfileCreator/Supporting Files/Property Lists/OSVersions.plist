@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>iOS</key>
+	<array>
+		<string>9.2.1</string>
+		<string>9.2</string>
+		<string>9.1</string>
+		<string>9.0.2</string>
+		<string>9.0.1</string>
+		<string>9.0</string>
+		<string>8.4.1</string>
+		<string>8.4</string>
+		<string>8.3</string>
+		<string>8.2</string>
+		<string>8.1.3</string>
+		<string>8.1.2</string>
+		<string>8.1.1</string>
+		<string>8.1</string>
+		<string>8.0.2</string>
+		<string>8.0</string>
+		<string>7.1.2</string>
+		<string>7.1.1</string>
+		<string>7.1</string>
+		<string>7.0.6</string>
+		<string>7.0.5</string>
+		<string>7.0.4</string>
+		<string>7.0.3</string>
+		<string>7.0.2</string>
+		<string>7.0.1</string>
+		<string>7.0</string>
+	</array>
+	<key>OS X</key>
+	<array>
+		<string>10.11.3</string>
+		<string>10.11.2</string>
+		<string>10.11.1</string>
+		<string>10.11</string>
+		<string>10.10.5</string>
+		<string>10.10.4</string>
+		<string>10.10.3</string>
+		<string>10.10.2</string>
+		<string>10.10.1</string>
+		<string>10.10</string>
+		<string>10.9.5</string>
+		<string>10.9.4</string>
+		<string>10.9.3</string>
+		<string>10.9.2</string>
+		<string>10.9.1</string>
+		<string>10.9</string>
+		<string>10.8.5</string>
+		<string>10.8.4</string>
+		<string>10.8.3</string>
+		<string>10.8.2</string>
+		<string>10.8.1</string>
+		<string>10.8</string>
+		<string>10.7.5</string>
+		<string>10.7.4</string>
+		<string>10.7.3</string>
+		<string>10.7.2</string>
+		<string>10.7.1</string>
+		<string>10.7</string>
+	</array>
+</dict>
+</plist>

@@ -77,6 +77,23 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property                    NSDictionary *selectedManifest;
 
 // -------------------------------------------------------------------------
+//  Profile Settings
+// -------------------------------------------------------------------------
+@property (weak) IBOutlet NSView *viewProfileSettings;
+@property (weak) IBOutlet NSButton *checkboxPlatformOSX;
+@property (weak) IBOutlet NSButton *checkboxPlatformiOS;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformOSXLowest;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformOSXHighest;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformiOSLowest;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformiOSHighest;
+@property                 BOOL includePlatformOSX;
+@property                 BOOL includePlatformiOS;
+@property                 BOOL showAdvancedSettings;
+- (IBAction)checkboxPlatformOSX:(id)sender;
+- (IBAction)checkboxPlatformiOS:(id)sender;
+- (IBAction)buttonProfileSettings:(id)sender;
+
+// -------------------------------------------------------------------------
 //  Payload
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet PFCSplitViewPayloadLibrary *splitViewPayload;

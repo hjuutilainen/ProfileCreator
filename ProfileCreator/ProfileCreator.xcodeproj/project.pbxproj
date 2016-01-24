@@ -40,6 +40,7 @@
 		536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 536213031C43D1C500C6C8BF /* PFCSplitViews.m */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
+		537290721C554D43003160EA /* OSVersions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 537290711C554D43003160EA /* OSVersions.plist */; };
 		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
 		53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
 		53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */; };
@@ -143,6 +144,7 @@
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		536FC5271C15EEDE00B1D7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		537290711C554D43003160EA /* OSVersions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = OSVersions.plist; path = "Supporting Files/Property Lists/OSVersions.plist"; sourceTree = SOURCE_ROOT; };
 		53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.certificate.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.certificate.plist"; sourceTree = "<group>"; };
 		53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconAirPlay.png; path = "../Supporting Files/Graphics/MenuIconAirPlay.png"; sourceTree = "<group>"; };
 		53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconExchange.png; path = "../Supporting Files/Graphics/MenuIconExchange.png"; sourceTree = "<group>"; };
@@ -283,12 +285,21 @@
 		536FC51F1C15EEDE00B1D7CF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				537290701C554CFE003160EA /* Property Lists */,
 				53D7955E1C4AF849006B19E9 /* Submodules */,
 				53751FE71C1B830B00FF3CB0 /* Graphics */,
 				532B6C4E1C17277100297025 /* ProfileManifests */,
 			);
 			name = "Supporting Files";
 			path = ProfileCreator;
+			sourceTree = "<group>";
+		};
+		537290701C554CFE003160EA /* Property Lists */ = {
+			isa = PBXGroup;
+			children = (
+				537290711C554D43003160EA /* OSVersions.plist */,
+			);
+			name = "Property Lists";
 			sourceTree = "<group>";
 		};
 		53751FE71C1B830B00FF3CB0 /* Graphics */ = {
@@ -478,6 +489,7 @@
 				53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */,
 				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
 				5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */,
+				537290721C554D43003160EA /* OSVersions.plist in Resources */,
 				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,
 				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */,
 				53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */,
