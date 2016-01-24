@@ -2376,16 +2376,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [NSMenu popUpContextMenu:_menuButtonAdd withEvent:event forView:(NSButton *)sender];
 } // buttonAdd
 
-- (IBAction)menuItemAddMobileconfig:(id)sender {
-    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"mobileconfig!");
-}
-
-- (IBAction)menuItemAddPlist:(id)sender {
-    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"plist!");
-}
-
 - (IBAction)buttonCancel:(id)sender {
     [[self window] performClose:self];
 } // buttonCancel
@@ -2406,8 +2396,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Populate sheet with the current name, and disable the save button
         //  When typing the save button state is handled in -controlTextDidChange
         // -------------------------------------------------------------------------
+        // FIXME - Need to do a check in library if _profileName exist already, and set enabled of save button accordingly
         [_buttonSaveSheetProfileName setEnabled:NO];
-        [_textFieldSheetProfileName setStringValue:PFCDefaultProfileName];
+        [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
         
         [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
             // All actions are handled in the IBActions: -buttonCancelSheetProfileName, -buttonSaveSheetProfileName
@@ -2424,6 +2415,16 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self collapseSplitViewInfo];
     }
 } // buttonToggleInfo
+
+- (IBAction)menuItemAddMobileconfig:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"mobileconfig!");
+}
+
+- (IBAction)menuItemAddPlist:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"plist!");
+}
 
 - (IBAction)buttonSaveSheetProfileName:(id)sender {
     

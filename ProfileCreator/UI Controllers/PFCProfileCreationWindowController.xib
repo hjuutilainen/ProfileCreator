@@ -1609,7 +1609,7 @@ Gw
                                                     <outlet property="settingDatePicker" destination="sBU-rw-aEN" id="rC3-rH-h7E"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="CellViewSettingsTextFieldDaysHoursNoTitle" id="5Hf-2c-rOA" customClass="CellViewSettingsTextFieldDaysHoursNoTitle">
+                                            <tableCellView identifier="CellViewSettingsTextFieldDaysHoursNoTitle" misplaced="YES" id="5Hf-2c-rOA" customClass="CellViewSettingsTextFieldDaysHoursNoTitle">
                                                 <rect key="frame" x="45" y="974" width="354" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -2681,7 +2681,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileHeader" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="51" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" id="mgy-53-9NI">
-                                <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>
+                                <rect key="frame" x="0.0" y="0.0" width="190" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
