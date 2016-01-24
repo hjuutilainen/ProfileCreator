@@ -77,6 +77,19 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property                    NSDictionary *selectedManifest;
 
 // -------------------------------------------------------------------------
+//  Profile Header
+// -------------------------------------------------------------------------
+@property (weak)    IBOutlet NSView *viewProfileHeaderSplitView;
+@property (weak)    IBOutlet NSView *viewProfileHeader;
+@property (weak)    IBOutlet NSTableView *tableViewProfileHeader;
+@property (weak)    IBOutlet NSTextField *textFieldProfileName;
+@property (strong)  IBOutlet NSLayoutConstraint *constraintProfileHeaderHeight;
+@property (readwrite)        NSString *profileName;
+@property (readwrite)        NSString *profileDescription;
+@property (readwrite)        BOOL profileHeaderHidden;
+- (IBAction)selectTableViewProfileHeader:(id)sender;
+
+// -------------------------------------------------------------------------
 //  Profile Settings
 // -------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewProfileSettings;
@@ -89,25 +102,12 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property                 BOOL includePlatformOSX;
 @property                 BOOL includePlatformiOS;
 @property                 BOOL showAdvancedSettings;
-- (IBAction)checkboxPlatformOSX:(id)sender;
-- (IBAction)checkboxPlatformiOS:(id)sender;
-- (IBAction)buttonProfileSettings:(id)sender;
 
 // -------------------------------------------------------------------------
 //  Payload
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet PFCSplitViewPayloadLibrary *splitViewPayload;
 @property                    NSString *selectedPayloadTableViewIdentifier;
-
-// -------------------------------------------------------------------------
-//  Payload Header
-// -------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView *viewPayloadHeaderSplitView;
-@property (weak)    IBOutlet NSView *viewPayloadHeader;
-@property (weak)    IBOutlet NSTextField *textFieldProfileName;
-@property (strong)  IBOutlet NSLayoutConstraint *constraintPayloadHeaderHeight;
-@property (readwrite)        NSString *profileName;
-@property (readwrite)        BOOL payloadHeaderHidden;
 
 // -------------------------------------------------------------------------
 //  PayloadProfile

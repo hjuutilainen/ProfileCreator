@@ -34,6 +34,7 @@
 NSString *const PFCTableViewIdentifierPayloadProfile = @"TableViewIdentifierPayloadProfile";
 NSString *const PFCTableViewIdentifierPayloadLibrary = @"TableViewIdentifierPayloadLibrary";
 NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPayloadSettings";
+NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfileHeader";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Implementation
@@ -196,7 +197,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Add header views to window
     // ---------------------------------------------------------------------
     [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
-    [self insertSubview:_viewPayloadHeader inSuperview:_viewPayloadHeaderSplitView hidden:NO];
+    [self insertSubview:_viewProfileHeader inSuperview:_viewProfileHeaderSplitView hidden:NO];
     [self insertSubview:[_viewInfoController view] inSuperview:_viewInfoSplitView hidden:YES];
     [self insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
     
@@ -322,6 +323,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
     [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
     [self sortArrayPayloadProfile];
+    [self updateProfileHeader];
     
     // ---------------------------------------------------------------------
     //  Setup TableView Payload Profile
@@ -361,7 +363,18 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Setup Profile Settings
     // ---------------------------------------------------------------------
     [self setupPopUpButtonOsVersion];
+    
+    // ---------------------------------------------------------------------
+    //  Select frst responder depending on profile state
+    // ---------------------------------------------------------------------
+    [self selectFirstResponder];
 } // setupTableViews
+
+- (void)selectFirstResponder {
+    [_tableViewProfileHeader selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    [self selectTableViewProfileHeader:self];
+    [[_viewProfileSettings window] setInitialFirstResponder:_textFieldProfileName];
+} // selectFirstResponder
 
 - (void)sortArrayPayloadProfile {
     
@@ -612,6 +625,11 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
 } // setupPopUpButtonOsVersion
 
+- (void)updateProfileHeader {
+    [_tableViewProfileHeader beginUpdates];
+    [_tableViewProfileHeader reloadData];
+    [_tableViewProfileHeader endUpdates];
+} // setupProfileHeader
 
 - (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
@@ -736,6 +754,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         return (NSInteger)[_arrayPayloadLibrary count];
     } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadSettings] ) {
         return (NSInteger)[_arraySettings count];
+    } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileHeader] ) {
+        return 1;
     } else {
         return 0;
     }
@@ -1007,6 +1027,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
             CellViewMenuEnabled *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
             return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict row:row sender:self];
         }
+    } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileHeader] ) {
+        return [_tableViewProfileHeader makeViewWithIdentifier:@"CellViewProfileHeader" owner:self];
     }
     return nil;
 } // tableView:viewForTableColumn:row
@@ -1109,6 +1131,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         return 42;
     } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadLibrary] ) {
         return 32;
+    } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileHeader] ) {
+        return 48;
     }
     return 1;
 } // tableView:heightOfRow
@@ -2109,13 +2133,13 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 } // hideSettingsHeader
 
 - (void)showPayloadHeader {
-    [_constraintPayloadHeaderHeight setConstant:48.0f];
-    [self setPayloadHeaderHidden:NO];
+    [_constraintProfileHeaderHeight setConstant:48.0f];
+    [self setProfileHeaderHidden:NO];
 } // showPayloadHeader
 
 - (void)hidePayloadHeader {
-    [_constraintPayloadHeaderHeight setConstant:0.0f];
-    [self setPayloadHeaderHidden:NO];
+    [_constraintProfileHeaderHeight setConstant:0.0f];
+    [self setProfileHeaderHidden:NO];
 } // hidePayloadHeader
 
 - (void)showPayloadFooter {
@@ -2459,6 +2483,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Update the selection properties with the current value
     // -------------------------------------------------------------------------
     [_tableViewPayloadLibrary deselectAll:self];
+    [_tableViewProfileHeader deselectAll:self];
     [self setTableViewPayloadLibrarySelectedRow:-1];
     [self setTableViewPayloadProfileSelectedRow:[_tableViewPayloadProfile selectedRow]];
     
@@ -2571,6 +2596,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     //  Update the selection properties with the current value
     // -------------------------------------------------------------------------
     [_tableViewPayloadProfile deselectAll:self];
+    [_tableViewProfileHeader deselectAll:self];
     [self setTableViewPayloadProfileSelectedRow:-1];
     [self setTableViewPayloadLibrarySelectedRow:row];
     [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlPayloadLibrary selectedSegment]];
@@ -2732,6 +2758,25 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
     }
 } // selectSegmentedControlLibrary
+
+- (IBAction)selectTableViewProfileHeader:(id)sender {
+    [_tableViewPayloadLibrary deselectAll:self];
+    [_tableViewPayloadProfile deselectAll:self];
+    
+    [_textFieldSettingsHeaderTitle setStringValue:@"Profile Settings"];
+    
+    //NSImage *icon = [NSImage imageNamed:@"Profiles.icns"];
+    NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"];
+    if ( icon ) {
+        [_imageViewSettingsHeaderIcon setImage:icon];
+    }
+    
+    if ( _settingsHeaderHidden ) {
+        [self showSettingsHeader];
+    }
+    
+    [self showSettingsProfile];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2959,15 +3004,6 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     NSLog(@"viewIdentifier=%@", viewIdentifier);
 }
 
-- (IBAction)checkboxPlatformOSX:(id)sender {
-}
-
-- (IBAction)checkboxPlatformiOS:(id)sender {
-}
-
-- (IBAction)buttonProfileSettings:(id)sender {
-    [self showSettingsProfile];
-}
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

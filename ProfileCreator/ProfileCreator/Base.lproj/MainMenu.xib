@@ -685,7 +685,7 @@
                             <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdD-fF-vyN" customClass="RFOverlayScrollView">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="250"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="ZX0-ay-R3n">
-                                    <rect key="frame" x="1.5" y="0.5" width="148" height="248"/>
+                                    <rect key="frame" x="1.5" y="1" width="148" height="248"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView identifier="TableViewProfiles" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="pfy-i1-zvg">
@@ -736,7 +736,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="Lgf-M4-4f9">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Lgf-M4-4f9">
                                     <rect key="frame" x="1" y="234" width="148" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -794,7 +794,7 @@
                     <constraint firstAttribute="bottom" secondItem="F1e-Bs-Uhl" secondAttribute="bottom" constant="20" symbolic="YES" id="zEW-DQ-8ZI"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="352" y="298.5"/>
+            <point key="canvasLocation" x="317" y="281.5"/>
         </window>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="JCg-7c-7Ab">
             <rect key="frame" x="0.0" y="0.0" width="150" height="221"/>

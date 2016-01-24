@@ -103,7 +103,7 @@
 - (void)addSavedProfiles {
     NSArray *savedProfiles = [self savedProfileURLs];
     if ( [savedProfiles count] == 0 ) {
-        [_viewNoProfiles setHidden:NO];
+        [self showStatusNoProfiles];
     } else {
         for ( NSURL *profileURL in savedProfiles ) {
             
@@ -333,7 +333,7 @@
     [_tableViewProfiles scrollRowToVisible:index];
     [_tableViewProfilesItems insertObject:profileDict atIndex:(NSUInteger)index];
     [_tableViewProfiles endUpdates];
-    [_viewNoProfiles setHidden:YES];
+    [self hideStatusNoProfiles];
     return index;
 }
 
@@ -397,6 +397,16 @@
     }
 }
 
+- (void)showStatusNoProfiles {
+    //[_viewTableViewProfilesSuperview setHidden:YES];
+    [_viewNoProfiles setHidden:NO];
+}
+
+- (void)hideStatusNoProfiles {
+    [_viewNoProfiles setHidden:YES];
+    //[_viewTableViewProfilesSuperview setHidden:YES];
+}
+
 - (void)removeProfile {
     
     NSInteger index = [_tableViewProfiles selectedRow];
@@ -434,7 +444,7 @@
                     [_tableViewProfilesItems removeObjectAtIndex:index];
                     [_tableViewProfiles removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:index] withAnimation:NSTableViewAnimationEffectNone];
                     if ( [_tableViewProfilesItems count] == 0 ) {
-                        [_viewNoProfiles setHidden:NO];
+                        [self showStatusNoProfiles];
                     }
                 } else {
                     NSLog(@"[ERROR] %@", [error localizedDescription]);
@@ -443,45 +453,6 @@
         }
     }];
 }
-/*
-- (IBAction)buttonOpenFoldera:(id)sender {
-    // --------------------------------------------------------------
-    //  Setup open dialog for current settings
-    // --------------------------------------------------------------
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setTitle:@"Open Folder"];
-    [openPanel setPrompt:@"Select"];
-    [openPanel setCanChooseFiles:NO];
-    [openPanel setCanChooseDirectories:YES];
-    [openPanel setCanCreateDirectories:NO];
-    [openPanel setAllowsMultipleSelection:NO];
-    
-    [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-        if ( result == NSModalResponseOK ) {
-            NSArray *selectedURLs = [openPanel URLs];
-            NSURL *folderURL = [selectedURLs firstObject];
-            
-            NSArray * dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:folderURL
-                                                                  includingPropertiesForKeys:@[]
-                                                                                     options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                                       error:nil];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
-            NSMutableArray *menuArray = [[NSMutableArray alloc] init];
-            for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
-                NSDictionary *fileManifest = [PFCManifestCreationParser manifestForPlistAtURL:plistURL];
-                [menuArray addObject:fileManifest];
-            }
-            
-            if ( ! _profileWindowController ) {
-                NSLog(@"Initing with custom!");
-                _profileWindowController = [[PFCProfileCreationWindowController alloc] initWithProfileDict:@{} sender:self];
-                [_profileWindowController setCustomMenu:menuArray];
-            }
-            [[_profileWindowController window] makeKeyAndOrderFront:self];
-        }
-    }];
-}
-*/
 
 - (IBAction)buttonCancelSheetProfileName:(id)sender {
     [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];

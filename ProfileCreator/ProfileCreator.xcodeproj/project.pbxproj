@@ -41,6 +41,7 @@
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 		537290721C554D43003160EA /* OSVersions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 537290711C554D43003160EA /* OSVersions.plist */; };
+		537290771C557666003160EA /* Profiles.icns in Resources */ = {isa = PBXBuildFile; fileRef = 537290761C557666003160EA /* Profiles.icns */; };
 		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
 		53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
 		53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */; };
@@ -145,6 +146,7 @@
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		536FC5271C15EEDE00B1D7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		537290711C554D43003160EA /* OSVersions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = OSVersions.plist; path = "Supporting Files/Property Lists/OSVersions.plist"; sourceTree = SOURCE_ROOT; };
+		537290761C557666003160EA /* Profiles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Profiles.icns; sourceTree = "<group>"; };
 		53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.certificate.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.certificate.plist"; sourceTree = "<group>"; };
 		53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconAirPlay.png; path = "../Supporting Files/Graphics/MenuIconAirPlay.png"; sourceTree = "<group>"; };
 		53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconExchange.png; path = "../Supporting Files/Graphics/MenuIconExchange.png"; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 		53751FE71C1B830B00FF3CB0 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				537290761C557666003160EA /* Profiles.icns */,
 				53C7339E1C1F396800119C71 /* MenuIconSCEP.png */,
 				53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */,
 				53FCF0121C1F5D7F00E440CB /* MenuIconPrinting.png */,
@@ -523,6 +526,7 @@
 				537520031C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png in Resources */,
 				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
 				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
+				537290771C557666003160EA /* Profiles.icns in Resources */,
 				53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
