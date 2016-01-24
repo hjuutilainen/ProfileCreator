@@ -56,7 +56,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 // -------------------------------------------------------------------------
 //  Unsorted
 // -------------------------------------------------------------------------
-@property BOOL advancedSettings;
+@property                   BOOL advancedSettings;
+
 @property id parentObject;
 
 // -------------------------------------------------------------------------
@@ -189,6 +190,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSButton *buttonCancel;
 @property (weak)    IBOutlet NSButton *buttonSave;
 @property (weak)    IBOutlet NSButton *buttonToggleInfo;
+@property                    BOOL showKeysDisabled;
+@property                    BOOL showKeysHidden;
 - (IBAction)buttonPopOverSettings:(id)sender;
 - (IBAction)buttonCancel:(id)sender;
 - (IBAction)buttonSave:(id)sender;

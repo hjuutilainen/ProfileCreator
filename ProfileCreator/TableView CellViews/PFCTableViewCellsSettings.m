@@ -22,6 +22,7 @@
 #import "PFCTableViewCellsSettingsTableView.h"
 #import "PFCFileInfoProcessors.h"
 #import "PFCConstants.h"
+#import "PFCManifestUtility.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -75,8 +76,9 @@
     // ---------------------------------------------------------------------
     if ( [manifest[PFCManifestKeyIndentLeft] boolValue] ) {
         [[cellView constraintLeading] setConstant:102];
-    } else if ( [manifest[PFCManifestKeyIndent] boolValue] ) {
-        [[cellView constraintLeading] setConstant:16];
+    } else if ( manifest[PFCManifestKeyIndentLevel] != nil ) {
+        CGFloat constratingConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifest[PFCManifestKeyIndentLevel]];
+        [[cellView constraintLeading] setConstant:constratingConstant];
     } else {
         [[cellView constraintLeading] setConstant:8];
     }
@@ -154,8 +156,9 @@
     // ---------------------------------------------------------------------
     if ( [manifest[PFCManifestKeyIndentLeft] boolValue] ) {
         [[cellView constraintLeading] setConstant:102];
-    } else if ( [manifest[PFCManifestKeyIndent] boolValue] ) {
-        [[cellView constraintLeading] setConstant:16];
+    } else if ( manifest[PFCManifestKeyIndentLevel] != nil ) {
+        CGFloat constratingConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifest[PFCManifestKeyIndentLevel]];
+        [[cellView constraintLeading] setConstant:constratingConstant];
     } else {
         [[cellView constraintLeading] setConstant:8];
     }
@@ -177,6 +180,94 @@
 
 @end
 
+
+
+// REVIEWING
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewSettingsDatePicker
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+@implementation CellViewSettingsDatePicker
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewSettingsDatePicker *)populateCellViewDatePicker:(CellViewSettingsDatePicker *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+    
+    // ---------------------------------------------------------------------------------------
+    //  Get required and enabled state of this cell view
+    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    // ---------------------------------------------------------------------------------------
+    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    
+    BOOL enabled = YES;
+    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView settingTitle] setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+    if ( enabled ) {
+        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    } else {
+        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    }
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSDate *date;
+    if ( settings[PFCSettingsKeyValue] != nil ) {
+        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
+    } else {
+        date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
+    }
+    [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
+    [[cellView settingDatePicker] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Set minimum value selectable to tomorrow
+    // ---------------------------------------------------------------------
+    // FIXME - The time is set to 23:00, should probably investigate the format
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
+    [offsetComponents setDay:1];
+    NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
+    [[cellView settingDatePicker] setMinDate:dateTomorrow];
+    
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    //[[cellView settingDatePicker] setEnabled:enabled];
+    
+    // ---------------------------------------------------------------------
+    //  Target Action
+    // ---------------------------------------------------------------------
+    [[cellView settingDatePicker] setAction:@selector(datePickerSelection:)];
+    [[cellView settingDatePicker] setTarget:sender];
+    [[cellView settingDatePicker] setTag:row];
+    
+    // ---------------------------------------------------------------------
+    //  Description
+    // ---------------------------------------------------------------------
+    NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
+    [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+    
+    return cellView;
+} // populateCellViewDatePicker
+
+@end
 
 
 
@@ -1120,85 +1211,6 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 } // drawRect
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewSettingsDatePicker
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewSettingsDatePicker
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (CellViewSettingsDatePicker *)populateCellViewDatePicker:(CellViewSettingsDatePicker *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
-    BOOL required = [manifest[@"Required"] boolValue];
-    BOOL enabled = YES;
-    if ( ! required && settings[@"Enabled"] != nil ) {
-        enabled = [settings[@"Enabled"] boolValue];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Title
-    // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifest[@"Title"] ?: @""];
-    if ( enabled ) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
-    } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
-    }
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[@"Description"] ?: @""];
-    
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    NSDate *date;
-    if ( settings[PFCSettingsKeyValue] != nil ) {
-        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
-    } else {
-        date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
-    }
-    [[cellView settingDatePicker] setDateValue:date ?: [NSDate date]];
-    [[cellView settingDatePicker] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Set minimum value selectable to tomorrow
-    // ---------------------------------------------------------------------
-    // FIXME - The time is set to 23:00, should probably investigate the format
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
-    [offsetComponents setDay:1];
-    NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
-    [[cellView settingDatePicker] setMinDate:dateTomorrow];
-    
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    //[[cellView settingDatePicker] setEnabled:enabled];
-    
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingDatePicker] setAction:@selector(datePickerSelection:)];
-    [[cellView settingDatePicker] setTarget:sender];
-    [[cellView settingDatePicker] setTag:row];
-    
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-    [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
-    
-    return cellView;
-} // populateCellViewDatePicker
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

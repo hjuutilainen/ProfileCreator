@@ -150,6 +150,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         _searchNoMatchesHidden = YES;
         _windowShouldClose = NO;
         _showSettingsLocal = YES;
+        _showKeysDisabled = YES;
+        _showKeysHidden = NO;
         
         // ---------------------------------------------------------------------
         //  Initialize Classes
@@ -162,6 +164,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
     [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
+    [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
+    [self removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -208,7 +212,8 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     // ---------------------------------------------------------------------
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
-    
+    [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
     // ---------------------------------------------------------------------
     //  Perform Initial Setup
     // ---------------------------------------------------------------------
@@ -523,6 +528,10 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         [_tableViewSettings beginUpdates];
         [_tableViewSettings reloadData];
         [_tableViewSettings endUpdates];
+    } else if (
+               [keyPath isEqualToString:@"showKeysDisabled"] ||
+               [keyPath isEqualToString:@"showKeysHidden"] ) {
+        [self updateTableViewSettingsFromManifest:_selectedManifest];
     }
 } // observeValueForKeyPath:ofObject:change:context
 
@@ -635,6 +644,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         NSString *tableColumnIdentifier = [tableColumn identifier];
         NSDictionary *manifestContentDict = _arraySettings[(NSUInteger)row];
         NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+        
         if ( [tableColumnIdentifier isEqualToString:@"ColumnSettings"] ) {
             
             // ---------------------------------------------------------------------
@@ -644,6 +654,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
                 
             } else {
+                
                 NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
                 NSDictionary *userSettingsDict = _settingsManifest[identifier];
                 NSDictionary *localSettingsDict;
@@ -797,11 +808,6 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                 }
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
-            // FIXME -  Should hidden be used, and should that be in the manifest?
-            //          The idea was to hide automatic preferences for window size etc, but allow with an advanced option to show those aswell
-            if ( [manifestContentDict[@"Hidden"] boolValue] ) {
-                return nil;
-            }
             
             if ( [cellType isEqualToString:PFCCellTypePadding] ) {
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
@@ -936,7 +942,6 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         }
         
         NSDictionary *manifestContentDict = _arraySettings[(NSUInteger)row];
-        
         NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
         if ( [cellType isEqualToString:PFCCellTypePadding] ) {
             return 20;
@@ -1067,6 +1072,24 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
     }
 } // updatePayloadMenuItem
 
+- (void)updateTableViewSettingsFromManifest:(NSDictionary *)manifest {
+    [_tableViewSettings beginUpdates];
+    [_arraySettings removeAllObjects];
+    NSArray *manifestContent = [self manifestContentForManifest:manifest];
+    NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
+    if ( [manifestContentArray count] != 0 ) {
+        [_arraySettings addObjectsFromArray:manifestContentArray];
+    } else {
+        NSLog(@"manifestContentArray was Empty!");
+        if ( _settingsStatusHidden ) {
+            // FIXME - Should show text like "No Keys Enabled"
+            // Not This -> [self showSettingsError];
+        }
+    }
+    [_tableViewSettings reloadData];
+    [_tableViewSettings endUpdates];
+} // updateTableViewSettingsFromManifest
+
 - (void)updateTableViewSettingsFromManifestContentDict:(NSDictionary *)manifestContentDict atRow:(NSInteger)row {
     
     // -------------------------------------------------------------------------
@@ -1120,7 +1143,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         // -------------------------------------------------------------------------------
         __block NSInteger rowCount = 0;
         [_arraySettings enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ( [obj[@"ParentKey"] containsObject:identifier] ) {
+            if ( [obj[PFCManifestKeyParentKey] containsObject:identifier] ) {
                 rowCount++;
             } else {
                 *stop = YES;
@@ -1501,10 +1524,17 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         if ( checkbox == [(CellViewSettingsEnabled *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettingsEnabled"] row:row makeIfNecessary:NO] settingEnabled] ) {
             settingsDict[PFCSettingsKeyEnabled] = @(state);
             _settingsManifest[identifier] = [settingsDict copy];
-            [_tableViewSettings beginUpdates];
-            NSRange allColumns = NSMakeRange(0, [[_tableViewSettings tableColumns] count]);
-            [_tableViewSettings reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
-            [_tableViewSettings endUpdates];
+            
+            if ( ! _showKeysDisabled ) {
+                [self updateTableViewSettingsFromManifest:_selectedManifest];
+            } else {
+                [_tableViewSettings beginUpdates];
+                // FIXME - Should be able to just reload the current row, but the background doesn't change. Haven't looked into it yet, just realoads all until then.
+                //NSRange allColumns = NSMakeRange(0, [[_tableViewSettings tableColumns] count]);
+                //[_tableViewSettings reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+                [_tableViewSettings reloadData];
+                [_tableViewSettings endUpdates];
+            }
             return;
         }
         
@@ -1514,7 +1544,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
                [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
                ) {
         if ( checkbox == [(CellViewSettingsTextFieldCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox] ) {
-            settingsDict[@"ValueCheckbox"] = @(state);
+            settingsDict[PFCSettingsKeyValueCheckbox] = @(state);
         }
         
         
@@ -2294,7 +2324,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  Load the current manifest from the array
         // ------------------------------------------------------------------------------------
         NSMutableDictionary *manifest = [_arrayPayloadProfile[_tableViewPayloadProfileSelectedRow] mutableCopy];
-        [self setSelectedManifest:manifest];
+        [self setSelectedManifest:[manifest copy]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current settings from the saved settings dict (by using the payload domain)
@@ -2308,7 +2338,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:manifest];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
@@ -2347,7 +2377,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         }
         
         // ---------------------------------------------------------------------
-        //  Unset the SelectedTableViewIdentifier
+        //  Unset the SelectedTableViewIdentifier and SelectedManifest
         // ---------------------------------------------------------------------
         [self setSelectedPayloadTableViewIdentifier:nil];
         [self setSelectedManifest:nil];
@@ -2401,9 +2431,14 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
         
         // ------------------------------------------------------------------------------------
-        //  Load the current settings from the saved settings dict (by using the payload domain)
+        //  Load the current manifest from the array
         // ------------------------------------------------------------------------------------
         NSMutableDictionary *manifest = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
+        [self setSelectedManifest:[manifest copy]];
+        
+        // ------------------------------------------------------------------------------------
+        //  Load the current settings from the saved settings dict (by using the payload domain)
+        // ------------------------------------------------------------------------------------
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         [self setSettingsManifest:[_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
@@ -2413,7 +2448,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
         if ( [manifestContentArray count] != 0 ) {
             [_arraySettings addObjectsFromArray:[manifestContentArray copy]];
             [_textFieldSettingsHeaderTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
@@ -2455,6 +2490,7 @@ NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPay
         //  Unset the SelectedTableViewIdentifier and SelectedManifest
         // ---------------------------------------------------------------------
         [self setSelectedPayloadTableViewIdentifier:nil];
+        [self setSelectedManifest:nil];
     }
     
     [_tableViewSettings reloadData];

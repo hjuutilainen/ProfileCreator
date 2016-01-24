@@ -21,17 +21,19 @@
 
 @interface PFCManifestUtility : NSObject
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  Class Methods
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 + (id)sharedUtility;
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  Utility Methods
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
+- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel;
 - (NSImage *)iconForManifest:(NSDictionary *)manifest;
 - (BOOL)hideKey:(NSString *)key;
 - (NSString *)typeStringFromValue:(id)value;
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString;
+- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden;
 
 @end

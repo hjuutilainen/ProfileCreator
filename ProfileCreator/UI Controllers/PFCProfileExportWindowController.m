@@ -354,7 +354,7 @@
     }
     
     // Next step is to solve nested keys
-    //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+    //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
     
     NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
         return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];
@@ -542,7 +542,7 @@
         }
         
         // Next step is to solve nested keys
-        //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+        //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
         
         NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];
@@ -735,7 +735,7 @@
     }
     
     // Next step is to solve nested keys
-    //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+    //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
     
     NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
         return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];
@@ -803,7 +803,7 @@
     }
 
     // Next step is to solve nested keys
-    //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+    //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
     
     NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
         return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];
@@ -876,7 +876,7 @@
         }
         
         // Next step is to solve nested keys
-        //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+        //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
         
         NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];
@@ -1012,7 +1012,7 @@
         }
         
         // Next step is to solve nested keys
-        //NSString *payloadParentKey = payloadDict[@"ParentKey"];
+        //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
         
         NSUInteger idx = [*payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
             return [[item objectForKey:@"PayloadType"] isEqualToString:payloadType];

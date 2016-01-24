@@ -46,10 +46,16 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal {
+- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for ( NSDictionary *manifestContentDict in manifestContent ) {
-        [array addObjectsFromArray:[self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
+        
+        // ---------------------------------------------------------------------------------
+        //  Check if manifest content dict should be shown agains the current user settings
+        // ---------------------------------------------------------------------------------
+        if ( [[PFCManifestUtility sharedUtility] showManifestContentDict:manifestContentDict settings:settings showDisabled:showDisabled showHidden:showHidden] ) {
+            [array addObjectsFromArray:[self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
+        }
     }
     return [array copy];
 } // arrayFromManifestContent:settings:settingsLocal
@@ -227,7 +233,7 @@
 } // arrayFromCellTypeCheckbox:settings:settingsLocal:parentKeys
 
 - (NSArray *)arrayFromCellTypePopUpButton:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys {
-
+    
     // ----------------------------------------------------------------------------------------------
     //  Verify this manifest content dict contains any 'ValueKeys' and 'AvailableValues'. Else stop.
     // ----------------------------------------------------------------------------------------------
@@ -254,7 +260,7 @@
     } else if (  [settingsLocal[identifier][PFCSettingsKeyValue] length] != 0 ) {
         selectedItem = settingsLocal[identifier][PFCSettingsKeyValue];
     }
-
+    
     // -------------------------------------------------------------------------
     //  Verify selection was made and that it exists in 'AvailableValues'
     //  If not, select first item in 'AvailableValues'
@@ -264,7 +270,7 @@
         NSLog(@"[WARNING] PopUpButton selection is invalid, selecting first available item");
         selectedItem = [availableValues firstObject];
     }
-
+    
     // -------------------------------------------------------------------------
     //  Add any subkeys the current manifest content dict contains
     // -------------------------------------------------------------------------
@@ -375,9 +381,9 @@
         // ---------------------------------------------------------------------------
         if ( ! [[valueKeys[value] class] isSubclassOfClass:[NSArray class]] ) {
             /*
-            NSLog(@"[DEBUG] Selected value is: %@", value);
-            NSLog(@"[DEBUG] Selected value class is: %@", [valueKeys[value] class]);
-            NSLog(@"[DEBUG] Available ValueKeys: %@", valueKeys);
+             NSLog(@"[DEBUG] Selected value is: %@", value);
+             NSLog(@"[DEBUG] Selected value class is: %@", [valueKeys[value] class]);
+             NSLog(@"[DEBUG] Available ValueKeys: %@", valueKeys);
              */
             return @[];
         }
@@ -434,8 +440,8 @@
             if ( ! [parentKeys containsObject:identifier] ) {
                 [parentKeys addObject:identifier];
             }
-
-            mutableValueDict[@"ParentKey"] = [parentKeys copy];
+            
+            mutableValueDict[PFCManifestKeyParentKey] = [parentKeys copy];
             
             // -----------------------------------------------------------------
             //  Add any subkeys the current manifest content dict contains
@@ -557,17 +563,10 @@
         NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
         
         // -----------------------------------------------------------------------------------------
-        //  FIXME - Add preference for hiding system keys (like window position etc.)
+        //  Set 'Hidden' to yes for all keys in hidden list in preferences
         // -----------------------------------------------------------------------------------------
-        if ( @YES ) {
-            
-            // -----------------------------------------------------------------------------------------
-            // FIXME - Should probably add this as a key like "Hidden" instead of excluding so the user can show hidden keys later.
-            // Like: manifestDict[PFCManifestKeyHidden] = @([self hideKey:key]);
-            // -----------------------------------------------------------------------------------------
-            if ( [[PFCManifestUtility sharedUtility] hideKey:key] ) {
-                continue;
-            }
+        if ( [[PFCManifestUtility sharedUtility] hideKey:key] ) {
+            manifestDict[PFCManifestKeyHidden] = @YES;
         }
         
         // ---------------------------------------------------------------------------------
@@ -833,7 +832,7 @@
         //  TableView
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
-
+        
         // ---------------------------------------------------------------------
         //  TextField
         // ---------------------------------------------------------------------

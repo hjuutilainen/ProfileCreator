@@ -21,25 +21,25 @@
 
 @interface PFCManifestParser : NSObject
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  Class Methods
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 + (id)sharedParser;
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  TableView arrays from Manifest
-// -------------------------------------------------------------
-- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal;
+// -----------------------------------------------------------------------------
+- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden;
 - (NSArray *)arrayFromManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal parentKeys:(NSMutableArray *)parentKeys;
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  Create Manifest
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 - (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings;
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  Verify Manifest
-// -------------------------------------------------------------
+// -----------------------------------------------------------------------------
 - (NSDictionary *)verifyManifestContent:(NSArray *)ManifestContent settings:(NSDictionary *)settings;
 - (NSDictionary *)verifyManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings;
 

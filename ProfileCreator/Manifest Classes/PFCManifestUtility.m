@@ -44,6 +44,20 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel {
+    CGFloat indentationBaseValue = 8.0f;
+    CGFloat indentationMultiplier;
+    if ( [indentationLevel floatValue] < 1.0f ) {
+        return indentationBaseValue;
+    } else if ( 5.0f < [indentationLevel floatValue] ) {
+        indentationMultiplier = 5.0f;
+    } else {
+        indentationMultiplier = [indentationLevel floatValue];
+    }
+    
+    return ( indentationBaseValue + ( indentationBaseValue * indentationMultiplier ) );
+} // constantForIndentationLevel
+
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
     
     NSImage *icon = [[NSBundle mainBundle] imageForResource:manifest[PFCManifestKeyIconName]];
@@ -154,5 +168,34 @@
     if ( [typeString isEqualToString:PFCValueTypeData] )     return PFCCellTypeFile;
     return @"Unknown";
 } // cellTypeFromTypeString
+
+- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden {
+    BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ( ! showDisabled ) {
+        
+        BOOL enabled = YES;
+        if ( ! required && settings[identifier][PFCSettingsKeyEnabled] != nil ) {
+            enabled = [settings[identifier][PFCSettingsKeyEnabled] boolValue];
+        }
+        
+        if ( ! enabled ) {
+            return NO;
+        }
+    }
+    
+    if ( ! showHidden ) {
+        BOOL hidden = NO;
+        if ( ! required && [manifestContentDict[PFCManifestKeyHidden] boolValue] ) {
+            hidden = [manifestContentDict[PFCManifestKeyHidden] boolValue];
+        }
+        
+        if ( hidden ) {
+            return NO;
+        }
+    }
+    
+    return YES;
+} // showManifestContentDict:settings:showDisabled:showHidden
 
 @end
