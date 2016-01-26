@@ -319,9 +319,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ------------------------------------------------------------------------------------------
     NSMutableArray *enabledPayloadDomains = [NSMutableArray array];
     for ( NSString *payloadDomain in [_settingsProfile allKeys] ) {
-        NSDictionary *settingsManifest = _settingsProfile[payloadDomain];
-        if ( [settingsManifest[PFCSettingsKeySelected] boolValue] ) {
-            [enabledPayloadDomains addObject:payloadDomain];
+        for ( NSDictionary *settingsManifest in _settingsProfile[payloadDomain] ?: @[] ) {
+            if ( [settingsManifest[PFCSettingsKeySelected] boolValue] ) {
+                [enabledPayloadDomains addObject:payloadDomain];
+            }
         }
     }
     
@@ -695,12 +696,39 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)tabIndexSelected:(NSNotification *)notification {
+    NSLog(@"tabIndexSelected");
+    // -------------------------------------------------------------------------
+    //  If currently selected index is selected again, do nothing
+    // -------------------------------------------------------------------------
+    NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
+    NSLog(@"indexSelected=%ld", (long)indexSelected);
+    NSLog(@"_tabIndexSelected=%ld", (long)_tabIndexSelected);
+    if ( indexSelected == _tabIndexSelected ) {
+        return;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Save current settings
+    // -------------------------------------------------------------------------
+    NSString *manifestDomain = _selectedManifest[PFCManifestKeyDomain];
+    [self saveSettingsForManifestWithDomain:manifestDomain settings:_settingsManifest manifestTabIndex:_tabIndexSelected];
     
     // -------------------------------------------------------------------------
     //  Store the currently selected tab in property _tabIndexSelected
     // -------------------------------------------------------------------------
-    NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
     [self setTabIndexSelected:indexSelected];
+    
+    // -------------------------------------------------------------------------
+    //  Set correct settings for selected tab
+    // -------------------------------------------------------------------------
+    [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:indexSelected]];
+
+    // -------------------------------------------------------------------------
+    //  Update settings view with the new settings
+    // -------------------------------------------------------------------------
+    [_tableViewSettings beginUpdates];
+    [_tableViewSettings reloadData];
+    [_tableViewSettings endUpdates];
 } // tabIndexSelected
 
 - (void)tabIndexClosed:(NSNotification *)notification {
@@ -731,6 +759,11 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Remove view from the view array
     // -------------------------------------------------------------------------
     [_arrayPayloadTabs removeObjectAtIndex:indexClosed];
+    
+    // -------------------------------------------------------------------------
+    //  Remove settings from the settings array
+    // -------------------------------------------------------------------------
+    [self removeSettingsForManifestWithDomain:_selectedManifest[PFCManifestKeyDomain] manifestTabIndex:indexClosed];
     
     // ----------------------------------------------------------------------------------------------------------------------
     //  If the currently selected tab sent the close notification, calculate and send what tab to select after it has closed
@@ -1107,8 +1140,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             
             NSDictionary *manifestSettings;
             if ( _tableViewPayloadProfileSelectedRow == -1 && _tableViewPayloadLibrarySelectedRow == -1 ) {
-                NSDictionary *domain = manifestDict[PFCManifestKeyDomain];
-                manifestSettings = _settingsProfile[domain];
+                NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
+                manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
             } else {
                 manifestSettings = _settingsManifest;
             }
@@ -1640,8 +1673,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
             NSDictionary *manifestDict = [_arrayPayloadProfile objectAtIndex:row];
-            NSString *payloadDomain = manifestDict[PFCManifestKeyDomain];
-            NSInteger payloadLibrary = [_settingsProfile[payloadDomain][@"PayloadLibrary"] integerValue];
+            NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
+            NSMutableDictionary *manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
+            NSInteger payloadLibrary = [manifestSettings[@"PayloadLibrary"] integerValue] ?: 2;
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu ENABLED
@@ -1712,14 +1746,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 [_settingsManifest removeObjectForKey:@"Selected"];
                 [_settingsManifest removeObjectForKey:@"PayloadLibrary"];
             } else {
-                NSMutableDictionary *settingsDict = [_settingsProfile[payloadDomain] mutableCopy] ?: [NSMutableDictionary dictionary];
-                [settingsDict removeObjectForKey:@"Selected"];
-                [settingsDict removeObjectForKey:@"PayloadLibrary"];
-                if ( [settingsDict count] == 0 ) {
-                    [_settingsProfile removeObjectForKey:payloadDomain];
-                } else {
-                    _settingsProfile[payloadDomain] = [settingsDict copy];
-                }
+                [manifestSettings removeObjectForKey:@"Selected"];
+                [manifestSettings removeObjectForKey:@"PayloadLibrary"];
+                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings copy] manifestTabIndex:_tabIndexSelected];
             }
             
             // ---------------------------------------------------------------------
@@ -1731,7 +1760,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             //  Store the cell dict for move
             // ---------------------------------------------------------------------
             NSDictionary *manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
-            NSString *payloadDomain = manifestDict[PFCManifestKeyDomain];
+            NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
             
             // ---------------------------------------------------------------------
             //  Remove the cell dict from table view menu DISABLED
@@ -1795,10 +1824,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 
                 _settingsManifest[@"Selected"] = @YES;
             } else {
-                NSMutableDictionary *settingsDict = [_settingsProfile[payloadDomain] mutableCopy] ?: [NSMutableDictionary dictionary];
-                settingsDict[@"Selected"] = @YES;
-                settingsDict[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
-                _settingsProfile[payloadDomain] = [settingsDict copy];
+                NSMutableDictionary *manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
+                manifestSettings[@"Selected"] = @YES;
+                manifestSettings[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
+                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings copy] manifestTabIndex:_tabIndexSelected];
             }
         }
     } else {
@@ -2189,11 +2218,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------------------
     NSMutableDictionary *settingsProfile = [_settingsProfile mutableCopy];
     for ( NSString *domain in [settingsProfile allKeys] ) {
-        if ( [settingsProfile[domain][PFCProfileTemplateKeyUUID] length] == 0 ) {
-            NSMutableDictionary *settingsManifest = [settingsProfile[domain] mutableCopy];
-            settingsManifest[PFCProfileTemplateKeyUUID] = [[NSUUID UUID] UUIDString];
-            settingsProfile[domain] = [settingsManifest copy];
+        NSMutableArray *manifestSettings = [[NSMutableArray alloc] init];
+        for ( NSMutableDictionary *settings in settingsProfile[domain] ?: @[] ) {
+            if ( [settings[PFCProfileTemplateKeyUUID] length] == 0 ) {
+                settings[PFCProfileTemplateKeyUUID] = [[NSUUID UUID] UUIDString];
+            }
+            [manifestSettings addObject:[settings copy]];
         }
+        settingsProfile[domain] = [manifestSettings copy];
     }
     
     [self setSettingsProfile:[settingsProfile mutableCopy]];
@@ -2225,7 +2257,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             if ( [_settingsManifest count] != 0 ) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                 if ( [manifestDomain length] != 0 ) {
-                    _settingsProfile[manifestDomain] = [_settingsManifest copy];
+                    [self saveSettingsForManifestWithDomain:manifestDomain settings:_settingsManifest manifestTabIndex:_tabIndexSelected];
                 } else {
                     NSLog(@"[ERROR] No domain found for manifest when saving current selection");
                 }
@@ -2254,7 +2286,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 if ( [_settingsManifest count] != 0 ) {
                     NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                     if ( [manifestDomain length] != 0 ) {
-                        _settingsProfile[manifestDomain] = [_settingsManifest copy];
+                        [self saveSettingsForManifestWithDomain:manifestDomain settings:_settingsManifest manifestTabIndex:_tabIndexSelected];
                     } else {
                         NSLog(@"[ERROR] No domain found for manifest when saving current selection");
                     }
@@ -2680,7 +2712,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Load the current settings from the saved settings dict (by using the payload domain)
         // ------------------------------------------------------------------------------------
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-        [self setSettingsManifest:[_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
         [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
@@ -2798,7 +2830,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Load the current settings from the saved settings dict (by using the payload domain)
         // ------------------------------------------------------------------------------------
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-        [self setSettingsManifest:[_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
         [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
@@ -2944,6 +2976,62 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     
     [self showSettingsProfile];
 }
+
+- (NSMutableDictionary *)settingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
+    
+    // -------------------------------------------------------------------------
+    //  Check that manifest array contains any settings dict, else return new
+    // -------------------------------------------------------------------------
+    NSArray *manifestSettings = _settingsProfile[manifestDomain] ?: @[];
+    if ( [manifestSettings count] == 0 ) {
+        return [[NSMutableDictionary alloc] init];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Check that selected index exist in settings, else return new
+    // -------------------------------------------------------------------------
+    if ( [manifestSettings count] <= manifestTabIndex ) {
+        return [[NSMutableDictionary alloc] init];
+    }
+    
+    return [manifestSettings[manifestTabIndex] mutableCopy];
+} // settingsForManifestWithDomain:manifestTabIndex
+
+- (void)saveSettingsForManifestWithDomain:(NSString *)manifestDomain settings:(NSDictionary *)settings manifestTabIndex:(NSInteger)manifestTabIndex {
+
+    // -------------------------------------------------------------------------
+    //  Check that manifest array contains any settings dict, else return new
+    // -------------------------------------------------------------------------
+    NSMutableArray *manifestSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  Check that manifest array contains correct amount of settings dicts
+    //  If some is missing, add empty dicts to get the index matching correct
+    // -------------------------------------------------------------------------
+    NSInteger manifestSettingsCount = [manifestSettings count];
+    while ( (manifestSettingsCount - 1 ) < manifestTabIndex ) {
+        [manifestSettings addObject:[[NSMutableDictionary alloc] init]];
+        manifestSettingsCount = [manifestSettings count];
+    }
+    
+    [manifestSettings replaceObjectAtIndex:manifestTabIndex withObject:settings];
+    _settingsProfile[manifestDomain] = manifestSettings;
+} // saveSettingsForManifestWithDomain:settings:manifestTabIndex
+
+- (void)removeSettingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
+    
+    // -------------------------------------------------------------------------
+    //  Check that manifest array contains any settings dict, else stop
+    //  Also check if manifestTabIndex is higher than settings count, then stop
+    // -------------------------------------------------------------------------
+    NSMutableArray *manifestSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableArray alloc] init];
+    if ( [manifestSettings count] == 0 || [manifestSettings count] < manifestTabIndex  ) {
+        return;
+    }
+    
+    [manifestSettings removeObjectAtIndex:manifestTabIndex];
+    _settingsProfile[manifestDomain] = manifestSettings;
+} // removeSettingsForManifestWithDomain:manifestTabIndex
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -3175,7 +3263,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
     PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
     [_arrayPayloadTabs addObject:newTabView];
-    [_stackViewTabBar insertView:newTabView atIndex:[[_stackViewTabBar views] count] inGravity:NSStackViewGravityTrailing];
+    NSInteger newIndex = [[_stackViewTabBar views] count];
+    [_stackViewTabBar insertView:newTabView atIndex:newIndex inGravity:NSStackViewGravityTrailing];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(([_arrayPayloadTabs count] - 1)) }];
     if ( _tabBarHidden ) {
         [self showSettingsTabBar];
