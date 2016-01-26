@@ -97,6 +97,7 @@ NSString *const PFCManifestKeyPayloadParentKeyHost = @"PayloadParentKeyHost";
 NSString *const PFCManifestKeyPayloadParentKeyPort = @"PayloadParentKeyPort";
 NSString *const PFCManifestKeyPayloadParentKeyTextField = @"PayloadParentKeyTextField";
 NSString *const PFCManifestKeyPayloadParentValueType = @"PayloadParentValueType";
+NSString *const PFCManifestKeyPayloadTabTitle = @"PayloadTabTitle";
 NSString *const PFCManifestKeyPayloadType = @"PayloadType";
 NSString *const PFCManifestKeyPayloadValueType = @"PayloadValueType";
 NSString *const PFCManifestKeyPayloadValue = @"PayloadValue";

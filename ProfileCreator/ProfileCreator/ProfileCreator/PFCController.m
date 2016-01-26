@@ -366,7 +366,8 @@
 - (void)createProfile {
     
     NSMutableDictionary *profileDict = [@{ PFCRuntimeKeyPath : [PFCController newProfilePath],
-                                           @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName }} mutableCopy];
+                                           @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName,
+                                                          PFCProfileTemplateKeyUUID : [[NSUUID UUID] UUIDString] }} mutableCopy];
     
     PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
     if ( controller ) {

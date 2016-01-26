@@ -492,12 +492,18 @@
 
 - (NSDictionary *)manifestRootFromPlistAtURL:(NSURL *)fileURL {
     
-    NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *manifest = [[NSMutableDictionary alloc] init];
     
     // ---------------------------------------------------------------------
     //  Set the required CellType for the Menu
     // ---------------------------------------------------------------------
-    manifestDict[PFCManifestKeyCellType] = PFCCellTypeMenu;
+    manifest[PFCManifestKeyCellType] = PFCCellTypeMenu;
+    
+    // ---------------------------------------------------------------------
+    //  Set allow multiple payloads to NO
+    //  FIXME - This might be a setting, need to discuss.
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyAllowMultiplePayloads] = @NO;
     
     // ---------------------------------------------------------------------
     //  Set the domain to the plist name (without the file extension)
@@ -508,8 +514,8 @@
         // ---------------------------------------------------------------------
         //  Set both the "Domain" and "Title" to the domain
         // ---------------------------------------------------------------------
-        manifestDict[PFCManifestKeyDomain] = domain;
-        manifestDict[PFCManifestKeyTitle] = domain;
+        manifest[PFCManifestKeyDomain] = domain;
+        manifest[PFCManifestKeyTitle] = domain;
         
         // -----------------------------------------------------------------------------
         //  Check if any applications can be found using the domain as bundle identifier
@@ -524,7 +530,7 @@
                 // -----------------------------------------------------------------------------
                 NSString *bundleName = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
                 if ( [bundleName length] != 0 ) {
-                    manifestDict[PFCManifestKeyTitle] = bundleName;
+                    manifest[PFCManifestKeyTitle] = bundleName;
                 }
                 
                 // ----------------------------------------------------------------------------------------
@@ -532,13 +538,13 @@
                 // ----------------------------------------------------------------------------------------
                 NSImage *bundleIcon = [[NSWorkspace sharedWorkspace] iconForFile:[bundleURL path]];
                 if ( bundleIcon ) {
-                    manifestDict[PFCManifestKeyIconPathBundle] = [bundleURL path];
+                    manifest[PFCManifestKeyIconPathBundle] = [bundleURL path];
                 }
             }
         }
     }
     
-    return [manifestDict copy];
+    return [manifest copy];
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -84,6 +84,11 @@
     }
     
     // ---------------------------------------------------------------------
+    //  Tool Tip
+    // ---------------------------------------------------------------------
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    
+    // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
     [[cellView settingCheckbox] setAction:@selector(checkbox:)];
@@ -162,6 +167,11 @@
     } else {
         [[cellView constraintLeading] setConstant:8];
     }
+    
+    // ---------------------------------------------------------------------
+    //  Tool Tip
+    // ---------------------------------------------------------------------
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Target Action
@@ -479,7 +489,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[self toolTipWithKey:manifest[@"PayloadKey"] type:@"String" required:required description:manifest[@"ToolTipDescription"]]];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Enabled
@@ -506,20 +516,6 @@
         [_constraintTextFieldTrailing setConstant:8.0];
         [_imageViewRequired setHidden:YES];
     }
-}
-
-// FIXME - Test for tool tips, will have to build this out to support attributed strings
-- (NSString *)toolTipWithKey:(NSString *)key type:(NSString *)type required:(BOOL)required description:(NSString *)description {
-    NSMutableString *toolTip = [[NSMutableString alloc] init];
-    
-    [toolTip appendString:[NSString stringWithFormat:@"\t\tKey: %@", key ?: @"Unknown"]];
-    [toolTip appendString:[NSString stringWithFormat:@"\n\t       Type: %@", type ?: @"Unknown"]];
-    [toolTip appendString:[NSString stringWithFormat:@"\n\tRequired: %@", (required) ? @"YES" : @"NO"]];
-    if ( [description length] != 0 ) {
-        [toolTip appendString:[NSString stringWithFormat:@"\n     Description: %@", description]];
-    }
-    
-    return toolTip;
 }
 
 @end

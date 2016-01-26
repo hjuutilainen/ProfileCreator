@@ -14,6 +14,8 @@
 	<string>MenuIconMail.png</string>
 	<key>IconPath</key>
 	<string>/Applications/Mail.app/Contents/Resources/ApplicationIcon.icns</string>
+	<key>AllowMultiplePayloads</key>
+	<true/>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

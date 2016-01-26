@@ -12,6 +12,8 @@
 	<string>Identification</string>
 	<key>IconName</key>
 	<string>MenuIconIdentification.png</string>
+	<key>AllowMultiplePayloads</key>
+	<true/>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

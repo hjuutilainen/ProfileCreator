@@ -22,6 +22,7 @@
 #import "RFOverlayScrollView.h"
 #import "PFCSplitViews.h"
 #import "PFCProfileCreationInfoView.h"
+#import "PFCProfileCreationTab.h"
 @class PFCPayloadLibraryTableView;
 @class PFCSettingsTableView;
 
@@ -84,6 +85,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSTableView *tableViewProfileHeader;
 @property (weak)    IBOutlet NSTextField *textFieldProfileName;
 @property (strong)  IBOutlet NSLayoutConstraint *constraintProfileHeaderHeight;
+@property                    NSString *profileUUID;
 @property (readwrite)        NSString *profileName;
 @property (readwrite)        NSString *profileDescription;
 @property (readwrite)        BOOL profileHeaderHidden;
@@ -181,6 +183,17 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSTextField *textFieldSettingsHeaderTitle;
 @property (strong)  IBOutlet NSLayoutConstraint *constraintSettingsHeaderHeight;
 @property (readwrite)        BOOL settingsHeaderHidden;
+
+// -------------------------------------------------------------------------
+//  PayloadTabBar
+// -------------------------------------------------------------------------
+@property (weak) IBOutlet NSStackView *stackViewTabBar;
+@property                 BOOL tabBarHidden;
+@property                 BOOL tabBarButtonHidden;
+@property                 NSInteger tabIndexSelected;
+@property                 NSMutableArray *arrayPayloadTabs;
+- (IBAction)buttonAddPayload:(id)sender;
+
 
 // -------------------------------------------------------------------------
 //  Settings

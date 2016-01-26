@@ -14,6 +14,8 @@
 	<string>MenuIconExchange.png</string>
 	<key>IconPath</key>
 	<string>/System/Library/PrivateFrameworks/AccountsUI.framework/Versions/A/Resources/exchange.tiff</string>
+	<key>AllowMultiplePayloads</key>
+	<true/>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

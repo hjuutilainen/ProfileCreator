@@ -132,6 +132,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         _arrayPayloadLibraryApple = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryUserPreferences = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryCustom = [[NSMutableArray alloc] init];
+        _arrayPayloadTabs = [[NSMutableArray alloc] init];
         _arraySettings = [[NSMutableArray alloc] init];
         
         // ---------------------------------------------------------------------
@@ -167,6 +168,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"selectTab" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"closeTab" object:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,10 +302,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // FIXME - Comment this
     [self updateTableColumnsSettings];
     
+    // --------------------------------------------------------------
+    //  Add Notification Observers
+    // --------------------------------------------------------------
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabIndexSelected:) name:@"selectTab" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabIndexClosed:) name:@"closeTab" object:nil];
+    
     // ---------------------------------------------------------------------
     //  Initialize property 'profileName'
     // ---------------------------------------------------------------------
     [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
+    [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
     
     // ------------------------------------------------------------------------------------------
     //  Populate (NSMutableArray)enabledPayloadDomains with all manifest domains that's selected
@@ -348,32 +358,66 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     [_tableViewSettings setTableViewDelegate:self];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup Headers
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self showPayloadHeader];
     [self hideSettingsHeader];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup Main SplitView
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self collapseSplitViewInfo];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup Profile Settings
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self setupPopUpButtonOsVersion];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Select frst responder depending on profile state
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self selectFirstResponder];
+    
+    // -------------------------------------------------------------------------
+    //  Setup settings tab bar
+    // -------------------------------------------------------------------------
+    [self setupSettingsTabBar];
+    
 } // setupTableViews
 
+- (void)setupSettingsTabBar {
+    
+    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
+    
+    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
+    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    [_arrayPayloadTabs addObject:newTabView];
+    [_stackViewTabBar addView:newTabView inGravity:NSStackViewGravityTrailing];
+    
+    [self hideSettingsTabBar];
+} // setupSettingsTabBar
+
 - (void)selectFirstResponder {
-    [_tableViewProfileHeader selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-    [self selectTableViewProfileHeader:self];
-    [[_viewProfileSettings window] setInitialFirstResponder:_textFieldProfileName];
+    
+    // -------------------------------------------------------------------------
+    //  If this is a new profile (profile name is the Default name)
+    //  Select profile settings and set profile name setting as first responder
+    // -------------------------------------------------------------------------
+    if ( [_profileName isEqualToString:PFCDefaultProfileName] ) {
+        [_tableViewProfileHeader selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        [self selectTableViewProfileHeader:self];
+        [[_viewProfileSettings window] setInitialFirstResponder:_textFieldProfileName];
+    } else {
+        
+        // -------------------------------------------------------------------------
+        //  If this is an already saved profile (profile name is NOT the Default name)
+        //  Select manifest General in payload profile
+        // -------------------------------------------------------------------------
+        [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        [self selectTableViewPayloadProfile:self];
+    }
 } // selectFirstResponder
 
 - (void)sortArrayPayloadProfile {
@@ -555,7 +599,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSLog(@"[ERROR] OS Versions dict was empty!");
         return;
     }
-
+    
     // -------------------------------------------------------------------------
     //  Create OS X versions menu and add to popUpButtons for OS X
     // -------------------------------------------------------------------------
@@ -625,12 +669,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
 } // setupPopUpButtonOsVersion
 
-- (void)updateProfileHeader {
-    [_tableViewProfileHeader beginUpdates];
-    [_tableViewProfileHeader reloadData];
-    [_tableViewProfileHeader endUpdates];
-} // setupProfileHeader
-
 - (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -649,6 +687,96 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [superview setHidden:NO];
     [subview setHidden:hidden];
 } // insertSubview:inSuperview:hidden
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark NSNotification Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)tabIndexSelected:(NSNotification *)notification {
+    
+    // -------------------------------------------------------------------------
+    //  Store the currently selected tab in property _tabIndexSelected
+    // -------------------------------------------------------------------------
+    NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
+    [self setTabIndexSelected:indexSelected];
+} // tabIndexSelected
+
+- (void)tabIndexClosed:(NSNotification *)notification {
+    
+    // -------------------------------------------------------------------------
+    //  Get view that sent close notification and remove it form the stack view
+    // -------------------------------------------------------------------------
+    PFCProfileCreationTabView *view = [notification userInfo][@"TabView"];
+    if ( view != nil ) {
+        if ( [[_stackViewTabBar views] containsObject:view] ) {
+            [_stackViewTabBar removeView:view];
+        }
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get index of the view (in the stack view) that sent close notification
+    // -------------------------------------------------------------------------
+    NSInteger indexClosed = [[notification userInfo][@"TabIndex"] integerValue];
+    
+    // -------------------------------------------------------------------------
+    //  Sanity check the array of views so the selection is valid
+    // -------------------------------------------------------------------------
+    if ( [_arrayPayloadTabs count] <= 1 || [_arrayPayloadTabs count] < indexClosed ) {
+        return;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Remove view from the view array
+    // -------------------------------------------------------------------------
+    [_arrayPayloadTabs removeObjectAtIndex:indexClosed];
+    
+    // ----------------------------------------------------------------------------------------------------------------------
+    //  If the currently selected tab sent the close notification, calculate and send what tab to select after it has closed
+    // ----------------------------------------------------------------------------------------------------------------------
+    if ( _tabIndexSelected == indexClosed ) {
+        if ( indexClosed == 0 || [_arrayPayloadTabs count] == 1 ) {
+            
+            // -----------------------------------------------------------------
+            //  If there is only one tab remaining in the array, select it
+            // -----------------------------------------------------------------
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                                object:self
+                                                              userInfo:@{ @"TabIndex" : @0 }];
+            
+            // -----------------------------------------------------------------
+            //  Hide the tab bar when there's only one payload configured
+            // -----------------------------------------------------------------
+            [self hideSettingsTabBar];
+        } else if ( indexClosed == [_arrayPayloadTabs count] ) {
+            
+            // --------------------------------------------------------------------
+            //  If the closed tab was last in the view, select the "new" last view
+            // --------------------------------------------------------------------
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                                object:self
+                                                              userInfo:@{ @"TabIndex" : @((indexClosed - 1)) }];
+        } else {
+            
+            // --------------------------------------------------------------------
+            //  If none of the above, send same index as the closed tab to select
+            //  The next adjacent one to the closed tab's right
+            // --------------------------------------------------------------------
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                                object:self
+                                                              userInfo:@{ @"TabIndex" : @(indexClosed) }];
+        }
+    } else if ( indexClosed < _tabIndexSelected ) {
+        
+        // --------------------------------------------------------------------
+        //  Closed tab was left of the current selection, update the tab selected
+        // --------------------------------------------------------------------
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                            object:self
+                                                          userInfo:@{ @"TabIndex" : @((_tabIndexSelected - 1)) }];
+    }
+} // tabIndexClosed
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -989,8 +1117,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             NSNumber *errorCount;
             if ( [verificationReport count] != 0 ) {
                 errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]);
+                [self updatePayloadTabErrorCount:errorCount];
             }
-
+            
             if ( [cellType isEqualToString:PFCCellTypeMenu] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
                 [cellView setIdentifier:nil];
@@ -1200,6 +1329,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 #pragma mark TableView Update Methods
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
+
+- (void)updateProfileHeader {
+    [_tableViewProfileHeader beginUpdates];
+    [_tableViewProfileHeader reloadData];
+    [_tableViewProfileHeader endUpdates];
+} // setupProfileHeader
 
 - (void)updateTableColumnsSettings {
     
@@ -1466,8 +1601,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     _settingsManifest[identifier] = [settingsDict copy];
+    if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && [_selectedManifest[PFCManifestKeyPayloadTabTitle] hasPrefix:identifier] ) {
+        [self updatePayloadTabTitle:[inputText copy]];
+    }
     [self updatePayloadMenuItem];
 } // controlTextDidChange
+
+- (void)updatePayloadTabTitle:(NSString *)title {
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs  objectAtIndex:_tabIndexSelected];
+    [tab updateTitle:title];
+} // updatePayloadTabTitle
+
+- (void)updatePayloadTabErrorCount:(NSNumber *)errorCount {
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:_tabIndexSelected];
+    [tab updateErrorCount:errorCount];
+} // updatePayloadTabErrorCount
 
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
     
@@ -2122,6 +2270,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (void)showSettingsTabBar {
+    [self setTabBarHidden:NO];
+} // showSettingsTabBar
+
+- (void)hideSettingsTabBar {
+    [self setTabBarHidden:YES];
+} // hideSettingsTabBar
+
 - (void)showSettingsHeader {
     [_constraintSettingsHeaderHeight setConstant:48.0f];
     [self setSettingsHeaderHidden:NO];
@@ -2130,6 +2286,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)hideSettingsHeader {
     [_constraintSettingsHeaderHeight setConstant:0.0f];
     [self setSettingsHeaderHidden:YES];
+    if ( ! _tabBarButtonHidden ) {
+        [self setTabBarButtonHidden:YES];
+    }
 } // hideSettingsHeader
 
 - (void)showPayloadHeader {
@@ -2291,7 +2450,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSRect viewCenterFrame = [viewCenter frame];
     
     NSRect splitViewWindowFrame = [_splitViewWindow frame];
-    
     
     [viewInfo setHidden:YES];
     
@@ -2548,6 +2706,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 [self showSettingsHeader];
             }
             
+            if ( [manifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && _tabBarButtonHidden ) {
+                [self setTabBarButtonHidden:NO];
+            }
+            
             if ( ! _settingsStatusHidden || _settingsStatusLoading ) {
                 [self hideSettingsStatus];
             }
@@ -2660,6 +2822,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
+            }
+            
+            if ( [manifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && _tabBarButtonHidden ) {
+                [self setTabBarButtonHidden:NO];
             }
             
             if ( ! _settingsStatusHidden || _settingsStatusLoading ) {
@@ -3003,7 +3169,18 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)updateInfoViewView:(NSString *)viewIdentifier {
     NSLog(@"viewIdentifier=%@", viewIdentifier);
-}
+} // updateInfoViewView
+
+- (IBAction)buttonAddPayload:(id)sender {
+    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
+    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    [_arrayPayloadTabs addObject:newTabView];
+    [_stackViewTabBar insertView:newTabView atIndex:[[_stackViewTabBar views] count] inGravity:NSStackViewGravityTrailing];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(([_arrayPayloadTabs count] - 1)) }];
+    if ( _tabBarHidden ) {
+        [self showSettingsTabBar];
+    }
+} // buttonAddPayload
 
 @end
 

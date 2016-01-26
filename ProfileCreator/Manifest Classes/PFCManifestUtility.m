@@ -198,4 +198,33 @@
     return YES;
 } // showManifestContentDict:settings:showDisabled:showHidden
 
+- (NSString *)toolTipForManifestContentDict:(NSDictionary *)manifestContentDict {
+    
+    // FIXME - This is just a basic implementation to get it in there, probably need to override to create a custom tool tip to get a good look, allso add relevant info here.
+    
+    NSMutableString *toolTip = [[NSMutableString alloc] init];
+    
+    // -------------------------------------------------------------------------
+    //  PayloadKey
+    // -------------------------------------------------------------------------
+    [toolTip appendString:[NSString stringWithFormat:@"\t\tKey: %@", manifestContentDict[PFCManifestKeyPayloadKey] ?: @"-"]];
+    
+    // -------------------------------------------------------------------------
+    //  PayloadType
+    // -------------------------------------------------------------------------
+    [toolTip appendString:[NSString stringWithFormat:@"\n\tType: %@", manifestContentDict[PFCManifestKeyPayloadType] ?: @"-"]];
+    
+    // -------------------------------------------------------------------------
+    //  Required
+    // -------------------------------------------------------------------------
+    [toolTip appendString:[NSString stringWithFormat:@"\n\tRequired: %@", (manifestContentDict[PFCManifestKeyRequired]) ? @"YES" : @"NO"]];
+    
+    // -------------------------------------------------------------------------
+    //  ToolTip
+    // -------------------------------------------------------------------------
+    [toolTip appendString:[NSString stringWithFormat:@"\n\tDescription: %@", manifestContentDict[PFCManifestKeyToolTipDescription] ?: @"-"]];
+    
+    return toolTip;
+}
+
 @end

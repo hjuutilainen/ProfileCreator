@@ -12,6 +12,8 @@
 	<string>LDAP</string>
 	<key>IconName</key>
 	<string>MenuIconLDAP.png</string>
+	<key>AllowMultiplePayloads</key>
+	<true/>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

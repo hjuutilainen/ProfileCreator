@@ -97,6 +97,7 @@ extern NSString *const PFCManifestKeyPayloadParentKeyHost;
 extern NSString *const PFCManifestKeyPayloadParentKeyPort;
 extern NSString *const PFCManifestKeyPayloadParentKeyTextField;
 extern NSString *const PFCManifestKeyPayloadParentValueType;
+extern NSString *const PFCManifestKeyPayloadTabTitle;
 extern NSString *const PFCManifestKeyPayloadType;
 extern NSString *const PFCManifestKeyPayloadValueType;
 extern NSString *const PFCManifestKeyPayloadValue;
