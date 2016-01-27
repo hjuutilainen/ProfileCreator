@@ -7,6 +7,7 @@
 //
 
 #import "PFCLog.h"
+#import "PFCLogFormatter.h"
 #import "PFCConstants.h"
 
 DDLogLevel ddLogLevel;
@@ -19,6 +20,7 @@ DDLogLevel ddLogLevel;
     //  Log to Console (Xcode/Commandline)
     // --------------------------------------------------------------
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    [[DDTTYLogger sharedInstance] setLogFormatter:[[PFCLogFormatter alloc] init]];
     
     // --------------------------------------------------------------
     //  Log to File
@@ -27,6 +29,7 @@ DDLogLevel ddLogLevel;
     [fileLogger setMaximumFileSize:10000000]; // 10000000 = 10 MB
     [fileLogger setRollingFrequency:0];
     [[fileLogger logFileManager] setMaximumNumberOfLogFiles:7];
+    [fileLogger setLogFormatter:[[PFCLogFormatter alloc] init]];
     [DDLog addLogger:fileLogger];
     
     // --------------------------------------------------------------
@@ -50,7 +53,7 @@ DDLogLevel ddLogLevel;
     }
     
     // FIXME - Force Debug Logging
-    ddLogLevel = DDLogLevelDebug;
+    ddLogLevel = DDLogLevelVerbose;
     
     NSString *logLevelName;
     
@@ -59,8 +62,7 @@ DDLogLevel ddLogLevel;
             
             break;
         case kPFCSessionTypeGUI:
-            DDLogError(@"");
-            DDLogError(@"Starting ProfileCreator version %@ (build %@)...", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]);
+            DDLogInfo(@"Starting ProfileCreator version %@ (build %@)...", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]);
             switch (ddLogLevel) {
                 case 1:
                     logLevelName = @"Error";

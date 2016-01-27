@@ -19,6 +19,7 @@
 
 #import "PFCManifestUtility.h"
 #import "PFCConstants.h"
+#import "PFCLog.h"
 
 @implementation PFCManifestUtility
 
@@ -33,6 +34,7 @@
     static PFCManifestUtility *sharedTools = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
         sharedTools = [[self alloc] init];
     });
     return sharedTools;

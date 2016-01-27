@@ -21,6 +21,7 @@
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCError.h"
+#import "PFCLog.h"
 
 @implementation PFCManifestParser
 
@@ -35,6 +36,7 @@
     static PFCManifestParser *sharedParser = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
         sharedParser = [[self alloc] init];
     });
     return sharedParser;

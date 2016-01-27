@@ -68,6 +68,7 @@
 		53897E301C59568700B1D868 /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53897E341C59571B00B1D868 /* PFCLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53897E331C59571B00B1D868 /* PFCLog.m */; };
 		53897E361C5958F700B1D868 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53897E351C5958F700B1D868 /* Defaults.plist */; };
+		53897E3A1C595DFF00B1D868 /* PFCLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53897E391C595DFF00B1D868 /* PFCLogFormatter.m */; };
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
@@ -313,6 +314,8 @@
 		53897E321C59571B00B1D868 /* PFCLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCLog.h; path = "General Classes/PFCLog.h"; sourceTree = SOURCE_ROOT; };
 		53897E331C59571B00B1D868 /* PFCLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCLog.m; path = "General Classes/PFCLog.m"; sourceTree = SOURCE_ROOT; };
 		53897E351C5958F700B1D868 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = "Supporting Files/Property Lists/Defaults.plist"; sourceTree = SOURCE_ROOT; };
+		53897E381C595DFF00B1D868 /* PFCLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCLogFormatter.h; path = "General Classes/PFCLogFormatter.h"; sourceTree = SOURCE_ROOT; };
+		53897E391C595DFF00B1D868 /* PFCLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCLogFormatter.m; path = "General Classes/PFCLogFormatter.m"; sourceTree = SOURCE_ROOT; };
 		538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCFileInfoProcessors.h; path = FileInfoProcessors/PFCFileInfoProcessors.h; sourceTree = "<group>"; };
 		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
@@ -581,6 +584,8 @@
 				53908EAC1C540FA4009468F0 /* PFCError.m */,
 				53897E321C59571B00B1D868 /* PFCLog.h */,
 				53897E331C59571B00B1D868 /* PFCLog.m */,
+				53897E381C595DFF00B1D868 /* PFCLogFormatter.h */,
+				53897E391C595DFF00B1D868 /* PFCLogFormatter.m */,
 			);
 			name = "General Classes";
 			path = ProfileCreator;
@@ -863,6 +868,7 @@
 				532DF2371C5665E700369513 /* PFCProfileCreationTab.m in Sources */,
 				53897E341C59571B00B1D868 /* PFCLog.m in Sources */,
 				53FEC8021C4E114000C96596 /* PFCViews.m in Sources */,
+				53897E3A1C595DFF00B1D868 /* PFCLogFormatter.m in Sources */,
 				535B07BC1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m in Sources */,
 				532746401C3C53A30030CD95 /* PFCProfileExportWindowController.m in Sources */,
 				53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */,

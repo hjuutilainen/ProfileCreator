@@ -27,6 +27,7 @@
 #import "PFCProfileCreationInfoView.h"
 #import "PFCManifestParser.h"
 #import "PFCError.h"
+#import "PFCLog.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -115,6 +116,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
     if (self != nil) {
         
@@ -165,6 +168,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // init
 
 - (void)dealloc {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
     [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
@@ -180,6 +185,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)windowDidLoad {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [super windowDidLoad];
     
     // ---------------------------------------------------------------------
@@ -239,6 +246,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (BOOL)windowShouldClose:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // ------------------------------------------------------------------------------------
     //  Check if property (BOOL)windowShouldClose is true
@@ -289,6 +297,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // windowShouldClose
 
 - (void)closeWindow {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [[self window] performClose:self];
 } // closeWindow
 
@@ -299,6 +309,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)initialSetup {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // FIXME - Comment this
     [self updateTableColumnsSettings];
@@ -389,6 +400,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // setupTableViews
 
 - (void)setupSettingsTabBar {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
@@ -402,6 +414,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // setupSettingsTabBar
 
 - (void)selectFirstResponder {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
     //  If this is a new profile (profile name is the Default name)
@@ -423,6 +436,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // selectFirstResponder
 
 - (void)sortArrayPayloadProfile {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
     //  Sort array payload profile
@@ -449,6 +463,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // sortArrayPayloadProfile
 
 - (void)setupManifestLibraryApple:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSError *error = nil;
     
@@ -500,6 +515,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // setupManifestLibraryApple
 
 - (void)setupManifestLibraryUserLibrary:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSError *error = nil;
     
@@ -566,6 +582,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // setupManifestLibraryUserLibrary
 
 - (void)setupPopUpButtonOsVersion {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
     //  Create base menu
@@ -672,6 +689,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // setupPopUpButtonOsVersion
 
 - (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
@@ -697,26 +716,58 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)addPayloadTab {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    // -------------------------------------------------------------------------
+    //  Create a new view controller and extract the tab view
+    // -------------------------------------------------------------------------
     PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
     PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    DDLogVerbose(@"New tab view: %@", newTabView);
+    
+    // -------------------------------------------------------------------------
+    //  Add the new tab view to the tab view array
+    // -------------------------------------------------------------------------
+    DDLogDebug(@"Adding new tab view to tab view array");
     [_arrayPayloadTabs addObject:newTabView];
+    DDLogDebug(@"Array tab view count after addition: %lu", (unsigned long)[_arrayPayloadTabs count]);
+    
+    // -------------------------------------------------------------------------
+    //  Get index of where to add the new stack view (end of current views)
+    // -------------------------------------------------------------------------
     NSInteger newIndex = [[_stackViewTabBar views] count];
+    DDLogDebug(@"StackView view count (insert index): %ld", (long)newIndex);
+    
+    // -------------------------------------------------------------------------
+    //  Insert new view in stack view
+    // -------------------------------------------------------------------------
+    DDLogVerbose(@"Inserting new tab view in stack view");
     [_stackViewTabBar insertView:newTabView atIndex:newIndex inGravity:NSStackViewGravityTrailing];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(([_arrayPayloadTabs count] - 1)) }];
+    DDLogDebug(@"StackView view count after addition: %lu", (unsigned long)[[_stackViewTabBar views] count]);
+    
+    // -------------------------------------------------------------------------
+    //  Post notification to select the newly created view
+    // -------------------------------------------------------------------------
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(newIndex) }];
+    
+    // -------------------------------------------------------------------------
+    //  When adding a view the tab bar should become visible
+    // -------------------------------------------------------------------------
     if ( _tabBarHidden ) {
         [self showSettingsTabBar];
     }
 } // addPayloadTab
 
 - (void)tabIndexSelected:(NSNotification *)notification {
-    NSLog(@"tabIndexSelected");
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     // -------------------------------------------------------------------------
     //  If currently selected index is selected again, do nothing
     // -------------------------------------------------------------------------
     NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
-    NSLog(@"indexSelected=%ld", (long)indexSelected);
-    NSLog(@"_tabIndexSelected=%ld", (long)_tabIndexSelected);
+    DDLogDebug(@"Selected index: %ld", (long)indexSelected);
     if ( indexSelected == _tabIndexSelected ) {
+        DDLogVerbose(@"indexSelected: %ld is equal to _tabIndexSelected: %ld", (long)indexSelected, (long)_tabIndexSelected);
         return;
     }
     
@@ -724,11 +775,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Save current settings
     // -------------------------------------------------------------------------
     NSString *manifestDomain = _selectedManifest[PFCManifestKeyDomain];
+    DDLogDebug(@"Current manifest domain: %@", manifestDomain);
     [self saveSettingsForManifestWithDomain:manifestDomain settings:_settingsManifest manifestTabIndex:_tabIndexSelected];
     
     // -------------------------------------------------------------------------
     //  Store the currently selected tab in property _tabIndexSelected
     // -------------------------------------------------------------------------
+    DDLogVerbose(@"Setting _tabIndexSelected to: %ld", (long)indexSelected);
     [self setTabIndexSelected:indexSelected];
     
     // -------------------------------------------------------------------------
@@ -739,20 +792,27 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Update settings view with the new settings
     // -------------------------------------------------------------------------
+    DDLogVerbose(@"Reloading TableView Settings");
     [_tableViewSettings beginUpdates];
     [_tableViewSettings reloadData];
     [_tableViewSettings endUpdates];
 } // tabIndexSelected
 
 - (void)tabIndexClosed:(NSNotification *)notification {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
     //  Get view that sent close notification and remove it form the stack view
     // -------------------------------------------------------------------------
     PFCProfileCreationTabView *view = [notification userInfo][@"TabView"];
+    DDLogVerbose(@"Sender view: %@", view);
     if ( view != nil ) {
         if ( [[_stackViewTabBar views] containsObject:view] ) {
+            DDLogDebug(@"Removing tab view from stack view!");
             [_stackViewTabBar removeView:view];
+        } else {
+            DDLogError(@"StackView doesn't contain view that sent notification to close it's tab");
+            DDLogError(@"Will NOT remove any views from StackView, this might cause an inconsistent internal state");
         }
     }
     
@@ -760,6 +820,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Get index of the view (in the stack view) that sent close notification
     // -------------------------------------------------------------------------
     NSInteger indexClosed = [[notification userInfo][@"TabIndex"] integerValue];
+    DDLogDebug(@"Closed index: %ld", (long)indexClosed);
     
     // -------------------------------------------------------------------------
     //  Sanity check the array of views so the selection is valid
@@ -771,17 +832,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Remove view from the view array
     // -------------------------------------------------------------------------
+    DDLogVerbose(@"Removing index: %ld from _arrayPayloadTabs", (long)indexClosed);
     [_arrayPayloadTabs removeObjectAtIndex:indexClosed];
     
     // -------------------------------------------------------------------------
     //  Remove settings from the settings array
     // -------------------------------------------------------------------------
+    DDLogVerbose(@"Removing settings dict from manifest settings");
     [self removeSettingsForManifestWithDomain:_selectedManifest[PFCManifestKeyDomain] manifestTabIndex:indexClosed];
     
     // ----------------------------------------------------------------------------------------------------------------------
     //  If the currently selected tab sent the close notification, calculate and send what tab to select after it has closed
     // ----------------------------------------------------------------------------------------------------------------------
     if ( _tabIndexSelected == indexClosed ) {
+        DDLogVerbose(@"Currently selected tab was closed");
+        
         if ( indexClosed == 0 || [_arrayPayloadTabs count] == 1 ) {
             
             // -----------------------------------------------------------------
@@ -814,6 +879,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                               userInfo:@{ @"TabIndex" : @(indexClosed) }];
         }
     } else if ( indexClosed < _tabIndexSelected ) {
+        DDLogVerbose(@"Tab to the left of currently selected tab was closed");
         
         // --------------------------------------------------------------------
         //  Closed tab was left of the current selection, update the tab selected
@@ -2683,13 +2749,20 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // buttonSaveSheetProfileName
 
 - (IBAction)selectTableViewPayloadProfile:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     NSInteger selectedRow = [_tableViewPayloadProfile selectedRow];
+    DDLogDebug(@"Row selected in tableview payload profile: %ld", (long)selectedRow);
+    DDLogDebug(@"Row selection saved for payload profile: %ld", (long)_tableViewPayloadLibrarySelectedRow);
     if ( selectedRow != _tableViewPayloadProfileSelectedRow ) {
         [self selectTableViewPayloadProfileRow:selectedRow];
+    } else {
+        DDLogDebug(@"Row already selected");
     }
 } // selectTableViewPayloadProfile
 
 - (void)selectTableViewPayloadProfileRow:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
@@ -2745,35 +2818,57 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Update tab count to match saved settings
         // ---------------------------------------------------------------------
         NSInteger settingsCount = [_settingsProfile[manifestDomain] count];
-        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        DDLogDebug(@"Saved setting dict count: %ld", (long)settingsCount);
         if ( settingsCount == 0 ) {
             settingsCount = 1;
         }
-        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        
         NSInteger stackViewCount = [[_stackViewTabBar views] count];
-        NSLog(@"stackViewCount=%ld", (long)stackViewCount);
+        DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
         if ( settingsCount != stackViewCount ) {
-            NSLog(@"settingsCount not equalt to stackViewCount");
+            
+            DDLogDebug(@"Settings count is NOT equal to current stack view count");
             if ( settingsCount < stackViewCount ) {
-                NSLog(@"settingsCount is less than stackViewCount");
-                NSLog(@"while settingsCount < [[_stackViewTabBar views] count]");
-                while ( settingsCount < [[_stackViewTabBar views] count] ) {
+                
+                DDLogDebug(@"Settings count is LESS than stack view count");
+                while ( settingsCount < stackViewCount ) {
+                    
+                    DDLogDebug(@"Removing last view from stack view");
                     [_stackViewTabBar removeView:[[_stackViewTabBar views] lastObject]];
-                    if ( [_arrayPayloadTabs count] < [_arrayPayloadTabs count] ) {
-                        [_arrayPayloadTabs removeObjectAtIndex:[_arrayPayloadTabs count]];
+                    
+                    DDLogDebug(@"Array tab view count: %lu", (unsigned long)[_arrayPayloadTabs count]);
+                    if ( 0 < [_arrayPayloadTabs count] && stackViewCount == [_arrayPayloadTabs count] ) {
+                        
+                        DDLogDebug(@"Removing view at index: %ld from array tab view", (stackViewCount - 1));
+                        [_arrayPayloadTabs removeObjectAtIndex:(stackViewCount - 1)];
+                    } else {
+                        DDLogError(@"Array tab view count is not matching stack view, this might cause an inconsistent internal state");
                     }
+                    
+                    stackViewCount = [[_stackViewTabBar views] count];
+                    DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
                 }
             } else if ( stackViewCount < settingsCount ) {
-                NSLog(@"stackViewCount is less than settingsCount");
-                NSLog(@"while [[_stackViewTabBar views] count] < settingsCount");
-                while ( [[_stackViewTabBar views] count] < settingsCount ) {
-                    NSLog(@"Adding payload tab!");
+                
+                DDLogDebug(@"Stack view count is LESS than settings count");
+                while ( stackViewCount < settingsCount ) {
                     [self addPayloadTab];
+                    
+                    stackViewCount = [[_stackViewTabBar views] count];
+                    DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
                 }
             }
         }
-        NSLog(@"After: %lu", [[_stackViewTabBar views] count]);
+        
+        // ---------------------------------------------------------------------
+        //  Get saved index of selected tab (if not saved, select index 0)
+        // ---------------------------------------------------------------------
         NSInteger selectedTab = [_settingsProfile[@"SelectedTab"] integerValue] ?: 0;
+        DDLogDebug(@"Saved index of manifest selected tab: %ld", (long)selectedTab);
+        
+        // ---------------------------------------------------------------------
+        //  Post notification to select saved tab index
+        // ---------------------------------------------------------------------
         [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(selectedTab) }];
@@ -2848,13 +2943,20 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // selectTableViewPayloadProfileRow
 
 - (IBAction)selectTableViewPayloadLibrary:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     NSInteger selectedRow = [_tableViewPayloadLibrary selectedRow];
+    DDLogDebug(@"Row selected in tableview payload library: %ld", (long)selectedRow);
+    DDLogDebug(@"Row selection saved for payload library: %ld", (long)_tableViewPayloadLibrarySelectedRow);
     if ( selectedRow != _tableViewPayloadLibrarySelectedRow ) {
         [self selectTableViewPayloadLibraryRow:selectedRow];
+    } else {
+        DDLogDebug(@"Row already selected");
     }
 } // selectTableViewPayloadLibrary
 
 - (void)selectTableViewPayloadLibraryRow:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
@@ -2911,35 +3013,57 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Update tab count to match saved settings
         // ---------------------------------------------------------------------
         NSInteger settingsCount = [_settingsProfile[manifestDomain] count];
-        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        DDLogDebug(@"Saved setting dict count: %ld", (long)settingsCount);
         if ( settingsCount == 0 ) {
             settingsCount = 1;
         }
-        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        
         NSInteger stackViewCount = [[_stackViewTabBar views] count];
-        NSLog(@"stackViewCount=%ld", (long)stackViewCount);
+        DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
         if ( settingsCount != stackViewCount ) {
-            NSLog(@"settingsCount not equalt to stackViewCount");
+            
+            DDLogDebug(@"Settings count is NOT equal to current stack view count");
             if ( settingsCount < stackViewCount ) {
-                NSLog(@"settingsCount is less than stackViewCount");
-                NSLog(@"while settingsCount < [[_stackViewTabBar views] count]");
-                while ( settingsCount < [[_stackViewTabBar views] count] ) {
+                
+                DDLogDebug(@"Settings count is LESS than stack view count");
+                while ( settingsCount < stackViewCount ) {
+                    
+                    DDLogDebug(@"Removing last view from stack view");
                     [_stackViewTabBar removeView:[[_stackViewTabBar views] lastObject]];
-                    if ( [_arrayPayloadTabs count] < [_arrayPayloadTabs count] ) {
-                        [_arrayPayloadTabs removeObjectAtIndex:[_arrayPayloadTabs count]];
+                    
+                    DDLogDebug(@"Array tab view count: %lu", (unsigned long)[_arrayPayloadTabs count]);
+                    if ( 0 < [_arrayPayloadTabs count] && stackViewCount == [_arrayPayloadTabs count] ) {
+                        
+                        DDLogDebug(@"Removing view at index: %ld from array tab view", (stackViewCount - 1));
+                        [_arrayPayloadTabs removeObjectAtIndex:(stackViewCount - 1)];
+                    } else {
+                        DDLogError(@"Array tab view count is not matching stack view, this might cause an inconsistent internal state");
                     }
+                    
+                    stackViewCount = [[_stackViewTabBar views] count];
+                    DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
                 }
             } else if ( stackViewCount < settingsCount ) {
-                NSLog(@"stackViewCount is less than settingsCount");
-                NSLog(@"while [[_stackViewTabBar views] count] < settingsCount");
-                while ( [[_stackViewTabBar views] count] < settingsCount ) {
-                    NSLog(@"Adding payload tab!");
+                
+                DDLogDebug(@"Stack view count is LESS than settings count");
+                while ( stackViewCount < settingsCount ) {
                     [self addPayloadTab];
+                    
+                    stackViewCount = [[_stackViewTabBar views] count];
+                    DDLogDebug(@"Current stack view count: %ld", (long)stackViewCount);
                 }
             }
         }
-        NSLog(@"After: %lu", [[_stackViewTabBar views] count]);
-        NSInteger selectedTab = [_settingsManifest[@"SelectedTab"] integerValue] ?: 0;
+        
+        // ---------------------------------------------------------------------
+        //  Get saved index of selected tab (if not saved, select index 0)
+        // ---------------------------------------------------------------------
+        NSInteger selectedTab = [_settingsProfile[@"SelectedTab"] integerValue] ?: 0;
+        DDLogDebug(@"Saved index of manifest selected tab: %ld", (long)selectedTab);
+        
+        // ---------------------------------------------------------------------
+        //  Post notification to select saved tab index
+        // ---------------------------------------------------------------------
         [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(selectedTab) }];
@@ -3117,37 +3241,52 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // settingsForManifestWithDomain:manifestTabIndex
 
 - (void)saveSettingsForManifestWithDomain:(NSString *)manifestDomain settings:(NSMutableDictionary *)settings manifestTabIndex:(NSInteger)manifestTabIndex {
-
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     // -------------------------------------------------------------------------
     //  Save current selected settings tab
     // -------------------------------------------------------------------------
+    DDLogDebug(@"Saving index of currently selected settings tab: %ld", (long)manifestTabIndex);
     _settingsProfile[@"SelectedTab"] = @(manifestTabIndex);
-    NSLog(@"settings=%@", settings);
+    
     // -------------------------------------------------------------------------
     //  Check that manifest array contains any settings dict, else return new
     // -------------------------------------------------------------------------
     NSMutableArray *manifestSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableArray alloc] init];
-    NSLog(@"manifestSettings=%@", manifestSettings);
+    
     // -------------------------------------------------------------------------
     //  Check that manifest array contains correct amount of settings dicts
     //  If some is missing, add empty dicts to get the index matching correct
     // -------------------------------------------------------------------------
     NSInteger manifestSettingsCount = [manifestSettings count];
-    NSLog(@"manifestSettingsCount=%ld", (long)manifestSettingsCount);
-    while ( manifestSettingsCount < manifestTabIndex ) {
-        NSLog(@"adding empty settings object");
+    DDLogDebug(@"Saved settings dict count: %ld", (long)manifestSettingsCount);
+    
+    // -------------------------------------------------------------------------
+    //  Get current count of settings tabs
+    // -------------------------------------------------------------------------
+    NSInteger manifestTabCount = [_arrayPayloadTabs count];
+    DDLogDebug(@"Current array tab view count: %ld", (long)manifestTabCount);
+    
+    while ( manifestSettingsCount < ( manifestTabCount + 1 ) ) {
+        DDLogDebug(@"Adding empty setting to end of settings dict array");
         [manifestSettings addObject:[[NSMutableDictionary alloc] init]];
         manifestSettingsCount = [manifestSettings count];
+        DDLogDebug(@"Current settings dict count: %ld", (long)manifestSettingsCount);
     }
-    NSLog(@"manifestSettingsCount=%ld", (long)manifestSettingsCount);
-    NSLog(@"inserting settings at index: %ld", (long)manifestTabIndex);
+    
     if ( manifestSettingsCount == 0 || manifestSettingsCount == manifestTabIndex ) {
+        DDLogDebug(@"Adding settings dict to end of settings dict array");
         [manifestSettings addObject:[settings copy]];
     } else {
+        DDLogDebug(@"Replacing settings dict at index: %ld", (long)manifestTabIndex);
         [manifestSettings replaceObjectAtIndex:manifestTabIndex withObject:[settings copy]];
     }
+    DDLogDebug(@"Current settings dict count: %ld", [manifestSettings count]);
+    
+    // -------------------------------------------------------------------------
+    //  Save current settings to profile settings dict
+    // -------------------------------------------------------------------------
     _settingsProfile[manifestDomain] = manifestSettings;
-    NSLog(@"saved: %@", _settingsProfile[manifestDomain]);
 } // saveSettingsForManifestWithDomain:settings:manifestTabIndex
 
 - (void)removeSettingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
