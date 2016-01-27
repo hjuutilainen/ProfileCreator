@@ -22,6 +22,7 @@
 #import "PFCManifestParser.h"
 #import "PFCTableViewCellsProfiles.h"
 #import "PFCProfileExportWindowController.h"
+#import "PFCLog.h"
 
 @implementation PFCController
 
@@ -176,6 +177,21 @@
 
 - (void)awakeFromNib {
     if ( ! _initialized ) {
+        // --------------------------------------------------------------
+        //  Register user defaults
+        // --------------------------------------------------------------
+        NSError *error;
+        NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
+        if ( [defaultSettingsPath checkResourceIsReachableAndReturnError:&error] ) {
+            NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
+            if ( [defaultSettingsDict count] != 0 ) {
+                [[NSUserDefaults standardUserDefaults] registerDefaults:defaultSettingsDict];
+            }
+        } else {
+            // Use NSLog as CocoaLumberjack isn't available yet
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        [PFCLog configureLoggingForSession:kPFCSessionTypeGUI];
         [_window setBackgroundColor:[NSColor whiteColor]];
         [self setInitialized:YES];
         [_tableViewProfiles setTarget:self];
@@ -361,6 +377,10 @@
     NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
     NSURL *profileURL = [[PFCController profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
     return [profileURL path];
+}
+
+- (void)setupLogging {
+    
 }
 
 - (void)createProfile {

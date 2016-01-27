@@ -64,6 +64,10 @@
 		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
 		538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 538750B61C4C0F4F0003F0EF /* PFCConstants.m */; };
+		53897E2C1C59566500B1D868 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; };
+		53897E301C59568700B1D868 /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		53897E341C59571B00B1D868 /* PFCLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 53897E331C59571B00B1D868 /* PFCLog.m */; };
+		53897E361C5958F700B1D868 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53897E351C5958F700B1D868 /* Defaults.plist */; };
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
@@ -86,6 +90,128 @@
 		53FEC8021C4E114000C96596 /* PFCViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FEC8011C4E114000C96596 /* PFCViews.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		53897E0C1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DCB3185114EB418E001CFBEE;
+			remoteInfo = CocoaLumberjack;
+		};
+		53897E0E1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18F3BF0F1A81D8B700692297;
+			remoteInfo = CocoaLumberjackSwift;
+		};
+		53897E101C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19FF46021B8B4CF400B43179;
+			remoteInfo = "CocoaLumberjack-iOS";
+		};
+		53897E121C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19FF460F1B8B4D1400B43179;
+			remoteInfo = "CocoaLumberjackSwift-iOS";
+		};
+		53897E141C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18F3BFD71A81E06E00692297;
+			remoteInfo = "CocoaLumberjack-iOS-Static";
+		};
+		53897E161C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19190EDE1B84D812008D059E;
+			remoteInfo = "CocoaLumberjack-watchOS";
+		};
+		53897E181C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19190EEB1B84D826008D059E;
+			remoteInfo = "CocoaLumberjackSwift-watchOS";
+		};
+		53897E1A1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19D90B261BBFA9DB00947169;
+			remoteInfo = "CocoaLumberjack-tvOS";
+		};
+		53897E1C1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19D90B351BBFAA7500947169;
+			remoteInfo = "CocoaLumberjackSwift-tvOS";
+		};
+		53897E1E1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DCB318CA14ED6C3B001CFBEE;
+			remoteInfo = FmwkTest;
+		};
+		53897E201C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55CCBEFF19BA679200957A39;
+			remoteInfo = SwiftTest;
+		};
+		53897E221C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18F3BF5F1A81DD2E00692297;
+			remoteInfo = iOSSwiftTest;
+		};
+		53897E241C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19EC14671B84D134000EC2E7;
+			remoteInfo = watchOSSwiftTest;
+		};
+		53897E261C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19EC14731B84D134000EC2E7;
+			remoteInfo = "watchOSSwiftTest Extension";
+		};
+		53897E281C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19406BE11BDBABFF001194DC;
+			remoteInfo = tvOSSwiftTest;
+		};
+		53897E2A1C59563C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18F3BFF21A81E0C700692297;
+			remoteInfo = iOSLibStaticTest;
+		};
+		53897E2D1C59566C00B1D868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCB3185014EB418E001CFBEE;
+			remoteInfo = CocoaLumberjack;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		532B6C521C172A2700297025 /* Copy Manifests */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -104,6 +230,17 @@
 				532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests */,
 			);
 			name = "Copy Manifests";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53897E2F1C59567500B1D868 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53897E301C59568700B1D868 /* CocoaLumberjack.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -172,6 +309,10 @@
 		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconDock.png; path = "../Supporting Files/Graphics/MenuIconDock.png"; sourceTree = "<group>"; };
 		538750B51C4C0F4F0003F0EF /* PFCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCConstants.h; path = "../General Classes/PFCConstants.h"; sourceTree = "<group>"; };
 		538750B61C4C0F4F0003F0EF /* PFCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCConstants.m; path = "../General Classes/PFCConstants.m"; sourceTree = "<group>"; };
+		53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = ../CocoaLumberjack/Lumberjack.xcodeproj; sourceTree = "<group>"; };
+		53897E321C59571B00B1D868 /* PFCLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCLog.h; path = "General Classes/PFCLog.h"; sourceTree = SOURCE_ROOT; };
+		53897E331C59571B00B1D868 /* PFCLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCLog.m; path = "General Classes/PFCLog.m"; sourceTree = SOURCE_ROOT; };
+		53897E351C5958F700B1D868 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = "Supporting Files/Property Lists/Defaults.plist"; sourceTree = SOURCE_ROOT; };
 		538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCFileInfoProcessors.h; path = FileInfoProcessors/PFCFileInfoProcessors.h; sourceTree = "<group>"; };
 		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
@@ -205,6 +346,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53897E2C1C59566500B1D868 /* CocoaLumberjack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +447,7 @@
 			isa = PBXGroup;
 			children = (
 				537290711C554D43003160EA /* OSVersions.plist */,
+				53897E351C5958F700B1D868 /* Defaults.plist */,
 			);
 			name = "Property Lists";
 			sourceTree = "<group>";
@@ -340,6 +483,40 @@
 				53751FF21C1B849400FF3CB0 /* MenuIconVPN.png */,
 			);
 			name = Graphics;
+			sourceTree = "<group>";
+		};
+		53897DF81C59562A00B1D868 /* RFOverlayScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				53D7955F1C4AF865006B19E9 /* RFOverlayScroller.h */,
+				53D795601C4AF865006B19E9 /* RFOverlayScroller.m */,
+				53D795611C4AF865006B19E9 /* RFOverlayScrollView.h */,
+				53D795621C4AF865006B19E9 /* RFOverlayScrollView.m */,
+			);
+			name = RFOverlayScrollView;
+			sourceTree = "<group>";
+		};
+		53897DFA1C59563C00B1D868 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */,
+				53897E0F1C59563C00B1D868 /* CocoaLumberjackSwift.framework */,
+				53897E111C59563C00B1D868 /* CocoaLumberjack.framework */,
+				53897E131C59563C00B1D868 /* CocoaLumberjackSwift.framework */,
+				53897E151C59563C00B1D868 /* libCocoaLumberjack.a */,
+				53897E171C59563C00B1D868 /* CocoaLumberjack.framework */,
+				53897E191C59563C00B1D868 /* CocoaLumberjackSwift.framework */,
+				53897E1B1C59563C00B1D868 /* CocoaLumberjack.framework */,
+				53897E1D1C59563C00B1D868 /* CocoaLumberjackSwift.framework */,
+				53897E1F1C59563C00B1D868 /* FmwkTest.app */,
+				53897E211C59563C00B1D868 /* SwiftTest.app */,
+				53897E231C59563C00B1D868 /* iOSSwiftTest.app */,
+				53897E251C59563C00B1D868 /* watchOSSwiftTest.app */,
+				53897E271C59563C00B1D868 /* watchOSSwiftTest Extension.appex */,
+				53897E291C59563C00B1D868 /* tvOSSwiftTest.app */,
+				53897E2B1C59563C00B1D868 /* iOSLibStaticTest.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		538A66581C2007AE008350F4 /* FileInfoProcessors */ = {
@@ -402,6 +579,8 @@
 				538750B61C4C0F4F0003F0EF /* PFCConstants.m */,
 				53908EAB1C540FA4009468F0 /* PFCError.h */,
 				53908EAC1C540FA4009468F0 /* PFCError.m */,
+				53897E321C59571B00B1D868 /* PFCLog.h */,
+				53897E331C59571B00B1D868 /* PFCLog.m */,
 			);
 			name = "General Classes";
 			path = ProfileCreator;
@@ -421,10 +600,8 @@
 		53D7955E1C4AF849006B19E9 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				53D7955F1C4AF865006B19E9 /* RFOverlayScroller.h */,
-				53D795601C4AF865006B19E9 /* RFOverlayScroller.m */,
-				53D795611C4AF865006B19E9 /* RFOverlayScrollView.h */,
-				53D795621C4AF865006B19E9 /* RFOverlayScrollView.m */,
+				53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */,
+				53897DF81C59562A00B1D868 /* RFOverlayScrollView */,
 			);
 			name = Submodules;
 			path = ..;
@@ -441,10 +618,12 @@
 				536FC5161C15EEDE00B1D7CF /* Frameworks */,
 				536FC5171C15EEDE00B1D7CF /* Resources */,
 				532B6C521C172A2700297025 /* Copy Manifests */,
+				53897E2F1C59567500B1D868 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				53897E2E1C59566C00B1D868 /* PBXTargetDependency */,
 			);
 			name = ProfileCreator;
 			productName = ProfileCreator;
@@ -477,12 +656,133 @@
 			mainGroup = 536FC5101C15EEDE00B1D7CF;
 			productRefGroup = 536FC51A1C15EEDE00B1D7CF /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 53897DFA1C59563C00B1D868 /* Products */;
+					ProjectRef = 53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				536FC5181C15EEDE00B1D7CF /* ProfileCreator */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjack.framework;
+			remoteRef = 53897E0C1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E0F1C59563C00B1D868 /* CocoaLumberjackSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjackSwift.framework;
+			remoteRef = 53897E0E1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E111C59563C00B1D868 /* CocoaLumberjack.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjack.framework;
+			remoteRef = 53897E101C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E131C59563C00B1D868 /* CocoaLumberjackSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjackSwift.framework;
+			remoteRef = 53897E121C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E151C59563C00B1D868 /* libCocoaLumberjack.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCocoaLumberjack.a;
+			remoteRef = 53897E141C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E171C59563C00B1D868 /* CocoaLumberjack.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjack.framework;
+			remoteRef = 53897E161C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E191C59563C00B1D868 /* CocoaLumberjackSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjackSwift.framework;
+			remoteRef = 53897E181C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E1B1C59563C00B1D868 /* CocoaLumberjack.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjack.framework;
+			remoteRef = 53897E1A1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E1D1C59563C00B1D868 /* CocoaLumberjackSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaLumberjackSwift.framework;
+			remoteRef = 53897E1C1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E1F1C59563C00B1D868 /* FmwkTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = FmwkTest.app;
+			remoteRef = 53897E1E1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E211C59563C00B1D868 /* SwiftTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SwiftTest.app;
+			remoteRef = 53897E201C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E231C59563C00B1D868 /* iOSSwiftTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = iOSSwiftTest.app;
+			remoteRef = 53897E221C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E251C59563C00B1D868 /* watchOSSwiftTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = watchOSSwiftTest.app;
+			remoteRef = 53897E241C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E271C59563C00B1D868 /* watchOSSwiftTest Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "watchOSSwiftTest Extension.appex";
+			remoteRef = 53897E261C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E291C59563C00B1D868 /* tvOSSwiftTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = tvOSSwiftTest.app;
+			remoteRef = 53897E281C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		53897E2B1C59563C00B1D868 /* iOSLibStaticTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = iOSLibStaticTest.app;
+			remoteRef = 53897E2A1C59563C00B1D868 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		536FC5171C15EEDE00B1D7CF /* Resources */ = {
@@ -518,6 +818,7 @@
 				53FCF00A1C1F561900E440CB /* com.apple.messages.plist in Resources */,
 				53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */,
 				532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */,
+				53897E361C5958F700B1D868 /* Defaults.plist in Resources */,
 				53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */,
 				537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */,
 				53FCF0101C1F569B00E440CB /* MenuIconAccessibility.png in Resources */,
@@ -560,6 +861,7 @@
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
 				53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */,
 				532DF2371C5665E700369513 /* PFCProfileCreationTab.m in Sources */,
+				53897E341C59571B00B1D868 /* PFCLog.m in Sources */,
 				53FEC8021C4E114000C96596 /* PFCViews.m in Sources */,
 				535B07BC1C42F53B00C0F6C8 /* PFCProfileExportPayloadViewController.m in Sources */,
 				532746401C3C53A30030CD95 /* PFCProfileExportWindowController.m in Sources */,
@@ -571,6 +873,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		53897E2E1C59566C00B1D868 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CocoaLumberjack;
+			targetProxy = 53897E2D1C59566C00B1D868 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		536FC5241C15EEDE00B1D7CF /* MainMenu.xib */ = {

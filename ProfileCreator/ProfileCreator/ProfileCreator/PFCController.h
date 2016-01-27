@@ -23,12 +23,10 @@
 
 typedef NS_ENUM(NSInteger, PFCFolders) {
     /** ProfileCreator in user application support **/
-    kPFCFolderUserApplicationSupport,
+    kPFCFolderUserApplicationSupport = 0,
     /** Profile Save Folder **/
     kPFCFolderSavedProfiles
 };
-
-
 
 @interface PFCController : NSObject <NSApplicationDelegate, NSTableViewDelegate, NSTableViewDataSource>
 

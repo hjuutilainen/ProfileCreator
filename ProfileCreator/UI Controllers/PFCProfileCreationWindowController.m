@@ -149,6 +149,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         _advancedSettings = NO;
         _buttonAddHidden = YES;
         _settingsStatusHidden = YES;
+        _settingsHidden = YES;
         _searchNoMatchesHidden = YES;
         _windowShouldClose = NO;
         _showSettingsLocal = YES;
@@ -695,6 +696,18 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (void)addPayloadTab {
+    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
+    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    [_arrayPayloadTabs addObject:newTabView];
+    NSInteger newIndex = [[_stackViewTabBar views] count];
+    [_stackViewTabBar insertView:newTabView atIndex:newIndex inGravity:NSStackViewGravityTrailing];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(([_arrayPayloadTabs count] - 1)) }];
+    if ( _tabBarHidden ) {
+        [self showSettingsTabBar];
+    }
+} // addPayloadTab
+
 - (void)tabIndexSelected:(NSNotification *)notification {
     NSLog(@"tabIndexSelected");
     // -------------------------------------------------------------------------
@@ -722,7 +735,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Set correct settings for selected tab
     // -------------------------------------------------------------------------
     [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:indexSelected]];
-
+    
     // -------------------------------------------------------------------------
     //  Update settings view with the new settings
     // -------------------------------------------------------------------------
@@ -1748,7 +1761,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             } else {
                 [manifestSettings removeObjectForKey:@"Selected"];
                 [manifestSettings removeObjectForKey:@"PayloadLibrary"];
-                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings copy] manifestTabIndex:_tabIndexSelected];
+                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings mutableCopy] manifestTabIndex:_tabIndexSelected];
             }
             
             // ---------------------------------------------------------------------
@@ -1827,7 +1840,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 NSMutableDictionary *manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
                 manifestSettings[@"Selected"] = @YES;
                 manifestSettings[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
-                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings copy] manifestTabIndex:_tabIndexSelected];
+                [self saveSettingsForManifestWithDomain:manifestDomain settings:[manifestSettings mutableCopy] manifestTabIndex:_tabIndexSelected];
             }
         }
     } else {
@@ -2384,7 +2397,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_viewProfileSettings setHidden:NO];
     [_viewSettingsSuperView setHidden:YES];
     [_viewSettingsStatus setHidden:YES];
-} // showSettingsNoSettings
+} // showSettingsProfile
+
+- (void)showSettings {
+    [_viewSettingsSuperView setHidden:NO];
+    [self setSettingsHidden:NO];
+} // showSettings
+
+- (void)hideSettings {
+    [_viewSettingsSuperView setHidden:YES];
+    [self setSettingsHidden:YES];
+} // hideSettings
 
 - (void)hideSettingsStatus {
     [self setSettingsStatusHidden:YES];
@@ -2660,7 +2683,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // buttonSaveSheetProfileName
 
 - (IBAction)selectTableViewPayloadProfile:(id)sender {
-    [self selectTableViewPayloadProfileRow:[_tableViewPayloadProfile selectedRow]];
+    NSInteger selectedRow = [_tableViewPayloadProfile selectedRow];
+    if ( selectedRow != _tableViewPayloadProfileSelectedRow ) {
+        [self selectTableViewPayloadProfileRow:selectedRow];
+    }
 } // selectTableViewPayloadProfile
 
 - (void)selectTableViewPayloadProfileRow:(NSInteger)row {
@@ -2715,6 +2741,43 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
         [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
+        // ---------------------------------------------------------------------
+        //  Update tab count to match saved settings
+        // ---------------------------------------------------------------------
+        NSInteger settingsCount = [_settingsProfile[manifestDomain] count];
+        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        if ( settingsCount == 0 ) {
+            settingsCount = 1;
+        }
+        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        NSInteger stackViewCount = [[_stackViewTabBar views] count];
+        NSLog(@"stackViewCount=%ld", (long)stackViewCount);
+        if ( settingsCount != stackViewCount ) {
+            NSLog(@"settingsCount not equalt to stackViewCount");
+            if ( settingsCount < stackViewCount ) {
+                NSLog(@"settingsCount is less than stackViewCount");
+                NSLog(@"while settingsCount < [[_stackViewTabBar views] count]");
+                while ( settingsCount < [[_stackViewTabBar views] count] ) {
+                    [_stackViewTabBar removeView:[[_stackViewTabBar views] lastObject]];
+                    if ( [_arrayPayloadTabs count] < [_arrayPayloadTabs count] ) {
+                        [_arrayPayloadTabs removeObjectAtIndex:[_arrayPayloadTabs count]];
+                    }
+                }
+            } else if ( stackViewCount < settingsCount ) {
+                NSLog(@"stackViewCount is less than settingsCount");
+                NSLog(@"while [[_stackViewTabBar views] count] < settingsCount");
+                while ( [[_stackViewTabBar views] count] < settingsCount ) {
+                    NSLog(@"Adding payload tab!");
+                    [self addPayloadTab];
+                }
+            }
+        }
+        NSLog(@"After: %lu", [[_stackViewTabBar views] count]);
+        NSInteger selectedTab = [_settingsProfile[@"SelectedTab"] integerValue] ?: 0;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                            object:self
+                                                          userInfo:@{ @"TabIndex" : @(selectedTab) }];
+        
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
         //  If the manifest content dict array is empty, show "Error Reading Settings"
@@ -2732,6 +2795,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
+            }
+            
+            if ( _settingsHidden ) {
+                [self showSettings];
             }
             
             if ( _settingsHeaderHidden ) {
@@ -2765,6 +2832,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [self hideSettingsStatus];
         }
         
+        if ( ! _settingsHidden ) {
+            [self hideSettings];
+        }
+        
         // ---------------------------------------------------------------------
         //  Unset the SelectedTableViewIdentifier and SelectedManifest
         // ---------------------------------------------------------------------
@@ -2777,7 +2848,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // selectTableViewPayloadProfileRow
 
 - (IBAction)selectTableViewPayloadLibrary:(id)sender {
-    [self selectTableViewPayloadLibraryRow:[_tableViewPayloadLibrary selectedRow]];
+    NSInteger selectedRow = [_tableViewPayloadLibrary selectedRow];
+    if ( selectedRow != _tableViewPayloadLibrarySelectedRow ) {
+        [self selectTableViewPayloadLibraryRow:selectedRow];
+    }
 } // selectTableViewPayloadLibrary
 
 - (void)selectTableViewPayloadLibraryRow:(NSInteger)row {
@@ -2833,6 +2907,43 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
         [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
+        // ---------------------------------------------------------------------
+        //  Update tab count to match saved settings
+        // ---------------------------------------------------------------------
+        NSInteger settingsCount = [_settingsProfile[manifestDomain] count];
+        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        if ( settingsCount == 0 ) {
+            settingsCount = 1;
+        }
+        NSLog(@"settingsCount=%ld", (long)settingsCount);
+        NSInteger stackViewCount = [[_stackViewTabBar views] count];
+        NSLog(@"stackViewCount=%ld", (long)stackViewCount);
+        if ( settingsCount != stackViewCount ) {
+            NSLog(@"settingsCount not equalt to stackViewCount");
+            if ( settingsCount < stackViewCount ) {
+                NSLog(@"settingsCount is less than stackViewCount");
+                NSLog(@"while settingsCount < [[_stackViewTabBar views] count]");
+                while ( settingsCount < [[_stackViewTabBar views] count] ) {
+                    [_stackViewTabBar removeView:[[_stackViewTabBar views] lastObject]];
+                    if ( [_arrayPayloadTabs count] < [_arrayPayloadTabs count] ) {
+                        [_arrayPayloadTabs removeObjectAtIndex:[_arrayPayloadTabs count]];
+                    }
+                }
+            } else if ( stackViewCount < settingsCount ) {
+                NSLog(@"stackViewCount is less than settingsCount");
+                NSLog(@"while [[_stackViewTabBar views] count] < settingsCount");
+                while ( [[_stackViewTabBar views] count] < settingsCount ) {
+                    NSLog(@"Adding payload tab!");
+                    [self addPayloadTab];
+                }
+            }
+        }
+        NSLog(@"After: %lu", [[_stackViewTabBar views] count]);
+        NSInteger selectedTab = [_settingsManifest[@"SelectedTab"] integerValue] ?: 0;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
+                                                            object:self
+                                                          userInfo:@{ @"TabIndex" : @(selectedTab) }];
+        
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
         //  If the manifest content dict array is empty, show "Error Reading Settings"
@@ -2850,6 +2961,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
             if ( icon ) {
                 [_imageViewSettingsHeaderIcon setImage:icon];
+            }
+            
+            if ( _settingsHidden ) {
+                [self showSettings];
             }
             
             if ( _settingsHeaderHidden ) {
@@ -2881,6 +2996,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         
         if ( ! _settingsStatusHidden || _settingsStatusLoading ) {
             [self hideSettingsStatus];
+        }
+        
+        if ( ! _settingsHidden ) {
+            [self hideSettings];
         }
         
         // ---------------------------------------------------------------------
@@ -2997,25 +3116,38 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     return [manifestSettings[manifestTabIndex] mutableCopy];
 } // settingsForManifestWithDomain:manifestTabIndex
 
-- (void)saveSettingsForManifestWithDomain:(NSString *)manifestDomain settings:(NSDictionary *)settings manifestTabIndex:(NSInteger)manifestTabIndex {
+- (void)saveSettingsForManifestWithDomain:(NSString *)manifestDomain settings:(NSMutableDictionary *)settings manifestTabIndex:(NSInteger)manifestTabIndex {
 
+    // -------------------------------------------------------------------------
+    //  Save current selected settings tab
+    // -------------------------------------------------------------------------
+    _settingsProfile[@"SelectedTab"] = @(manifestTabIndex);
+    NSLog(@"settings=%@", settings);
     // -------------------------------------------------------------------------
     //  Check that manifest array contains any settings dict, else return new
     // -------------------------------------------------------------------------
     NSMutableArray *manifestSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableArray alloc] init];
-
+    NSLog(@"manifestSettings=%@", manifestSettings);
     // -------------------------------------------------------------------------
     //  Check that manifest array contains correct amount of settings dicts
     //  If some is missing, add empty dicts to get the index matching correct
     // -------------------------------------------------------------------------
     NSInteger manifestSettingsCount = [manifestSettings count];
-    while ( (manifestSettingsCount - 1 ) < manifestTabIndex ) {
+    NSLog(@"manifestSettingsCount=%ld", (long)manifestSettingsCount);
+    while ( manifestSettingsCount < manifestTabIndex ) {
+        NSLog(@"adding empty settings object");
         [manifestSettings addObject:[[NSMutableDictionary alloc] init]];
         manifestSettingsCount = [manifestSettings count];
     }
-    
-    [manifestSettings replaceObjectAtIndex:manifestTabIndex withObject:settings];
+    NSLog(@"manifestSettingsCount=%ld", (long)manifestSettingsCount);
+    NSLog(@"inserting settings at index: %ld", (long)manifestTabIndex);
+    if ( manifestSettingsCount == 0 || manifestSettingsCount == manifestTabIndex ) {
+        [manifestSettings addObject:[settings copy]];
+    } else {
+        [manifestSettings replaceObjectAtIndex:manifestTabIndex withObject:[settings copy]];
+    }
     _settingsProfile[manifestDomain] = manifestSettings;
+    NSLog(@"saved: %@", _settingsProfile[manifestDomain]);
 } // saveSettingsForManifestWithDomain:settings:manifestTabIndex
 
 - (void)removeSettingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
@@ -3260,15 +3392,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // updateInfoViewView
 
 - (IBAction)buttonAddPayload:(id)sender {
-    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
-    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
-    [_arrayPayloadTabs addObject:newTabView];
-    NSInteger newIndex = [[_stackViewTabBar views] count];
-    [_stackViewTabBar insertView:newTabView atIndex:newIndex inGravity:NSStackViewGravityTrailing];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(([_arrayPayloadTabs count] - 1)) }];
-    if ( _tabBarHidden ) {
-        [self showSettingsTabBar];
-    }
+    [self addPayloadTab];
 } // buttonAddPayload
 
 @end
