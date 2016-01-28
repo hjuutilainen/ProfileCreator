@@ -52,8 +52,8 @@ DDLogLevel ddLogLevel;
         [[NSUserDefaults standardUserDefaults] setObject:@((int)ddLogLevel) forKey:PFCUserDefaultsLogLevel];
     }
     
-    // FIXME - Force Debug Logging
-    ddLogLevel = DDLogLevelVerbose;
+    // FIXME - Force Verbose Logging
+    //ddLogLevel = DDLogLevelVerbose;
     
     NSString *logLevelName;
     
