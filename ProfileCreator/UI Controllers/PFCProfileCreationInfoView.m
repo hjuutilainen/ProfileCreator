@@ -64,7 +64,7 @@
         return;
     }
     
-    NSLog(@"manifestContentDict=%@", manifestContentDict);
+    [self removeSubviews];
     [self insertSubview:_viewManifestContent inSuperview:[self view] hidden:NO];
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     [self updateInfoForCellType:cellType manifestContentDict:manifestContentDict];
@@ -75,8 +75,15 @@
     if ( [manifestDict count] == 0 ) {
         return;
     }
-    
-    NSLog(@"manifestDict=%@", manifestDict);
+
+    [self removeSubviews];
+    [self insertSubview:_viewManifestContent inSuperview:[self view] hidden:NO];
+}
+
+- (void)removeSubviews {
+    for ( NSView *view in [[self view] subviews] ) {
+        [view removeFromSuperview];
+    }
 }
 
 - (void)updateInfoForCellType:(NSString *)cellType manifestContentDict:(NSDictionary *)manifestContentDict {
@@ -86,7 +93,7 @@
 }
 
 - (void)updateinfoForCellTypeTextField:(NSDictionary *)manifestContentDict {
-    NSLog(@"");
+
 }
 
 @end

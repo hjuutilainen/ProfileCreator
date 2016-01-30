@@ -21,6 +21,32 @@
 
 @interface PFCFileInfoProcessors : NSObject
 
++ (id)fileInfoProcessorWithName:(NSString *)fileInfoProcessorName fileURL:(NSURL *)fileURL;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCFileInfoProcessorCertificate
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@interface PFCFileInfoProcessorCertificate : NSObject
+@property NSURL *fileURL;
+- (id)initWithFileURL:(NSURL *)fileURL;
+- (NSDictionary *)fileInfo;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCFileInfoProcessorFallback
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@interface PFCFileInfoProcessorFallback : NSObject
+@property NSURL *fileURL;
+- (id)initWithFileURL:(NSURL *)fileURL;
+- (NSDictionary *)fileInfo;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

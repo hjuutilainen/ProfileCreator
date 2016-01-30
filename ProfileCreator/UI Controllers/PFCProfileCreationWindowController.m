@@ -1060,25 +1060,25 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                     //  PopUpButton
                     // ---------------------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
-                    CellViewSettingsPopUp *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUp" owner:self];
+                    CellViewSettingsPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButton" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewPopUp:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                    return [cellView populateCellViewPopUpButton:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  PopUpButtonLeft
                     // ---------------------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
-                    CellViewSettingsPopUpLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpLeft" owner:self];
+                    CellViewSettingsPopUpButtonLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsPopUpButtonLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  PopUpButtonNoTitle
                     // ---------------------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
-                    CellViewSettingsPopUpNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpNoTitle" owner:self];
+                    CellViewSettingsPopUpButtonNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                    return [cellView populateCellViewSettingsPopUpButtonNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
                     // ---------------------------------------------------------------------
                     //  SegmentedControl
@@ -1442,7 +1442,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( [_selectedPayloadTableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         if ( 0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count] ) {
             NSInteger columnIndex = [_tableViewPayloadProfile columnWithIdentifier:@"ColumnMenu"];
-            [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadProfileSelectedRow] columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
+            [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadProfileSelectedRow]
+                                                columnIndexes:[NSIndexSet indexSetWithIndex:columnIndex]];
         }
     }
 } // updatePayloadMenuItem
@@ -1713,7 +1714,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     NSNumber *buttonTag = @([checkbox tag]);
     if ( buttonTag == nil ) {
-        NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
+        DDLogError(@"[ERROR] Checkbox: %@ has no tag", checkbox);
         return;
     }
     NSInteger row = [buttonTag integerValue];
@@ -2031,9 +2032,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Make sure it's a settings popup button
     // ---------------------------------------------------------------------
     if (
-        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUp class]] &&
-        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpNoTitle class]] ) {
-        NSLog(@"[ERROR] PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
+        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButton class]] &&
+        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButtonNoTitle class]] ) {
+        DDLogError(@"PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
         return;
     }
     
@@ -2042,7 +2043,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     NSNumber *popUpButtonTag = @([popUpButton tag]);
     if ( popUpButtonTag == nil ) {
-        NSLog(@"[ERROR] PopUpButton: %@ tag is nil", popUpButton);
+        DDLogError(@"PopUpButton: %@ has no tag", popUpButton);
         return;
     }
     NSInteger row = [popUpButtonTag integerValue];
@@ -2054,7 +2055,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( [identifier length] != 0 ) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
-        NSLog(@"[ERROR] No key returned from manifest dict!");
+        DDLogError(@"Manifest content dict doesn't have an identifier");
         return;
     }
     
@@ -2062,8 +2063,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Another verification this is a CellViewSettingsPopUp popup button
     // ---------------------------------------------------------------------
     if (
-        popUpButton == [(CellViewSettingsPopUp *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
-        popUpButton == [(CellViewSettingsPopUpNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
+        popUpButton == [(CellViewSettingsPopUpButton *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
+        popUpButton == [(CellViewSettingsPopUpButtonNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
         
         // ---------------------------------------------------------------------
         //  Save selection
@@ -2084,8 +2085,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     //  Make sure it's a settings button
     // ---------------------------------------------------------------------
+    // FIXME - Might be able to remove/change this check
     if ( ! [[[button superview] class] isSubclassOfClass:[CellViewSettingsFile class]] ) {
-        NSLog(@"[ERROR] Button: %@ superview class is: %@", button, [[button superview] class]);
+        DDLogError(@"Button: %@ superview class is: %@", button, [[button superview] class]);
         return;
     }
     
@@ -2094,7 +2096,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     NSNumber *buttonTag = @([button tag]);
     if ( buttonTag == nil ) {
-        NSLog(@"[ERROR] Button: %@ tag is nil", button);
+        DDLogError(@"Button: %@ has no tag", button);
         return;
     }
     NSInteger row = [buttonTag integerValue];
@@ -2106,26 +2108,36 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( [identifier length] != 0 ) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
-        NSLog(@"[ERROR] No key returned from manifest dict!");
+        DDLogError(@"Manifest content dict doesn't have an identifier");
         return;
     }
     
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsFile button
     // ---------------------------------------------------------------------
+    // FIXME - Might be able to remove/change this check
     if ( button == [(CellViewSettingsFile *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
         
         // --------------------------------------------------------------
-        //  Get open dialog settings from dict
+        //  Get open dialog prompt
         // --------------------------------------------------------------
         NSString *prompt = manifestContentDict[PFCManifestKeyFilePrompt] ?: @"Select File";
-        NSArray *allowedFileTypes = @[];
-        if ( manifestContentDict[PFCManifestKeyAllowedFileTypes] != nil && [manifestContentDict[PFCManifestKeyAllowedFileTypes] isKindOfClass:[NSArray class]] ) {
-            allowedFileTypes = manifestContentDict[PFCManifestKeyAllowedFileTypes] ?: @[];
-        }
         
         // --------------------------------------------------------------
-        //  Setup open dialog for current settings
+        //  Get open dialog allowed file types
+        // --------------------------------------------------------------
+        NSMutableArray *allowedFileTypes = [[NSMutableArray alloc] init];
+        if ( manifestContentDict[PFCManifestKeyAllowedFileTypes] != nil && [manifestContentDict[PFCManifestKeyAllowedFileTypes] isKindOfClass:[NSArray class]] ) {
+            [allowedFileTypes addObjectsFromArray:manifestContentDict[PFCManifestKeyAllowedFileTypes] ?: @[]];
+        }
+        
+        if ( manifestContentDict[PFCManifestKeyAllowedFileExtensions] != nil && [manifestContentDict[PFCManifestKeyAllowedFileExtensions] isKindOfClass:[NSArray class]] ) {
+            [allowedFileTypes addObjectsFromArray:manifestContentDict[PFCManifestKeyAllowedFileExtensions] ?: @[]];
+        }
+        
+        
+        // --------------------------------------------------------------
+        //  Setup open dialog
         // --------------------------------------------------------------
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
         [openPanel setTitle:prompt];
@@ -2144,11 +2156,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 NSArray *selectedURLs = [openPanel URLs];
                 NSURL *fileURL = [selectedURLs firstObject];
                 
-                settingsDict[@"FilePath"] = [fileURL path];
+                settingsDict[PFCSettingsKeyFilePath] = [fileURL path];
                 _settingsManifest[identifier] = [settingsDict copy];
                 
                 [_tableViewSettings beginUpdates];
-                [_tableViewSettings reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:3]];
+                [_tableViewSettings reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row]
+                                              columnIndexes:[NSIndexSet indexSetWithIndex:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"]]];
                 [_tableViewSettings endUpdates];
             }
         }];
@@ -2697,26 +2710,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
 } // buttonSave
 
-- (IBAction)buttonToggleInfo:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    if ( [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
-        [self uncollapseSplitViewInfo];
-    } else {
-        [self collapseSplitViewInfo];
-    }
-} // buttonToggleInfo
-
-- (IBAction)menuItemAddMobileconfig:(id)sender {
-    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"mobileconfig!");
-}
-
-- (IBAction)menuItemAddPlist:(id)sender {
-    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"plist!");
-}
-
 - (IBAction)buttonSaveSheetProfileName:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
@@ -2761,11 +2754,32 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
 } // buttonSaveSheetProfileName
 
+
+- (IBAction)buttonToggleInfo:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    if ( [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
+        [self uncollapseSplitViewInfo];
+    } else {
+        [self collapseSplitViewInfo];
+    }
+} // buttonToggleInfo
+
+- (IBAction)menuItemAddMobileconfig:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"mobileconfig!");
+}
+
+- (IBAction)menuItemAddPlist:(id)sender {
+    // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
+    NSLog(@"plist!");
+}
+
 - (IBAction)selectTableViewPayloadProfile:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSInteger selectedRow = [_tableViewPayloadProfile selectedRow];
-    if ( selectedRow != _tableViewPayloadProfileSelectedRow ) {
+    if ( selectedRow == -1 || selectedRow != _tableViewPayloadProfileSelectedRow ) {
         [self selectTableViewPayloadProfileRow:selectedRow];
     }
 } // selectTableViewPayloadProfile
@@ -2886,7 +2900,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             if ( ! _settingsStatusHidden || _settingsStatusLoading ) {
                 [self hideSettingsStatus];
             }
-            
+
             if ( ! [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
                 [_viewInfoController updateInfoForManifestDict:manifest];
             }
@@ -2925,7 +2939,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSInteger selectedRow = [_tableViewPayloadLibrary selectedRow];
-    if ( selectedRow != _tableViewPayloadLibrarySelectedRow ) {
+    if ( selectedRow == -1 || selectedRow != _tableViewPayloadLibrarySelectedRow ) {
         [self selectTableViewPayloadLibraryRow:selectedRow];
     }
 } // selectTableViewPayloadLibrary
@@ -3159,7 +3173,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     
     [_textFieldSettingsHeaderTitle setStringValue:@"Profile Settings"];
     
-    //NSImage *icon = [NSImage imageNamed:@"Profiles.icns"];
     NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"];
     if ( icon ) {
         [_imageViewSettingsHeaderIcon setImage:icon];

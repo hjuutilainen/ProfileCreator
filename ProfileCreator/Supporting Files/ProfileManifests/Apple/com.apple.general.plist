@@ -154,6 +154,12 @@
 						<string>Date</string>
 						<key>Description</key>
 						<string>Removal date</string>
+						<key>IndentLeft</key>
+						<true/>
+						<key>MinValueOffsetDays</key>
+						<integer>1</integer>
+						<key>ShowDateInterval</key>
+						<true/>
 						<key>CellType</key>
 						<string>DatePickerNoTitle</string>
 						<key>ToolTipDescription</key>

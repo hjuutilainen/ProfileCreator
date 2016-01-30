@@ -46,8 +46,8 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel {
-    CGFloat indentationBaseValue = 8.0f;
+- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant {
+    CGFloat indentationBaseValue = [baseConstant floatValue] ?: 8.0f;
     CGFloat indentationMultiplier;
     if ( [indentationLevel floatValue] < 1.0f ) {
         return indentationBaseValue;

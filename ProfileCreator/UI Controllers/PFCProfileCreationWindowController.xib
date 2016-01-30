@@ -221,7 +221,7 @@ Gw
                                                     <constraint firstAttribute="width" secondItem="WYo-Bg-edj" secondAttribute="height" multiplier="1:1" id="J6z-vN-777"/>
                                                     <constraint firstAttribute="height" constant="16" id="uwA-UH-Jvn"/>
                                                 </constraints>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSInvalidDataFreestandingTemplate" imagePosition="only" alignment="center" alternateImage="NSLeftFacingTriangleTemplate" imageScaling="proportionallyUpOrDown" inset="2" id="nMC-wu-lKr">
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSLeftFacingTriangleTemplate" imagePosition="only" alignment="center" alternateImage="NSRightFacingTriangleTemplate" imageScaling="proportionallyUpOrDown" inset="2" id="nMC-wu-lKr">
                                                     <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
@@ -696,7 +696,7 @@ Gw
                 <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="81" horizontalPageScroll="10" verticalLineScroll="81" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Op-f3-UEY" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="1474"/>
                     <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="Qkp-7a-FmM">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1474"/>
+                        <rect key="frame" x="0.5" y="0.0" width="320" height="1474"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings" customClass="PFCSettingsTableView">
@@ -1103,7 +1103,7 @@ Gw
                                                     <outlet property="settingTitle" destination="bp6-9c-hud" id="1tH-Ay-iwS"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="CellViewSettingsPopUp" id="xwp-SS-620" customClass="CellViewSettingsPopUp">
+                                            <tableCellView identifier="CellViewSettingsPopUpButton" id="xwp-SS-620" customClass="CellViewSettingsPopUpButton">
                                                 <rect key="frame" x="45" y="363" width="231" height="81"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -1155,12 +1155,13 @@ Gw
                                                     <constraint firstAttribute="trailing" secondItem="zKZ-6m-MGL" secondAttribute="trailing" constant="20" symbolic="YES" id="y6w-vB-0tf"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="constraintLeading" destination="uVl-sl-14t" id="w67-Qn-hCP"/>
                                                     <outlet property="settingDescription" destination="zKZ-6m-MGL" id="aWP-gI-jjm"/>
                                                     <outlet property="settingPopUpButton" destination="Agg-6b-H1o" id="AzC-gw-2O2"/>
                                                     <outlet property="settingTitle" destination="ENk-Qk-Icy" id="Q3J-Vw-yf5"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="CellViewSettingsPopUpNoTitle" id="IV0-jP-6Gf" customClass="CellViewSettingsPopUpNoTitle">
+                                            <tableCellView identifier="CellViewSettingsPopUpButtonNoTitle" id="IV0-jP-6Gf" customClass="CellViewSettingsPopUpButtonNoTitle">
                                                 <rect key="frame" x="45" y="444" width="231" height="54"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -1207,7 +1208,7 @@ Gw
                                                     <outlet property="settingPopUpButton" destination="TPU-gQ-3Yh" id="bpJ-mm-mXR"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="CellViewSettingsPopUpLeft" id="1x5-XV-La3" customClass="CellViewSettingsPopUpLeft">
+                                            <tableCellView identifier="CellViewSettingsPopUpButtonLeft" id="1x5-XV-La3" customClass="CellViewSettingsPopUpButtonLeft">
                                                 <rect key="frame" x="45" y="498" width="231" height="53"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -1402,6 +1403,8 @@ Gw
                                                     <constraint firstItem="bjR-yn-NYj" firstAttribute="centerY" secondItem="uvm-pb-7aP" secondAttribute="centerY" id="zCU-GJ-xNq"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="constraintTextFieldPortTrailing" destination="dUj-pq-Q9W" id="Wkc-CK-JDP"/>
+                                                    <outlet property="imageViewRequired" destination="bjR-yn-NYj" id="0p9-o7-KNA"/>
                                                     <outlet property="settingCheckbox" destination="P5V-aA-cRb" id="K9P-Ph-QOa"/>
                                                     <outlet property="settingDescription" destination="fXY-lX-W7S" id="IHS-kD-5dL"/>
                                                     <outlet property="settingTextField" destination="uvm-pb-7aP" id="UVg-qw-q5u"/>
@@ -1484,6 +1487,8 @@ Gw
                                                     <constraint firstItem="cbT-PU-nkY" firstAttribute="leading" secondItem="DQw-Sb-woG" secondAttribute="leading" constant="8" id="xg7-Dz-Hql"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="constraintTextFieldPortTrailing" destination="lMg-Eu-MLF" id="eML-oR-gX0"/>
+                                                    <outlet property="imageViewRequired" destination="hHe-sC-QVe" id="h0f-4r-Ged"/>
                                                     <outlet property="settingCheckbox" destination="cbT-PU-nkY" id="uy6-FM-oRR"/>
                                                     <outlet property="settingDescription" destination="KuU-SX-6vY" id="a9e-3n-qof"/>
                                                     <outlet property="settingTextFieldHost" destination="yOw-ES-PlZ" id="tCf-X1-qSI"/>
@@ -1528,14 +1533,6 @@ Gw
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                         </datePickerCell>
                                                     </datePicker>
-                                                    <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="mQS-oa-3jT">
-                                                        <rect key="frame" x="114" y="11" width="99" height="17"/>
-                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="hBc-4k-4P8">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="r6d-LY-mbm">
                                                         <rect key="frame" x="6" y="58" width="33" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Title" id="0RU-bd-xem">
@@ -1552,20 +1549,29 @@ Gw
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
+                                                    <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="mQS-oa-3jT">
+                                                        <rect key="frame" x="110" y="11" width="103" height="17"/>
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="hBc-4k-4P8">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="r6d-LY-mbm" firstAttribute="leading" secondItem="Syv-E9-hJ2" secondAttribute="leading" constant="8" id="0ua-9G-B2q"/>
                                                     <constraint firstItem="mQS-oa-3jT" firstAttribute="baseline" secondItem="1Rj-9Y-6fz" secondAttribute="baseline" id="4Fm-2c-Svw"/>
                                                     <constraint firstItem="51x-88-boH" firstAttribute="top" secondItem="r6d-LY-mbm" secondAttribute="bottom" constant="2" id="4yK-TW-6uC"/>
                                                     <constraint firstItem="1Rj-9Y-6fz" firstAttribute="top" secondItem="51x-88-boH" secondAttribute="bottom" constant="8" id="DmY-Cc-DFL"/>
-                                                    <constraint firstItem="1Rj-9Y-6fz" firstAttribute="leading" secondItem="Syv-E9-hJ2" secondAttribute="leading" constant="8" id="G2p-qg-CJ8"/>
+                                                    <constraint firstItem="mQS-oa-3jT" firstAttribute="leading" secondItem="Syv-E9-hJ2" secondAttribute="leading" constant="112" id="Jto-Jd-PNe"/>
                                                     <constraint firstAttribute="trailing" secondItem="mQS-oa-3jT" secondAttribute="trailing" constant="20" symbolic="YES" id="UBd-nn-vVK"/>
-                                                    <constraint firstItem="mQS-oa-3jT" firstAttribute="leading" secondItem="1Rj-9Y-6fz" secondAttribute="trailing" constant="8" symbolic="YES" id="XLi-YR-eSn"/>
+                                                    <constraint firstItem="mQS-oa-3jT" firstAttribute="leading" secondItem="1Rj-9Y-6fz" secondAttribute="trailing" constant="4" id="XLi-YR-eSn"/>
                                                     <constraint firstItem="r6d-LY-mbm" firstAttribute="top" secondItem="Syv-E9-hJ2" secondAttribute="top" constant="8" id="YXP-na-dBR"/>
                                                     <constraint firstItem="51x-88-boH" firstAttribute="leading" secondItem="r6d-LY-mbm" secondAttribute="leading" id="nwg-jG-fbZ"/>
                                                     <constraint firstAttribute="bottom" secondItem="1Rj-9Y-6fz" secondAttribute="bottom" constant="8" id="pfO-K1-bah"/>
+                                                    <constraint firstItem="1Rj-9Y-6fz" firstAttribute="leading" secondItem="51x-88-boH" secondAttribute="leading" id="w3Y-py-FWh"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="constraintLeading" destination="Jto-Jd-PNe" id="UYo-Ga-mj7"/>
                                                     <outlet property="settingDateDescription" destination="mQS-oa-3jT" id="5mQ-gh-gfa"/>
                                                     <outlet property="settingDatePicker" destination="1Rj-9Y-6fz" id="WjY-I9-Mb4"/>
                                                     <outlet property="settingDescription" destination="51x-88-boH" id="2r9-RE-8Gl"/>
@@ -1589,7 +1595,7 @@ Gw
                                                         </datePickerCell>
                                                     </datePicker>
                                                     <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Nmi-El-mxy">
-                                                        <rect key="frame" x="114" y="11" width="99" height="17"/>
+                                                        <rect key="frame" x="110" y="11" width="103" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="Cgt-12-6rV">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
@@ -1599,19 +1605,20 @@ Gw
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="Nmi-El-mxy" firstAttribute="baseline" secondItem="sBU-rw-aEN" secondAttribute="baseline" id="4ng-OO-rOE"/>
-                                                    <constraint firstItem="sBU-rw-aEN" firstAttribute="leading" secondItem="cYE-XF-Nog" secondAttribute="leading" constant="8" id="M8e-zi-S8I"/>
                                                     <constraint firstAttribute="trailing" secondItem="Nmi-El-mxy" secondAttribute="trailing" constant="20" symbolic="YES" id="QiO-6m-sVf"/>
                                                     <constraint firstAttribute="bottom" secondItem="sBU-rw-aEN" secondAttribute="bottom" constant="8" id="Wd9-CK-nvw"/>
                                                     <constraint firstItem="sBU-rw-aEN" firstAttribute="top" secondItem="cYE-XF-Nog" secondAttribute="top" constant="8" id="eZp-Bo-Xt8"/>
-                                                    <constraint firstItem="Nmi-El-mxy" firstAttribute="leading" secondItem="sBU-rw-aEN" secondAttribute="trailing" constant="8" symbolic="YES" id="nLZ-Sl-niv"/>
+                                                    <constraint firstItem="Nmi-El-mxy" firstAttribute="leading" secondItem="sBU-rw-aEN" secondAttribute="trailing" constant="4" id="nLZ-Sl-niv"/>
+                                                    <constraint firstItem="Nmi-El-mxy" firstAttribute="leading" secondItem="cYE-XF-Nog" secondAttribute="leading" constant="112" id="sg6-wf-vs8"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="constraintLeading" destination="sg6-wf-vs8" id="9te-Z8-LvL"/>
                                                     <outlet property="settingDateDescription" destination="Nmi-El-mxy" id="H6j-Nu-flC"/>
                                                     <outlet property="settingDatePicker" destination="sBU-rw-aEN" id="rC3-rH-h7E"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="CellViewSettingsTextFieldDaysHoursNoTitle" misplaced="YES" id="5Hf-2c-rOA" customClass="CellViewSettingsTextFieldDaysHoursNoTitle">
-                                                <rect key="frame" x="45" y="974" width="354" height="38"/>
+                                            <tableCellView identifier="CellViewSettingsTextFieldDaysHoursNoTitle" id="5Hf-2c-rOA" customClass="CellViewSettingsTextFieldDaysHoursNoTitle">
+                                                <rect key="frame" x="45" y="974" width="353" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oH1-pU-RvF">
@@ -1653,7 +1660,7 @@ Gw
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c1F-Ib-Kni">
-                                                        <rect key="frame" x="165" y="11" width="42" height="17"/>
+                                                        <rect key="frame" x="165" y="11" width="41" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Hours" id="hav-rA-Rdl">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
@@ -2236,7 +2243,7 @@ Gw
                 <constraint firstAttribute="trailing" secondItem="NiK-2b-YWJ" secondAttribute="trailing" constant="20" symbolic="YES" id="hct-Pu-5f5"/>
                 <constraint firstAttribute="bottom" secondItem="IqR-Mx-jTe" secondAttribute="bottom" constant="10" id="iJL-Ga-Y4J"/>
             </constraints>
-            <point key="canvasLocation" x="-2047.5" y="-672"/>
+            <point key="canvasLocation" x="-2016.5" y="-994"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="Tw1-BX-GRa">
             <rect key="frame" x="0.0" y="0.0" width="423" height="48"/>
@@ -2363,7 +2370,6 @@ Gw
             </constraints>
             <point key="canvasLocation" x="-1383" y="-1260.5"/>
         </customView>
-        <userDefaultsController representsSharedInstance="YES" id="K6P-C2-taR"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="FVl-Hk-IRj" customClass="PFCViewInfo">
             <rect key="frame" x="0.0" y="0.0" width="190" height="20"/>
             <subviews>
@@ -2771,16 +2777,16 @@ Gw
                                                         </connections>
                                                     </textField>
                                                     <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="7ed-w7-gdR">
-                                                        <rect key="frame" x="10" y="-2" width="170" height="5"/>
+                                                        <rect key="frame" x="0.0" y="-2" width="190" height="5"/>
                                                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <font key="titleFont" metaFont="system"/>
                                                     </box>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="7ed-w7-gdR" firstAttribute="leading" secondItem="iKm-Lh-fiF" secondAttribute="leading" constant="10" id="3KN-TV-c2K"/>
+                                                    <constraint firstItem="7ed-w7-gdR" firstAttribute="leading" secondItem="iKm-Lh-fiF" secondAttribute="leading" id="3KN-TV-c2K"/>
                                                     <constraint firstItem="EEc-kp-66g" firstAttribute="top" secondItem="LCN-sF-AEk" secondAttribute="bottom" constant="3" id="E42-E3-3op"/>
-                                                    <constraint firstAttribute="trailing" secondItem="7ed-w7-gdR" secondAttribute="trailing" constant="10" id="INg-F4-BjN"/>
+                                                    <constraint firstAttribute="trailing" secondItem="7ed-w7-gdR" secondAttribute="trailing" id="INg-F4-BjN"/>
                                                     <constraint firstItem="EEc-kp-66g" firstAttribute="leading" secondItem="LCN-sF-AEk" secondAttribute="leading" id="Jcg-5R-JaR"/>
                                                     <constraint firstAttribute="trailing" secondItem="LCN-sF-AEk" secondAttribute="trailing" constant="8" id="TbJ-5C-D9S"/>
                                                     <constraint firstItem="LCN-sF-AEk" firstAttribute="top" secondItem="iKm-Lh-fiF" secondAttribute="top" constant="7" id="dul-Sz-g7Q"/>
@@ -2820,7 +2826,7 @@ Gw
                 <constraint firstAttribute="trailing" secondItem="OxA-xf-cyg" secondAttribute="trailing" id="qMO-rZ-Oib"/>
                 <constraint firstItem="OxA-xf-cyg" firstAttribute="top" secondItem="A03-7W-IGN" secondAttribute="top" id="wAt-U8-2se"/>
             </constraints>
-            <point key="canvasLocation" x="-2118" y="-732"/>
+            <point key="canvasLocation" x="-2525" y="-1106"/>
         </customView>
     </objects>
     <resources>
@@ -2831,6 +2837,7 @@ Gw
         <image name="NSInvalidDataFreestandingTemplate" width="14" height="14"/>
         <image name="NSLeftFacingTriangleTemplate" width="9" height="12"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
+        <image name="NSRightFacingTriangleTemplate" width="9" height="12"/>
         <image name="NSUser" width="32" height="32"/>
     </resources>
 </document>

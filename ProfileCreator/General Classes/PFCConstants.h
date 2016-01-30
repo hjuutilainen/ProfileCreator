@@ -67,6 +67,7 @@ extern NSString *const PFCValueTypeUnknown;
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCManifestKeyAllowedFileTypes;
+extern NSString *const PFCManifestKeyAllowedFileExtensions;
 extern NSString *const PFCManifestKeyAllowMultiplePayloads;
 extern NSString *const PFCManifestKeyAvailableValues;
 extern NSString *const PFCManifestKeyButtonTitle;
@@ -91,6 +92,9 @@ extern NSString *const PFCManifestKeyIndentLeft;
 extern NSString *const PFCManifestKeyManifestContent;
 extern NSString *const PFCManifestKeyMaxValue;
 extern NSString *const PFCManifestKeyMinValue;
+extern NSString *const PFCManifestKeyMinValueOffsetDays;
+extern NSString *const PFCManifestKeyMinValueOffsetHours;
+extern NSString *const PFCManifestKeyMinValueOffsetMinutes;
 extern NSString *const PFCManifestKeyOptional;
 extern NSString *const PFCManifestKeyParentKey;
 extern NSString *const PFCManifestKeyPayloadKey;
@@ -116,7 +120,10 @@ extern NSString *const PFCManifestKeyRequired;
 extern NSString *const PFCManifestKeyRequiredHost;
 extern NSString *const PFCManifestKeyRequiredPort;
 extern NSString *const PFCManifestKeySharedKey;
+extern NSString *const PFCManifestKeyShowDateInterval;
+extern NSString *const PFCManifestKeyShowDateTime;
 extern NSString *const PFCManifestKeyTableViewColumns;
+extern NSString *const PFCManifestKeyTableViewColumnTitle;
 extern NSString *const PFCManifestKeyTitle;
 extern NSString *const PFCManifestKeyToolTipDescription;
 extern NSString *const PFCManifestKeyUnit;
@@ -127,6 +134,17 @@ extern NSString *const PFCManifestKeyValueKeysShared;
 #pragma mark UserDefaults
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCUserDefaultsLogLevel;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark FileInfoKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCFileInfoTitle;
+extern NSString *const PFCFileInfoLabel1;
+extern NSString *const PFCFileInfoDescription1;
+extern NSString *const PFCFileInfoLabel2;
+extern NSString *const PFCFileInfoDescription2;
+extern NSString *const PFCFileInfoLabel3;
+extern NSString *const PFCFileInfoDescription3;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark FontWeights
@@ -157,7 +175,9 @@ extern NSString *const PFCProfileTemplateKeyUUID;
 #pragma mark SettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCSettingsKeyEnabled;
+extern NSString *const PFCSettingsKeyFilePath;
 extern NSString *const PFCSettingsKeySelected;
+extern NSString *const PFCSettingsKeyTableViewContent;
 extern NSString *const PFCSettingsKeyValue;
 extern NSString *const PFCSettingsKeyValueCheckbox;
 extern NSString *const PFCSettingsKeyValueHost;

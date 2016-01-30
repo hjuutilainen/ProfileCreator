@@ -18,8 +18,87 @@
 //  limitations under the License.
 
 #import "PFCFileInfoProcessors.h"
+#import "PFCConstants.h"
+#import "PFCLog.h"
 
 @implementation PFCFileInfoProcessors
+
++ (id)fileInfoProcessorWithName:(NSString *)fileInfoProcessorName fileURL:(NSURL *)fileURL {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@"fileInfoProcessorName=%@", fileInfoProcessorName);
+    if ( [fileInfoProcessorName isEqualToString:@"FileInfoProcessorFont"] ) {
+        return [[PFCFileInfoProcessorFont alloc] initWithFileURL:fileURL];
+    }
+    return [[PFCFileInfoProcessorFallback alloc] initWithFileURL:fileURL];
+} // fileInfoProcessorWithName:fileURL
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCFileInfoProcessorCertificate
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation PFCFileInfoProcessorCertificate
+
+- (id)initWithFileURL:(NSURL *)fileURL {
+    self = [super init];
+    if ( self ) {
+        _fileURL = fileURL;
+    }
+    return self;
+} // initWithFileURL
+
+- (NSDictionary *)fileInfo {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableDictionary *fileInfoDict = [[NSMutableDictionary alloc] init];
+    
+    return [fileInfoDict copy];
+} // fileInfo
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCFileInfoProcessorFallback
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation PFCFileInfoProcessorFallback
+
+- (id)initWithFileURL:(NSURL *)fileURL {
+    self = [super init];
+    if ( self ) {
+        _fileURL = fileURL;
+    }
+    return self;
+} // initWithFileURL
+
+- (NSDictionary *)fileInfo {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSError *error = nil;
+    
+    NSMutableDictionary *fileInfoDict = [[NSMutableDictionary alloc] init];
+
+    fileInfoDict[PFCFileInfoTitle] = [_fileURL lastPathComponent];
+    
+    fileInfoDict[PFCFileInfoLabel1] = @"Path:";
+    fileInfoDict[PFCFileInfoDescription1] = [_fileURL path] ?: @"";
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:&error];
+    if ( fileAttributes ) {
+        NSString *fileSize = [NSByteCountFormatter stringFromByteCount:[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
+        fileInfoDict[PFCFileInfoLabel2] = @"Size:";
+        fileInfoDict[PFCFileInfoDescription2] = fileSize ?: @"";
+    }
+
+    
+    
+    return [fileInfoDict copy];
+} // fileInfo
 
 @end
 
@@ -40,6 +119,8 @@
 } // initWithFileURL
 
 - (NSDictionary *)fileInfo {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     NSMutableDictionary *fileInfoDict = [[NSMutableDictionary alloc] init];
     
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename([[_fileURL path] UTF8String]);
@@ -47,7 +128,7 @@
         CGFontRef font = CGFontCreateWithDataProvider(fontDataProvider);
         if ( font ) {
             NSString *fontFullName = CFBridgingRelease(CGFontCopyPostScriptName(font));
-            fileInfoDict[@"Title"] = fontFullName ?: [_fileURL path];
+            fileInfoDict[PFCFileInfoTitle] = fontFullName ?: [_fileURL path];
         }
     } else {
         NSLog(@"NoProvider!");
@@ -56,31 +137,31 @@
     MDItemRef fontMDItem = MDItemCreateWithURL(kCFAllocatorDefault, (CFURLRef)_fileURL);
     if ( fontMDItem ) {
         NSString *copyright = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemCopyright));
-        fileInfoDict[@"DescriptionLabel1"] = @"Copyright:";
-        fileInfoDict[@"Description1"] = copyright ?: @"";
+        fileInfoDict[PFCFileInfoLabel1] = @"Copyright:";
+        fileInfoDict[PFCFileInfoDescription1] = copyright ?: @"";
         
         NSString *version = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemVersion));
         if ( [version containsString:@";"] ) {
             version = [[version componentsSeparatedByString:@";"] firstObject];
         }
-        fileInfoDict[@"DescriptionLabel2"] = @"Version:";
-        fileInfoDict[@"Description2"] = version ?: @"";
+        fileInfoDict[PFCFileInfoLabel2] = @"Version:";
+        fileInfoDict[PFCFileInfoDescription2] = version ?: @"";
         
         NSArray *publishers = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemPublishers));
         if ( [publishers count] != 0 ) {
-            fileInfoDict[@"DescriptionLabel3"] = @"Publisher:";
-            fileInfoDict[@"Description3"] = [publishers componentsJoinedByString:@", "];
+            fileInfoDict[PFCFileInfoLabel3] = @"Publisher:";
+            fileInfoDict[PFCFileInfoDescription3] = [publishers componentsJoinedByString:@", "];
         } else {
             NSString *creator = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemCreator));
             if ( [creator length] != 0 ) {
-                fileInfoDict[@"DescriptionLabel3"] = @"Creator:";
-                fileInfoDict[@"Description3"] = creator;
+                fileInfoDict[PFCFileInfoLabel3] = @"Creator:";
+                fileInfoDict[PFCFileInfoDescription3] = creator;
             }
         }
         CFRelease(fontMDItem);
     }
     
     return [fileInfoDict copy];
-}
+} // fileInfo
 
 @end

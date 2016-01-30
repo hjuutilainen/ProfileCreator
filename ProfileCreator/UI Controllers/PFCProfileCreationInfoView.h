@@ -46,6 +46,7 @@
 //  Manifest Content View
 // ------------------------------------------------------
 @property (weak) IBOutlet PFCViewInfo *viewManifestContent;
+@property (weak) IBOutlet PFCViewInfo *viewManifest;
 
 - (id)initWithDelegate:(id<PFCProfileCreationInfoDelegate>)delegate;
 - (void)updateInfoForManifestDict:(NSDictionary *)manifestDict;

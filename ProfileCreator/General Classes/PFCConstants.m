@@ -60,6 +60,7 @@ NSString *const PFCValueTypeUnknown = @"Unknown";
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCManifestKeyAllowedFileTypes = @"AllowedFileTypes";
+NSString *const PFCManifestKeyAllowedFileExtensions = @"AllowedFileExtensions";
 NSString *const PFCManifestKeyAllowMultiplePayloads = @"AllowMultiplePayloads";
 NSString *const PFCManifestKeyAvailableValues = @"AvailableValues";
 NSString *const PFCManifestKeyButtonTitle = @"ButtonTitle";
@@ -84,6 +85,9 @@ NSString *const PFCManifestKeyIndentLeft = @"IndentLeft";
 NSString *const PFCManifestKeyManifestContent = @"ManifestContent";
 NSString *const PFCManifestKeyMaxValue = @"MaxValue";
 NSString *const PFCManifestKeyMinValue = @"MinValue";
+NSString *const PFCManifestKeyMinValueOffsetDays = @"MinValueOffsetDays";
+NSString *const PFCManifestKeyMinValueOffsetHours = @"MinValueOffsetHours";
+NSString *const PFCManifestKeyMinValueOffsetMinutes = @"MinValueOffsetMinutes";
 NSString *const PFCManifestKeyOptional = @"Optional";
 NSString *const PFCManifestKeyParentKey = @"ParentKey";
 NSString *const PFCManifestKeyPayloadKey = @"PayloadKey";
@@ -109,7 +113,10 @@ NSString *const PFCManifestKeyRequired = @"Required";
 NSString *const PFCManifestKeyRequiredHost = @"RequiredHost";
 NSString *const PFCManifestKeyRequiredPort = @"RequiredPort";
 NSString *const PFCManifestKeySharedKey = @"SharedKey";
+NSString *const PFCManifestKeyShowDateInterval = @"ShowDateInterval";
+NSString *const PFCManifestKeyShowDateTime = @"ShowDateTime";
 NSString *const PFCManifestKeyTableViewColumns = @"TableViewColumns";
+NSString *const PFCManifestKeyTableViewColumnTitle = @"Title";
 NSString *const PFCManifestKeyTitle = @"Title";
 NSString *const PFCManifestKeyToolTipDescription = @"ToolTipDescription";
 NSString *const PFCManifestKeyUnit = @"Unit";
@@ -120,6 +127,17 @@ NSString *const PFCManifestKeyValueKeysShared = @"ValueKeysShared";
 #pragma mark UserDefaults
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCUserDefaultsLogLevel = @"LogLevel";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark FileInfoKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCFileInfoTitle = @"Title";
+NSString *const PFCFileInfoLabel1 = @"Label1";
+NSString *const PFCFileInfoDescription1 = @"Description1";
+NSString *const PFCFileInfoLabel2 = @"Label2";
+NSString *const PFCFileInfoDescription2 = @"Description2";
+NSString *const PFCFileInfoLabel3 = @"Label3";
+NSString *const PFCFileInfoDescription3 = @"Description3";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark FontWeights
@@ -151,7 +169,9 @@ NSString *const PFCProfileTemplateKeyUUID = @"UUID";
 #pragma mark SettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCSettingsKeyEnabled = @"Enabled";
+NSString *const PFCSettingsKeyFilePath = @"FilePath";
 NSString *const PFCSettingsKeySelected = @"Selected";
+NSString *const PFCSettingsKeyTableViewContent = @"TableViewContent";
 NSString *const PFCSettingsKeyValue = @"Value";
 NSString *const PFCSettingsKeyValueCheckbox = @"ValueCheckbox";
 NSString *const PFCSettingsKeyValueHost = @"ValueHost";
