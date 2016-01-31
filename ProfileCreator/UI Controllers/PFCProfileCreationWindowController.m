@@ -28,6 +28,7 @@
 #import "PFCManifestParser.h"
 #import "PFCError.h"
 #import "PFCLog.h"
+#import "PFCManifestLibrary.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -468,29 +469,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSError *error = nil;
     
     [_arrayPayloadLibrary removeAllObjects];
-    
-    // ---------------------------------------------------------------------
-    //  Get path to manifest folder inside ProfileCreator.app
-    // ---------------------------------------------------------------------
-    NSURL *profileManifestFolderURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"Manifests"];
-    if ( ! [profileManifestFolderURL checkResourceIsReachableAndReturnError:&error] ) {
-        NSLog(@"[ERROR] %@", [error localizedDescription]);
-        return;
-    } else {
-        
-        // ---------------------------------------------------------------------
-        //  Put all profile manifest plist URLs in an array
-        // ---------------------------------------------------------------------
-        NSArray *manifestPlists = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:profileManifestFolderURL
-                                                                includingPropertiesForKeys:@[]
-                                                                                   options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                                     error:nil];
-        
-        // ---------------------------------------------------------------------
-        //  Loop through all profile manifests and add them to the menu array
-        // ---------------------------------------------------------------------
-        NSPredicate *predicateManifestPlists = [NSPredicate predicateWithFormat:@"self.pathExtension == 'plist'"];
-        for ( NSURL *manifestURL in [manifestPlists filteredArrayUsingPredicate:predicateManifestPlists] ) {
+    NSArray *libraryApple = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
+    if ( [libraryApple count] != 0 ) {
+        for ( NSURL *manifestURL in libraryApple ) {
             NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
             if ( [manifestDict count] != 0 ) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
@@ -503,7 +484,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                     [_arrayPayloadLibraryApple addObject:[manifestDict copy]];
                 }
             } else {
-                NSLog(@"[ERROR] Manifest %@ was empty!", [manifestURL lastPathComponent]);
+                DDLogError(@"Manifest: %@ was empty!", [manifestURL lastPathComponent]);
             }
         }
         
@@ -511,6 +492,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Sort array
         // ---------------------------------------------------------------------
         [_arrayPayloadLibraryApple sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+    } else {
+        DDLogError(@"No manifests returned for library Apple");
+        DDLogError(@"%@", [error localizedDescription]);
     }
 } // setupManifestLibraryApple
 
@@ -520,57 +504,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSError *error = nil;
     
     [_arrayPayloadLibraryUserPreferences removeAllObjects];
-    
-    // -------------------------------------------------------------------------
-    //  Get path to user library folder
-    // -------------------------------------------------------------------------
-    NSURL *userLibraryURL = [[NSFileManager defaultManager] URLForDirectory:NSLibraryDirectory
-                                                                   inDomain:NSUserDomainMask
-                                                          appropriateForURL:nil
-                                                                     create:NO
-                                                                      error:&error];
-    if ( userLibraryURL == nil ) {
-        NSLog(@"[ERROR] %@", [error localizedDescription]);
-        return;
-    }
-    
-    // -------------------------------------------------------------------------
-    //  Get path to user library preferences folder
-    // -------------------------------------------------------------------------
-    NSURL *userLibraryPreferencesURL = [userLibraryURL URLByAppendingPathComponent:@"Preferences"];
-    if ( ! [userLibraryPreferencesURL checkResourceIsReachableAndReturnError:&error] ) {
-        NSLog(@"[ERROR] %@", [error localizedDescription]);
-        return;
-    } else {
-        
-        // ---------------------------------------------------------------------
-        //  Get all contents of user library preferences folder
-        // ---------------------------------------------------------------------
-        NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:userLibraryPreferencesURL
-                                                             includingPropertiesForKeys:@[]
-                                                                                options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                                  error:nil];
-        
-        // ---------------------------------------------------------------------
-        //  Create a manifest for all files ending with .plist
-        // ---------------------------------------------------------------------
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
-        for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
-            NSMutableDictionary *settingsDict = [[NSMutableDictionary alloc] init];
-            NSDictionary *manifestDict = [[PFCManifestParser sharedParser] manifestFromPlistAtURL:plistURL settings:settingsDict];
-            if ( [manifestDict count] != 0 ) {
-                NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
-                if (
-                    [enabledPayloadDomains containsObject:manifestDomain]
-                    ) {
-                    [_arrayPayloadProfile addObject:manifestDict];
-                } else {
-                    [_arrayPayloadLibraryUserPreferences addObject:manifestDict];
-                }
-                
-                _settingsLocal[manifestDomain] = settingsDict;
+    NSArray *libraryLibraryUserPreferences = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error settingsLocal:_settingsLocal acceptCached:YES];
+    if ( [libraryLibraryUserPreferences count] != 0 ) {
+        for ( NSDictionary *manifest in libraryLibraryUserPreferences ) {
+            NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+            if ( [enabledPayloadDomains containsObject:manifestDomain] ) {
+                [_arrayPayloadProfile addObject:manifest];
             } else {
-                NSLog(@"[ERROR] Plist: %@ was empty!", [plistURL lastPathComponent]);
+                [_arrayPayloadLibraryUserPreferences addObject:manifest];
             }
         }
         
@@ -578,6 +519,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         //  Sort array
         // ---------------------------------------------------------------------
         [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+    } else {
+        DDLogError(@"No manifests returned for library user library preferences");
+        DDLogError(@"%@", [error localizedDescription]);
     }
 } // setupManifestLibraryUserLibrary
 

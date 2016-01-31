@@ -638,7 +638,7 @@
             // -----------------------------------------------------------------
             settingsDict[identifier] = [identifierSettingsDict copy] ?: @{};
         } else {
-            NSLog(@"[ERROR] TypeString was empty!");
+            DDLogError(@"TypeString was empty!");
             continue;
         }
         [manifestArray addObject:[manifestDict copy]];
@@ -692,7 +692,7 @@
             [tableViewContent addObject:@{ columnTitle : @{ PFCSettingsKeyValue : string } }];
         }
         
-        settings[@"TableViewContent"] = [tableViewContent copy];
+        settings[PFCSettingsKeyTableViewContent] = [tableViewContent copy];
         
         // -------------------------------------------------------------------------
         //  Array content: Dict
@@ -733,7 +733,7 @@
             [tableViewContent addObject:[contentDict copy]];
         }
         
-        settings[@"TableViewContent"] = [tableViewContent copy];
+        settings[PFCSettingsKeyTableViewContent] = [tableViewContent copy];
     }
     return [tableViewColumns copy];
 } // tableViewColumnsFromArray
@@ -889,7 +889,7 @@
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return [self verifyCellTypeTextFieldNumber:manifestContentDict settings:settings];
     } else if ( [cellType length] != 0 ) {
-        NSLog(@"[ERROR] Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
+        DDLogError(@"Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
     } else {
         //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
@@ -944,6 +944,7 @@
     if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
+    
     BOOL required = [manifestContentDict[@"Required"] boolValue];
     NSString *value = contentDictSettings[@"ValueTextField"];
     if ( [value length] == 0 ) {
@@ -971,6 +972,7 @@
     if ( [contentDictSettings count] == 0 ) {
         //NSLog(@"No settings!");
     }
+    
     BOOL required = [manifestContentDict[@"Required"] boolValue];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if ( value == nil ) {

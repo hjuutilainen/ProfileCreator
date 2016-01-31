@@ -22,6 +22,7 @@
 #import "PFCManifestParser.h"
 #import "PFCTableViewCellsProfiles.h"
 #import "PFCProfileExportWindowController.h"
+#import "PFCManifestLibrary.h"
 #import "PFCLog.h"
 
 @implementation PFCController
@@ -191,6 +192,9 @@
             // Use NSLog as CocoaLumberjack isn't available yet
             NSLog(@"%@", [error localizedDescription]);
         }
+        // Initialize libraries
+        [PFCManifestLibrary sharedLibrary];
+        
         [PFCLog configureLoggingForSession:kPFCSessionTypeGUI];
         [_window setBackgroundColor:[NSColor whiteColor]];
         [self setInitialized:YES];

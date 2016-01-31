@@ -70,6 +70,7 @@
 		53897E361C5958F700B1D868 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53897E351C5958F700B1D868 /* Defaults.plist */; };
 		53897E3A1C595DFF00B1D868 /* PFCLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53897E391C595DFF00B1D868 /* PFCLogFormatter.m */; };
 		538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */; };
+		538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 538C31801C5E94E100D0125C /* PFCManifestLibrary.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
@@ -318,6 +319,8 @@
 		53897E391C595DFF00B1D868 /* PFCLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCLogFormatter.m; path = "General Classes/PFCLogFormatter.m"; sourceTree = SOURCE_ROOT; };
 		538A66591C2007DC008350F4 /* PFCFileInfoProcessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCFileInfoProcessors.h; path = FileInfoProcessors/PFCFileInfoProcessors.h; sourceTree = "<group>"; };
 		538A665A1C2007DC008350F4 /* PFCFileInfoProcessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCFileInfoProcessors.m; path = FileInfoProcessors/PFCFileInfoProcessors.m; sourceTree = "<group>"; };
+		538C317F1C5E94E100D0125C /* PFCManifestLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestLibrary.h; path = "Manifest Classes/PFCManifestLibrary.h"; sourceTree = "<group>"; };
+		538C31801C5E94E100D0125C /* PFCManifestLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLibrary.m; path = "Manifest Classes/PFCManifestLibrary.m"; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
 		53908EAC1C540FA4009468F0 /* PFCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCError.m; path = "General Classes/PFCError.m"; sourceTree = SOURCE_ROOT; };
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.scep.plist"; sourceTree = "<group>"; };
@@ -396,6 +399,8 @@
 				53EF2BAF1C4D2F2B0029692E /* PFCManifestUtility.m */,
 				53597D891C5268C50062AADC /* PFCManifestParser.h */,
 				53597D8A1C5268C50062AADC /* PFCManifestParser.m */,
+				538C317F1C5E94E100D0125C /* PFCManifestLibrary.h */,
+				538C31801C5E94E100D0125C /* PFCManifestLibrary.m */,
 			);
 			name = "Manifest Classes";
 			sourceTree = "<group>";
@@ -865,6 +870,7 @@
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
 				53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */,
+				538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */,
 				532DF2371C5665E700369513 /* PFCProfileCreationTab.m in Sources */,
 				53897E341C59571B00B1D868 /* PFCLog.m in Sources */,
 				53FEC8021C4E114000C96596 /* PFCViews.m in Sources */,
