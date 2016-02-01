@@ -638,17 +638,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    NSArray *constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
-                                                                        options:0
-                                                                        metrics:nil
-                                                                          views:NSDictionaryOfVariableBindings(subview)];
-    [superview addConstraints:constraintsArray];
+    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:NSDictionaryOfVariableBindings(subview)]];
     
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
-                                                               options:0
-                                                               metrics:nil
-                                                                 views:NSDictionaryOfVariableBindings(subview)];
-    [superview addConstraints:constraintsArray];
+    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:NSDictionaryOfVariableBindings(subview)]];
     [superview setHidden:NO];
     [subview setHidden:hidden];
 } // insertSubview:inSuperview:hidden
@@ -777,6 +775,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                                 object:self
                                                               userInfo:@{ @"TabIndex" : @((indexClosed - 1)),
                                                                           @"SaveSettingsDone" : @YES }];
+            
+            [self updateTabBarTitles];
         } else {
             
             // --------------------------------------------------------------------
@@ -787,6 +787,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                                 object:self
                                                               userInfo:@{ @"TabIndex" : @(indexClosed),
                                                                           @"SaveSettingsDone" : @YES }];
+            
+            [self updateTabBarTitles];
         }
     } else if ( indexClosed < _tabIndexSelected ) {
         DDLogVerbose(@"Tab to the left of currently selected tab was closed");
@@ -808,12 +810,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(_tabIndexSelected),
                                                                       @"SaveSettingsDone" : @YES }];
-
+        
         // -----------------------------------------------------------------
         //  Hide the tab bar when there's only one payload configured
         // -----------------------------------------------------------------
         if ( [_arrayPayloadTabs count] == 1 ) {
             [self hideSettingsTabBar];
+        } else {
+            [self updateTabBarTitles];
         }
     }
 } // tabIndexClosed
@@ -1157,7 +1161,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             NSNumber *errorCount;
             if ( [verificationReport count] != 0 ) {
                 errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]);
-                [self updatePayloadTabErrorCount:errorCount];
+                [self updatePayloadTabErrorCount:errorCount tabIndex:_tabIndexSelected];
             }
             
             if ( [cellType isEqualToString:PFCCellTypeMenu] ) {
@@ -1643,19 +1647,22 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     
     _settingsManifest[identifier] = [settingsDict copy];
     if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && [_selectedManifest[PFCManifestKeyPayloadTabTitle] hasPrefix:identifier] ) {
-        [self updatePayloadTabTitle:[inputText copy]];
+        [self updatePayloadTabTitle:[inputText copy] tabIndex:_tabIndexSelected];
     }
     [self updatePayloadMenuItem];
 } // controlTextDidChange
 
-- (void)updatePayloadTabTitle:(NSString *)title {
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs  objectAtIndex:_tabIndexSelected];
-    [tab updateTitle:title];
+- (void)updatePayloadTabTitle:(NSString *)title tabIndex:(NSInteger)tabIndex {
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs  objectAtIndex:tabIndex];
+    if ( [title length] == 0 ) {
+        title = [@(tabIndex) stringValue];
+    }
+    [tab updateTitle:title ?: @""];
 } // updatePayloadTabTitle
 
-- (void)updatePayloadTabErrorCount:(NSNumber *)errorCount {
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:_tabIndexSelected];
-    [tab updateErrorCount:errorCount];
+- (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSInteger)tabIndex {
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:tabIndex];
+    [tab updateErrorCount:errorCount ?: @0];
 } // updatePayloadTabErrorCount
 
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
@@ -2920,16 +2927,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSMutableDictionary *manifest = [_arrayPayloadProfile[_tableViewPayloadProfileSelectedRow] mutableCopy];
         [self setSelectedManifest:[manifest copy]];
         
-        // ------------------------------------------------------------------------------------
-        //  Load the current settings from the saved settings dict (by using the payload domain)
-        // ------------------------------------------------------------------------------------
-        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
-        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-        
         // ---------------------------------------------------------------------
         //  Get saved index of selected tab (if not saved, select index 0)
         // ---------------------------------------------------------------------
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         NSInteger selectedTab = [_settingsProfile[manifestDomain][@"SelectedTab"] integerValue] ?: 0;
         
         // -------------------------------------------------------------------------
@@ -2949,6 +2950,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(selectedTab),
                                                                       @"SaveSettingsDone" : @YES }];
+        
+        // ------------------------------------------------------------------------------------
+        //  Load the current settings from the saved settings dict (by using the payload domain)
+        // ------------------------------------------------------------------------------------
+        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:selectedTab]];
+        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
@@ -2975,6 +2982,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
+            }
+            
+            // -----------------------------------------------------------------
+            //  Update all tabs with saved values
+            // -----------------------------------------------------------------
+            if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] ) {
+                [self updateTabBarTitles];
             }
             
             // --------------------------------------------------------------------------
@@ -3081,16 +3095,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSMutableDictionary *manifest = [[_arrayPayloadLibrary objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
         [self setSelectedManifest:[manifest copy]];
         
-        // ------------------------------------------------------------------------------------
-        //  Load the current settings from the saved settings dict (by using the payload domain)
-        // ------------------------------------------------------------------------------------
-        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
-        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
-        
         // -----------------------------------------------------------------------
         //  Get saved index of selected tab (if not saved, select index 0)
         // ------------------------------------------------------------------------
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         NSInteger selectedTab = [_settingsProfile[manifestDomain][@"SelectedTab"] integerValue] ?: 0;
         
         // -------------------------------------------------------------------------
@@ -3110,6 +3118,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(selectedTab),
                                                                       @"SaveSettingsDone" : @YES }];
+        
+        // ------------------------------------------------------------------------------------
+        //  Load the current settings from the saved settings dict (by using the payload domain)
+        // ------------------------------------------------------------------------------------
+        [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:selectedTab]];
+        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ------------------------------------------------------------------------------------
         //  Load the current manifest content dict array from the selected manifest
@@ -3136,6 +3150,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             
             if ( _settingsHeaderHidden ) {
                 [self showSettingsHeader];
+            }
+            
+            // -----------------------------------------------------------------
+            //  Update all tabs with saved values
+            // -----------------------------------------------------------------
+            if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] ) {
+                [self updateTabBarTitles];
             }
             
             // --------------------------------------------------------------------------
@@ -3249,7 +3270,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( 0 <= _tableViewPayloadLibrarySelectedRow && _tableViewPayloadLibrarySelectedRowSegment == selectedSegment ) {
         [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
     }
-
+    
     // --------------------------------------------------------------------------------------------
     //  If the payload library array is empty, show "No Manifests"
     // --------------------------------------------------------------------------------------------
@@ -3647,6 +3668,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab" object:self userInfo:@{ @"TabIndex" : @(newIndex) }];
     
+    
+    // -------------------------------------------------------------------------
+    //  Update new tab with default title
+    // -------------------------------------------------------------------------
+    [self updatePayloadTabTitle:@"" tabIndex:_tabIndexSelected];
+    
     // -------------------------------------------------------------------------
     //  When adding a view the tab bar should become visible
     // -------------------------------------------------------------------------
@@ -3654,6 +3681,32 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self showSettingsTabBar];
     }
 } // addPayloadTab
+
+- (void)updateTabBarTitles {
+    
+    // -----------------------------------------------------------------
+    //  Update all tabs with saved values
+    // -----------------------------------------------------------------
+    
+    NSString *manifestDomain = _selectedManifest[PFCManifestKeyDomain];
+    NSArray *manifestSettings;
+    NSString *payloadTabTitleIndex = _selectedManifest[PFCManifestKeyPayloadTabTitle] ?: @"";
+    if ( [payloadTabTitleIndex length] != 0 ) {
+        manifestSettings = _settingsProfile[manifestDomain][@"Settings"];
+    }
+    
+    [_arrayPayloadTabs enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
+        if ( idx < [manifestSettings count] ) {
+            NSDictionary *settings = manifestSettings[idx][payloadTabTitleIndex] ?: @{};
+            
+            // FIXME - Should specify what key should be used in the dict, now just use "Value" for testing
+            [self updatePayloadTabTitle:settings[@"Value"] ?: @"" tabIndex:idx];
+        } else {
+            [self updatePayloadTabTitle:@"" tabIndex:idx];
+        }
+        
+    }];
+} // updateTabBarTitles
 
 - (NSInteger)updateTabCountForManifestDomain:(NSString *)manifestDomain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -3687,7 +3740,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     return settingsCount;
-}
+} // updateTabCountForManifestDomain
 
 - (void)saveTabIndexSelected:(NSInteger)tabIndexSelected forManifestDomain:(NSString *)manifestDomain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
