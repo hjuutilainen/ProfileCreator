@@ -218,6 +218,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
     [self insertSubview:_viewSettingsStatus inSuperview:_viewSettingsSplitView hidden:YES];
     [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
+    [self insertSubview:_viewPayloadLibraryNoManifests inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     
     // ---------------------------------------------------------------------
     //  Add profile settings view
@@ -1950,6 +1951,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     } else {
         NSLog(@"[ERROR] Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
     }
+    
+    if ( [_arrayPayloadLibrary count] == 0 ) {
+        [self showLibraryNoManifests];
+    } else {
+        [self hideLibraryNoManifests];
+    }
 } // checkboxMenuEnabled
 
 - (void)checkbox:(NSButton *)checkbox {
@@ -2537,11 +2544,27 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)showSearchNoMatches {
     [self setSearchNoMatchesHidden:NO];
     [_viewPayloadLibraryNoMatches setHidden:NO];
+    [_viewPayloadLibraryNoManifests setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:YES];
 } // showSearchNoMatches
 
 - (void)hideSearchNoMatches {
     [self setSearchNoMatchesHidden:YES];
+    [_viewPayloadLibraryNoMatches setHidden:YES];
+    [_viewPayloadLibraryNoManifests setHidden:YES];
+    [_viewPayloadLibraryScrollView setHidden:NO];
+} // hideSearchNoMatches
+
+- (void)showLibraryNoManifests {
+    [self setLibraryNoManifestsHidden:NO];
+    [_viewPayloadLibraryNoManifests setHidden:NO];
+    [_viewPayloadLibraryNoMatches setHidden:YES];
+    [_viewPayloadLibraryScrollView setHidden:YES];
+} // showSearchNoMatches
+
+- (void)hideLibraryNoManifests {
+    [self setLibraryNoManifestsHidden:YES];
+    [_viewPayloadLibraryNoManifests setHidden:YES];
     [_viewPayloadLibraryNoMatches setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:NO];
 } // hideSearchNoMatches
@@ -3215,10 +3238,20 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     
     // --------------------------------------------------------------------------------------------
     //  If the currently selected payload is in the selected segment, restore that selection in the TableView
-    // --------------------------------------------------------------------------------------------x
+    // --------------------------------------------------------------------------------------------
     if ( 0 <= _tableViewPayloadLibrarySelectedRow && _tableViewPayloadLibrarySelectedRowSegment == selectedSegment ) {
         [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
     }
+
+    // --------------------------------------------------------------------------------------------
+    //  If the payload library array is empty, show "No Manifests"
+    // --------------------------------------------------------------------------------------------
+    if ( [_arrayPayloadLibrary count] == 0 ) {
+        [self showLibraryNoManifests];
+    } else {
+        [self hideLibraryNoManifests];
+    }
+    
 } // selectSegmentedControlLibrary
 
 - (IBAction)selectTableViewProfileHeader:(id)sender {

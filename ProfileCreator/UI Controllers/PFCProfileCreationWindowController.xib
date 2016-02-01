@@ -52,6 +52,7 @@
                 <outlet property="viewPayloadFooterSuperview" destination="aiU-07-iM2" id="T1o-ru-904"/>
                 <outlet property="viewPayloadLibraryMenu" destination="DDH-xY-2Kw" id="owz-rJ-aD6"/>
                 <outlet property="viewPayloadLibraryMenuSuperview" destination="w0w-p9-Wd4" id="XHf-iA-aHL"/>
+                <outlet property="viewPayloadLibraryNoManifests" destination="4kG-5i-EVH" id="uqa-xX-LFc"/>
                 <outlet property="viewPayloadLibraryNoMatches" destination="Ecf-Iz-xGo" id="MOh-7x-o1j"/>
                 <outlet property="viewPayloadLibraryScrollView" destination="NWj-Ps-yH3" id="LrD-JO-Dr8"/>
                 <outlet property="viewPayloadLibrarySplitView" destination="dOs-pi-DS9" id="XJG-nG-73W"/>
@@ -2827,6 +2828,25 @@ Gw
                 <constraint firstItem="OxA-xf-cyg" firstAttribute="top" secondItem="A03-7W-IGN" secondAttribute="top" id="wAt-U8-2se"/>
             </constraints>
             <point key="canvasLocation" x="-2525" y="-1106"/>
+        </customView>
+        <customView focusRingType="none" appearanceType="aqua" id="4kG-5i-EVH">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SlP-r8-C0a">
+                    <rect key="frame" x="118" y="94" width="84" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Manifests" id="NaG-Nw-28a">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="SlP-r8-C0a" firstAttribute="centerX" secondItem="4kG-5i-EVH" secondAttribute="centerX" id="aAb-Ie-lY5"/>
+                <constraint firstItem="SlP-r8-C0a" firstAttribute="top" secondItem="4kG-5i-EVH" secondAttribute="top" constant="55" id="uDM-GN-T5r"/>
+            </constraints>
+            <point key="canvasLocation" x="-2112" y="-937"/>
         </customView>
     </objects>
     <resources>

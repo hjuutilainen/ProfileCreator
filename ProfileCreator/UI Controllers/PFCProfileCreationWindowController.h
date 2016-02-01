@@ -132,6 +132,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak)    IBOutlet NSBox *linePayloadLibraryMenuTop;
 @property (weak)    IBOutlet NSBox *linePayloadLibraryMenuBottom;
 @property (weak)    IBOutlet NSView *viewPayloadLibraryNoMatches;
+@property (weak)    IBOutlet NSView *viewPayloadLibraryNoManifests;
 @property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadLibrary;
 @property (weak)    IBOutlet NSSegmentedControl *segmentedControlPayloadLibrary;
 @property (readwrite)        NSMutableArray *arrayPayloadLibrary;
@@ -166,6 +167,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (strong)  IBOutlet NSLayoutConstraint *constraintSearchFieldLeading;
 @property (weak)    IBOutlet NSMenu *menuButtonAdd;
 @property (readwrite)        BOOL searchNoMatchesHidden;
+@property (readwrite)        BOOL libraryNoManifestsHidden;
 @property (readwrite)        BOOL buttonAddHidden;
 @property (readwrite)        BOOL payloadLibrarySplitViewCollapsed;
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
