@@ -808,6 +808,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                                             object:self
                                                           userInfo:@{ @"TabIndex" : @(_tabIndexSelected),
                                                                       @"SaveSettingsDone" : @YES }];
+
+        // -----------------------------------------------------------------
+        //  Hide the tab bar when there's only one payload configured
+        // -----------------------------------------------------------------
+        if ( [_arrayPayloadTabs count] == 1 ) {
+            [self hideSettingsTabBar];
+        }
     }
 } // tabIndexClosed
 
