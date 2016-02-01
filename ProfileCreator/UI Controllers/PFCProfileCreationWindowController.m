@@ -144,7 +144,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // ---------------------------------------------------------------------
         _settingsProfile = [profileDict[@"Config"][PFCProfileTemplateKeySettings] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _settingsManifest = [[NSMutableDictionary alloc] init];
-        _settingsLocal = [[NSMutableDictionary alloc] init];
         _settingsLocalManifest = [[NSMutableDictionary alloc] init];
         
         // ---------------------------------------------------------------------
@@ -504,7 +503,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSError *error = nil;
     
     [_arrayPayloadLibraryUserPreferences removeAllObjects];
-    NSArray *libraryLibraryUserPreferences = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error settingsLocal:_settingsLocal acceptCached:YES];
+    NSArray *libraryLibraryUserPreferences = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
     if ( [libraryLibraryUserPreferences count] != 0 ) {
         for ( NSDictionary *manifest in libraryLibraryUserPreferences ) {
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
@@ -2896,7 +2895,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // ------------------------------------------------------------------------------------
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
-        [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // ---------------------------------------------------------------------
         //  Get saved index of selected tab (if not saved, select index 0)
@@ -3057,7 +3056,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // ------------------------------------------------------------------------------------
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         [self setSettingsManifest:[self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected]];
-        [self setSettingsLocalManifest:[_settingsLocal[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
+        [self setSettingsLocalManifest:[[[PFCManifestLibrary sharedLibrary] cachedLocalSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init]];
         
         // -----------------------------------------------------------------------
         //  Get saved index of selected tab (if not saved, select index 0)

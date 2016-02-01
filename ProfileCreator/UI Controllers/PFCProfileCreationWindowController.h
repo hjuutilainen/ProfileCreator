@@ -207,7 +207,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (readwrite)        NSMutableArray *arraySettings;
 @property (readwrite)        NSMutableDictionary *settingsProfile;
 @property (readwrite)        NSMutableDictionary *settingsManifest;
-@property (readwrite)        NSMutableDictionary *settingsLocal;
 @property (readwrite)        NSMutableDictionary *settingsLocalManifest;
 @property (readwrite)        BOOL settingsHidden;
 @property (readwrite)        BOOL showSettingsLocal;

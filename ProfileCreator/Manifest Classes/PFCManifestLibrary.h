@@ -21,12 +21,13 @@
 @property NSArray *cachedLibraryApple;
 @property NSArray *cachedLibraryUserLibraryPreferencesLocal;
 @property NSArray *cachedLibraryLibraryPreferencesLocal;
+@property NSMutableDictionary *cachedLocalSettings;
 
 // -----------------------------------------------------------------------------
 //  Library Methods
 // -----------------------------------------------------------------------------
 - (NSArray *)libraryApple:(NSError **)error acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError **)error settingsLocal:(NSMutableDictionary *)settingsLocal acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryLibraryPreferencesLocal:(NSError **)error settingsLocal:(NSMutableDictionary *)settingsLocal acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
 
 @end

@@ -30,6 +30,14 @@
     return sharedLibrary;
 } // sharedParser
 
+- (id)init {
+    self = [super init];
+    if ( self ) {
+        _cachedLocalSettings = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+} // init
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Library Methods
@@ -67,7 +75,7 @@
     }
 } // libraryApple
 
-- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError *__autoreleasing *)error settingsLocal:(NSMutableDictionary *)settingsLocal acceptCached:(BOOL)acceptCached {
+- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
     
     if ( acceptCached && _cachedLibraryUserLibraryPreferencesLocal ) {
         return _cachedLibraryUserLibraryPreferencesLocal;
@@ -92,12 +100,12 @@
     if ( ! [userLibraryPreferencesURL checkResourceIsReachableAndReturnError:error] ) {
         return nil;
     } else {
-        _cachedLibraryUserLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:userLibraryPreferencesURL settingsLocal:settingsLocal];
+        _cachedLibraryUserLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:userLibraryPreferencesURL];
         return _cachedLibraryUserLibraryPreferencesLocal;
     }
 } // libraryUserLibraryPreferencesLocal:settingsLocal
 
-- (NSArray *)libraryLibraryPreferencesLocal:(NSError *__autoreleasing *)error settingsLocal:(NSMutableDictionary *)settingsLocal acceptCached:(BOOL)acceptCached {
+- (NSArray *)libraryLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
     
     if ( acceptCached && _cachedLibraryLibraryPreferencesLocal ) {
         return _cachedLibraryLibraryPreferencesLocal;
@@ -122,7 +130,7 @@
     if ( ! [libraryPreferencesURL checkResourceIsReachableAndReturnError:error] ) {
         return nil;
     } else {
-        _cachedLibraryLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:libraryPreferencesURL settingsLocal:settingsLocal];
+        _cachedLibraryLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:libraryPreferencesURL];
         return _cachedLibraryLibraryPreferencesLocal;
     }
 } // libraryLibraryPreferencesLocal:settingsLocal
@@ -133,7 +141,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)manifestsFromPlistsAtURL:(NSURL *)folderURL settingsLocal:(NSMutableDictionary *)settingsLocal {
+- (NSArray *)manifestsFromPlistsAtURL:(NSURL *)folderURL {
     
     // ---------------------------------------------------------------------
     //  Get all contents of user library preferences folder
@@ -155,7 +163,7 @@
         if ( [manifest count] != 0 ) {
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
             [library addObject:manifest];
-            settingsLocal[manifestDomain] = settings;
+            _cachedLocalSettings[manifestDomain] = settings;
         } else {
             DDLogDebug(@"Plist at path: %@ did not create a manifest", [plistURL path]);
         }

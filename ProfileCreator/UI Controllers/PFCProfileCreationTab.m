@@ -30,7 +30,7 @@
 
 @implementation PFCProfileCreationTabView
 
-- (void)commonInit {
+- (void)customInit {
     _color = [NSColor clearColor];
     _colorSelected = [NSColor clearColor];
     _colorDeSelected = [[NSColor blackColor] colorWithAlphaComponent:0.1f];
@@ -44,14 +44,14 @@
 
 - (id)initWithFrame:(CGRect)aRect {
     if ((self = [super initWithFrame:aRect])) {
-        [self commonInit];
+        [self customInit];
     }
     return self;
 } // initWithFrame
 
 - (id)initWithCoder:(NSCoder*)coder {
     if ((self = [super initWithCoder:coder])) {
-        [self commonInit];
+        [self customInit];
     }
     return self;
 } // initWithCoder
