@@ -39,7 +39,7 @@
     // --------------------------------------------------------------
     //  Add Notification Observers
     // --------------------------------------------------------------
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabIndexSelected:) name:@"selectTab" object:nil];
+    [self addObserver:self forKeyPath:@"isSelected" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (id)initWithFrame:(CGRect)aRect {
@@ -57,8 +57,23 @@
 } // initWithCoder
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"selectTab" object:nil];
+    _delegate = nil;
+    [self removeObserver:self forKeyPath:@"isSelected" context:nil];
 } // dealloc
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *)change context:(void *) __unused context {
+    if ( [keyPath isEqualToString:@"isSelected"] ) {
+        if ( _isSelected ) {
+            [_borderBottom setHidden:YES];
+            [self setColor:_colorSelected];
+            [self display];
+        } else {
+            [_borderBottom setHidden:NO];
+            [self setColor:_colorDeSelected];
+            [self display];
+        }
+    }
+} // observeValueForKeyPath:ofObject:change:context
 
 - (void)tabIndexSelected:(NSNotification *)notification {
     NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
@@ -84,9 +99,9 @@
 } // tabIndex
 
 - (void)selectTab {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectTab"
-                                                        object:self
-                                                      userInfo:@{ @"TabIndex" : @([self tabIndex]) }];
+    if ( _delegate ) {
+        [_delegate tabIndexSelected:[self tabIndex] saveSettings:YES sender:self];
+    }
 } // selectTab
 
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -149,9 +164,11 @@
 } // drawRect
 
 - (IBAction)buttonClose:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"closeTab"
-                                                        object:self
-                                                      userInfo:@{ @"TabIndex" : @([self tabIndex]), @"TabView" : self }];
+    if ( _delegate ) {
+        if ( [_delegate tabIndexShouldClose:[self tabIndex] sender:self] ) {
+            [_delegate tabIndexClose:[self tabIndex] sender:self];
+        }
+    }
 } // buttonClose
 
 @end

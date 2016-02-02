@@ -42,7 +42,7 @@
     // -------------------------------------------------------------------------
     //  Error Counter
     // -------------------------------------------------------------------------
-    if ( errorCount != nil && 0 < errorCount ) {
+    if ( errorCount != nil && 0 < [errorCount integerValue] ) {
         NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
         [[cellView errorCount] setAttributedStringValue:errorCountString];
     } else {

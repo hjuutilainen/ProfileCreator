@@ -10,6 +10,15 @@
 @class PFCProfileCreationTabView;
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark PFCProfileCreationInfoDelegate
+////////////////////////////////////////////////////////////////////////////////
+@protocol PFCProfileCreationTabDelegate
+- (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender;
+- (BOOL)tabIndexShouldClose:(NSInteger)tabIndex sender:(id)sender;
+- (void)tabIndexClose:(NSInteger)tabIndex sender:(id)sender;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileCreationTab
 ////////////////////////////////////////////////////////////////////////////////
 @interface PFCProfileCreationTab : NSViewController
@@ -19,6 +28,11 @@
 #pragma mark PFCProfileCreationTabView
 ////////////////////////////////////////////////////////////////////////////////
 @interface PFCProfileCreationTabView : NSView
+
+// ------------------------------------------------------
+//  Delegate
+// ------------------------------------------------------
+@property (nonatomic, weak) id delegate;
 
 @property (weak) IBOutlet NSBox *borderBottom;
 @property (weak) IBOutlet NSTextField *textFieldTitle;
