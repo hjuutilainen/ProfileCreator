@@ -652,10 +652,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Selected tab index: %ld", (long)tabIndex);
     
     // -------------------------------------------------------------------------
     //  If currently selected index is selected again, do nothing
     // -------------------------------------------------------------------------
+    DDLogDebug(@"Current selected tab index: %ld", _tabIndexSelected);
     if ( tabIndex == _tabIndexSelected ) {
         return;
     }
@@ -715,15 +717,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)tabIndexClose:(NSInteger)tabIndex sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-} // tabIndexClose:sender
-
-- (void)tabIndexClosed:(NSNotification *)notification {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
     // -------------------------------------------------------------------------
     //  Get view that sent close notification and remove it form the stack view
     // -------------------------------------------------------------------------
-    PFCProfileCreationTabView *view = [notification userInfo][@"TabView"];
+    if ( ! [sender isKindOfClass:[PFCProfileCreationTabView class]] ) {
+        DDLogError(@"Class %@ not allowed to send -tabIndexClose", [sender class]);
+        return;
+    }
+    
+    PFCProfileCreationTabView *view = sender;
     DDLogVerbose(@"Sender view: %@", view);
     if ( view != nil ) {
         if ( [[_stackViewTabBar views] containsObject:view] ) {
@@ -736,37 +738,31 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     // -------------------------------------------------------------------------
-    //  Get index of the view (in the stack view) that sent close notification
-    // -------------------------------------------------------------------------
-    NSInteger indexClosed = [[notification userInfo][@"TabIndex"] integerValue];
-    DDLogDebug(@"Closed index: %ld", (long)indexClosed);
-    
-    // -------------------------------------------------------------------------
     //  Sanity check the array of views so the selection is valid
     // -------------------------------------------------------------------------
-    if ( [_arrayPayloadTabs count] <= 1 || [_arrayPayloadTabs count] < indexClosed ) {
+    if ( [_arrayPayloadTabs count] <= 1 || [_arrayPayloadTabs count] < tabIndex ) {
         return;
     }
     
     // -------------------------------------------------------------------------
     //  Remove view from the view array
     // -------------------------------------------------------------------------
-    DDLogVerbose(@"Removing index: %ld from _arrayPayloadTabs", (long)indexClosed);
-    [_arrayPayloadTabs removeObjectAtIndex:indexClosed];
+    DDLogVerbose(@"Removing index: %ld from _arrayPayloadTabs", (long)tabIndex);
+    [_arrayPayloadTabs removeObjectAtIndex:tabIndex];
     
     // -------------------------------------------------------------------------
     //  Remove settings from the settings array
     // -------------------------------------------------------------------------
     DDLogVerbose(@"Removing settings dict from manifest settings");
-    [self removeSettingsForManifestWithDomain:_selectedManifest[PFCManifestKeyDomain] manifestTabIndex:indexClosed];
+    [self removeSettingsForManifestWithDomain:_selectedManifest[PFCManifestKeyDomain] manifestTabIndex:tabIndex];
     
     // ----------------------------------------------------------------------------------------------------------------------
     //  If the currently selected tab sent the close notification, calculate and send what tab to select after it has closed
     // ----------------------------------------------------------------------------------------------------------------------
-    if ( _tabIndexSelected == indexClosed ) {
+    if ( tabIndex == _tabIndexSelected ) {
         DDLogVerbose(@"Currently selected tab was closed");
         
-        if ( indexClosed == 0 || [_arrayPayloadTabs count] == 1 ) {
+        if ( tabIndex == 0 || [_arrayPayloadTabs count] == 1 ) {
             
             // -----------------------------------------------------------------
             //  If there is only one tab remaining in the array, select it
@@ -777,25 +773,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             //  Hide the tab bar when there's only one payload configured
             // -----------------------------------------------------------------
             [self hideSettingsTabBar];
-        } else if ( indexClosed == [_arrayPayloadTabs count] ) {
+        } else if ( tabIndex == [_arrayPayloadTabs count] ) {
             
             // --------------------------------------------------------------------
             //  If the closed tab was last in the view, select the "new" last view
             // --------------------------------------------------------------------
-            [self tabIndexSelected:(indexClosed - 1) saveSettings:NO sender:self];
-            
-            [self updateTabBarTitles];
+            [self tabIndexSelected:(tabIndex - 1) saveSettings:NO sender:self];
         } else {
             
             // --------------------------------------------------------------------
             //  If none of the above, send same index as the closed tab to select
             //  The next adjacent one to the closed tab's right
             // --------------------------------------------------------------------
-            [self tabIndexSelected:indexClosed saveSettings:NO sender:self];
-            
-            [self updateTabBarTitles];
+            [self tabIndexSelected:tabIndex saveSettings:NO sender:self];
         }
-    } else if ( indexClosed < _tabIndexSelected ) {
+    } else if ( tabIndex < _tabIndexSelected ) {
         DDLogVerbose(@"Tab to the left of currently selected tab was closed");
         
         // -------------------------------------------------------------------------
@@ -818,13 +810,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // -----------------------------------------------------------------
         if ( [_arrayPayloadTabs count] == 1 ) {
             [self hideSettingsTabBar];
-        } else {
-            [self updateTabBarTitles];
         }
     }
     
+    [self updateTabBarTitles];
     [self updateErrorsForManifest:_selectedManifest];
-} // tabIndexClosed
+} // tabIndexClose:sender
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2756,7 +2747,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (IBAction)buttonAddPayload:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    [self addPayloadTab];
+    [self addTabShouldSaveSettings:YES];
 } // buttonAddPayload
 
 - (IBAction)buttonCancel:(id)sender {
@@ -3646,7 +3637,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)addPayloadTab {
+- (void)addTabShouldSaveSettings:(BOOL)saveSettings {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
@@ -3655,6 +3646,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
     PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
     [newTabView setDelegate:self];
+    [newTabView setIsSelected:YES]; // This is when added
     
     // -------------------------------------------------------------------------
     //  Add the new tab view to the tab view array
@@ -3674,8 +3666,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Post notification to select the newly created view
     // -------------------------------------------------------------------------
-    // Here's the problem
-    [self tabIndexSelected:newIndex saveSettings:YES sender:self];
+    [self tabIndexSelected:newIndex saveSettings:saveSettings sender:self];
     
     // -------------------------------------------------------------------------
     //  Update new tab with default title
@@ -3773,7 +3764,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [self updatePayloadTabErrorCount:@0 tabIndex:idx];
         }
     }];
-
+    
     return combinedErrors;
 } // updateTabBarErrors
 
@@ -3821,7 +3812,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             
         } else if ( stackViewCount < settingsCount ) {
             while ( stackViewCount < settingsCount ) {
-                [self addPayloadTab];
+                [self addTabShouldSaveSettings:NO];
                 stackViewCount = [[_stackViewTabBar views] count];
             }
         }
