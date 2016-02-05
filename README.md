@@ -1,4 +1,6 @@
-#### Important - This application is currently in initial development. Previews, documentation and further information will be available together with the first Alpha release.
+##### Important - This application is currently in initial development.
+**Previews, documentation and further information will be available together with the first Alpha release.**
+___
 
 # ProfileCreator
 OS X Application to create configuration profiles.
@@ -10,6 +12,7 @@ ProfileCreator requires Mac OS X 10.10 or newer.
 
 ProfileCreator makes use of the following open source components:
 
+* [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack)
 * [RFOverlayScrollView](https://github.com/rheinfabrik/RFOverlayScrollView)
 
 # License
