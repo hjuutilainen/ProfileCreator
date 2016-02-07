@@ -29,5 +29,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface CellViewProfile : NSTableCellView
+@property (weak) IBOutlet NSTextField *menuTitle;
+@property (weak) IBOutlet NSTextField *menuDescription;
+@property (weak) IBOutlet NSImageView *menuIcon;
 - (CellViewProfile *)populateCellViewProfile:(CellViewProfile *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewProfileGroup
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@interface CellViewProfileGroup : NSTableCellView
+@property (weak) IBOutlet NSTextField *menuTitle;
+- (CellViewProfileGroup *)populateCellViewProfileGroup:(CellViewProfileGroup *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
 @end

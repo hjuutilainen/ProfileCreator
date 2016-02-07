@@ -10,7 +10,7 @@
 @class PFCProfileCreationTabView;
 
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark PFCProfileCreationInfoDelegate
+#pragma mark PFCProfileCreationTabDelegate
 ////////////////////////////////////////////////////////////////////////////////
 @protocol PFCProfileCreationTabDelegate
 - (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender;

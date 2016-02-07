@@ -20,15 +20,9 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 #import "PFCProfileCreationWindowController.h"
+#import "PFCMainWindowController.h"
 
-typedef NS_ENUM(NSInteger, PFCFolders) {
-    /** ProfileCreator in user application support **/
-    kPFCFolderUserApplicationSupport = 0,
-    /** Profile Save Folder **/
-    kPFCFolderSavedProfiles
-};
-
-@interface PFCController : NSObject <NSApplicationDelegate, NSTableViewDelegate, NSTableViewDataSource>
+@interface PFCController : NSObject <NSApplicationDelegate>
 
 @property (strong) IBOutlet NSWindow *sheetProfileName;
 @property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
@@ -38,6 +32,7 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 
 @property (weak) IBOutlet NSWindow *window;
 
+@property PFCMainWindowController *mainWindowController;
 @property PFCProfileCreationWindowController *profileWindowController;
 
 @property BOOL initialized; // Temporary
@@ -53,11 +48,6 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 @property NSMutableArray *tableViewProfilesItems;
 @property NSMutableDictionary *savedProfiles;
 
-@property (weak) IBOutlet NSSegmentedControl *segmentedControlAddRemove;
-- (IBAction)segmentedControlAddRemove:(id)sender;
-
-+ (NSString *)newProfilePath;
-+ (NSURL *)profileCreatorFolder:(NSInteger)folder;
 - (void)removeControllerForProfileDictWithName:(NSString *)name;
 - (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName;
 

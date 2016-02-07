@@ -24,6 +24,7 @@
 #import "PFCProfileExportWindowController.h"
 #import "PFCManifestLibrary.h"
 #import "PFCLog.h"
+#import "PFCGeneralUtility.h"
 
 @implementation PFCController
 
@@ -37,101 +38,15 @@
     self = [super init];
     if (self != nil) {
         _profileWindows = [[NSMutableDictionary alloc] init];
-        _tableViewProfilesItems = [[NSMutableArray alloc] init];
         _savedProfiles = [[NSMutableDictionary alloc] init];
         _initialized = NO;
     }
     return self;
 } // init
 
-+ (NSURL *)profileCreatorFolder:(NSInteger)folder {
-    switch (folder) {
-        case kPFCFolderUserApplicationSupport:
-        {
-            NSURL *userApplicationSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
-                                                                                   inDomain:NSUserDomainMask
-                                                                          appropriateForURL:nil
-                                                                                     create:NO
-                                                                                      error:nil];
-            
-            return [userApplicationSupport URLByAppendingPathComponent:@"ProfileCreator"];
-        }
-            break;
-            
-        case kPFCFolderSavedProfiles:
-        {
-            return [[self profileCreatorFolder:kPFCFolderUserApplicationSupport] URLByAppendingPathComponent:@"Profiles"];
-        }
-            break;
-            
-        default:
-            return nil;
-            break;
-    }
+- (void)dealloc {
+    
 }
-
-- (NSArray *)savedProfileURLs {
-    NSURL *savedProfilesFolderURL = [PFCController profileCreatorFolder:kPFCFolderSavedProfiles];
-    if ( ! [savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
-        return nil;
-    } else {
-        NSArray *savedProfilesContent = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:savedProfilesFolderURL
-                                                                      includingPropertiesForKeys:@[]
-                                                                                         options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                                           error:nil];
-        
-        return [savedProfilesContent filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension == 'pfcconf'"]];
-    }
-}
-
-- (void)setupViewNoProfiles {
-    [_viewTableViewProfilesSuperview addSubview:_viewNoProfiles positioned:NSWindowAbove relativeTo:nil];
-    [_viewNoProfiles setTranslatesAutoresizingMaskIntoConstraints:NO];
-    NSArray *constraintsArray;
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"|[_viewNoProfiles]|"
-                                                               options:0
-                                                               metrics:nil
-                                                                 views:NSDictionaryOfVariableBindings(_viewNoProfiles)];
-    [_viewTableViewProfilesSuperview addConstraints:constraintsArray];
-    constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_viewNoProfiles]|"
-                                                               options:0
-                                                               metrics:nil
-                                                                 views:NSDictionaryOfVariableBindings(_viewNoProfiles)];
-    [_viewTableViewProfilesSuperview addConstraints:constraintsArray];
-    [_viewTableViewProfilesSuperview setHidden:NO];
-    [_viewNoProfiles setHidden:YES];
-} // setupSettings
-
-- (void)addSavedProfiles {
-    NSArray *savedProfiles = [self savedProfileURLs];
-    if ( [savedProfiles count] == 0 ) {
-        [self showStatusNoProfiles];
-    } else {
-        for ( NSURL *profileURL in savedProfiles ) {
-            
-            NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
-            if ( [profileDict count] == 0 ) {
-                NSLog(@"[ERROR] Couldn't read profile at path: %@", [profileURL path]);
-                continue;
-            }
-            
-            NSString *name = profileDict[PFCProfileTemplateKeyName];
-            if ( [name length] == 0 ) {
-                NSLog(@"[ERROR] Profile doesn't contain a name!");
-                continue;
-            }
-            
-            NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
-                                                @"Config" : profileDict };
-            
-            // FIXME - Add sanity checking to see if this actually is a profile save
-            
-            [_tableViewProfilesItems addObject:savedProfileDict];
-        }
-        
-        [_tableViewProfiles reloadData];
-    }
-} // addSavedProfiles
 
 - (void)controlTextDidChange:(NSNotification *)sender {
     if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
@@ -176,53 +91,44 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)awakeFromNib {
-    if ( ! _initialized ) {
-        // --------------------------------------------------------------
-        //  Register user defaults
-        // --------------------------------------------------------------
-        NSError *error;
-        NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
-        if ( [defaultSettingsPath checkResourceIsReachableAndReturnError:&error] ) {
-            NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
-            if ( [defaultSettingsDict count] != 0 ) {
-                [[NSUserDefaults standardUserDefaults] registerDefaults:defaultSettingsDict];
-            }
-        } else {
-            // Use NSLog as CocoaLumberjack isn't available yet
-            NSLog(@"%@", [error localizedDescription]);
+- (void)applicationWillFinishLaunching:(NSNotification *)notification {
+    
+    // --------------------------------------------------------------
+    //  Register user defaults
+    // --------------------------------------------------------------
+    NSError *error;
+    NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
+    if ( [defaultSettingsPath checkResourceIsReachableAndReturnError:&error] ) {
+        NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
+        if ( [defaultSettingsDict count] != 0 ) {
+            [[NSUserDefaults standardUserDefaults] registerDefaults:defaultSettingsDict];
         }
-        // Initialize libraries
-        [PFCManifestLibrary sharedLibrary];
-        
-        [PFCLog configureLoggingForSession:kPFCSessionTypeGUI];
-        [_window setBackgroundColor:[NSColor whiteColor]];
-        [self setInitialized:YES];
-        [_tableViewProfiles setTarget:self];
-        [_tableViewProfiles setDoubleAction:@selector(openProfileCreationWindow:)];
-        [self setupViewNoProfiles];
-        [self addSavedProfiles];
-        [self setupAdvancedOptions];
-    }
-}
-
-- (void)applicationWillFinishLaunching:(NSNotification *) __unused notification {
-    // Not configured correctly, doesn't get called.
-} // applicationWillFinishLaunching
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark NSTableView DataSource Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    if ( [[tableView identifier] isEqualToString:@"TableViewProfiles"] ) {
-        return (NSInteger)[_tableViewProfilesItems count];
     } else {
-        return 0;
+        // Use NSLog as CocoaLumberjack isn't available yet
+        NSLog(@"%@", [error localizedDescription]);
     }
-} // numberOfRowsInTableView
+    
+    // --------------------------------------------------------------
+    //  Initialize Logging
+    // --------------------------------------------------------------
+    [PFCLog configureLoggingForSession:kPFCSessionTypeGUI];
+    
+    // --------------------------------------------------------------
+    //  Initialize Manifest Libraries
+    // --------------------------------------------------------------
+    [PFCManifestLibrary sharedLibrary];
+    
+    // --------------------------------------------------------------
+    //  Initialize Main Window Controller
+    // --------------------------------------------------------------
+    [self setMainWindowController:[[PFCMainWindowController alloc] init]];
+    
+    // --------------------------------------------------------------
+    //  Show Main Window
+    // --------------------------------------------------------------
+    [[_mainWindowController window] makeKeyAndOrderFront:self];
+    
+} // applicationWillFinishLaunching
 
 - (void)removeControllerForProfileDictWithName:(NSString *)name {
     NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
@@ -321,86 +227,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark NSTableView Delegate Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    NSString *tableViewIdentifier = [tableView identifier];
-    if ( [tableViewIdentifier isEqualToString:@"TableViewProfiles"] ) {
-        
-        // ---------------------------------------------------------------------
-        //  Verify the profile array isn't empty, if so stop here
-        // ---------------------------------------------------------------------
-        if ( [_tableViewProfilesItems count] < row || [_tableViewProfilesItems count] == 0 ) {
-            return nil;
-        }
-        
-        NSDictionary *profileDict = _tableViewProfilesItems[(NSUInteger)row];
-        
-        CellViewProfile *cellView = [tableView makeViewWithIdentifier:@"CellViewProfile" owner:self];
-        [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellViewProfile:cellView profileDict:profileDict row:row];
-    }
-    return nil;
-}
-
-- (NSInteger)insertProfileInTableView:(NSDictionary *)profileDict {
-    NSInteger index = [_tableViewProfiles selectedRow];
-    index++;
-    [_tableViewProfiles beginUpdates];
-    [_tableViewProfiles insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationSlideDown];
-    [_tableViewProfiles scrollRowToVisible:index];
-    [_tableViewProfilesItems insertObject:profileDict atIndex:(NSUInteger)index];
-    [_tableViewProfiles endUpdates];
-    [self hideStatusNoProfiles];
-    return index;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark IBActions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-- (IBAction)segmentedControlAddRemove:(id)sender {
-    switch ( [sender selectedSegment] ) {
-        case 0:
-            [self createProfile];
-            break;
-            
-        case 1:
-            [self removeProfile];
-            break;
-        default:
-            break;
-    }
-}
-
-+ (NSString *)newProfilePath {
-    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
-    NSURL *profileURL = [[PFCController profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
-    return [profileURL path];
-}
-
-- (void)setupLogging {
-    
-}
-
-- (void)createProfile {
-    
-    NSMutableDictionary *profileDict = [@{ PFCRuntimeKeyPath : [PFCController newProfilePath],
-                                           @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName,
-                                                          PFCProfileTemplateKeyUUID : [[NSUUID UUID] UUIDString] }} mutableCopy];
-    
-    PFCProfileCreationWindowController *controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
-    if ( controller ) {
-        profileDict[@"Controller"] = controller;
-        [[controller window] makeKeyAndOrderFront:self];
-    }
-    
-    [self insertProfileInTableView:[profileDict copy]];
-} // buttonCreateProfile
 
 - (void)openProfileCreationWindow:(id)sender {
     NSInteger row = [sender clickedRow];

@@ -21,3 +21,6 @@
 
 @interface PFCViewInfo : NSView
 @end
+
+@interface PFCViewMainGroups : NSView
+@end

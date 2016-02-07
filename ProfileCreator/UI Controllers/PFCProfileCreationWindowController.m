@@ -29,6 +29,7 @@
 #import "PFCError.h"
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
+#import "PFCGeneralUtility.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -197,31 +198,31 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ---------------------------------------------------------------------
     //  Add content views to window
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView hidden:NO];
-    [self insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
-    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
-    [self insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add header views to window
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
-    [self insertSubview:_viewProfileHeader inSuperview:_viewProfileHeaderSplitView hidden:NO];
-    [self insertSubview:[_viewInfoController view] inSuperview:_viewInfoSplitView hidden:YES];
-    [self insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewProfileHeader inSuperview:_viewProfileHeaderSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewInfoController view] inSuperview:_viewInfoSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
     
     // ---------------------------------------------------------------------
     //  Add error views to content views
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
-    [self insertSubview:_viewSettingsStatus inSuperview:_viewSettingsSplitView hidden:YES];
-    [self insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
-    [self insertSubview:_viewPayloadLibraryNoManifests inSuperview:_viewPayloadLibrarySplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewSettingsStatus inSuperview:_viewSettingsSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoManifests inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     
     // ---------------------------------------------------------------------
     //  Add profile settings view
     // ---------------------------------------------------------------------
-    [self insertSubview:_viewProfileSettings inSuperview:_viewSettingsSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewProfileSettings inSuperview:_viewSettingsSplitView hidden:YES];
     
     // ---------------------------------------------------------------------
     //  Register KVO observers
@@ -235,7 +236,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Perform Initial Setup
     // ---------------------------------------------------------------------
     [self initialSetup];
-    
 } // windowDidLoad
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -342,25 +342,25 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self updateProfileHeader];
     
     // ---------------------------------------------------------------------
-    //  Setup TableView Payload Profile
+    //  Setup TableView "Payload Profile"
     // ---------------------------------------------------------------------
     [self selectTableViewPayloadProfile:nil];
     [self setTableViewPayloadProfileSelectedRow:-1];
     [_tableViewPayloadProfile setTableViewDelegate:self];
-    [[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
+    //[[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
     [_tableViewPayloadProfile reloadData];
     
     // ---------------------------------------------------------------------
-    //  Setup TableView Payload Library
+    //  Setup TableView "Payload Library"
     // ---------------------------------------------------------------------
     [self selectTableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
     [_tableViewPayloadLibrary setTableViewDelegate:self];
-    [[_tableViewPayloadLibrary layer] setBorderWidth:0.0f];
+    //[[_tableViewPayloadLibrary layer] setBorderWidth:0.0f];
     [_tableViewPayloadLibrary reloadData];
     
     // ---------------------------------------------------------------------
-    //  Setup TableView Settings
+    //  Setup TableView "Settings"
     // ---------------------------------------------------------------------
     [_tableViewSettings setTableViewDelegate:self];
     
@@ -624,25 +624,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [_popUpButtonPlatformiOSHighest setMenu:[menuiOS copy]];
     }
 } // setupPopUpButtonOsVersion
-
-- (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
-    [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
-                                                                      options:0
-                                                                      metrics:nil
-                                                                        views:NSDictionaryOfVariableBindings(subview)]];
-    
-    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
-                                                                      options:0
-                                                                      metrics:nil
-                                                                        views:NSDictionaryOfVariableBindings(subview)]];
-    [superview setHidden:NO];
-    [subview setHidden:hidden];
-} // insertSubview:inSuperview:hidden
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2312,6 +2293,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // settingsSaved
 
 - (void)saveProfile {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSError *error = nil;
     
@@ -2323,7 +2305,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Create the profile template save folder if it does not exist
     // -------------------------------------------------------------------------
-    NSURL *savedProfilesFolderURL = [PFCController profileCreatorFolder:kPFCFolderSavedProfiles];
+    NSURL *savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
+    DDLogDebug(@"Profiles save folder: %@", [savedProfilesFolderURL path]);
     if ( ! [savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
         if ( ! [[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:&error] ) {
             // FIXME - Should notify the user here that the save folder could not be created
@@ -2337,10 +2320,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ----------------------------------------------------------------------------
     NSString *profilePath = _profileDict[PFCRuntimeKeyPath];
     if ( [profilePath length] == 0 ) {
-        profilePath = [PFCController newProfilePath];
+        profilePath = [PFCGeneralUtility newProfilePath];
     }
     NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
-    
+    DDLogDebug(@"Profile save path: %@", [profileURL path]);
     
     NSMutableDictionary *profileDict = [_profileDict mutableCopy];
     NSMutableDictionary *configurationDict = [_profileDict[@"Config"] mutableCopy];
@@ -2471,7 +2454,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_viewPayloadFooterSearch setHidden:NO];
     [_linePayloadLibraryMenuTop setHidden:NO];
     [_linePayloadLibraryMenuBottom setHidden:NO];
-    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
 } // showPayloadFooter
 
 - (void)hidePayloadFooter {
@@ -2479,7 +2462,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_viewPayloadFooterSearch setHidden:YES];
     [_linePayloadLibraryMenuTop setHidden:YES];
     [_linePayloadLibraryMenuBottom setHidden:YES];
-    [self insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadFooterSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadFooterSuperview hidden:NO];
 } // hidePayloadFooter
 
 - (void)showSettingsLoading {
@@ -3783,7 +3766,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSRange allColumns = NSMakeRange(0, [[_tableViewPayloadProfile tableColumns] count]);
         [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
     } else {
-        DDLogError(@"No menu item with domain: %@ was found", manifestDomain);
+        DDLogDebug(@"No menu item with domain: %@ was found", manifestDomain);
     }
 }
 

@@ -53,7 +53,7 @@ DDLogLevel ddLogLevel;
     }
     
     // FIXME - Force Verbose Logging
-    ddLogLevel = DDLogLevelVerbose;
+    //ddLogLevel = DDLogLevelVerbose;
     
     NSString *logLevelName;
     

@@ -31,13 +31,13 @@
 
 + (id)sharedUtility {
     // FIXME - Unsure if this has to be a singleton, figured it would be used alot and then not keep alloc/deallocing all the time
-    static PFCManifestUtility *sharedTools = nil;
+    static PFCManifestUtility *sharedUtility = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-        sharedTools = [[self alloc] init];
+        sharedUtility = [[self alloc] init];
     });
-    return sharedTools;
+    return sharedUtility;
 } // sharedParser
 
 ////////////////////////////////////////////////////////////////////////////////

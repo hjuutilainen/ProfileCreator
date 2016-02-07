@@ -30,7 +30,7 @@
                 <constraint firstItem="09Z-8g-4hU" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="20" symbolic="YES" id="iND-NR-MgO"/>
                 <constraint firstAttribute="trailing" secondItem="09Z-8g-4hU" secondAttribute="trailing" constant="20" symbolic="YES" id="stz-ni-BXr"/>
             </constraints>
-            <point key="canvasLocation" x="403" y="490"/>
+            <point key="canvasLocation" x="455" y="434"/>
         </customView>
     </objects>
 </document>

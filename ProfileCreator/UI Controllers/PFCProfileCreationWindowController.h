@@ -103,6 +103,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 @property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformiOSHighest;
 @property                 BOOL includePlatformOSX;
 @property                 BOOL includePlatformiOS;
+@property                 BOOL isSupervised;
 @property                 BOOL showAdvancedSettings;
 
 // -------------------------------------------------------------------------

@@ -47,3 +47,29 @@
 } // populateCellViewMenu:menuDict:row
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewProfileGroup
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation CellViewProfileGroup
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewProfileGroup *)populateCellViewProfileGroup:(CellViewProfileGroup *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
+        
+    NSDictionary *profileSettingsDict = profileDict[@"Config"];
+    NSLog(@"profileSettingsDict=%@", profileSettingsDict);
+    // ---------------------------------------------------------------------
+    //  Title
+    // ---------------------------------------------------------------------
+    [[cellView textField] setStringValue:profileSettingsDict[@"Name"] ?: @""];
+    
+    return cellView;
+} // populateCellViewMenu:menuDict:row
+
+@end
