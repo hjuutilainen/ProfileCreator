@@ -14,6 +14,7 @@ ProfileCreator makes use of the following open source components:
 
 * [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack)
 * [RFOverlayScrollView](https://github.com/rheinfabrik/RFOverlayScrollView)
+* [NSView+NSLayoutConstraintFilter](https://github.com/iluuu1994/ITSearchField/blob/8c4350bf7422a4d9d6a1ee4de6dccfd8d41d52e4/Expanding%20Search/Expanding%20Search/NSView%2BNSLayoutConstraintFilter.h)
 
 # License
     Copyright 2016 Erik Berglund. All rights reserved.
