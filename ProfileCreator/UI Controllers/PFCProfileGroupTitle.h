@@ -8,11 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, PFCProfileGroups) {
+    kPFCProfileGroups = 0,
+    kPFCProfileSmartGroups
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileGroupDelegate
 ////////////////////////////////////////////////////////////////////////////////
 @protocol PFCProfileGroupDelegate
-- (void)addGroup;
+- (void)addGroupOfType:(PFCProfileGroups)group;
 @end
 
 
@@ -25,9 +30,12 @@
 //  Delegate
 // ------------------------------------------------------
 @property (nonatomic, weak) id delegate;
+
+@property PFCProfileGroups profileGroup;
+
+@property (weak) IBOutlet NSTextField *textFieldTitle;
 @property (weak) IBOutlet NSButton *buttonAddGroup;
 - (IBAction)buttonAddGroup:(id)sender;
-
-@property                 NSTrackingArea *trackingArea;
+@property NSTrackingArea *trackingArea;
 
 @end

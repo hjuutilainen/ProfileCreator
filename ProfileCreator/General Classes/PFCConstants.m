@@ -156,6 +156,7 @@ NSString *const PFCRuntimeKeyProfileExporter = @"ProfileExporter";
 #pragma mark Other
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCDefaultProfileName = @"Untitled Profile...";
+NSString *const PFCDefaultProfileGroupName = @"Untitled Group";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileTemplateKeys
@@ -164,6 +165,14 @@ NSString *const PFCProfileTemplateKeyName = @"Name";
 NSString *const PFCProfileTemplateKeyPath = @"Path";
 NSString *const PFCProfileTemplateKeySettings = @"Settings";
 NSString *const PFCProfileTemplateKeyUUID = @"UUID";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark ProfileGroupKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCProfileGroupKeyName = @"Name";
+NSString *const PFCProfileGroupKeyPath = @"Path";
+NSString *const PFCProfileGroupKeyProfiles = @"Profiles";
+NSString *const PFCProfileGroupKeyUUID = @"UUID";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark SettingsKeys

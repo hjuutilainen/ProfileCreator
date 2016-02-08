@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "PFCTableViewCellsProfiles.h"
+#import "PFCConstants.h"
 
 @implementation PFCTableViewCellsProfiles
 @end
@@ -41,7 +42,7 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:profileSettingsDict[@"Name"] ?: @""];
+    [[cellView textField] setStringValue:profileSettingsDict[PFCProfileTemplateKeyName] ?: @""];
     
     return cellView;
 } // populateCellViewMenu:menuDict:row
@@ -62,12 +63,12 @@
 
 - (CellViewProfileGroup *)populateCellViewProfileGroup:(CellViewProfileGroup *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
         
-    NSDictionary *profileSettingsDict = profileDict[@"Config"];
-    NSLog(@"profileSettingsDict=%@", profileSettingsDict);
+    NSDictionary *profileGroupDict = profileDict[@"Config"];
+    
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:profileSettingsDict[@"Name"] ?: @""];
+    [[cellView textField] setStringValue:profileGroupDict[PFCProfileGroupKeyName] ?: @""];
     
     return cellView;
 } // populateCellViewMenu:menuDict:row

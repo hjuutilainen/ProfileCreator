@@ -163,6 +163,7 @@ extern NSString *const PFCRuntimeKeyPath;
 #pragma mark Other
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCDefaultProfileName;
+extern NSString *const PFCDefaultProfileGroupName;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileTemplateKeys
@@ -170,6 +171,14 @@ extern NSString *const PFCDefaultProfileName;
 extern NSString *const PFCProfileTemplateKeyName;
 extern NSString *const PFCProfileTemplateKeySettings;
 extern NSString *const PFCProfileTemplateKeyUUID;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark ProfileGroupKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCProfileGroupKeyName;
+extern NSString *const PFCProfileGroupKeyPath;
+extern NSString *const PFCProfileGroupKeyProfiles;
+extern NSString *const PFCProfileGroupKeyUUID;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark SettingsKeys

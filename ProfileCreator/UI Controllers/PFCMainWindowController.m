@@ -14,6 +14,7 @@
 #import "PFCGeneralUtility.h"
 #import "PFCManifestParser.h"
 #import "PFCProfileUtility.h"
+#import "NSView+NSLayoutConstraintFilter.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -21,6 +22,7 @@
 NSString *const PFCTableViewIdentifierProfileLibrary = @"TableViewIdentifierProfileLibrary";
 NSString *const PFCTableViewIdentifierProfileGroups = @"TableViewIdentifierProfileGroups";
 NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierProfileGroupAll";
+int const PFCTableViewGroupsRowHeight = 24;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Implementation
@@ -52,7 +54,21 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
         // ---------------------------------------------------------------------
         PFCProfileGroupTitle *profileGroupTitleViewController = [[PFCProfileGroupTitle alloc] init];
         [(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] setDelegate:self];
+        [(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] setProfileGroup:kPFCProfileGroups];
+        [[(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] textFieldTitle] setStringValue:@"Groups"];
         _viewAddGroupsTitle = (PFCProfileGroupTitleView *)[profileGroupTitleViewController view];
+        
+        PFCProfileGroupTitle *profileSmartGroupTitleViewController = [[PFCProfileGroupTitle alloc] init];
+        [(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] setDelegate:self];
+        [(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] setProfileGroup:kPFCProfileSmartGroups];
+        [[(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] textFieldTitle] setStringValue:@"Smart Groups"];
+        _viewAddSmartGroupsTitle = (PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view];
+        
+        // ---------------------------------------------------------------------
+        //  Initialize BOOLs (for clarity)
+        // ---------------------------------------------------------------------
+        _profilePreviewHidden = YES;
+        _profilePreviewSelectionUnavailableHidden = YES;
     }
     return self;
 } // init
@@ -82,12 +98,14 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewProfileGroupsSuperview inSuperview:_viewProfileGroupsSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewAddGroupsTitle inSuperview:_viewAddGroupsSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewAddSmartGroupsTitle inSuperview:_viewAddSmartGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileLibraryTableViewSuperview inSuperview:_viewProfileLibrarySplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPreviewSuperview inSuperview:_viewPreviewSplitView hidden:YES];
     
     // -------------------------------------------------------------------------
     //  Add error views to content views
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:_viewPreviewNoProfiles inSuperview:_viewPreviewSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewPreviewSelectionUnavailable inSuperview:_viewPreviewSplitView hidden:NO];
     
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -118,6 +136,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Library"
     // -------------------------------------------------------------------------
+    [self setTableViewProfileLibrarySelectedRow:-1];
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
     
@@ -125,6 +144,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     //  Setup TableView "Profile Preview"
     // -------------------------------------------------------------------------
     // FIXME - Add init here
+    [self showProfilePreviewNoSelection];
     
     // -------------------------------------------------------------------------
     //  Select "All Profiles"
@@ -152,8 +172,9 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     // -------------------------------------------------------------------------
     //  Add the only item "All Profiles" to table view.
     // -------------------------------------------------------------------------
-    [_arrayProfileGroupAll addObject:@{ @"Config" : @{ @"Name" : @"All Profiles",
-                                                       @"Profiles" : [profiles copy] ?: @[]}}];
+    [_arrayProfileGroupAll addObject:@{ @"Config" : @{ PFCProfileGroupKeyName : @"All Profiles",
+                                                       PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString],
+                                                       PFCProfileGroupKeyProfiles : [profiles copy] ?: @[]}}];
     [_tableViewProfileGroupAll reloadData];
 } // setupProfileGroupAll
 
@@ -183,7 +204,6 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
             
         }
     }
-    
     return proposedMaximumPosition;
 } // splitView:constrainMaxCoordinate:ofSubviewAt
 
@@ -244,11 +264,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     //  Stop user from empty selections
     //  Empty selection is still needed as there are multiple table views and they need to feel as one
     // ------------------------------------------------------------------------------------------------
-    NSLog(@"selectionIndexesForProposedSelection");
-    NSLog(@"[tableView identifier]=%@", [tableView identifier]);
-    NSLog(@"_selectedTableViewIdentifier=%@", _selectedTableViewIdentifier);
     if ( [[tableView identifier] isEqualToString:_selectedTableViewIdentifier] && [proposedSelectionIndexes count] == 0 ) {
-        NSLog(@"Select Previous");
         return [NSIndexSet indexSetWithIndex:[tableView selectedRow]];
     }
     return proposedSelectionIndexes;
@@ -300,7 +316,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     NSInteger index = [_tableViewProfileLibrary selectedRow];
     index++;
     [_tableViewProfileLibrary beginUpdates];
-    [_tableViewProfileLibrary insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationSlideDown];
+    [_tableViewProfileLibrary insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationEffectNone];
     [_tableViewProfileLibrary scrollRowToVisible:index];
     [_arrayProfileLibrary insertObject:profileDict atIndex:(NSUInteger)index];
     [_tableViewProfileLibrary endUpdates];
@@ -311,7 +327,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     NSInteger index = [_tableViewProfileGroups selectedRow];
     index++;
     [_tableViewProfileGroups beginUpdates];
-    [_tableViewProfileGroups insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationSlideDown];
+    [_tableViewProfileGroups insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationEffectNone];
     [_tableViewProfileGroups scrollRowToVisible:index];
     [_arrayProfileGroups insertObject:profileDict atIndex:(NSUInteger)index];
     [_tableViewProfileGroups endUpdates];
@@ -340,21 +356,59 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark Preview
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict {
+    
+    NSDictionary *profileSettings = profileDict[@"Config"];
+    
+    NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
+    [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark UI Updates
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)showProfilePreviewNoProfiles {
-    [self setProfilePreviewHidden:YES];
-    [_viewPreviewSuperview setHidden:YES];
-    [_viewPreviewNoProfiles setHidden:NO];
-} // showProfilePreviewNoProfiles
-
 - (void)showProfilePreview {
-    [self setProfilePreviewHidden:NO];
-    [_viewPreviewNoProfiles setHidden:YES];
     [_viewPreviewSuperview setHidden:NO];
+    [self setProfilePreviewHidden:NO];
+    
+    [_viewPreviewSelectionUnavailable setHidden:YES];
+    [_textFieldPreviewSelectionUnavailable setStringValue:@""];
+    [self setProfilePreviewSelectionUnavailableHidden:YES];
 } // showProfilePreview
+
+- (void)showProfilePreviewError {
+    [_textFieldPreviewSelectionUnavailable setStringValue:@"Error Reading Selected Profile"];
+    [_viewPreviewSelectionUnavailable setHidden:NO];
+    [self setProfilePreviewSelectionUnavailableHidden:NO];
+    
+    [_viewPreviewSuperview setHidden:YES];
+    [self setProfilePreviewHidden:YES];
+} // showProfilePreviewError
+
+- (void)showProfilePreviewNoSelection {
+    [_textFieldPreviewSelectionUnavailable setStringValue:@"No Profile Selected"];
+    [_viewPreviewSelectionUnavailable setHidden:NO];
+    [self setProfilePreviewSelectionUnavailableHidden:NO];
+    
+    [_viewPreviewSuperview setHidden:YES];
+    [self setProfilePreviewHidden:YES];
+} // showProfilePreviewNoSelection
+
+- (void)showProfilePreviewMultipleSelections:(NSNumber *)count {
+    [_textFieldPreviewSelectionUnavailable setStringValue:[NSString stringWithFormat:@"%@ %@ Selected", [count stringValue], ([count intValue] == 1) ? @"Profile" : @"Profiles"]];
+    [_viewPreviewSelectionUnavailable setHidden:NO];
+    [self setProfilePreviewSelectionUnavailableHidden:NO];
+    
+    [_viewPreviewSuperview setHidden:YES];
+    [self setProfilePreviewHidden:YES];
+} // showProfilePreviewNoSelection
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -380,15 +434,27 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     [self insertProfileInTableView:[profileDict copy]];
 } // createNewProfile
 
-- (void)addGroup {
-    NSNumber *index = @([self insertProfileGroupInTableView:@{ PFCRuntimeKeyPath : [PFCGeneralUtility newProfileGroupPath],
-                                                               @"Config" : @{ @"Name" : @"Untitled Group" }}]);
-    [self selectTableViewProfileGroupsRow:[index integerValue]];
-    [_tableViewProfileGroups selectRowIndexes:[NSIndexSet indexSetWithIndex:[index integerValue]] byExtendingSelection:NO];
-    [[[_tableViewProfileGroups viewAtColumn:1
-                                        row:[index integerValue]
-                            makeIfNecessary:NO] menuTitle] selectText:self];
+- (void)addGroupOfType:(PFCProfileGroups)group {
+    if ( group == kPFCProfileGroups ) {
+        NSNumber *index = @([self insertProfileGroupInTableView:@{ PFCRuntimeKeyPath : [PFCGeneralUtility newProfileGroupPath],
+                                                                   @"Config" : @{ PFCProfileGroupKeyName : PFCDefaultProfileGroupName,
+                                                                                  PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString] }}]);
+        [self selectTableViewProfileGroupsRow:[index integerValue]];
+        [_tableViewProfileGroups selectRowIndexes:[NSIndexSet indexSetWithIndex:[index integerValue]] byExtendingSelection:NO];
+        [[[_tableViewProfileGroups viewAtColumn:1
+                                            row:[index integerValue]
+                                makeIfNecessary:NO] menuTitle] selectText:self];
+        
+        [self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileGroups count] tableView:_scrollViewProfileGroups];
+    } else if ( group == kPFCProfileSmartGroups ) {
+        NSLog(@"Add a SMART GROUP");
+    }
 } // addGroup
+
+- (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
+    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
+    [constraint setConstant:tableHeight];
+} // setTableViewHeight
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -406,6 +472,8 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
 } // segmentedControlProfileLibraryFooterAddRemove
 
 - (IBAction)selectTableViewProfileGroupAll:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     NSInteger selectedRow = [_tableViewProfileGroupAll selectedRow];
     if ( 0 <= selectedRow && selectedRow != _tableViewProfileGroupAllSelectedRow ) {
         [self selectTableViewProfileGroupAllRow:selectedRow];
@@ -415,6 +483,9 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
 } // selectTableViewProfileGroupAll
 
 - (void)selectTableViewProfileGroupAllRow:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSUInteger index = NSNotFound;
     
     // -------------------------------------------------------------------------
     //  Update the selection properties with the current value
@@ -446,7 +517,7 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
         // ---------------------------------------------------------------------
         //  Load the current group profile array from the selected group dict
         // ---------------------------------------------------------------------
-        NSArray *groupProfileUUIDArray = group[@"Config"][@"Profiles"] ?: @[];
+        NSArray *groupProfileUUIDArray = group[@"Config"][PFCProfileGroupKeyProfiles] ?: @[];
         NSArray *groupProfiles = [[PFCProfileUtility sharedUtility] profileDictsFromUUIDs:groupProfileUUIDArray];
         
         // ------------------------------------------------------------------------------------------
@@ -455,9 +526,15 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
         if ( 1 <= [groupProfiles count] ) {
             [_arrayProfileLibrary addObjectsFromArray:groupProfiles];
             
-            
+            if ( [_selectedProfileUUID length] != 0 ) {
+                index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+                    return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
+                }];
+            }
         } else {
-            [self showProfilePreviewNoProfiles];
+            if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
+                [self showProfilePreviewNoSelection];
+            }
         }
     } else {
         DDLogError(@"Profile group all selection is -1, this should not happen");
@@ -465,6 +542,10 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
+    
+    if ( index != NSNotFound ) {
+        [_tableViewProfileLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    }
 } // selectTableViewProfileGroupAllRow
 
 - (IBAction)selectTableViewProfileGroups:(id)sender {
@@ -480,6 +561,8 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
 
 - (void)selectTableViewProfileGroupsRow:(NSInteger)row {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSUInteger index = NSNotFound;
     
     // -------------------------------------------------------------------------
     //  Update the selection properties with the current value
@@ -512,15 +595,24 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
         // ---------------------------------------------------------------------
         //  Load the current group profile array from the selected group dict
         // ---------------------------------------------------------------------
-        NSMutableArray *groupProfileUUIDArray = [group[@"Content"] mutableCopy] ?: [[NSMutableArray alloc] init];
+        NSArray *groupProfileUUIDArray = group[@"Config"][PFCProfileGroupKeyProfiles] ?: @[];
+        NSArray *groupProfiles = [[PFCProfileUtility sharedUtility] profileDictsFromUUIDs:groupProfileUUIDArray];
         
         // ------------------------------------------------------------------------------------------
         //
         // ------------------------------------------------------------------------------------------
-        if ( 1 <= [groupProfileUUIDArray count] ) {
+        if ( 1 <= [groupProfiles count] ) {
+            [_arrayProfileLibrary addObjectsFromArray:groupProfiles];
             
+            if ( [_selectedProfileUUID length] != 0 ) {
+                index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+                    return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
+                }];
+            }
         } else {
-            [self showProfilePreviewNoProfiles];
+            if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
+                [self showProfilePreviewNoSelection];
+            }
         }
     } else {
         DDLogError(@"Profile groups selection is -1, this should not happen");
@@ -528,10 +620,91 @@ NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierPro
     
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
+    
+    if ( index != NSNotFound ) {
+        [_tableViewProfileLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    }
 } // selectTableViewProfileGroupsRow
 
 - (IBAction)selectTableViewProfileLibrary:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
+    NSInteger selectedRow = [_tableViewProfileLibrary selectedRow];
+    
+    if ( selectedRow != _tableViewProfileLibrarySelectedRow ) {
+        
+        // -------------------------------------------------------------------------
+        //  Update the selection properties with the current value
+        // -------------------------------------------------------------------------
+        [self setTableViewProfileLibrarySelectedRow:selectedRow];
+        
+        if ( 0 <= selectedRow ) {
+            [self selectTableViewProfileLibraryRow:selectedRow];
+        } else {
+            if ( _profilePreviewSelectionUnavailableHidden ) {
+                [self showProfilePreviewNoSelection];
+            }
+            
+            // ---------------------------------------------------------------------
+            //  Unset the SelectedProfileUUID
+            // ---------------------------------------------------------------------
+            [self setSelectedProfileUUID:nil];
+        }
+    }
 } // selectTableViewProfileLibrary
+
+- (void)selectTableViewProfileLibraryRow:(NSInteger)row {
+    
+    // ----------------------------------------------------------------------------------------
+    //  If selection is within the table view, update the settings view. Else leave it empty
+    // ----------------------------------------------------------------------------------------
+    if ( 0 <= _tableViewProfileLibrarySelectedRow && _tableViewProfileLibrarySelectedRow <= [_arrayProfileLibrary count] ) {
+        
+        // ---------------------------------------------------------------------
+        //  Load the current profile from the array
+        // ---------------------------------------------------------------------
+        NSDictionary *profileDict = _arrayProfileLibrary[row] ?: @{};
+        
+        // ---------------------------------------------------------------------
+        //  Verify the profile has any content
+        // ---------------------------------------------------------------------
+        if ( [profileDict count] == 0 ) {
+            if ( _profilePreviewSelectionUnavailableHidden ) {
+                [self showProfilePreviewError];
+            }
+            return;
+        }
+        
+        // --------------------------------------------------------------------------
+        //  Store the currently selected uuid in local variable _selectedProfileUUID
+        // --------------------------------------------------------------------------
+        NSString *profileUUID = profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @"";
+        if ( [profileUUID length] == 0 ) {
+            if ( _profilePreviewSelectionUnavailableHidden ) {
+                [self showProfilePreviewError];
+            }
+            return;
+        }
+        [self setSelectedProfileUUID:profileUUID];
+        
+        // ---------------------------------------------------------------------
+        //  Populate the preview view with the selected profile
+        // ---------------------------------------------------------------------
+        [self updatePreviewWithProfileDict:profileDict];
+        
+        // ---------------------------------------------------------------------
+        //  Show selected profile preview (of not already visible)
+        // ---------------------------------------------------------------------
+        if ( _profilePreviewHidden ) {
+            [self showProfilePreview];
+        }
+    } else {
+        
+        // ---------------------------------------------------------------------
+        //  Unset the SelectedProfileUUID
+        // ---------------------------------------------------------------------
+        [self setSelectedProfileUUID:nil];
+    }
+}
 
 @end

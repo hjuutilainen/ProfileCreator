@@ -115,6 +115,7 @@
 		538B392C1C67F60F0076E09E /* PFCProfileUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 538B392B1C67F60F0076E09E /* PFCProfileUtility.m */; };
 		538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 538C31801C5E94E100D0125C /* PFCManifestLibrary.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
+		53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
 		53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D795601C4AF865006B19E9 /* RFOverlayScroller.m */; };
@@ -414,6 +415,8 @@
 		538C31801C5E94E100D0125C /* PFCManifestLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLibrary.m; path = "Manifest Classes/PFCManifestLibrary.m"; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
 		53908EAC1C540FA4009468F0 /* PFCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCError.m; path = "General Classes/PFCError.m"; sourceTree = SOURCE_ROOT; };
+		53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+NSLayoutConstraintFilter.h"; sourceTree = "<group>"; };
+		53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+NSLayoutConstraintFilter.m"; sourceTree = "<group>"; };
 		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.scep.plist"; sourceTree = "<group>"; };
 		53C7339E1C1F396800119C71 /* MenuIconSCEP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconSCEP.png; path = "../Supporting Files/Graphics/MenuIconSCEP.png"; sourceTree = "<group>"; };
 		53D7955F1C4AF865006B19E9 /* RFOverlayScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RFOverlayScroller.h; path = ../RFOverlayScrollView/RFOverlayScrollView/RFOverlayScroller.h; sourceTree = "<group>"; };
@@ -542,6 +545,7 @@
 		536FC5101C15EEDE00B1D7CF = {
 			isa = PBXGroup;
 			children = (
+				53A47E5F1C692FAC000F4035 /* AA */,
 				538B393C1C67F6150076E09E /* Profile Classes */,
 				536FC51B1C15EEDE00B1D7CF /* ProfileCreator */,
 				539FC5CD1C53A2720074CEC9 /* General Classes */,
@@ -760,6 +764,15 @@
 				53232F311C5EB130004630F8 /* PFCButtons.m */,
 			);
 			name = "UI Subclasses";
+			sourceTree = "<group>";
+		};
+		53A47E5F1C692FAC000F4035 /* AA */ = {
+			isa = PBXGroup;
+			children = (
+				53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */,
+				53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */,
+			);
+			name = AA;
 			sourceTree = "<group>";
 		};
 		53D7955E1C4AF849006B19E9 /* Submodules */ = {
@@ -1056,6 +1069,7 @@
 				537612F81C662D8E00CFCE1D /* PFCProfileGroupTitle.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
 				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
+				53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */,
 				536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,

@@ -18,7 +18,7 @@
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ag3-ht-co7">
                     <rect key="frame" x="8" y="2" width="117" height="14"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Groups" id="2UC-Gl-Y9t">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="2UC-Gl-Y9t">
                         <font key="font" metaFont="systemSemibold" size="11"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -49,6 +49,7 @@
             </constraints>
             <connections>
                 <outlet property="buttonAddGroup" destination="AJz-ou-n5I" id="YNt-5e-qK0"/>
+                <outlet property="textFieldTitle" destination="Ag3-ht-co7" id="eop-Un-L1Z"/>
             </connections>
             <point key="canvasLocation" x="-497.5" y="247"/>
         </customView>
