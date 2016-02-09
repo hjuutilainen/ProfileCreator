@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "PFCTableViewCellsSettings.h"
-#import "PFCProfileCreationWindowController.h"
+#import "PFCProfileEditor.h"
 #import "PFCTableViewCellsSettingsTableView.h"
 #import "PFCFileInfoProcessors.h"
 #import "PFCConstants.h"
@@ -307,7 +307,7 @@
     // ---------------------------------------------------------------------
     if ( [manifest[PFCManifestKeyShowDateInterval] boolValue] ) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-        [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+        [[cellView settingDateDescription] setStringValue:[(PFCProfileEditor *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
     
     return cellView;
@@ -412,7 +412,7 @@
     // ---------------------------------------------------------------------
     if ( [manifest[PFCManifestKeyShowDateInterval] boolValue] ) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-        [[cellView settingDateDescription] setStringValue:[(PFCProfileCreationWindowController *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+        [[cellView settingDateDescription] setStringValue:[(PFCProfileEditor *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
     
     return cellView;
@@ -1064,9 +1064,9 @@
 
 - (void)updateTableViewSavedContent {
     if ( _sender && [_senderIdentifier length] != 0 ) {
-        NSMutableDictionary *settings = [[(PFCProfileCreationWindowController *)_sender settingsManifest][_senderIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *settings = [[(PFCProfileEditor *)_sender settingsManifest][_senderIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         settings[PFCSettingsKeyTableViewContent] = [_tableViewContent copy];
-        [(PFCProfileCreationWindowController *)_sender settingsManifest][_senderIdentifier] = [settings mutableCopy];
+        [(PFCProfileEditor *)_sender settingsManifest][_senderIdentifier] = [settings mutableCopy];
     }
 } // updateTableViewSavedContent
 
@@ -1559,7 +1559,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *) __unused change context:(void *) __unused context {
     if ( ( _sender != nil && [_cellIdentifier length] != 0 ) && ( [keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"] )) {
         int seconds = ( ( [_stepperValueRemovalIntervalDays intValue] * 86400 ) + ( [_stepperValueRemovalIntervalHours intValue] * 60 ) );
-        NSMutableDictionary *settingsDict = [[(PFCProfileCreationWindowController *)_sender settingsManifest] mutableCopy];
+        NSMutableDictionary *settingsDict = [[(PFCProfileEditor *)_sender settingsManifest] mutableCopy];
         if ( seconds == 0 ) {
             [settingsDict removeObjectForKey:_cellIdentifier];
         } else {
@@ -1567,7 +1567,7 @@
             cellDict[PFCSettingsKeyValue] = @(seconds);
             settingsDict[_cellIdentifier] = cellDict;
         }
-        [(PFCProfileCreationWindowController *)_sender setSettingsManifest:settingsDict];
+        [(PFCProfileEditor *)_sender setSettingsManifest:settingsDict];
     }
 } // observeValueForKeyPath
 

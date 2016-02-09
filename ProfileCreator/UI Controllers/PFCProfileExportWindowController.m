@@ -84,8 +84,8 @@
 }
 
 - (BOOL)windowShouldClose:(id)sender {
-        if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
-            [_parentObject removeControllerForProfileDictWithName:_profileDict[@"Config"][@"Name"]];
+        if ( [_parentObject respondsToSelector:@selector(closeProfileEditorForProfileWithUUID:)] ) {
+            [_parentObject closeProfileEditorForProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
         }
         return YES;
 }

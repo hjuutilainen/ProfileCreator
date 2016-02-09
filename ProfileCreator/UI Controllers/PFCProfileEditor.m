@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCProfileCreationWindowController.h"
+#import "PFCProfileEditor.h"
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
 #import "PFCConstants.h"
@@ -42,7 +42,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Implementation
 ////////////////////////////////////////////////////////////////////////////////
-@implementation PFCProfileCreationWindowController
+@implementation PFCProfileEditor
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -120,7 +120,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    self = [super initWithWindowNibName:@"PFCProfileCreationWindowController"];
+    self = [super initWithWindowNibName:@"PFCProfileEditor"];
     if (self != nil) {
         
         // ---------------------------------------------------------------------
@@ -253,8 +253,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ------------------------------------------------------------------------------------
     if ( _windowShouldClose ) {
         [self setWindowShouldClose:NO];
-        if ( [_parentObject respondsToSelector:@selector(removeControllerForProfileDictWithName:)] ) {
-            [_parentObject removeControllerForProfileDictWithName:_profileDict[@"Config"][PFCProfileTemplateKeyName]];
+        if ( [_parentObject respondsToSelector:@selector(closeProfileEditorForProfileWithUUID:)] ) {
+            [_parentObject closeProfileEditorForProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
         }
         return YES;
     }

@@ -9,8 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PFCViews.h"
 #import "PFCProfileGroupTitle.h"
+#import "PFCAlert.h"
 
-@interface PFCMainWindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCProfileGroupDelegate>
+@interface PFCMainWindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCProfileGroupDelegate, PFCAlertDelegate>
 
 // -------------------------------------------------------------------------
 //  Unsorted
@@ -83,6 +84,7 @@
 @property (weak) IBOutlet NSTextField *textFieldPreviewProfileName;
 
 
+- (void)closeProfileEditorForProfileWithUUID:(NSString *)profileUUID;
 
 
 

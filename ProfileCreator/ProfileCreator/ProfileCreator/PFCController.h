@@ -19,36 +19,19 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
-#import "PFCProfileCreationWindowController.h"
+#import "PFCProfileEditor.h"
 #import "PFCMainWindowController.h"
 
 @interface PFCController : NSObject <NSApplicationDelegate>
 
-@property (strong) IBOutlet NSWindow *sheetProfileName;
-@property (weak) IBOutlet NSTextField *textFieldSheetProfileName;
-- (IBAction)buttonCancelSheetProfileName:(id)sender;
-@property (weak) IBOutlet NSButton *buttonSaveSheetProfileName;
-- (IBAction)buttonSaveSheetProfileName:(id)sender;
-
-@property (weak) IBOutlet NSWindow *window;
-
 @property PFCMainWindowController *mainWindowController;
-@property PFCProfileCreationWindowController *profileWindowController;
+@property PFCProfileEditor *profileEditor;
 
 @property BOOL initialized; // Temporary
-@property (weak) IBOutlet NSMenu *menuAdvancedOptions;
 
-// Te be used when opening multiple profile windows
-@property NSMutableDictionary *profileWindows;
-
-@property (weak) IBOutlet NSView *viewTableViewProfilesSuperview;
-@property (weak) IBOutlet NSView *viewNoProfiles;
-
-@property (weak) IBOutlet NSTableView *tableViewProfiles;
 @property NSMutableArray *tableViewProfilesItems;
 @property NSMutableDictionary *savedProfiles;
 
-- (void)removeControllerForProfileDictWithName:(NSString *)name;
 - (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName;
 
 @end

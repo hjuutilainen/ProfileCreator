@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileCreationWindowController
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCProfileCreationWindowController : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate, PFCSettingsTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileCreationTabDelegate>
+@interface PFCProfileEditor : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate, PFCSettingsTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileCreationTabDelegate>
 
 // -------------------------------------------------------------------------
 //  Unsorted

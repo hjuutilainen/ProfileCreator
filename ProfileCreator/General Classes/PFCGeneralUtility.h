@@ -17,7 +17,6 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 
 @interface PFCGeneralUtility : NSObject
 
-+ (NSArray *)savedProfileURLs;
 + (NSString *)newProfilePath;
 + (NSString *)newProfileGroupPath;
 + (NSURL *)profileCreatorFolder:(NSInteger)folder;

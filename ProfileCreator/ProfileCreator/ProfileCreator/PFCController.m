@@ -37,7 +37,6 @@
 - (id)init {
     self = [super init];
     if (self != nil) {
-        _profileWindows = [[NSMutableDictionary alloc] init];
         _savedProfiles = [[NSMutableDictionary alloc] init];
         _initialized = NO;
     }
@@ -46,43 +45,6 @@
 
 - (void)dealloc {
     
-}
-
-- (void)controlTextDidChange:(NSNotification *)sender {
-    if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
-        NSDictionary *userInfo = [sender userInfo];
-        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
-        
-        NSInteger selectedRow = [_tableViewProfiles selectedRow];
-        if ( selectedRow < 0 ) {
-            NSLog(@"[ERROR] No row is selected!");
-            return;
-        }
-        
-        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:selectedRow] mutableCopy];
-        if ( [ profileDict count] == 0 ) {
-            NSLog(@"[ERROR] profile at index: %ld is empty!", (long)selectedRow);
-            return;
-        }
-        
-        NSString *profilePath = profileDict[@"Path"];
-        if ( [profilePath length] == 0 ) {
-            NSLog(@"[ERROR] No path to profile!");
-            return;
-        }
-        
-        NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
-        
-        if (
-            [inputText isEqualToString:PFCDefaultProfileName] ||
-            [inputText isEqualToString:profileCurrentName] ||
-            [inputText length] == 0 ) {
-            [_buttonSaveSheetProfileName setEnabled:NO];
-        } else {
-            [_buttonSaveSheetProfileName setEnabled:YES];
-        }
-        return;
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,20 +92,6 @@
     
 } // applicationWillFinishLaunching
 
-- (void)removeControllerForProfileDictWithName:(NSString *)name {
-    NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return [item[@"Config"][PFCProfileTemplateKeyName] isEqualToString:name];
-    }];
-    
-    if ( idx != NSNotFound ) {
-        NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
-        [profileDict removeObjectForKey:@"Controller"];
-        [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
-    } else {
-        NSLog(@"Found no profile named: %@", name);
-    }
-}
-
 - (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName {
     NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
         return [item[@"Config"][@"Name"] isEqualToString:name];
@@ -155,60 +103,12 @@
         configDict[@"Name"] = newName ?: @"";
         profileDict[@"Config"] = [configDict copy];
         [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
-        [_tableViewProfiles reloadData];
     } else {
         NSLog(@"Found no profile named: %@", name);
     }
 }
 
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    
-    NSString *menuItemTitle = [menuItem title];
-    
-    // Verify one (1) profile is selected
-    if (
-        [menuItemTitle isEqualToString:@"Rename"] ||
-        [menuItemTitle isEqualToString:@"Export"]
-        ) {
-        return ( [[_tableViewProfiles selectedRowIndexes] count] == 1 ) ? YES : NO;
-    }
-    
-    return YES;
-}
-
-- (void)setupAdvancedOptions {
-    NSMenuItem *menuItemRename = [[NSMenuItem alloc] initWithTitle:@"Rename" action:@selector(renameProfile) keyEquivalent:@""];
-    [menuItemRename setTarget:self];
-    [_menuAdvancedOptions addItem:menuItemRename];
-    
-    [_menuAdvancedOptions addItem:[NSMenuItem separatorItem]];
-    
-    NSMenuItem *menuItemExport = [[NSMenuItem alloc] initWithTitle:@"Export" action:@selector(exportProfile) keyEquivalent:@""];
-    [menuItemExport setTarget:self];
-    [_menuAdvancedOptions addItem:menuItemExport];
-}
-
-- (void)renameProfile {
-    NSInteger selectedRow = [_tableViewProfiles selectedRow];
-    if ( selectedRow < 0 ) {
-        NSLog(@"[ERROR] No row is selected!");
-        return;
-    }
-    
-    NSDictionary *profileDict = [_tableViewProfilesItems objectAtIndex:selectedRow];
-    if ( [ profileDict count] == 0 ) {
-        NSLog(@"[ERROR] profile at index: %ld is empty!", (long)selectedRow);
-        return;
-    }
-    
-    NSString *profileCurrentName = profileDict[@"Config"][@"Name"];
-    [_buttonSaveSheetProfileName setEnabled:NO];
-    [_textFieldSheetProfileName setStringValue:profileCurrentName];
-    [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
-        
-    }];
-}
-
+/*
 - (void)exportProfile {
     NSInteger idx = [_tableViewProfiles selectedRow];
     
@@ -216,7 +116,7 @@
         NSMutableDictionary *profileDict = [[_tableViewProfilesItems objectAtIndex:idx] mutableCopy];
         PFCProfileExportWindowController *exporter = [[PFCProfileExportWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
         if ( exporter ) {
-            profileDict[@"Controller"] = exporter;
+            profileDict[PFCRuntimeKeyProfileEditor] = exporter;
             [_tableViewProfilesItems replaceObjectAtIndex:idx withObject:[profileDict copy]];
             [[exporter window] makeKeyAndOrderFront:self];
         } else {
@@ -230,36 +130,6 @@
 #pragma mark IBActions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-- (void)openProfileCreationWindow:(id)sender {
-    NSInteger row = [sender clickedRow];
-    if ( 0 <= row && row <= [_tableViewProfilesItems count] ) {
-        NSMutableDictionary *profileDict = [_tableViewProfilesItems[row] mutableCopy];
-        PFCProfileCreationWindowController *controller;
-        if ( profileDict[@"Controller"] != nil ) {
-            controller = profileDict[@"Controller"];
-        } else {
-            controller = [[PFCProfileCreationWindowController alloc] initWithProfileDict:[profileDict copy] sender:self];
-            if ( controller ) {
-                profileDict[@"Controller"] = controller;
-                [_tableViewProfilesItems replaceObjectAtIndex:row withObject:[profileDict copy]];
-            } else {
-                NSLog(@"[ERROR] No Controller!");
-            }
-        }
-        [[controller window] makeKeyAndOrderFront:self];
-    }
-}
-
-- (void)showStatusNoProfiles {
-    //[_viewTableViewProfilesSuperview setHidden:YES];
-    [_viewNoProfiles setHidden:NO];
-}
-
-- (void)hideStatusNoProfiles {
-    [_viewNoProfiles setHidden:YES];
-    //[_viewTableViewProfilesSuperview setHidden:YES];
-}
 
 - (void)removeProfile {
     
@@ -298,7 +168,7 @@
                     [_tableViewProfilesItems removeObjectAtIndex:index];
                     [_tableViewProfiles removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:index] withAnimation:NSTableViewAnimationEffectNone];
                     if ( [_tableViewProfilesItems count] == 0 ) {
-                        [self showStatusNoProfiles];
+
                     }
                 } else {
                     NSLog(@"[ERROR] %@", [error localizedDescription]);
@@ -346,5 +216,5 @@
     [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
     [_sheetProfileName orderOut:self];
 }
-
+*/
 @end
