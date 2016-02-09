@@ -21,7 +21,7 @@
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
 #import "PFCConstants.h"
-#import "PFCController.h"
+#import "PFCAppDelegate.h"
 #import "PFCSplitViews.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileCreationInfoView.h"
@@ -2782,14 +2782,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // FIXME -  This is just for testing, and feels weak to search for Name, and also limits the possibility to have profiles with the same name.
     //          Should use a unique identifier instead of name to identify the profile.
     //          -(void)renameProfileWithIdentifier: or -(void)renameProfileWithDomain
-    if ( [_parentObject respondsToSelector:@selector(renameProfileWithName:newName:)] ) {
+    if ( [_parentObject respondsToSelector:@selector(renameProfileWithUUID:newName:)] ) {
         
         NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
         
         // -----------------------------------------------------------------------------------------
         //  Call -(void)renameProfileWithName:newName to rename profile in the main menu
         // -----------------------------------------------------------------------------------------
-        [_parentObject renameProfileWithName:PFCDefaultProfileName newName:newName];
+        [_parentObject renameProfileWithUUID:@"" newName:newName];
         
         // -----------------------------------------------------------------------------------------
         //  Update the profile dict stored in this window controller with the same name

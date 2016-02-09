@@ -185,8 +185,10 @@ extern NSString *const PFCDefaultProfileGroupName;
 #pragma mark ProfileTemplateKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCProfileTemplateKeyName;
+extern NSString *const PFCProfileTemplateKeyPath;
 extern NSString *const PFCProfileTemplateKeySettings;
 extern NSString *const PFCProfileTemplateKeyUUID;
+extern NSString *const PFCProfileTemplateExtension;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileGroupKeys

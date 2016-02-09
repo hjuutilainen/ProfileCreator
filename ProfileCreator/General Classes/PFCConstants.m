@@ -181,6 +181,7 @@ NSString *const PFCProfileTemplateKeyName = @"Name";
 NSString *const PFCProfileTemplateKeyPath = @"Path";
 NSString *const PFCProfileTemplateKeySettings = @"Settings";
 NSString *const PFCProfileTemplateKeyUUID = @"UUID";
+NSString *const PFCProfileTemplateExtension = @"pfcconf";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileGroupKeys

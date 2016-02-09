@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCController.h"
+#import "PFCAppDelegate.h"
 #import "PFCConstants.h"
 #import "PFCManifestParser.h"
 #import "PFCTableViewCellsProfiles.h"
@@ -26,26 +26,7 @@
 #import "PFCLog.h"
 #import "PFCGeneralUtility.h"
 
-@implementation PFCController
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Init/Dealloc
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (id)init {
-    self = [super init];
-    if (self != nil) {
-        _savedProfiles = [[NSMutableDictionary alloc] init];
-        _initialized = NO;
-    }
-    return self;
-} // init
-
-- (void)dealloc {
-    
-}
+@implementation PFCAppDelegate
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -83,7 +64,7 @@
     // --------------------------------------------------------------
     //  Initialize Main Window Controller
     // --------------------------------------------------------------
-    [self setMainWindowController:[[PFCMainWindowController alloc] init]];
+    [self setMainWindowController:[[PFCMainWindow alloc] init]];
     
     // --------------------------------------------------------------
     //  Show Main Window
@@ -92,6 +73,17 @@
     
 } // applicationWillFinishLaunching
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark To Move/Remove
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+/*
 - (void)renameProfileWithName:(NSString *)name newName:(NSString *)newName {
     NSUInteger idx = [_tableViewProfilesItems indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
         return [item[@"Config"][@"Name"] isEqualToString:name];
@@ -108,7 +100,6 @@
     }
 }
 
-/*
 - (void)exportProfile {
     NSInteger idx = [_tableViewProfiles selectedRow];
     

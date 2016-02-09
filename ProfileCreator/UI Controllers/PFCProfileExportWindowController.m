@@ -19,7 +19,7 @@
 
 #import "PFCProfileExportWindowController.h"
 #import "PFCManifestParser.h"
-#import "PFCController.h"
+#import "PFCAppDelegate.h"
 #import "PFCConstants.h"
 #import "PFCError.h"
 

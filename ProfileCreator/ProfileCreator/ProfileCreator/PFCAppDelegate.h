@@ -1,5 +1,5 @@
 //
-//  PFCProfileExportPayloadViewController.h
+//  PFCController.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,11 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
+#import "PFCProfileEditor.h"
+#import "PFCMainWindow.h"
 
-@interface PFCProfileExportPayloadViewController : NSViewController
+@interface PFCAppDelegate : NSObject <NSApplicationDelegate>
 
-
-
+@property PFCMainWindow *mainWindowController;
 
 @end

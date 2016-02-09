@@ -18,7 +18,8 @@
 // -----------------------------------------------------------------------------
 //  Utility Methods
 // -----------------------------------------------------------------------------
-- (NSArray *)savedProfiles;
-- (NSArray *)profileDictsFromUUIDs:(NSArray *)profileUUIDs;
+- (NSArray *)profiles;
+- (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs;
+- (NSDictionary *)profileWithUUID:(NSString *)profileUUID;
 
 @end
