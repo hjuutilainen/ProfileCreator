@@ -85,7 +85,7 @@
 @property (weak)    IBOutlet NSView                     *viewProfileLibraryFooterSplitView;
 @property (weak)    IBOutlet NSView                     *viewProfileLibraryTableViewSuperview;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileLibrary;
-@property                    NSInteger                  tableViewProfileLibrarySelectedRow;
+@property                    NSIndexSet                 *tableViewProfileLibrarySelectedRows;
 @property                    NSMutableArray             *arrayProfileLibrary;
 
 - (IBAction) selectTableViewProfileLibrary:(id)sender;

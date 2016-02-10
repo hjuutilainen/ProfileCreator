@@ -15,7 +15,8 @@
 
 @property NSMutableArray *arraySavedProfiles;
 @property NSMutableArray *arrayUnsavedProfiles;
-@property NSDate *savedProfilesLastCheck;
+@property NSDate *savedProfilesModificationDate;
+@property NSURL *savedProfilesFolderURL;
 
 @end
 
@@ -38,10 +39,13 @@
 } // sharedUtility
 
 - (id)init {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     self = [super init];
     if ( self ) {
         _arraySavedProfiles = [[NSMutableArray alloc] init];
         _arrayUnsavedProfiles = [[NSMutableArray alloc] init];
+        _savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
     }
     return self;
 } // init
@@ -53,11 +57,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)savedProfileURLs {
-    NSURL *savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
-    if ( ! [savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    if ( ! _savedProfilesFolderURL ) {
+        [self setSavedProfilesFolderURL:[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles]];
+    }
+    
+    if ( ! [_savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil] ) {
         return nil;
     } else {
-        NSArray *savedProfilesContent = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:savedProfilesFolderURL
+        NSArray *savedProfilesContent = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:_savedProfilesFolderURL
                                                                       includingPropertiesForKeys:@[]
                                                                                          options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                                            error:nil];
@@ -73,43 +82,72 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)profiles {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     // FIXME - Handle unsaved profiles as well
     return [self savedProfiles];
 } // profiles
 
 - (NSArray *)savedProfiles {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    // FIXME - This should be cached somehow, by checking mod time of folder etc?
-    if ( [_arraySavedProfiles count] == 0 ) {
-        [_arraySavedProfiles removeAllObjects];
-        
-        // ---------------------------------------------------------------------
-        //  Read all saved profiles from disk
-        // ---------------------------------------------------------------------
-        for ( NSURL *profileURL in [self savedProfileURLs] ?: @[] ) {
-            
-            NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
-            if ( [profileDict count] == 0 ) {
-                DDLogError(@"Couldn't read profile at path: %@", [profileURL path]);
-                continue;
-            }
-            
-            NSString *name = profileDict[PFCProfileTemplateKeyName];
-            if ( [name length] == 0 ) {
-                DDLogError(@"Couldn't read profile name for profile at path: %@", [profileURL path]);
-                continue;
-            }
-            
-            NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
-                                                @"Config" : profileDict };
-            
-            // FIXME - Add sanity checking to see if this actually is a profile save
-            
-            [_arraySavedProfiles addObject:savedProfileDict];
-        }
+    // FIXME -  Don't know if checking modification date of save folder is the best way of determining to return cache for this data.
+    //          Am happy for better ideas.
+    
+    NSError *error = nil;
+    
+    if ( ! _savedProfilesFolderURL ) {
+        [self setSavedProfilesFolderURL:[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles]];
     }
+    
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_savedProfilesFolderURL path] ?: @"" error:&error];
+    if ( [attributes count] != 0 ) {
+        NSDate *modificationDate = (NSDate *)[attributes objectForKey: NSFileModificationDate];
+        DDLogDebug(@"Profile save folder modification date: %@", modificationDate);
+        DDLogDebug(@"Profile save folder cached modification date: %@", _savedProfilesModificationDate);
+        
+        if ( _savedProfilesModificationDate ) {
+            if ( [modificationDate isEqualToDate:_savedProfilesModificationDate] ) {
+                DDLogDebug(@"Profile save folder have not changed, returning cached profile array");
+                
+                return [_arraySavedProfiles copy];
+            } else {
+                DDLogDebug(@"Profile save folder have changed, reloading saved profiles from disk...");
+            }
+        }
+        DDLogDebug(@"Updating profile save folder modification date to: %@", modificationDate);
+        [self setSavedProfilesModificationDate:modificationDate];
+    }
+    
+    [_arraySavedProfiles removeAllObjects];
+    
+    // ---------------------------------------------------------------------
+    //  Read all saved profiles from disk
+    // ---------------------------------------------------------------------
+    for ( NSURL *profileURL in [self savedProfileURLs] ?: @[] ) {
+        
+        NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
+        if ( [profileDict count] == 0 ) {
+            DDLogError(@"Couldn't read profile at path: %@", [profileURL path]);
+            continue;
+        }
+        
+        // FIXME - Add sanity checking to see if this actually is a profile save
+        
+        NSString *name = profileDict[PFCProfileTemplateKeyName];
+        if ( [name length] == 0 ) {
+            DDLogError(@"Couldn't read profile name for profile at path: %@", [profileURL path]);
+            continue;
+        }
+        
+        NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
+                                            @"Config" : profileDict };
+
+        [_arraySavedProfiles addObject:savedProfileDict];
+    }
+    
     return [_arraySavedProfiles copy];
-} // profiles
+} // savedProfiles
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -118,6 +156,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     if ( [profileUUIDs ?: @[] count] == 0 ) {
         return @[];
     }
@@ -133,6 +173,8 @@
 } // profilesWithUUIDs
 
 - (NSDictionary *)profileWithUUID:(NSString *)profileUUID {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     if ( [profileUUID length] != 0 ) {
         NSArray *profiles = [self profiles];
         NSUInteger index = [profiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {

@@ -37,7 +37,7 @@
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="ZQo-mr-iCl">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="800" height="600"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" focusRingType="none" id="hM9-4C-HuU">
                 <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -159,21 +159,20 @@
                     <constraint firstItem="2yG-le-9IZ" firstAttribute="leading" secondItem="hM9-4C-HuU" secondAttribute="leading" id="ixr-av-wVD"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-592" y="481"/>
+            <point key="canvasLocation" x="-727" y="318"/>
         </window>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
             <subviews>
-                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="44" horizontalPageScroll="10" verticalLineScroll="44" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
+                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="42" horizontalPageScroll="10" verticalLineScroll="42" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Jbc-6O-SzG">
                         <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="42" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU">
+                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="42" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU">
                                 <rect key="frame" x="0.0" y="0.0" width="187" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
@@ -191,7 +190,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="CellViewProfile" id="H6P-Et-eRM" userLabel="CellViewMenu" customClass="CellViewProfile">
-                                                <rect key="frame" x="1" y="1" width="184" height="42"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="184" height="42"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tcg-6w-Rh9">
@@ -266,7 +265,7 @@
                 <constraint firstAttribute="trailing" secondItem="kgS-ch-DaF" secondAttribute="trailing" id="piz-E8-BwS"/>
                 <constraint firstItem="kgS-ch-DaF" firstAttribute="leading" secondItem="azA-lO-Z5V" secondAttribute="leading" id="tw7-Sd-3cb"/>
             </constraints>
-            <point key="canvasLocation" x="341.5" y="120.5"/>
+            <point key="canvasLocation" x="-1007.5" y="369.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf" customClass="PFCViewMainGroups">
             <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>

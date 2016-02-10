@@ -154,7 +154,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Library"
     // -------------------------------------------------------------------------
-    [self setTableViewProfileLibrarySelectedRow:-1];
+    [self setTableViewProfileLibrarySelectedRows:nil];
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
     
@@ -386,6 +386,8 @@ int const PFCTableViewGroupsRowHeight = 24;
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)showProfilePreview {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [_viewPreviewSuperview setHidden:NO];
     [self setProfilePreviewHidden:NO];
     
@@ -395,6 +397,8 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // showProfilePreview
 
 - (void)showProfilePreviewError {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [_textFieldPreviewSelectionUnavailable setStringValue:@"Error Reading Selected Profile"];
     [_viewPreviewSelectionUnavailable setHidden:NO];
     [self setProfilePreviewSelectionUnavailableHidden:NO];
@@ -404,6 +408,8 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // showProfilePreviewError
 
 - (void)showProfilePreviewNoSelection {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [_textFieldPreviewSelectionUnavailable setStringValue:@"No Profile Selected"];
     [_viewPreviewSelectionUnavailable setHidden:NO];
     [self setProfilePreviewSelectionUnavailableHidden:NO];
@@ -413,6 +419,8 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // showProfilePreviewNoSelection
 
 - (void)showProfilePreviewMultipleSelections:(NSNumber *)count {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     [_textFieldPreviewSelectionUnavailable setStringValue:[NSString stringWithFormat:@"%@ %@ Selected", [count stringValue], ([count intValue] == 1) ? @"Profile" : @"Profiles"]];
     [_viewPreviewSelectionUnavailable setHidden:NO];
     [self setProfilePreviewSelectionUnavailableHidden:NO];
@@ -643,7 +651,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)selectTableViewProfileGroupAllRow:(NSInteger)row {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    NSUInteger index = NSNotFound;
+    NSIndexSet *rowIndexes = [NSIndexSet indexSet];
     
     // -------------------------------------------------------------------------
     //  Update the selection properties with the current value
@@ -664,12 +672,13 @@ int const PFCTableViewGroupsRowHeight = 24;
         //  Update the SelectedTableViewIdentifier with the current TableView identifier
         // ------------------------------------------------------------------------------------
         [self setSelectedTableViewIdentifier:[_tableViewProfileGroupAll identifier]];
-        DDLogDebug(@"Setting selected profile table view identifier: %@", _selectedTableViewIdentifier);
+        DDLogDebug(@"Updating selected profile table view identifier: %@", _selectedTableViewIdentifier);
 
         // ---------------------------------------------------------------------
         //  Load the current group dict from the array
         // ---------------------------------------------------------------------
         NSMutableDictionary *group = [_arrayProfileGroupAll[_tableViewProfileGroupAllSelectedRow] mutableCopy];
+        DDLogDebug(@"Updating selected group: %@", group[@"Config"][PFCProfileGroupKeyName] ?: @"");
         [self setSelectedGroup:[group copy]];
         
         // ---------------------------------------------------------------------
@@ -683,9 +692,15 @@ int const PFCTableViewGroupsRowHeight = 24;
         if ( 1 <= [profiles count] ) {
             [_arrayProfileLibrary addObjectsFromArray:profiles];
             if ( [_selectedProfileUUID length] != 0 ) {
-                index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSUInteger index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
                     return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
                 }];
+                
+                if ( index != NSNotFound ) {
+                    rowIndexes = [NSIndexSet indexSetWithIndex:index];
+                }
+            } else if ( 1 < [_tableViewProfileLibrarySelectedRows count] ) {
+                rowIndexes = _tableViewProfileLibrarySelectedRows;
             }
         } else {
             if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
@@ -699,8 +714,8 @@ int const PFCTableViewGroupsRowHeight = 24;
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
     
-    if ( index != NSNotFound ) {
-        [_tableViewProfileLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    if ( [rowIndexes count] ) {
+        [_tableViewProfileLibrary selectRowIndexes:rowIndexes byExtendingSelection:NO];
     }
 } // selectTableViewProfileGroupAllRow
 
@@ -718,7 +733,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)selectTableViewProfileGroupsRow:(NSInteger)row {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    NSUInteger index = NSNotFound;
+    NSIndexSet *rowIndexes = [NSIndexSet indexSet];
     
     // -------------------------------------------------------------------------
     //  Update the selection properties with the current value
@@ -760,9 +775,15 @@ int const PFCTableViewGroupsRowHeight = 24;
             [_arrayProfileLibrary addObjectsFromArray:groupProfileUUIDArray];
             
             if ( [_selectedProfileUUID length] != 0 ) {
-                index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSUInteger index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
                     return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
                 }];
+            
+                if ( index != NSNotFound ) {
+                    rowIndexes = [NSIndexSet indexSetWithIndex:index];
+                }
+            } else if ( 1 < [_tableViewProfileLibrarySelectedRows count] ) {
+                rowIndexes = _tableViewProfileLibrarySelectedRows;
             }
         } else {
             if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
@@ -776,8 +797,8 @@ int const PFCTableViewGroupsRowHeight = 24;
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
     
-    if ( index != NSNotFound ) {
-        [_tableViewProfileLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    if ( [rowIndexes count] ) {
+        [_tableViewProfileLibrary selectRowIndexes:rowIndexes byExtendingSelection:NO];
     }
 } // selectTableViewProfileGroupsRow
 
@@ -799,25 +820,58 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (IBAction) selectTableViewProfileLibrary:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    NSInteger selectedRow = [_tableViewProfileLibrary selectedRow];
+    NSIndexSet *selectedRowIndexes = [_tableViewProfileLibrary selectedRowIndexes];
+    DDLogDebug(@"Table view profile library selected rows: %@", selectedRowIndexes);
     
-    if ( selectedRow != _tableViewProfileLibrarySelectedRow ) {
+    if ( 1 < [selectedRowIndexes count] ) {
         
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Update the selection properties with the current value
-        // -------------------------------------------------------------------------
-        [self setTableViewProfileLibrarySelectedRow:selectedRow];
+        // ---------------------------------------------------------------------
+        DDLogDebug(@"Updating table view profile library selected row");
+        [self setTableViewProfileLibrarySelectedRows:selectedRowIndexes];
         
-        if ( 0 <= selectedRow ) {
+        // ---------------------------------------------------------------------
+        //  Hide profile preview and show count of selected profiles
+        // ---------------------------------------------------------------------
+        [self showProfilePreviewMultipleSelections:@([selectedRowIndexes count])];
+        
+        // ---------------------------------------------------------------------
+        //  Unset the SelectedProfileUUID
+        // ---------------------------------------------------------------------
+        [self setSelectedProfileUUID:nil];
+        
+    } else if ( selectedRowIndexes != _tableViewProfileLibrarySelectedRows ) {
+        
+        // ---------------------------------------------------------------------
+        //  Update the selection properties with the current value
+        // ---------------------------------------------------------------------
+        DDLogDebug(@"Updating table view profile library selected row");
+        [self setTableViewProfileLibrarySelectedRows:selectedRowIndexes];
+        
+        // ---------------------------------------------------------------------
+        //  Get selected row as NSInteger
+        // ---------------------------------------------------------------------
+        NSInteger selectedRow = [selectedRowIndexes firstIndex];
+        DDLogDebug(@"Table view profile library selected row: %ld", (long)selectedRow);
+        
+        if ( selectedRow != NSNotFound ) {
+            
+            // -----------------------------------------------------------------
+            //  Call method to change profile selection (and preview)
+            // -----------------------------------------------------------------
             [self selectTableViewProfileLibraryRow:selectedRow];
         } else {
-            if ( _profilePreviewSelectionUnavailableHidden ) {
-                [self showProfilePreviewNoSelection];
-            }
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
+            //  Hide profile preview and show no selection
+            // -----------------------------------------------------------------
+            [self showProfilePreviewNoSelection];
+            
+            // -----------------------------------------------------------------
             //  Unset the SelectedProfileUUID
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
+            DDLogDebug(@"Removing selected profile uuid");
             [self setSelectedProfileUUID:nil];
         }
     }
@@ -828,7 +882,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     // ----------------------------------------------------------------------------------------
     //  If selection is within the table view, update the settings view. Else leave it empty
     // ----------------------------------------------------------------------------------------
-    if ( 0 <= _tableViewProfileLibrarySelectedRow && _tableViewProfileLibrarySelectedRow <= [_arrayProfileLibrary count] ) {
+    if ( [_tableViewProfileLibrarySelectedRows firstIndex] != NSNotFound && [_tableViewProfileLibrarySelectedRows firstIndex] <= [_arrayProfileLibrary count] ) {
         
         // ---------------------------------------------------------------------
         //  Load the current profile from the array
