@@ -61,6 +61,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         _arrayProfileGroupAll = [[NSMutableArray alloc] init];
         _arrayProfileGroups = [[NSMutableArray alloc] init];
         _arrayProfileSmartGroups = [[NSMutableArray alloc] init];
+        _arrayStackViewPreview = [[NSMutableArray alloc] init];
         
         // ---------------------------------------------------------------------
         //  Initialize Classes
@@ -154,7 +155,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Library"
     // -------------------------------------------------------------------------
-    [self setTableViewProfileLibrarySelectedRows:nil];
+    [self setTableViewProfileLibrarySelectedRows:[NSIndexSet indexSet]];
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
     
@@ -373,10 +374,21 @@ int const PFCTableViewGroupsRowHeight = 24;
 
 - (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict {
     
+    [_arrayStackViewPreview removeAllObjects];
+    
+    for ( NSView *view in [_stackViewPreview views] ) {
+        [view removeFromSuperview];
+    }
+    
+    
+    
     NSDictionary *profileSettings = profileDict[@"Config"];
+    NSLog(@"profileDict=%@", profileDict);
     
     NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
     [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
+    
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////

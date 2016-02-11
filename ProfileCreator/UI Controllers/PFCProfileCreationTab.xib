@@ -81,7 +81,7 @@
                 <outlet property="textFieldErrorCount" destination="8rn-Z7-F1k" id="NeW-q7-N3r"/>
                 <outlet property="textFieldTitle" destination="wam-2X-Or6" id="GKj-FV-KMY"/>
             </connections>
-            <point key="canvasLocation" x="-2651" y="-335"/>
+            <point key="canvasLocation" x="-2575" y="-314"/>
         </customView>
     </objects>
     <resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Name</key>
+	<string>Name</string>
+	<key>Settings</key>
+	<dict>
+		<key>com.apple.general</key>
+		<dict>
+			<key>Settings</key>
+			<array>
+				<dict>
+					<key>UUID</key>
+					<string>UUID</string>
+					<key>CD1A01D6-908D-49CD-BAD6-181B45CC6738</key>
+					<dict>
+						<key>Value</key>
+						<string>Erik</string>
+					</dict>
+				</dict>
+			</array>
+			<key>PayloadLibrary</key>
+			<integer>1</integer>
+			<key>UUID</key>
+			<string>UUID</string>
+			<key>Selected</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>UUID</key>
+	<string>UUID</string>
+</dict>
+</plist>

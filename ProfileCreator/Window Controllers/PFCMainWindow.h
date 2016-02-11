@@ -109,6 +109,11 @@
 - (IBAction) buttonProfileExport:(id)sender;
 - (IBAction) segmentedControlProfileLibraryFooterAddRemove:(id)sender;
 
+@property (weak) IBOutlet NSTextField *textFieldPlatform;
+@property (weak) IBOutlet NSTextField *textFieldSupervised;
+@property (weak) IBOutlet NSStackView *stackViewPreview;
+@property NSMutableArray *arrayStackViewPreview;
+
 // -----------------------------------------------------------------------------
 //  Instance Methods
 // -----------------------------------------------------------------------------
