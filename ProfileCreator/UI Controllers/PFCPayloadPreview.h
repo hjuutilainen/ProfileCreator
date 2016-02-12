@@ -10,6 +10,16 @@
 
 @interface PFCPayloadPreview : NSViewController
 
+@property BOOL isCollapsed;
+
+@property NSString *payloadDomain;
+@property NSString *payloadDescription;
+
+@property NSMutableArray *arrayPayloadInfo;
+
+@property (weak) IBOutlet NSTableView *tableViewPayloadInfo;
+@property (strong) IBOutlet NSLayoutConstraint *layoutConstraintDescriptionBottom;
+
 @property (weak) IBOutlet NSTextField *textFieldPayloadName;
 @property (weak) IBOutlet NSButton *buttonDisclosureTriangle;
 - (IBAction)buttonDisclosureTriangle:(id)sender;

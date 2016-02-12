@@ -28,13 +28,15 @@
 #import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCTableViews.h"
 #import "PFCProfileGroupTitle.h"
+#import "PFCPayloadPreview.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCTableViewIdentifierProfileLibrary = @"TableViewIdentifierProfileLibrary";
-NSString *const PFCTableViewIdentifierProfileGroups = @"TableViewIdentifierProfileGroups";
 NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierProfileGroupAll";
+NSString *const PFCTableViewIdentifierProfileGroups = @"TableViewIdentifierProfileGroups";
+NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifierProfileSmartGroups";
 int const PFCTableViewGroupsRowHeight = 24;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,21 +376,36 @@ int const PFCTableViewGroupsRowHeight = 24;
 
 - (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict {
     
+    // ---------------------------------------------------------------------
+    //  Clean up previews preview content
+    // ---------------------------------------------------------------------
     [_arrayStackViewPreview removeAllObjects];
-    
     for ( NSView *view in [_stackViewPreview views] ) {
         [view removeFromSuperview];
     }
     
-    
-    
+    // ---------------------------------------------------------------------
+    //  Clean up previews preview content
+    // ---------------------------------------------------------------------
     NSDictionary *profileSettings = profileDict[@"Config"];
-    NSLog(@"profileDict=%@", profileDict);
     
     NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
     [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
     
-    
+    for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
+        
+        NSDictionary *domainSettings = profileSettings[@"Settings"][domain];
+        if ( ! [domain isEqualToString:@"com.apple.general"] && ! [domainSettings[@"Selected"] boolValue] ) {
+            continue;
+        }
+        
+        PFCPayloadPreview *preview = [[PFCPayloadPreview alloc] init];
+        [preview setPayloadDomain:domain];
+        [preview setPayloadDescription:@"Description"];
+        
+        [_arrayStackViewPreview addObject:preview];
+        [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -634,6 +651,52 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
 }
 
+- (void)updateProfileWithUUID:(NSString *)uuid {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Profile UUID: %@", uuid);
+
+    DDLogDebug(@"Selected table view identifier: %@", _selectedTableViewIdentifier);
+    if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroupAll] ) {
+        NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+            return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
+        }];
+        
+        if ( selectedIndex != NSNotFound ) {
+            NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
+            if ( [profileDict count] != 0 ) {
+                [_arrayProfileLibrary replaceObjectAtIndex:selectedIndex withObject:profileDict];
+            }
+            
+            NSRange allColumns = NSMakeRange(0, [[_tableViewProfileLibrary tableColumns] count]);
+            [_tableViewProfileLibrary reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:selectedIndex] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+        }
+    } else if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroups] ) {
+        if ( [_arrayProfileGroups containsObject:uuid] ) {
+            NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSString * _Nonnull string, NSUInteger idx, BOOL * _Nonnull stop) {
+                return [string isEqualToString:uuid];
+            }];
+            
+            if ( selectedIndex != NSNotFound ) {
+                NSRange allColumns = NSMakeRange(0, [[_tableViewProfileLibrary tableColumns] count]);
+                [_tableViewProfileLibrary reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:selectedIndex] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+            }
+        }
+    } else if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileSmartGroups] ) {
+        // FIXME - This isn't implemented yet
+    } else {
+        DDLogError(@"Unknown table view identifier: %@", _selectedTableViewIdentifier);
+    }
+    
+    
+    DDLogDebug(@"Selected profile UUID: %@", _selectedProfileUUID);
+    if ( [_selectedProfileUUID isEqualToString:uuid] ) {
+        NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
+        if ( [profileDict count] != 0 ) {
+            [self updatePreviewWithProfileDict:profileDict];
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark IBActions
@@ -798,7 +861,7 @@ int const PFCTableViewGroupsRowHeight = 24;
                 rowIndexes = _tableViewProfileLibrarySelectedRows;
             }
         } else {
-            if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
+            if ( [_selectedProfileUUID length] == 0 ) {
                 [self showProfilePreviewNoSelection];
             }
         }

@@ -119,5 +119,6 @@
 // -----------------------------------------------------------------------------
 - (void)closeProfileEditorForProfileWithUUID:(NSString *)profileUUID;
 - (void)renameProfileWithUUID:(NSString *)profileUUID newName:(NSString *)newName;
+- (void)updateProfileWithUUID:(NSString *)uuid;
 
 @end

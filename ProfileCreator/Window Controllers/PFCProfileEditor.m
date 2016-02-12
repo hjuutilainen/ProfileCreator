@@ -2334,13 +2334,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     configurationDict[PFCProfileTemplateKeyName] = _profileName ?: @"";
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
     
-    // ---------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Write the profile template to disk and update
-    // ---------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if ( [configurationDict writeToURL:profileURL atomically:YES] ) {
         profileDict[@"Config"] = [configurationDict copy];
         [self setProfileDict:[profileDict copy]];
-        // FIXME - Should update the profile dict stored in PFCController with a delegate call
+        DDLogDebug(@"_profileDict=%@", _profileDict);
+        // ---------------------------------------------------------------------
+        //  Update main window with new settings for the saved profile
+        // ---------------------------------------------------------------------
+        [_parentObject updateProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""];
     } else {
         // FIXME - Should notify the user that the save failed!
         NSLog(@"[ERROR] Saving profile template failed!");
@@ -3710,12 +3714,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         manifestSettings = _settingsProfile[manifestDomain][@"Settings"];
     }
     __block NSInteger combinedErrors = 0;
-    
-    DDLogDebug(@"Enumerating all tabs (%lu) for manifest domain: %@ and updating errors", (unsigned long)[_arrayPayloadTabs count], manifestDomain);
-    [_arrayPayloadTabs enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
+
+    DDLogDebug(@"Enumerating all manifest settings (%lu) for manifest domain: %@ and updating errors", (unsigned long)[manifestSettings count], manifestDomain);
+    [manifestSettings enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
         
         DDLogDebug(@"Tab index: %lu", (unsigned long)idx);
-        if ( idx <= [manifestSettings count] ) {
+        if ( idx < [manifestSettings count] ) {
             
             NSDictionary *settings;
             if ( [manifest isEqualToDictionary:_selectedManifest] && idx == _tabIndexSelected ) {
@@ -3734,10 +3738,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             combinedErrors += [errorCount integerValue];
             DDLogDebug(@"Manifest errors: %ld", (long)combinedErrors);
             
-            if ( updateTabBar ) {
+            if ( updateTabBar && idx < [_arrayPayloadTabs count] ) {
                 [self updatePayloadTabErrorCount:errorCount tabIndex:idx];
             }
-        } else if ( updateTabBar ) {
+        } else if ( updateTabBar && idx < [_arrayPayloadTabs count] ) {
             [self updatePayloadTabErrorCount:@0 tabIndex:idx];
         }
     }];
