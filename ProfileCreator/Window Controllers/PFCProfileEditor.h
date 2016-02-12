@@ -26,12 +26,6 @@
 @class PFCPayloadLibraryTableView;
 @class PFCSettingsTableView;
 
-typedef NS_ENUM(NSInteger, PFCPayloadLibraries) {
-    kPFCPayloadLibraryApple = 0,
-    kPFCPayloadLibraryUserPreferences,
-    kPFCPayloadLibraryCustom
-};
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Protocol: PFCPayloadLibraryTableViewDelegate
 ////////////////////////////////////////////////////////////////////////////////

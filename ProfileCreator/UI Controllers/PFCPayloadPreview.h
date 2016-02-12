@@ -14,8 +14,10 @@
 
 @property NSString *payloadDomain;
 @property NSString *payloadDescription;
+@property NSImage *payloadIcon;
 
 @property NSMutableArray *arrayPayloadInfo;
+@property (weak) IBOutlet NSImageView *imageViewPayload;
 
 @property (weak) IBOutlet NSTableView *tableViewPayloadInfo;
 @property (strong) IBOutlet NSLayoutConstraint *layoutConstraintDescriptionBottom;

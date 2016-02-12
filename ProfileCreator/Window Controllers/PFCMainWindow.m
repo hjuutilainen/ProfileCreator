@@ -29,6 +29,8 @@
 #import "PFCTableViews.h"
 #import "PFCProfileGroupTitle.h"
 #import "PFCPayloadPreview.h"
+#import "PFCManifestLibrary.h"
+#import "PFCManifestUtility.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -393,19 +395,44 @@ int const PFCTableViewGroupsRowHeight = 24;
     [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
     
     for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
+        DDLogDebug(@"Payload domain: %@", domain);
         
         NSDictionary *domainSettings = profileSettings[@"Settings"][domain];
         if ( ! [domain isEqualToString:@"com.apple.general"] && ! [domainSettings[@"Selected"] boolValue] ) {
             continue;
         }
         
-        PFCPayloadPreview *preview = [[PFCPayloadPreview alloc] init];
-        [preview setPayloadDomain:domain];
-        [preview setPayloadDescription:@"Description"];
-        
-        [_arrayStackViewPreview addObject:preview];
-        [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
+        if ( [domain isEqualToString:@"com.apple.general"] || domainSettings[@"PayloadLibrary"] != nil ) {
+            NSInteger payloadLibrary = [domainSettings[@"PayloadLibrary"] integerValue] ?: 0;
+            DDLogDebug(@"Payload library: %ld", (long)payloadLibrary);
+            
+            NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:payloadLibrary withDomain:domain];
+            if ( [manifest count] != 0 ) {
+                PFCPayloadPreview *preview = [self previewForMainfest:manifest domain:domain];
+                [_arrayStackViewPreview addObject:preview];
+                [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
+            } else {
+                DDLogError(@"No manifest returned from payload library: %ld with domain: %@", (long)payloadLibrary, domain);
+            }
+        } else {
+            DDLogError(@"");
+        }
     }
+}
+
+- (PFCPayloadPreview *)previewForMainfest:(NSDictionary *)manifest domain:(NSString *)domain {
+    
+    PFCPayloadPreview *preview = [[PFCPayloadPreview alloc] init];
+    
+    [preview setPayloadDomain:manifest[PFCManifestKeyTitle] ?: domain];
+    [preview setPayloadDescription:manifest[PFCManifestKeyDescription] ?: @""];
+    
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
+    if ( icon ) {
+        [preview setPayloadIcon:icon];
+    }
+    
+    return preview;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -574,7 +601,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     NSInteger selectedRow = [tableView selectedRow];
     if (selectedRow == -1) return NO;
-
+    
     NSDictionary *groupDict;
     if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileGroups] ) {
         groupDict = _arrayProfileGroups[selectedRow] ?: @{};
@@ -617,7 +644,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         case kPFCProfileGroups:
         {
             NSInteger index = [_arrayProfileGroups indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-                    return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:groupUUID];
+                return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:groupUUID];
             }];
             DDLogDebug(@"Group index: %ld", (long)index);
             
@@ -654,7 +681,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)updateProfileWithUUID:(NSString *)uuid {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Profile UUID: %@", uuid);
-
+    
     DDLogDebug(@"Selected table view identifier: %@", _selectedTableViewIdentifier);
     if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroupAll] ) {
         NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -748,7 +775,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ------------------------------------------------------------------------------------
         [self setSelectedTableViewIdentifier:[_tableViewProfileGroupAll identifier]];
         DDLogDebug(@"Updating selected profile table view identifier: %@", _selectedTableViewIdentifier);
-
+        
         // ---------------------------------------------------------------------
         //  Load the current group dict from the array
         // ---------------------------------------------------------------------
@@ -853,7 +880,7 @@ int const PFCTableViewGroupsRowHeight = 24;
                 NSUInteger index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
                     return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
                 }];
-            
+                
                 if ( index != NSNotFound ) {
                     rowIndexes = [NSIndexSet indexSetWithIndex:index];
                 }
@@ -978,6 +1005,8 @@ int const PFCTableViewGroupsRowHeight = 24;
         //  Store the currently selected uuid in local variable _selectedProfileUUID
         // --------------------------------------------------------------------------
         NSString *profileUUID = profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @"";
+        DDLogDebug(@"Selected profile UUID: %@", profileUUID);
+        
         if ( [profileUUID length] == 0 ) {
             if ( _profilePreviewSelectionUnavailableHidden ) {
                 [self showProfilePreviewError];
@@ -1002,6 +1031,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Unset the SelectedProfileUUID
         // ---------------------------------------------------------------------
+        DDLogDebug(@"Removing selected profile UUID");
         [self setSelectedProfileUUID:nil];
     }
 }

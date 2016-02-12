@@ -43,7 +43,7 @@
 // -----------------------------------------------------------------------------
 //  SplitView Menu - Profile Groups
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView                     *viewProfileGroupsSplitView;
+@property (weak)    IBOutlet NSVisualEffectView         *viewProfileGroupsSplitView;
 @property (weak)    IBOutlet NSScrollView               *scrollViewProfileGroups;
 @property (weak)    IBOutlet PFCViewMainGroups          *viewProfileGroupsSuperview;
 

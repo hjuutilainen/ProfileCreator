@@ -52,6 +52,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="149" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
+                                    <visualEffectView appearanceType="vibrantLight" blendingMode="behindWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="yVM-VI-509">
+                                        <rect key="frame" x="0.0" y="0.0" width="149" height="600"/>
+                                    </visualEffectView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="FJa-9M-ioT">
                                         <rect key="frame" x="0.0" y="0.0" width="149" height="600"/>
                                         <constraints>
@@ -60,10 +63,14 @@
                                     </customView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="yVM-VI-509" secondAttribute="trailing" id="02s-30-Tog"/>
                                     <constraint firstItem="FJa-9M-ioT" firstAttribute="top" secondItem="0hb-ze-c3V" secondAttribute="top" id="dNK-rX-LIz"/>
+                                    <constraint firstItem="yVM-VI-509" firstAttribute="top" secondItem="0hb-ze-c3V" secondAttribute="top" id="ehz-zC-jvq"/>
                                     <constraint firstAttribute="bottom" secondItem="FJa-9M-ioT" secondAttribute="bottom" id="f3j-3E-ekW"/>
+                                    <constraint firstAttribute="bottom" secondItem="yVM-VI-509" secondAttribute="bottom" id="f5V-6t-cYi"/>
                                     <constraint firstAttribute="trailing" secondItem="FJa-9M-ioT" secondAttribute="trailing" id="i5J-Nz-ecG"/>
                                     <constraint firstItem="FJa-9M-ioT" firstAttribute="leading" secondItem="0hb-ze-c3V" secondAttribute="leading" id="nzw-0o-mKk"/>
+                                    <constraint firstItem="yVM-VI-509" firstAttribute="leading" secondItem="0hb-ze-c3V" secondAttribute="leading" id="trs-Uf-Gvz"/>
                                 </constraints>
                             </customView>
                             <customView id="1Yq-2D-nMX">
@@ -162,7 +169,7 @@
                     <constraint firstItem="2yG-le-9IZ" firstAttribute="leading" secondItem="hM9-4C-HuU" secondAttribute="leading" id="ixr-av-wVD"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-527" y="321"/>
+            <point key="canvasLocation" x="-736" y="284"/>
         </window>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
@@ -270,7 +277,7 @@
             </constraints>
             <point key="canvasLocation" x="-1007.5" y="369.5"/>
         </customView>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf" customClass="PFCViewMainGroups">
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf">
             <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>
             <subviews>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bFQ-uc-Kxk">
@@ -373,7 +380,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCProfileGroupTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="149" height="1"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -565,7 +572,7 @@
                 <constraint firstAttribute="trailing" secondItem="XjV-ub-3jF" secondAttribute="trailing" id="sRp-d6-Fyg"/>
                 <constraint firstAttribute="trailing" secondItem="7K3-G1-rh7" secondAttribute="trailing" id="wsV-nU-x27"/>
             </constraints>
-            <point key="canvasLocation" x="-827.5" y="-4.5"/>
+            <point key="canvasLocation" x="-1032.5" y="8.5"/>
         </customView>
         <customView id="GG8-PD-6eg">
             <rect key="frame" x="0.0" y="0.0" width="453" height="206"/>

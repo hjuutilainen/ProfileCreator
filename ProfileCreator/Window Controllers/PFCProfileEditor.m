@@ -461,22 +461,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSError *error = nil;
     
     [_arrayPayloadLibrary removeAllObjects];
-    NSArray *libraryApple = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
-    if ( [libraryApple count] != 0 ) {
-        for ( NSURL *manifestURL in libraryApple ) {
-            NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
-            if ( [manifestDict count] != 0 ) {
-                NSString *manifestDomain = manifestDict[PFCManifestKeyDomain] ?: @"";
-                if (
-                    [enabledPayloadDomains containsObject:manifestDomain] ||
-                    [manifestDomain isEqualToString:@"com.apple.general"]
-                    ) {
-                    [_arrayPayloadProfile addObject:[manifestDict copy]];
-                } else {
-                    [_arrayPayloadLibraryApple addObject:[manifestDict copy]];
-                }
+    NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
+    if ( [libraryAppleManifests count] != 0 ) {
+        for ( NSDictionary *manifest in libraryAppleManifests ) {
+            NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+            if (
+                [enabledPayloadDomains containsObject:manifestDomain] ||
+                [manifestDomain isEqualToString:@"com.apple.general"]
+                ) {
+                [_arrayPayloadProfile addObject:[manifest copy]];
             } else {
-                DDLogError(@"Manifest: %@ was empty!", [manifestURL lastPathComponent]);
+                [_arrayPayloadLibraryApple addObject:[manifest copy]];
             }
         }
         
@@ -633,7 +628,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Selected tab index: %ld", (long)tabIndex);
-    
+    DDLogDebug(@"Should save settings: %@", (saveSettings) ? @"YES" : @"NO");
     
     // -------------------------------------------------------------------------
     //  Loop through all tabs and update _isSelected
@@ -661,7 +656,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // --------------------------------------------------------------------------------
     NSString *manifestDomain = _selectedManifest[PFCManifestKeyDomain];
     DDLogDebug(@"Current manifest domain: %@", manifestDomain);
-    DDLogDebug(@"SaveSettings: %@", (saveSettings) ? @"YES" : @"NO");
     if ( saveSettings ) {
         [self saveSettingsForManifestWithDomain:manifestDomain settings:_settingsManifest manifestTabIndex:_tabIndexSelected];
     }
@@ -1628,6 +1622,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // updatePayloadTabTitle
 
 - (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSInteger)tabIndex {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:tabIndex];
     [tab updateErrorCount:errorCount ?: @0];
 } // updatePayloadTabErrorCount
@@ -2830,7 +2825,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (IBAction)selectTableViewPayloadProfile:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+    
     NSInteger selectedRow = [_tableViewPayloadProfile selectedRow];
     if ( selectedRow == -1 || selectedRow != _tableViewPayloadProfileSelectedRow ) {
         [self selectTableViewPayloadProfileRow:selectedRow];
@@ -2948,6 +2943,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             // -----------------------------------------------------------------
             if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] ) {
                 [self updateTabBarTitles];
+                
+                // Fix to get the first tab to also get an initial error count, could possibly be done somewhere else
+                if ( manifestTabCount == 1 ) {
+                    NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
+                    NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+                    [self updatePayloadTabErrorCount:errorCount tabIndex:0];
+                }
                 [self errorForManifest:_selectedManifest updateTabBar:YES];
             }
             
@@ -3119,6 +3121,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             // -----------------------------------------------------------------
             if ( [_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] ) {
                 [self updateTabBarTitles];
+                
+                // Fix to get the first tab to also get an initial error count, could possibly be done somewhere else
+                if ( manifestTabCount == 1 ) {
+                    NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
+                    NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+                    [self updatePayloadTabErrorCount:errorCount tabIndex:0];
+                }
                 [self errorForManifest:_selectedManifest updateTabBar:YES];
             }
             
@@ -3306,9 +3315,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Check that manifest array contains any settings dict, else return new
     // -------------------------------------------------------------------------
     NSMutableDictionary *manifestSettingsRoot = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
-    NSLog(@"manifestSettingsRoot=%@", manifestSettingsRoot);
     NSMutableArray *manifestSettings = [manifestSettingsRoot[@"Settings"] mutableCopy] ?: [[NSMutableArray alloc] init];
-    NSLog(@"manifestSettings=%@", manifestSettings);
     
     // -------------------------------------------------------------------------
     //  Check that manifest array contains correct amount of settings dicts
@@ -3674,25 +3681,31 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -----------------------------------------------------------------
     //  Update all tabs with saved values
     // -----------------------------------------------------------------
-    
     NSString *manifestDomain = _selectedManifest[PFCManifestKeyDomain];
+    DDLogDebug(@"Manifest domain: %@", manifestDomain);
+    
     NSArray *manifestSettings;
     NSString *payloadTabTitleIndex = _selectedManifest[PFCManifestKeyPayloadTabTitle] ?: @"";
+    DDLogDebug(@"Manifest tab title uuid: %@", payloadTabTitleIndex);
+    
+    DDLogDebug(@"_settingsProfile=%@", _settingsProfile);
     if ( [payloadTabTitleIndex length] != 0 ) {
         manifestSettings = _settingsProfile[manifestDomain][@"Settings"];
     }
     
-    [_arrayPayloadTabs enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
-        if ( idx <= [manifestSettings count] ) {
-            NSDictionary *settings = manifestSettings[idx][payloadTabTitleIndex] ?: @{};
+    if ( [_arrayPayloadTabs count] != 0 ) {
+        [_arrayPayloadTabs enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
+            if ( idx < [manifestSettings count] ) {
+                NSDictionary *settings = manifestSettings[idx][payloadTabTitleIndex] ?: @{};
+                
+                // FIXME - Should specify what key should be used in the dict, now just use "Value" for testing
+                [self updatePayloadTabTitle:settings[@"Value"] ?: @"" tabIndex:idx];
+            } else {
+                [self updatePayloadTabTitle:@"" tabIndex:idx];
+            }
             
-            // FIXME - Should specify what key should be used in the dict, now just use "Value" for testing
-            [self updatePayloadTabTitle:settings[@"Value"] ?: @"" tabIndex:idx];
-        } else {
-            [self updatePayloadTabTitle:@"" tabIndex:idx];
-        }
-        
-    }];
+        }];
+    }
 } // updateTabBarTitles
 
 - (NSInteger)errorForManifest:(NSDictionary *)manifest updateTabBar:(BOOL)updateTabBar {
@@ -3714,7 +3727,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         manifestSettings = _settingsProfile[manifestDomain][@"Settings"];
     }
     __block NSInteger combinedErrors = 0;
-
+    
     DDLogDebug(@"Enumerating all manifest settings (%lu) for manifest domain: %@ and updating errors", (unsigned long)[manifestSettings count], manifestDomain);
     [manifestSettings enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
         

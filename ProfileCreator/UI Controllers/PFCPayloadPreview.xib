@@ -3,11 +3,13 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PFCPayloadPreview">
             <connections>
                 <outlet property="buttonDisclosureTriangle" destination="qPq-eQ-673" id="UyE-IF-PbF"/>
+                <outlet property="imageViewPayload" destination="fvl-EB-kAb" id="Ioj-Af-MK2"/>
                 <outlet property="layoutConstraintDescriptionBottom" destination="VGH-PL-ipB" id="7pr-id-QUL"/>
                 <outlet property="tableViewPayloadInfo" destination="1HJ-fr-anQ" id="XPX-MR-KMD"/>
                 <outlet property="textFieldPayloadName" destination="rXo-oY-8bo" id="PGM-1X-ybk"/>
@@ -21,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="249" verticalHuggingPriority="749" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="rXo-oY-8bo">
-                    <rect key="frame" x="33" y="25" width="434" height="17"/>
+                    <rect key="frame" x="71" y="25" width="396" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="PayloadName" id="cwk-bo-D8O">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -35,16 +37,6 @@
                         </binding>
                     </connections>
                 </textField>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qPq-eQ-673">
-                    <rect key="frame" x="20" y="25" width="13" height="13"/>
-                    <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" imagePosition="above" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qR9-D8-qJk">
-                        <behavior key="behavior" pushIn="YES" changeBackground="YES" changeGray="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="buttonDisclosureTriangle:" target="-2" id="1j0-1v-G3j"/>
-                    </connections>
-                </button>
                 <scrollView horizontalHuggingPriority="249" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dak-vv-bab">
                     <rect key="frame" x="35" y="-17" width="430" height="17"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="c1F-XO-ejl">
@@ -146,7 +138,7 @@
                     </scroller>
                 </scrollView>
                 <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GnL-Kc-rXu">
-                    <rect key="frame" x="33" y="8" width="434" height="14"/>
+                    <rect key="frame" x="71" y="8" width="396" height="14"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="PayloadDescription" id="c8H-y6-zN8">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -166,26 +158,53 @@
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fvl-EB-kAb">
+                    <rect key="frame" x="35" y="8" width="34" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="fvl-EB-kAb" secondAttribute="height" multiplier="1:1" id="m0I-is-vAI"/>
+                        <constraint firstAttribute="width" constant="34" id="ylP-d2-bLy"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="706-cloud" id="bca-IF-ZDA"/>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.payloadIcon" id="T3X-9u-yss"/>
+                    </connections>
+                </imageView>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qPq-eQ-673">
+                    <rect key="frame" x="20" y="19" width="13" height="13"/>
+                    <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" imagePosition="above" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qR9-D8-qJk">
+                        <behavior key="behavior" pushIn="YES" changeBackground="YES" changeGray="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="buttonDisclosureTriangle:" target="-2" id="1j0-1v-G3j"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="rXo-oY-8bo" firstAttribute="leading" secondItem="qPq-eQ-673" secondAttribute="trailing" constant="2" id="8Kl-r9-lzc"/>
+                <constraint firstItem="fvl-EB-kAb" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="5" id="3oW-uq-kqQ"/>
+                <constraint firstItem="fvl-EB-kAb" firstAttribute="centerY" secondItem="qPq-eQ-673" secondAttribute="centerY" id="Bzq-qP-uju"/>
+                <constraint firstItem="dak-vv-bab" firstAttribute="leading" secondItem="fvl-EB-kAb" secondAttribute="leading" id="CGs-kV-9PS"/>
                 <constraint firstItem="dak-vv-bab" firstAttribute="top" secondItem="GnL-Kc-rXu" secondAttribute="bottom" constant="8" symbolic="YES" id="Do5-6z-2zm"/>
                 <constraint firstItem="yXe-8h-me3" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="E1B-QL-Ygd"/>
                 <constraint firstItem="GnL-Kc-rXu" firstAttribute="top" secondItem="rXo-oY-8bo" secondAttribute="bottom" constant="3" id="EXM-hp-Q6a"/>
-                <constraint firstItem="dak-vv-bab" firstAttribute="leading" secondItem="rXo-oY-8bo" secondAttribute="leading" id="Kvn-6Z-adJ"/>
                 <constraint firstItem="GnL-Kc-rXu" firstAttribute="trailing" secondItem="rXo-oY-8bo" secondAttribute="trailing" id="POb-KR-xGj"/>
                 <constraint firstAttribute="trailing" secondItem="rXo-oY-8bo" secondAttribute="trailing" constant="15" id="RHB-jZ-G5g"/>
                 <constraint firstItem="yXe-8h-me3" firstAttribute="top" secondItem="dak-vv-bab" secondAttribute="bottom" priority="725" constant="8" symbolic="YES" id="RvR-Gq-IYp"/>
+                <constraint firstItem="GnL-Kc-rXu" firstAttribute="bottom" secondItem="fvl-EB-kAb" secondAttribute="bottom" id="Sko-Mk-yLk"/>
                 <constraint firstItem="yXe-8h-me3" firstAttribute="top" secondItem="GnL-Kc-rXu" secondAttribute="bottom" priority="750" constant="7" id="VGH-PL-ipB"/>
                 <constraint firstAttribute="trailing" secondItem="yXe-8h-me3" secondAttribute="trailing" constant="20" symbolic="YES" id="Ve8-SQ-rXB"/>
                 <constraint firstAttribute="bottom" secondItem="yXe-8h-me3" secondAttribute="bottom" id="fNR-Y8-UOG"/>
+                <constraint firstItem="GnL-Kc-rXu" firstAttribute="leading" secondItem="fvl-EB-kAb" secondAttribute="trailing" constant="4" id="fOs-LG-zyU"/>
                 <constraint firstItem="dak-vv-bab" firstAttribute="trailing" secondItem="rXo-oY-8bo" secondAttribute="trailing" id="iWd-gF-Y0w"/>
-                <constraint firstItem="rXo-oY-8bo" firstAttribute="centerY" secondItem="qPq-eQ-673" secondAttribute="centerY" constant="-2" id="oC9-Rk-GQP"/>
-                <constraint firstItem="qPq-eQ-673" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="9" id="tfP-h0-1PK"/>
+                <constraint firstItem="fvl-EB-kAb" firstAttribute="leading" secondItem="qPq-eQ-673" secondAttribute="trailing" constant="2" id="kvD-nt-b8F"/>
+                <constraint firstItem="rXo-oY-8bo" firstAttribute="top" secondItem="fvl-EB-kAb" secondAttribute="top" id="ub2-qZ-uHv"/>
                 <constraint firstItem="qPq-eQ-673" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="xQI-wb-WDa"/>
                 <constraint firstItem="GnL-Kc-rXu" firstAttribute="leading" secondItem="rXo-oY-8bo" secondAttribute="leading" id="z3l-6d-aDr"/>
             </constraints>
-            <point key="canvasLocation" x="490" y="154.5"/>
+            <point key="canvasLocation" x="490" y="201.5"/>
         </customView>
     </objects>
+    <resources>
+        <image name="706-cloud" width="28" height="18"/>
+    </resources>
 </document>
