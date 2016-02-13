@@ -25,10 +25,3 @@
     NSRectFill([self bounds]);
 }
 @end
-
-@implementation PFCViewMainGroups
-- (void)drawRect:(NSRect)aRect {
-    [[NSColor controlColor] set];
-    NSRectFill([self bounds]);
-}
-@end

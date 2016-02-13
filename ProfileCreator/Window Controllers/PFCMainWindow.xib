@@ -12,12 +12,14 @@
                 <outlet property="buttonProfileExport" destination="9YF-gT-6Zg" id="N3S-eC-J4s"/>
                 <outlet property="popUpButtonProfileLibraryFooter" destination="hy3-b7-yU8" id="OLU-eb-rox"/>
                 <outlet property="scrollViewProfileGroups" destination="XjV-ub-3jF" id="fDH-lz-wiV"/>
+                <outlet property="scrollViewProfileSmartGroups" destination="7K3-G1-rh7" id="3rf-Qq-dmK"/>
                 <outlet property="segmentedControlProfileLibraryFooterAddRemove" destination="ghf-U3-2hu" id="WRQ-nO-J7y"/>
                 <outlet property="splitVewMain" destination="2yG-le-9IZ" id="PNh-pp-BZw"/>
                 <outlet property="stackViewPreview" destination="Ucd-d9-gWl" id="AwQ-Sw-yrU"/>
                 <outlet property="tableViewProfileGroupAll" destination="HhK-Tr-dLe" id="BU6-yw-6Zy"/>
                 <outlet property="tableViewProfileGroups" destination="N76-Th-hDv" id="tsg-Vf-T6r"/>
                 <outlet property="tableViewProfileLibrary" destination="Flb-rs-hgU" id="gVE-MB-Ng0"/>
+                <outlet property="tableViewProfileSmartGroups" destination="E2l-i3-Zvc" id="k85-cs-4IT"/>
                 <outlet property="textFieldPlatform" destination="qnr-PA-iNt" id="2zZ-dL-hbK"/>
                 <outlet property="textFieldPreviewProfileName" destination="r7v-N8-wug" id="ohu-Ra-n1e"/>
                 <outlet property="textFieldPreviewSelectionUnavailable" destination="LQh-Ez-yrs" id="ZQl-Vl-3le"/>
@@ -275,7 +277,7 @@
                 <constraint firstAttribute="trailing" secondItem="kgS-ch-DaF" secondAttribute="trailing" id="piz-E8-BwS"/>
                 <constraint firstItem="kgS-ch-DaF" firstAttribute="leading" secondItem="azA-lO-Z5V" secondAttribute="leading" id="tw7-Sd-3cb"/>
             </constraints>
-            <point key="canvasLocation" x="-1007.5" y="369.5"/>
+            <point key="canvasLocation" x="-726.5" y="164.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf">
             <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>
@@ -423,6 +425,9 @@
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="-2" id="gBb-wI-xpn"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
@@ -460,6 +465,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <customView focusRingType="none" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="WRI-Es-MnW">
+                    <rect key="frame" x="0.0" y="48" width="149" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="19" id="A9U-Tl-1K4"/>
+                    </constraints>
+                </customView>
                 <scrollView horizontalHuggingPriority="248" horizontalCompressionResistancePriority="748" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7K3-G1-rh7" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="149" height="48"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Npt-i1-nRS">
@@ -510,6 +521,9 @@
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="-2" id="Vx9-ph-ElI"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
@@ -527,7 +541,7 @@
                                     </tableColumn>
                                 </tableColumns>
                                 <connections>
-                                    <action selector="selectTableViewProfileGroups:" target="-2" id="7Z8-0W-YDp"/>
+                                    <action selector="selectTableViewProfileSmartGroups:" target="-2" id="8xn-td-jJP"/>
                                     <outlet property="dataSource" destination="-2" id="YrM-dw-008"/>
                                     <outlet property="delegate" destination="-2" id="qq8-Mf-ebK"/>
                                 </connections>
@@ -547,12 +561,6 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
-                <customView focusRingType="none" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="WRI-Es-MnW">
-                    <rect key="frame" x="0.0" y="48" width="149" height="19"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="19" id="A9U-Tl-1K4"/>
-                    </constraints>
-                </customView>
             </subviews>
             <constraints>
                 <constraint firstItem="bFQ-uc-Kxk" firstAttribute="leading" secondItem="rrI-fr-qSf" secondAttribute="leading" id="8XI-me-bVV"/>
@@ -572,7 +580,7 @@
                 <constraint firstAttribute="trailing" secondItem="XjV-ub-3jF" secondAttribute="trailing" id="sRp-d6-Fyg"/>
                 <constraint firstAttribute="trailing" secondItem="7K3-G1-rh7" secondAttribute="trailing" id="wsV-nU-x27"/>
             </constraints>
-            <point key="canvasLocation" x="-1032.5" y="8.5"/>
+            <point key="canvasLocation" x="-1192.5" y="-71.5"/>
         </customView>
         <customView id="GG8-PD-6eg">
             <rect key="frame" x="0.0" y="0.0" width="453" height="206"/>

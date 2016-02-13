@@ -24,6 +24,7 @@
     [alert addButtonWithTitle:PFCButtonTitleCancel];    //NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleDelete];    //NSAlertSecondButton
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete the group \"%@\"?", groupName]];
+    [alert setInformativeText:@"No profile will be removed"];
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[_delegate window] completionHandler:^(NSInteger returnCode) {
         [_delegate alertReturnCode:returnCode alertInfo:alertInfo];

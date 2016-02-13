@@ -32,6 +32,7 @@
 //  Unsorted
 // -----------------------------------------------------------------------------
 @property                    NSMutableDictionary        *selectedGroup;
+@property                    NSMutableDictionary        *profileRuntimeKeys;
 @property                    NSString                   *selectedProfileUUID;
 @property                    NSString                   *selectedTableViewIdentifier;
 
@@ -45,7 +46,10 @@
 // -----------------------------------------------------------------------------
 @property (weak)    IBOutlet NSVisualEffectView         *viewProfileGroupsSplitView;
 @property (weak)    IBOutlet NSScrollView               *scrollViewProfileGroups;
-@property (weak)    IBOutlet PFCViewMainGroups          *viewProfileGroupsSuperview;
+@property (weak)    IBOutlet NSScrollView               *scrollViewProfileSmartGroups;
+
+
+@property (weak)    IBOutlet NSView                     *viewProfileGroupsSuperview;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "All Profiles"
@@ -117,8 +121,7 @@
 // -----------------------------------------------------------------------------
 //  Instance Methods
 // -----------------------------------------------------------------------------
-- (void)closeProfileEditorForProfileWithUUID:(NSString *)profileUUID;
-- (void)renameProfileWithUUID:(NSString *)profileUUID newName:(NSString *)newName;
+- (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)updateProfileWithUUID:(NSString *)uuid;
 
 @end

@@ -567,7 +567,7 @@
     // ---------------------------------------------------------------------
     //  Button Title
     // ---------------------------------------------------------------------
-    NSString *buttonTitle = manifest[PFCManifestKeyButtonTitle] ?: @"";
+    NSString *buttonTitle = manifest[PFCManifestKeyButtonTitle] ?: @"Add File...";
     [[cellView settingButtonAdd] setTitle:buttonTitle ?: @"Add File..."];
     [[cellView settingButtonAdd] setEnabled:enabled];
     

@@ -197,6 +197,7 @@ extern NSString *const PFCProfileGroupKeyName;
 extern NSString *const PFCProfileGroupKeyPath;
 extern NSString *const PFCProfileGroupKeyProfiles;
 extern NSString *const PFCProfileGroupKeyUUID;
+extern NSString *const PFCProfileGroupExtension;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark SettingsKeys

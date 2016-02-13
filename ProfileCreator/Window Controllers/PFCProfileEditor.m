@@ -2767,7 +2767,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // FIXME -  This is just for testing, and feels weak to search for Name, and also limits the possibility to have profiles with the same name.
     //          Should use a unique identifier instead of name to identify the profile.
     //          -(void)renameProfileWithIdentifier: or -(void)renameProfileWithDomain
-    if ( [_parentObject respondsToSelector:@selector(renameProfileWithUUID:newName:)] ) {
+    /*
+    if ( [_parentObject respondsToSelector:@selector(updateProfileWithUUID:)] ) {
         
         NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
         
@@ -2800,6 +2801,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
         [_sheetProfileName orderOut:self];
     }
+     */
 } // buttonSaveSheetProfileName
 
 

@@ -39,6 +39,7 @@ NSString *const PFCTableViewIdentifierProfileLibrary = @"TableViewIdentifierProf
 NSString *const PFCTableViewIdentifierProfileGroupAll = @"TableViewIdentifierProfileGroupAll";
 NSString *const PFCTableViewIdentifierProfileGroups = @"TableViewIdentifierProfileGroups";
 NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifierProfileSmartGroups";
+NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 int const PFCTableViewGroupsRowHeight = 24;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,6 +67,11 @@ int const PFCTableViewGroupsRowHeight = 24;
         _arrayProfileGroups = [[NSMutableArray alloc] init];
         _arrayProfileSmartGroups = [[NSMutableArray alloc] init];
         _arrayStackViewPreview = [[NSMutableArray alloc] init];
+        
+        // ---------------------------------------------------------------------
+        //  Initialize Dictionaries
+        // ---------------------------------------------------------------------
+        _profileRuntimeKeys = [[NSMutableDictionary alloc] init];
         
         // ---------------------------------------------------------------------
         //  Initialize Classes
@@ -148,13 +154,12 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     //  Setup TableView "All Profiles"
     // -------------------------------------------------------------------------
-    [self setTableViewProfileGroupAllSelectedRow:-1];
     [self setupProfileGroupAll];
     
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Groups"
     // -------------------------------------------------------------------------
-    [self setTableViewProfileGroupsSelectedRow:-1];
+    [self setupProfileGroups];
     
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Library"
@@ -162,6 +167,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     [self setTableViewProfileLibrarySelectedRows:[NSIndexSet indexSet]];
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
+    [_tableViewProfileLibrary setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
     
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Preview"
@@ -180,12 +186,67 @@ int const PFCTableViewGroupsRowHeight = 24;
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
+    //  Reset table view row selection
+    // -------------------------------------------------------------------------
+    [self setTableViewProfileGroupAllSelectedRow:-1];
+    
+    // -------------------------------------------------------------------------
     //  Add the only item "All Profiles" to table view.
     // -------------------------------------------------------------------------
     [_arrayProfileGroupAll addObject:@{ @"Config" : @{ PFCProfileGroupKeyName : @"All Profiles",
                                                        PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString] }}];
+    
     [_tableViewProfileGroupAll reloadData];
 } // setupProfileGroupAll
+
+- (void)setupProfileGroups {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    // -------------------------------------------------------------------------
+    //  Reset table view row selection
+    // -------------------------------------------------------------------------
+    [self setTableViewProfileGroupsSelectedRow:-1];
+    
+    // -------------------------------------------------------------------------
+    //  Register for dragging destination
+    // -------------------------------------------------------------------------
+    [_tableViewProfileGroups registerForDraggedTypes:@[ PFCProfileDraggingType ]];
+    
+    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups];
+    DDLogDebug(@"Group save folder: %@", [groupSaveFolder path]);
+    if ( ! [groupSaveFolder checkResourceIsReachableAndReturnError:nil] ) {
+        DDLogDebug(@"Found no group folder!");
+        return;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Put all profile group plist URLs in an array
+    // -------------------------------------------------------------------------
+    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:groupSaveFolder
+                                                         includingPropertiesForKeys:@[]
+                                                                            options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                                              error:nil];
+    
+    // -------------------------------------------------------------------------
+    //  Insert all groups matching predicate in groups table view
+    // -------------------------------------------------------------------------
+    NSPredicate *predicateManifestGroups = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.pathExtension == '%@'", PFCProfileGroupExtension]];
+    NSArray *groupURLs = [dirContents filteredArrayUsingPredicate:predicateManifestGroups];
+    for ( NSURL *groupURL in groupURLs ?: @[] ) {
+        NSMutableDictionary *newGroup = [[NSMutableDictionary alloc] init];
+        NSDictionary *group = [NSDictionary dictionaryWithContentsOfURL:groupURL];
+        if ( [group count] != 0 ) {
+            newGroup[PFCRuntimeKeyPath] = [groupURL path];
+            newGroup[@"Config"] = group;
+            [self insertProfileGroupInTableView:newGroup];
+        }
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Adjust table view height to content
+    // -------------------------------------------------------------------------
+    [self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileGroups count] tableView:_scrollViewProfileGroups];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -328,6 +389,87 @@ int const PFCTableViewGroupsRowHeight = 24;
     return nil;
 } // tableView:viewForTableColumn:row
 
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {
+    if ( dropOperation == NSTableViewDropOn ) {
+        return NSDragOperationCopy;
+    }
+    return NSDragOperationNone;
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation {
+    
+    NSData *draggingData = [[info draggingPasteboard] dataForType:PFCProfileDraggingType];
+    NSArray *profileUUIDs = [NSKeyedUnarchiver unarchiveObjectWithData:draggingData];
+    if ( [profileUUIDs count] != 0 ) {
+        if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileGroups] ) {
+            [self insertProfileUUIDs:profileUUIDs inTableViewWithIdentifier:[tableView identifier] row:row];
+        }
+    }
+    return YES;
+}
+
+- (void)insertProfileUUIDs:(NSArray *)profileUUIDs inTableViewWithIdentifier:(NSString *)identifier row:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    DDLogDebug(@"Table view identifier: %@", identifier);
+    if ( [identifier isEqualToString:PFCTableViewIdentifierProfileGroups] ) {
+        NSMutableDictionary *group = [_arrayProfileGroups[row] mutableCopy];
+        NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy];
+        NSMutableArray *profiles = [groupConfig[PFCProfileGroupKeyProfiles] mutableCopy] ?: [[NSMutableArray alloc] init];
+        for ( NSString *uuid in profileUUIDs ) {
+            if ( ! [profiles containsObject:uuid] ) {
+                [profiles addObject:uuid];
+            }
+        }
+        groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
+        group[@"Config"] = [groupConfig copy];
+        [_arrayProfileGroups replaceObjectAtIndex:row withObject:[group copy]];
+        NSError *error = nil;
+        if ( ! [self saveGroup:[group copy] error:&error] ) {
+            DDLogError(@"%@", [error localizedDescription]);
+            // FIXME - Notify user that save couldn't be completed
+        }
+    }
+}
+
+- (void)tableView:(NSTableView *)tableView updateDraggingItemsForDrag:(id<NSDraggingInfo>)draggingInfo {
+    NSLog(@"updateDraggingItemsForDrag=%ld", (long)draggingInfo.numberOfValidItemsForDrop);
+    NSData *draggingData = [[draggingInfo draggingPasteboard] dataForType:PFCProfileDraggingType];
+    NSArray *profileUUIDs = [NSKeyedUnarchiver unarchiveObjectWithData:draggingData];
+    NSLog(@"profileUUIDs=%@", profileUUIDs);
+    
+    NSInteger count = [profileUUIDs count];
+    NSLog(@"count=%ld", (long)count);
+    
+    draggingInfo.numberOfValidItemsForDrop = count;
+}
+
+- (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(nonnull NSIndexSet *)rowIndexes toPasteboard:(nonnull NSPasteboard *)pboard {
+    if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileLibrary] ) {
+        NSMutableArray *selectedProfileUUIDs = [[NSMutableArray alloc] init];
+        NSArray *selectedProfiles = [_arrayProfileLibrary objectsAtIndexes:rowIndexes];
+        if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroupAll] ) {
+            for ( NSDictionary *profile in selectedProfiles ) {
+                NSString *profileUUID = profile[@"Config"][PFCProfileTemplateKeyUUID];
+                if ( [profileUUID length] != 0 ) {
+                    [selectedProfileUUIDs addObject:profileUUID];
+                }
+            }
+        } else {
+            for ( NSString *profileUUID in selectedProfiles ) {
+                [selectedProfileUUIDs addObject:profileUUID];
+            }
+        }
+        
+        
+        [pboard clearContents];
+        [pboard declareTypes:@[ PFCProfileDraggingType ] owner:nil];
+        [pboard setData:[NSKeyedArchiver archivedDataWithRootObject:[selectedProfileUUIDs copy]] forType:PFCProfileDraggingType];
+        return YES;
+    }
+    return NO;
+}
+
 - (NSInteger)insertProfileInTableView:(NSDictionary *)profileDict {
     NSInteger index = [_tableViewProfileLibrary selectedRow];
     index++;
@@ -352,12 +494,46 @@ int const PFCTableViewGroupsRowHeight = 24;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark NSControl Delegate Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)controlTextDidEndEditing:(NSNotification *)notification {
+    
+    // FIXME -  Should possibly get this somewhere else, but felt nice to get the info form the actual object
+    //          The only thin is to get the actual table view, now only groups is available
+    NSInteger row = [_tableViewProfileGroups rowForView:[[notification object] superview]];
+    
+    if ( row <= [_arrayProfileGroups count] ) {
+        NSMutableDictionary *group = [_arrayProfileGroups[row] mutableCopy];
+        NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        
+        NSDictionary *userInfo = [notification userInfo];
+        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+        DDLogDebug(@"New name for group: %@", inputText);
+        
+        groupConfig[PFCProfileGroupKeyName] = inputText ?: @"";
+        group[@"Config"] = [groupConfig copy];
+        [_arrayProfileGroups replaceObjectAtIndex:row withObject:[group copy]];
+        
+        NSError *error = nil;
+        if ( ! [self saveGroup:group error:&error] ) {
+            // FIXME - Notify if save failed
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark Saving
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
 - (BOOL)saveGroup:(NSDictionary *)groupDict error:(NSError **)error {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
     NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups];
+    DDLogDebug(@"Group save folder: %@", [groupSaveFolder path]);
     if ( ! [groupSaveFolder checkResourceIsReachableAndReturnError:nil] ) {
         if ( ! [[NSFileManager defaultManager] createDirectoryAtURL:groupSaveFolder withIntermediateDirectories:YES attributes:nil error:error] ) {
             return NO;
@@ -365,6 +541,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
     
     NSString *groupPath = groupDict[PFCRuntimeKeyPath] ?: [PFCGeneralUtility newProfileGroupPath];
+    DDLogDebug(@"Group save path: %@", groupPath);
     NSURL *groupURL = [NSURL fileURLWithPath:groupPath];
     NSDictionary *groupConfig = groupDict[@"Config"];
     return [groupConfig writeToURL:groupURL atomically:YES];
@@ -415,7 +592,7 @@ int const PFCTableViewGroupsRowHeight = 24;
                 DDLogError(@"No manifest returned from payload library: %ld with domain: %@", (long)payloadLibrary, domain);
             }
         } else {
-            DDLogError(@"");
+            DDLogError(@"Payload is selected but doesn't contain a \"PayloadLibrary\"");
         }
     }
 }
@@ -502,59 +679,69 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Get currently selected row
         // ---------------------------------------------------------------------
-        NSInteger selectedRow = [sender clickedRow];
-        DDLogDebug(@"Profile library selected row: %ld", (long)selectedRow);
+        NSInteger clickedRow = [sender clickedRow];
+        DDLogDebug(@"Profile library selected row: %ld", (long)clickedRow);
         
-        [self openProfileEditorForProfileAtRow:selectedRow];
+        NSString *profileUUID;
+        if ( [_selectedGroup[@"Config"][PFCProfileGroupKeyName] isEqualToString:@"All Profiles"] ) {
+            NSDictionary *profileDict = _arrayProfileLibrary[clickedRow] ?: @{};
+            profileUUID = profileDict[@"Config"][PFCProfileTemplateKeyUUID];
+        } else {
+            profileUUID = _arrayProfileLibrary[clickedRow];
+        }
+        
+        [self openProfileEditorForProfileWithUUID:profileUUID];
     }
 } // editSelectedProfile
 
-- (void)openProfileEditorForProfileAtRow:(NSInteger)row {
-    
-    // ---------------------------------------------------------------------
-    //  Sanity check that selection and array is reasonable
-    // ---------------------------------------------------------------------
-    if ( 0 <= row && row <= [_arrayProfileLibrary count] ) {
-        NSMutableDictionary *profileDict = [_arrayProfileLibrary[row] mutableCopy];
-        
-        // ---------------------------------------------------------------------------------------------
-        //  Check if an editor is already open, else instantiate a new one and save in the profile dict
-        // ---------------------------------------------------------------------------------------------
-        PFCProfileEditor *editor;
-        if ( profileDict[PFCRuntimeKeyProfileEditor] != nil ) {
-            editor = profileDict[PFCRuntimeKeyProfileEditor];
-        } else {
-            editor = [[PFCProfileEditor alloc] initWithProfileDict:[profileDict copy] sender:self];
-            if ( editor ) {
-                profileDict[PFCRuntimeKeyProfileEditor] = editor;
-                [_arrayProfileLibrary replaceObjectAtIndex:row withObject:[profileDict copy]];
-            } else {
-                DDLogError(@"Instantiating profile editor failed");
-            }
-        }
-        [[editor window] makeKeyAndOrderFront:self];
-    }
-} // openProfileEditorForProfileAtRow
-
-- (void)renameProfileWithUUID:(NSString *)profileUUID newName:(NSString *)newName {
-    
-}
-
-- (void)closeProfileEditorForProfileWithUUID:(NSString *)profileUUID {
+- (void)openProfileEditorForProfileWithUUID:(NSString *)uuid {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    DDLogInfo(@"Close profile editor for profile with UUID: %@", profileUUID);
-    NSUInteger index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary * _Nonnull dict, NSUInteger idx, BOOL *stop) {
-        return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:profileUUID];
-    }];
-    DDLogDebug(@"Profile index: %lu", (unsigned long)index);
+    DDLogInfo(@"Open profile editor for profile with UUID: %@", uuid);
+    if ( [uuid length] == 0 ) {
+        DDLogError(@"No profile uuid was passed for open");
+        return;
+    }
     
-    if ( index != NSNotFound ) {
-        NSMutableDictionary *profileDict = [[_arrayProfileLibrary objectAtIndex:index] mutableCopy];
-        [profileDict removeObjectForKey:PFCRuntimeKeyProfileEditor];
-        [_arrayProfileLibrary replaceObjectAtIndex:index withObject:[profileDict copy]];
+    PFCProfileEditor *editor;
+    NSMutableDictionary *profileRuntimeKeys = _profileRuntimeKeys[uuid] ?: [[NSMutableDictionary alloc] init];
+    DDLogDebug(@"Current profile runtime keys: %@", profileRuntimeKeys);
+    
+    if ( profileRuntimeKeys[PFCRuntimeKeyProfileEditor] != nil ) {
+        editor = profileRuntimeKeys[PFCRuntimeKeyProfileEditor];
     } else {
-        DDLogError(@"Found no profile with UUID: %@", profileUUID);
+        NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
+        if ( [profileDict count] != 0 ) {
+            editor = [[PFCProfileEditor alloc] initWithProfileDict:profileDict sender:self];
+            if ( editor ) {
+                DDLogDebug(@"Adding profile editor to profile runtime keys");
+                profileRuntimeKeys[PFCRuntimeKeyProfileEditor] = editor;
+                _profileRuntimeKeys[uuid] = profileRuntimeKeys;
+            }
+        }
+    }
+    
+    if ( editor ) {
+        [[editor window] makeKeyAndOrderFront:self];
+    }
+} // openProfileEditorForProfileWithUUID
+
+- (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    DDLogInfo(@"Close profile editor for profile with UUID: %@", uuid);
+    if ( [uuid length] == 0 ) {
+        DDLogError(@"No profile uuid was passed for close");
+        return;
+    }
+    
+    NSMutableDictionary *profileRuntimeKeys = _profileRuntimeKeys[uuid] ?: [[NSMutableDictionary alloc] init];
+    DDLogDebug(@"Current profile runtime keys: %@", profileRuntimeKeys);
+    
+    if ( profileRuntimeKeys[PFCRuntimeKeyProfileEditor] != nil ) {
+        DDLogDebug(@"Removing profile editor from profile runtime keys");
+        [profileRuntimeKeys removeObjectForKey:PFCRuntimeKeyProfileEditor];
+        _profileRuntimeKeys[uuid] = profileRuntimeKeys;
     }
 } // closeProfileEditorForProfileWithUUID
 
@@ -583,6 +770,9 @@ int const PFCTableViewGroupsRowHeight = 24;
                                             row:[index integerValue]
                                 makeIfNecessary:NO] menuTitle] selectText:self];
         
+        // ---------------------------------------------------------------------
+        //  Adjust table view height to content
+        // ---------------------------------------------------------------------
         [self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileGroups count] tableView:_scrollViewProfileGroups];
     } else if ( group == kPFCProfileSmartGroups ) {
         NSLog(@"Add a SMART GROUP");
@@ -640,6 +830,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
     DDLogDebug(@"Group UUID: %@", groupUUID);
     
+    NSURL *groupURL;
     switch (group) {
         case kPFCProfileGroups:
         {
@@ -648,11 +839,19 @@ int const PFCTableViewGroupsRowHeight = 24;
             }];
             DDLogDebug(@"Group index: %ld", (long)index);
             
+            NSDictionary *group = _arrayProfileGroups[index];
+            NSString *groupPath = group[PFCRuntimeKeyPath];
+            groupURL = [NSURL fileURLWithPath:groupPath];
+            
             if ( index != NSNotFound ) {
                 [_tableViewProfileGroups beginUpdates];
                 [_arrayProfileGroups removeObjectAtIndex:index];
                 [_tableViewProfileGroups reloadData];
                 [_tableViewProfileGroups endUpdates];
+                
+                // -------------------------------------------------------------
+                //  Adjust table view height to content
+                // -------------------------------------------------------------
                 [self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileGroups count] tableView:_scrollViewProfileGroups];
             }
         }
@@ -665,16 +864,35 @@ int const PFCTableViewGroupsRowHeight = 24;
             }];
             DDLogDebug(@"Group index: %ld", (long)index);
             
+            NSDictionary *group = _arrayProfileSmartGroups[index];
+            NSString *groupPath = group[PFCRuntimeKeyPath];
+            groupURL = [NSURL fileURLWithPath:groupPath];
+            
             if ( index != NSNotFound ) {
                 [_tableViewProfileGroupAll beginUpdates];
                 [_arrayProfileSmartGroups removeObjectAtIndex:index];
                 [_tableViewProfileGroupAll reloadData];
                 [_tableViewProfileGroupAll endUpdates];
-                //[self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileGroupAll count] tableView:_scrollViewProfileGroups];
+                
+                // -------------------------------------------------------------
+                //  Adjust table view height to content
+                // -------------------------------------------------------------
+                [self setTableViewHeight:PFCTableViewGroupsRowHeight*(int)[_arrayProfileSmartGroups count] tableView:_scrollViewProfileGroups];
             }
         }
         default:
             break;
+    }
+    
+    NSError *error = nil;
+    if ( [groupURL checkResourceIsReachableAndReturnError:&error] ) {
+        
+        DDLogDebug(@"Removing group plist at path: %@", [groupURL path]);
+        if ( ! [[NSFileManager defaultManager] removeItemAtURL:groupURL error:&error] ) {
+            DDLogError(@"%@", [error localizedDescription]);
+        }
+    } else {
+        DDLogError(@"%@", [error localizedDescription]);
     }
 }
 
@@ -869,6 +1087,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         //  Load the current group profile array from the selected group dict
         // ---------------------------------------------------------------------
         NSArray *groupProfileUUIDArray = group[@"Config"][PFCProfileGroupKeyProfiles] ?: @[];
+        DDLogDebug(@"Selected group profile UUID array: %@", groupProfileUUIDArray);
         
         // ------------------------------------------------------------------------------------------
         //
@@ -877,9 +1096,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             [_arrayProfileLibrary addObjectsFromArray:groupProfileUUIDArray];
             
             if ( [_selectedProfileUUID length] != 0 ) {
-                NSUInteger index = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-                    return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:_selectedProfileUUID];
-                }];
+                NSUInteger index = [_arrayProfileLibrary indexOfObject:_selectedProfileUUID];
                 
                 if ( index != NSNotFound ) {
                     rowIndexes = [NSIndexSet indexSetWithIndex:index];
@@ -989,7 +1206,12 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Load the current profile from the array
         // ---------------------------------------------------------------------
-        NSDictionary *profileDict = _arrayProfileLibrary[row] ?: @{};
+        NSDictionary *profileDict;
+        if ( [_selectedGroup[@"Config"][PFCProfileGroupKeyName] isEqualToString:@"All Profiles"] ) {
+            profileDict = _arrayProfileLibrary[row] ?: @{};
+        } else {
+            profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[row]];
+        }
         
         // ---------------------------------------------------------------------
         //  Verify the profile has any content
@@ -1041,10 +1263,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 }
 
 - (IBAction)buttonProfileEdit:(id)sender {
-    
-    if ( [_selectedProfileUUID length] != 0 ) {
-        
-    }
-}
+    [self openProfileEditorForProfileWithUUID:_selectedProfileUUID];
+} // buttonProfileEdit
 
 @end

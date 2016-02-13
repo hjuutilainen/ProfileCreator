@@ -190,6 +190,7 @@ NSString *const PFCProfileGroupKeyName = @"Name";
 NSString *const PFCProfileGroupKeyPath = @"Path";
 NSString *const PFCProfileGroupKeyProfiles = @"Profiles";
 NSString *const PFCProfileGroupKeyUUID = @"UUID";
+NSString *const PFCProfileGroupExtension = @"pfcgrp";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark SettingsKeys
