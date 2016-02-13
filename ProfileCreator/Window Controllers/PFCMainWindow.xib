@@ -182,7 +182,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="42" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU">
+                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="42" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="184" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -381,7 +381,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCProfileGroupTableView">
+                            <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
@@ -477,7 +477,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="149" height="48"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileSmartGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="E2l-i3-Zvc" customClass="PFCProfileGroupTableView">
+                            <tableView identifier="TableViewIdentifierProfileSmartGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="E2l-i3-Zvc" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="143" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>

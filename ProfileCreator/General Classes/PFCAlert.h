@@ -29,5 +29,8 @@
 //  Instance Methods
 // ------------------------------------------------------
 - (id)initWithDelegate:(id<PFCAlertDelegate>)delegate;
-- (void)showAlertDeleteGroup:(NSString *)groupName alertInfo:(NSDictionary *)alertInfo;
+- (void)showAlertDeleteGroups:(NSArray *)groupNames alertInfo:(NSDictionary *)alertInfo;
+- (void)showAlertDeleteProfiles:(NSArray *)profileNames alertInfo:(NSDictionary *)alertInfo;
+- (void)showAlertDeleteProfiles:(NSArray *)profileNames fromGroup:(NSString *)groupName alertInfo:(NSDictionary *)alertInfo;
+
 @end

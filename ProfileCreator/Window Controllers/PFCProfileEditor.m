@@ -260,6 +260,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     if ( [self settingsSaved] ) {
+        [self setWindowShouldClose:NO];
+        if ( [_parentObject respondsToSelector:@selector(closeProfileEditorForProfileWithUUID:)] ) {
+            [_parentObject closeProfileEditorForProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
+        }
         return YES;
     } else {
         

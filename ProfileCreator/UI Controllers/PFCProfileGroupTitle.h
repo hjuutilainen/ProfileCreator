@@ -9,7 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 typedef NS_ENUM(NSInteger, PFCProfileGroups) {
-    kPFCProfileGroups = 0,
+    kPFCProfileGroupAll = 0,
+    kPFCProfileGroups,
     kPFCProfileSmartGroups
 };
 

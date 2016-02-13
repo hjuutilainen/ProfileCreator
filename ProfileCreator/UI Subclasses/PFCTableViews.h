@@ -7,11 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class PFCProfileGroupTableView;
 
-@protocol ProfileGroupTableViewDelegate <NSTableViewDelegate>
--(BOOL)deleteKeyPressedForTableView:(PFCProfileGroupTableView *)tableView;
+@protocol PFCTableViewDelegate <NSTableViewDelegate>
+-(BOOL)deleteKeyPressedForTableView:(id)sender;
 @end
 
-@interface PFCProfileGroupTableView : NSTableView
+@interface PFCTableView : NSTableView
 @end

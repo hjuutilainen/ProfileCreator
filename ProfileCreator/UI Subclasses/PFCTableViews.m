@@ -8,19 +8,19 @@
 
 #import "PFCTableViews.h"
 
-@implementation PFCProfileGroupTableView
+@implementation PFCTableView
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 }
 
-+(unichar)firstCharPressedForEvent:(NSEvent *)theEvent {
-    if (![[theEvent characters] length]) return -1;
++ (unichar)firstCharPressedForEvent:(NSEvent *)theEvent {
+    if ( ! [[theEvent characters] length] ) return -1;
     return [[theEvent characters] characterAtIndex:0];
 }
 
-+(BOOL)eventIsDeleteKeyPressed:(NSEvent *)theEvent {
-    switch ([PFCProfileGroupTableView firstCharPressedForEvent:theEvent]) {
++ (BOOL)eventIsDeleteKeyPressed:(NSEvent *)theEvent {
+    switch ( [PFCTableView firstCharPressedForEvent:theEvent] ) {
         case NSDeleteFunctionKey:
         case NSDeleteCharFunctionKey:
         case NSDeleteCharacter:
@@ -30,10 +30,10 @@
     }
 }
 
--(void)keyDown:(NSEvent *)theEvent {
-    if ( [PFCProfileGroupTableView eventIsDeleteKeyPressed:theEvent] ) {
+- (void)keyDown:(NSEvent *)theEvent {
+    if ( [PFCTableView eventIsDeleteKeyPressed:theEvent] ) {
         if ( [[self delegate] respondsToSelector:@selector(deleteKeyPressedForTableView:)] ) {
-            if ( [(id<ProfileGroupTableViewDelegate>)[self delegate] deleteKeyPressedForTableView:self] ) {
+            if ( [(id<PFCTableViewDelegate>)[self delegate] deleteKeyPressedForTableView:self] ) {
                 return;
             }
         }

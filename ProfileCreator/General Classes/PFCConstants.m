@@ -142,7 +142,9 @@ NSString *const PFCAlertTagKey = @"AlertTag";
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark AlertTags
 ////////////////////////////////////////////////////////////////////////////////
-NSString *const PFCAlertTagDeleteGroup = @"AlertTagDeleteGroup";
+NSString *const PFCAlertTagDeleteGroups = @"AlertTagDeleteGroups";
+NSString *const PFCAlertTagDeleteProfiles = @"AlertTagDeleteProfiles";
+NSString *const PFCAlertTagDeleteProfilesInGroup = @"AlertTagDeleteProfilesInGroup";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark FileInfoKeys
