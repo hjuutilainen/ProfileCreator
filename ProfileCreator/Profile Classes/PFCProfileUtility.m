@@ -13,8 +13,14 @@
 
 @interface PFCProfileUtility ()
 
+@property NSMutableDictionary *profiles; // All
+
 @property NSMutableArray *arraySavedProfiles;
+@property NSMutableDictionary *dictSavedProfiles;
+
 @property NSMutableArray *arrayUnsavedProfiles;
+@property NSMutableDictionary *dictUnsavedProfiles;
+
 @property NSDate *savedProfilesModificationDate;
 @property NSURL *savedProfilesFolderURL;
 
@@ -43,9 +49,12 @@
     
     self = [super init];
     if ( self ) {
+        _profiles = [[NSMutableDictionary alloc] init];
         _arraySavedProfiles = [[NSMutableArray alloc] init];
         _arrayUnsavedProfiles = [[NSMutableArray alloc] init];
         _savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
+        _dictSavedProfiles = [[NSMutableDictionary alloc] init];
+        _dictUnsavedProfiles = [[NSMutableDictionary alloc] init];
     }
     return self;
 } // init
@@ -110,7 +119,7 @@
             if ( [modificationDate isEqualToDate:_savedProfilesModificationDate] ) {
                 DDLogDebug(@"Profile save folder have not changed, returning cached profile array");
                 
-                return [_arraySavedProfiles copy];
+                return [self allProfiles];
             } else {
                 DDLogDebug(@"Profile save folder have changed, reloading saved profiles from disk...");
             }
@@ -120,10 +129,12 @@
     }
     
     [_arraySavedProfiles removeAllObjects];
+    [_dictSavedProfiles removeAllObjects];
+    [_profiles removeAllObjects];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Read all saved profiles from disk
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     for ( NSURL *profileURL in [self savedProfileURLs] ?: @[] ) {
         
         NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
@@ -140,14 +151,60 @@
             continue;
         }
         
+        // ---------------------------------------------------------------------
+        //  If profile was saved, remove it from unsaved profiles
+        // ---------------------------------------------------------------------
+        NSString *uuid = profileDict[PFCProfileTemplateKeyUUID];
+        if ( [uuid length] != 0 ) {
+            if ( [_arrayUnsavedProfiles containsObject:uuid] ) {
+                [_arrayUnsavedProfiles removeObject:uuid];
+            }
+        }
+        
         NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
                                             @"Config" : profileDict };
 
+        
+        
         [_arraySavedProfiles addObject:savedProfileDict];
+        _dictSavedProfiles[uuid] = savedProfileDict;
     }
     
-    return [_arraySavedProfiles copy];
+    [_profiles addEntriesFromDictionary:_dictSavedProfiles];
+    
+    return [self allProfiles];
 } // savedProfiles
+
+- (void)addUnsavedProfile:(NSDictionary *)profile {
+    [_arrayUnsavedProfiles addObject:profile];
+    NSString *uuid = profile[@"Config"][PFCProfileTemplateKeyUUID];
+    _dictUnsavedProfiles[uuid] = profile;
+    _profiles[uuid] = profile;
+} // addUnsavedProfile
+
+- (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
+    NSInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
+    }];
+    
+    if ( index != NSNotFound ) {
+        [_arrayUnsavedProfiles removeObjectAtIndex:index];
+    }
+    
+    [_dictUnsavedProfiles removeObjectForKey:uuid];
+    [_profiles removeObjectForKey:uuid];
+} // removeUnsavedProfileWithUUID
+
+- (NSArray *)allProfiles {
+    NSMutableArray *profiles = [[NSMutableArray alloc] initWithArray:_arraySavedProfiles];
+    [profiles addObjectsFromArray:_arrayUnsavedProfiles];
+    return [profiles copy];
+} // allProfiles
+
+- (NSArray *)allProfileUUIDs {
+    [self profiles]; // Update if needed
+    return [_profiles allKeys];
+} // allProfileUUIDs
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -157,25 +214,25 @@
 
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    if ( [profileUUIDs ?: @[] count] == 0 ) {
-        return @[];
-    }
-    
+    DDLogDebug(@"Profile UUIDs: %@", profileUUIDs);
+    [self profiles]; // Update if needed
     NSMutableArray *profileDicts = [[NSMutableArray alloc] init];
-    [[self profiles] enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ( [profileUUIDs containsObject:dict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""] ) {
-            [profileDicts addObject:dict];
-        }
-    }];
-    
+    for ( NSString *uuid in profileUUIDs ) {
+        [profileDicts addObject:_profiles[uuid] ?: @{}];
+    }
+    [profileDicts removeObject:@{}];
+
     return [profileDicts copy];
+
 } // profilesWithUUIDs
 
-- (NSDictionary *)profileWithUUID:(NSString *)profileUUID {
+- (NSDictionary *)profileWithUUID:(NSString *)uuid {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Profile UUID: %@", uuid);
+    [self profiles]; // Update if needed
+    return _profiles[uuid] ?: @{};
     
-    if ( [profileUUID length] != 0 ) {
+        /*
         NSArray *profiles = [self profiles];
         NSUInteger index = [profiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
             return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:profileUUID];
@@ -184,8 +241,7 @@
         if ( index != NSNotFound ) {
             return profiles[index];
         }
-    }
-    return nil;
+         */
 } // profileWithUUID
 
 @end

@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, PFCProfileGroups) {
 #pragma mark PFCProfileGroupDelegate
 ////////////////////////////////////////////////////////////////////////////////
 @protocol PFCProfileGroupDelegate
-- (void)addGroupOfType:(PFCProfileGroups)group;
+- (void)createNewGroupOfType:(PFCProfileGroups)group;
 @end
 
 

@@ -75,6 +75,7 @@
 		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
 		536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 536213031C43D1C500C6C8BF /* PFCSplitViews.m */; };
+		5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 		537290721C554D43003160EA /* OSVersions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 537290711C554D43003160EA /* OSVersions.plist */; };
@@ -367,6 +368,8 @@
 		5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconSecurityPrivacy.png; path = "../Supporting Files/Graphics/MenuIconSecurityPrivacy.png"; sourceTree = "<group>"; };
 		536213021C43D1C500C6C8BF /* PFCSplitViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCSplitViews.h; path = "UI Subclasses/PFCSplitViews.h"; sourceTree = "<group>"; };
 		536213031C43D1C500C6C8BF /* PFCSplitViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCSplitViews.m; path = "UI Subclasses/PFCSplitViews.m"; sourceTree = "<group>"; };
+		5364EED81C710F8200F34BC9 /* NSColor+PFCColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSColor+PFCColors.h"; path = "Categories/NSColor+PFCColors.h"; sourceTree = "<group>"; };
+		5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSColor+PFCColors.m"; path = "Categories/NSColor+PFCColors.m"; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -779,6 +782,8 @@
 			children = (
 				53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */,
 				53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */,
+				5364EED81C710F8200F34BC9 /* NSColor+PFCColors.h */,
+				5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1090,6 +1095,7 @@
 				5341D3261C15F3500014F5A7 /* PFCProfileEditor.m in Sources */,
 				537612F81C662D8E00CFCE1D /* PFCProfileGroupTitle.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
+				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
 				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
 				53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */,
 				536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */,

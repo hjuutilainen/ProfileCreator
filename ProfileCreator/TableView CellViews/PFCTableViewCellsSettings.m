@@ -24,6 +24,7 @@
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCLog.h"
+#import "NSColor+PFCColors.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -851,7 +852,7 @@
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
-
+    
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
@@ -1351,15 +1352,22 @@
     //  Value
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
+    NSAttributedString *valueAttributed = nil;
     if ( [value length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValue] length] != 0 ) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
-            value = settingsLocal[PFCSettingsKeyValue] ?: @"";
+            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @""
+                                                              attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    
+    if ( [valueAttributed length] != 0 ) {
+        [[cellView settingTextField] setAttributedStringValue:valueAttributed];
+    } else {
+        [[cellView settingTextField] setStringValue:value];
+    }
     [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:value];
     [[cellView settingTextField] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1460,14 +1468,21 @@
     //  ValueTextField
     // ---------------------------------------------------------------------
     NSString *valueTextField;
+    NSAttributedString *valueTextFieldAttributed = nil;
     if ( [settings[PFCSettingsKeyValueTextField] length] != 0 ) {
         valueTextField = settings[PFCSettingsKeyValueTextField];
     } else if ( [manifest[PFCManifestKeyDefaultValueTextField] length] != 0 ) {
         valueTextField = manifest[PFCManifestKeyDefaultValueTextField];
     } else if ( [settingsLocal[PFCSettingsKeyValueTextField] length] != 0 ) {
-        valueTextField = settingsLocal[PFCSettingsKeyValueTextField];
+        valueTextFieldAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueTextField] ?: @""
+                                                          attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
     }
-    [[cellView settingTextField] setStringValue:valueTextField ?: @""];
+    
+    if ( [valueTextFieldAttributed length] != 0 ) {
+        [[cellView settingTextField] setAttributedStringValue:valueTextFieldAttributed];
+    } else {
+        [[cellView settingTextField] setStringValue:valueTextField ?: @""];
+    }
     [[cellView settingTextField] setDelegate:sender];
     [[cellView settingTextField] setTag:row];
     
@@ -1696,15 +1711,21 @@
     //  Value Host
     // ---------------------------------------------------------------------
     NSString *valueHost = settings[PFCSettingsKeyValueHost] ?: @"";
+    NSAttributedString *valueHostAttributed = nil;
     if ( [valueHost length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValueHost] length] != 0 ) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValueHost] length] != 0 ) {
-            valueHost = settingsLocal[PFCSettingsKeyValueHost] ?: @"";
+            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @""
+                                                              attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    if ( [valueHostAttributed length] != 0 ) {
+        [[cellView settingTextFieldHost] setAttributedStringValue:valueHostAttributed];
+    } else {
+        [[cellView settingTextFieldHost] setStringValue:valueHost];
+    }
     [[cellView settingTextFieldHost] setDelegate:sender];
-    [[cellView settingTextFieldHost] setStringValue:valueHost];
     [[cellView settingTextFieldHost] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1724,15 +1745,22 @@
     //  Value Port
     // ---------------------------------------------------------------------
     NSString *valuePort = settings[PFCSettingsKeyValuePort] ?: @"";
+    NSAttributedString *valuePortAttributed = nil;
     if ( [valuePort length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValuePort] length] != 0 ) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValuePort] length] != 0 ) {
-            valuePort = settingsLocal[PFCSettingsKeyValuePort] ?: @"";
+            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @""
+                                                              attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    
+    if ( [valuePortAttributed length] != 0 ) {
+        [[cellView settingTextFieldPort] setAttributedStringValue:valuePortAttributed];
+    } else {
+        [[cellView settingTextFieldPort] setStringValue:valuePort];
+    }
     [[cellView settingTextFieldPort] setDelegate:sender];
-    [[cellView settingTextFieldPort] setStringValue:valuePort];
     [[cellView settingTextFieldPort] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1855,15 +1883,22 @@
     //  Value Host
     // ---------------------------------------------------------------------
     NSString *valueHost = settings[PFCSettingsKeyValueHost] ?: @"";
+    NSAttributedString *valueHostAttributed = nil;
     if ( [valueHost length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValueHost] length] != 0 ) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValueHost] length] != 0 ) {
-            valueHost = settingsLocal[PFCSettingsKeyValueHost] ?: @"";
+            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @""
+                                                              attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    
+    if ( [valueHostAttributed length] != 0 ) {
+        [[cellView settingTextFieldHost] setAttributedStringValue:valueHostAttributed];
+    } else {
+        [[cellView settingTextFieldHost] setStringValue:valueHost];
+    }
     [[cellView settingTextFieldHost] setDelegate:sender];
-    [[cellView settingTextFieldHost] setStringValue:valueHost];
     [[cellView settingTextFieldHost] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1883,15 +1918,22 @@
     //  Value Port
     // ---------------------------------------------------------------------
     NSString *valuePort = settings[PFCSettingsKeyValuePort] ?: @"";
+    NSAttributedString *valuePortAttributed = nil;
     if ( [valuePort length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValuePort] length] != 0 ) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValuePort] length] != 0 ) {
-            valuePort = settingsLocal[PFCSettingsKeyValuePort] ?: @"";
+            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @""
+                                                                  attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    
+    if ( [valueHostAttributed length] != 0 ) {
+        [[cellView settingTextFieldPort] setAttributedStringValue:valuePortAttributed];
+    } else {
+        [[cellView settingTextFieldPort] setStringValue:valuePort];
+    }
     [[cellView settingTextFieldPort] setDelegate:sender];
-    [[cellView settingTextFieldPort] setStringValue:valuePort];
     [[cellView settingTextFieldPort] setTag:row];
     
     // ---------------------------------------------------------------------
@@ -1983,15 +2025,22 @@
     //  Value
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
+    NSAttributedString *valueAttributed = nil;
     if ( [value length] == 0 ) {
         if ( [manifest[PFCManifestKeyDefaultValue] length] != 0 ) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ( [settingsLocal[PFCSettingsKeyValue] length] != 0 ) {
-            value = settingsLocal[PFCSettingsKeyValue] ?: @"";
+            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @""
+                                                              attributes:@{ NSForegroundColorAttributeName : [NSColor localSettingsColor] }];
         }
     }
+    
+    if ( [valueAttributed length] != 0 ) {
+        [[cellView settingTextField] setAttributedStringValue:valueAttributed];
+    } else {
+        [[cellView settingTextField] setStringValue:value];
+    }
     [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:value];
     [[cellView settingTextField] setTag:row];
     
     // ---------------------------------------------------------------------

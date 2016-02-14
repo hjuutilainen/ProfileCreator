@@ -32,7 +32,7 @@
 
 - (IBAction)buttonAddGroup:(id)sender {
     if ( _delegate ) {
-        [_delegate addGroupOfType:_profileGroup];
+        [_delegate createNewGroupOfType:_profileGroup];
     }
 } // buttonAddGroup
 

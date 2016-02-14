@@ -18,8 +18,11 @@
 // -----------------------------------------------------------------------------
 //  Utility Methods
 // -----------------------------------------------------------------------------
+- (NSArray *)allProfileUUIDs;
 - (NSArray *)profiles;
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs;
 - (NSDictionary *)profileWithUUID:(NSString *)profileUUID;
+- (void)addUnsavedProfile:(NSDictionary *)profile;
+- (void)removeUnsavedProfileWithUUID:(NSString *)uuid;
 
 @end
