@@ -13,7 +13,7 @@
 
 @interface PFCProfileUtility ()
 
-@property NSMutableDictionary *profiles; // All
+@property NSMutableDictionary *profilesDict; // All
 
 @property NSMutableArray *arraySavedProfiles;
 @property NSMutableDictionary *dictSavedProfiles;
@@ -49,7 +49,7 @@
     
     self = [super init];
     if ( self ) {
-        _profiles = [[NSMutableDictionary alloc] init];
+        _profilesDict = [[NSMutableDictionary alloc] init];
         _arraySavedProfiles = [[NSMutableArray alloc] init];
         _arrayUnsavedProfiles = [[NSMutableArray alloc] init];
         _savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
@@ -130,7 +130,7 @@
     
     [_arraySavedProfiles removeAllObjects];
     [_dictSavedProfiles removeAllObjects];
-    [_profiles removeAllObjects];
+    [_profilesDict removeAllObjects];
     
     // -------------------------------------------------------------------------
     //  Read all saved profiles from disk
@@ -170,7 +170,7 @@
         _dictSavedProfiles[uuid] = savedProfileDict;
     }
     
-    [_profiles addEntriesFromDictionary:_dictSavedProfiles];
+    [_profilesDict addEntriesFromDictionary:_dictSavedProfiles];
     
     return [self allProfiles];
 } // savedProfiles
@@ -179,7 +179,7 @@
     [_arrayUnsavedProfiles addObject:profile];
     NSString *uuid = profile[@"Config"][PFCProfileTemplateKeyUUID];
     _dictUnsavedProfiles[uuid] = profile;
-    _profiles[uuid] = profile;
+    _profilesDict[uuid] = profile;
 } // addUnsavedProfile
 
 - (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
@@ -192,7 +192,7 @@
     }
     
     [_dictUnsavedProfiles removeObjectForKey:uuid];
-    [_profiles removeObjectForKey:uuid];
+    [_profilesDict removeObjectForKey:uuid];
 } // removeUnsavedProfileWithUUID
 
 - (NSArray *)allProfiles {
@@ -203,7 +203,7 @@
 
 - (NSArray *)allProfileUUIDs {
     [self profiles]; // Update if needed
-    return [_profiles allKeys];
+    return [_profilesDict allKeys];
 } // allProfileUUIDs
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@
     [self profiles]; // Update if needed
     NSMutableArray *profileDicts = [[NSMutableArray alloc] init];
     for ( NSString *uuid in profileUUIDs ) {
-        [profileDicts addObject:_profiles[uuid] ?: @{}];
+        [profileDicts addObject:_profilesDict[uuid] ?: @{}];
     }
     [profileDicts removeObject:@{}];
 
@@ -230,7 +230,7 @@
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Profile UUID: %@", uuid);
     [self profiles]; // Update if needed
-    return _profiles[uuid] ?: @{};
+    return _profilesDict[uuid] ?: @{};
     
         /*
         NSArray *profiles = [self profiles];

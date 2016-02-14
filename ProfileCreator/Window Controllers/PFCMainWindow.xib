@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PFCMainWindow">
@@ -176,13 +175,13 @@
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
             <subviews>
-                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="42" horizontalPageScroll="10" verticalLineScroll="42" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
+                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="40" horizontalPageScroll="10" verticalLineScroll="40" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Jbc-6O-SzG">
                         <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="42" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU" customClass="PFCTableView">
+                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="184" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -202,19 +201,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="CellViewProfile" id="H6P-Et-eRM" userLabel="CellViewMenu" customClass="CellViewProfile">
-                                                <rect key="frame" x="0.0" y="0.0" width="184" height="42"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="184" height="40"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tcg-6w-Rh9">
-                                                        <rect key="frame" x="8" y="4" width="32" height="32"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="32" id="Lop-r7-KTg"/>
-                                                            <constraint firstAttribute="width" secondItem="tcg-6w-Rh9" secondAttribute="height" multiplier="1:1" id="xB9-4k-LHi"/>
-                                                        </constraints>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSAdvanced" id="H1W-hn-Kui"/>
-                                                    </imageView>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w3z-I9-GAa">
-                                                        <rect key="frame" x="44" y="19" width="138" height="16"/>
+                                                        <rect key="frame" x="9" y="20" width="173" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Title" id="ogQ-Wa-v8N">
                                                             <font key="font" metaFont="systemBold" size="12"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -222,7 +213,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wqp-2r-ceT">
-                                                        <rect key="frame" x="44" y="5" width="138" height="13"/>
+                                                        <rect key="frame" x="9" y="6" width="173" height="13"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="AUE-B0-3CU">
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
@@ -231,20 +222,16 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="tcg-6w-Rh9" firstAttribute="top" secondItem="H6P-Et-eRM" secondAttribute="top" constant="6" id="3sE-t1-fPd"/>
-                                                    <constraint firstItem="w3z-I9-GAa" firstAttribute="top" secondItem="H6P-Et-eRM" secondAttribute="top" constant="7" id="4eP-at-sFR"/>
-                                                    <constraint firstItem="w3z-I9-GAa" firstAttribute="leading" secondItem="tcg-6w-Rh9" secondAttribute="trailing" constant="6" id="6hD-oW-JqG"/>
-                                                    <constraint firstAttribute="bottom" secondItem="tcg-6w-Rh9" secondAttribute="bottom" constant="4" id="MCJ-V0-dwY"/>
+                                                    <constraint firstItem="w3z-I9-GAa" firstAttribute="top" secondItem="H6P-Et-eRM" secondAttribute="top" constant="4" id="4eP-at-sFR"/>
+                                                    <constraint firstItem="w3z-I9-GAa" firstAttribute="leading" secondItem="H6P-Et-eRM" secondAttribute="leading" constant="11" id="8TD-Pb-iSJ"/>
                                                     <constraint firstItem="Wqp-2r-ceT" firstAttribute="leading" secondItem="w3z-I9-GAa" secondAttribute="leading" id="Vb3-mf-8O0"/>
                                                     <constraint firstAttribute="trailing" secondItem="w3z-I9-GAa" secondAttribute="trailing" constant="4" id="XHE-I2-ms0"/>
-                                                    <constraint firstItem="tcg-6w-Rh9" firstAttribute="leading" secondItem="H6P-Et-eRM" secondAttribute="leading" constant="8" id="eWo-p6-1Dv"/>
                                                     <constraint firstItem="Wqp-2r-ceT" firstAttribute="width" secondItem="w3z-I9-GAa" secondAttribute="width" id="f5D-Tu-Jza"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Wqp-2r-ceT" secondAttribute="bottom" constant="6" id="nBN-gr-Eex"/>
                                                     <constraint firstItem="Wqp-2r-ceT" firstAttribute="top" secondItem="w3z-I9-GAa" secondAttribute="bottom" constant="1" id="qcu-Hb-q11"/>
                                                 </constraints>
                                                 <connections>
-                                                    <outlet property="imageView" destination="tcg-6w-Rh9" id="W6L-TH-2PS"/>
                                                     <outlet property="menuDescription" destination="Wqp-2r-ceT" id="tsY-I2-pFt"/>
-                                                    <outlet property="menuIcon" destination="tcg-6w-Rh9" id="0kj-Ry-KwH"/>
                                                     <outlet property="menuTitle" destination="w3z-I9-GAa" id="7qr-Df-ElQ"/>
                                                     <outlet property="textField" destination="w3z-I9-GAa" id="ioN-QC-QPB"/>
                                                 </connections>
@@ -277,7 +264,7 @@
                 <constraint firstAttribute="trailing" secondItem="kgS-ch-DaF" secondAttribute="trailing" id="piz-E8-BwS"/>
                 <constraint firstItem="kgS-ch-DaF" firstAttribute="leading" secondItem="azA-lO-Z5V" secondAttribute="leading" id="tw7-Sd-3cb"/>
             </constraints>
-            <point key="canvasLocation" x="-726.5" y="164.5"/>
+            <point key="canvasLocation" x="-1321.5" y="186.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf">
             <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>
@@ -781,7 +768,6 @@
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="NSSmartBadgeTemplate" width="14" height="14"/>
     </resources>

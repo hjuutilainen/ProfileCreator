@@ -1087,6 +1087,17 @@ int const PFCTableViewGroupsRowHeight = 24;
     
     DDLogDebug(@"Selected table view identifier: %@", _selectedTableViewIdentifier);
     if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroupAll] ) {
+        if ( [_arrayProfileLibrary containsObject:uuid] ) {
+            NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSString * _Nonnull string, NSUInteger idx, BOOL * _Nonnull stop) {
+                return [string isEqualToString:uuid];
+            }];
+            
+            if ( selectedIndex != NSNotFound ) {
+                NSRange allColumns = NSMakeRange(0, [[_tableViewProfileLibrary tableColumns] count]);
+                [_tableViewProfileLibrary reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:selectedIndex] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+            }
+        }
+        /*
         NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
             return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
         }];
@@ -1100,6 +1111,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             NSRange allColumns = NSMakeRange(0, [[_tableViewProfileLibrary tableColumns] count]);
             [_tableViewProfileLibrary reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:selectedIndex] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
         }
+         */
     } else if ( [_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroups] ) {
         if ( [_arrayProfileGroups containsObject:uuid] ) {
             NSUInteger selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSString * _Nonnull string, NSUInteger idx, BOOL * _Nonnull stop) {
