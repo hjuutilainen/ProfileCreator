@@ -2495,7 +2495,7 @@ Gw
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="Sm1-vL-zYg">
                     <rect key="frame" x="132" y="247" width="44" height="18"/>
-                    <buttonCell key="cell" type="check" title="iOS" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="TWV-JZ-xSU">
+                    <buttonCell key="cell" type="check" title="iOS" bezelStyle="regularSquare" imagePosition="left" enabled="NO" state="on" inset="2" id="TWV-JZ-xSU">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -2521,7 +2521,7 @@ Gw
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p6Y-ks-bKA">
                     <rect key="frame" x="188" y="244" width="34" height="22"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="5wa-5B-0jl">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" enabled="NO" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="5wa-5B-0jl">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                         <menu key="menu" id="Dhg-pw-sjl"/>
@@ -2537,7 +2537,7 @@ Gw
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YSX-jt-Qcq">
                     <rect key="frame" x="239" y="244" width="34" height="22"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="mEM-83-zBz">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" enabled="NO" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="mEM-83-zBz">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                         <menu key="menu" id="ChU-dE-rc9"/>
@@ -2568,7 +2568,7 @@ Gw
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0Mf-93-DqT">
                     <rect key="frame" x="225" y="248" width="11" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="-" id="wGY-1P-maR">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="-" id="wGY-1P-maR">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

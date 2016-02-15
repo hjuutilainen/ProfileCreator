@@ -60,32 +60,32 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Set allowed date units to year, month and day
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Use calendar US
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
     [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Remove all components except the allowed date units
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSDateComponents* components = [calendarUS components:allowedUnits fromDate:futureDate];
     NSDate* date = [calendarUS dateFromComponents:components];
     NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Calculate the date interval
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Create date formatter to create the date in spelled out string format
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
     [dateComponentsFormatter setAllowedUnits:allowedUnits];
     [dateComponentsFormatter setMaximumUnitCount:3];
@@ -196,46 +196,46 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [[self window] setDelegate:self];
     [[self window] setBackgroundColor:[NSColor whiteColor]];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Add content views to window
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Add header views to window
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewSettingsHeader inSuperview:_viewSettingsHeaderSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileHeader inSuperview:_viewProfileHeaderSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_viewInfoController view] inSuperview:_viewInfoSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Add error views to content views
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewSettingsStatus inSuperview:_viewSettingsSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoManifests inSuperview:_viewPayloadLibrarySplitView hidden:YES];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Add profile settings view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewProfileSettings inSuperview:_viewSettingsSplitView hidden:YES];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Register KVO observers
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Perform Initial Setup
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self initialSetup];
 } // windowDidLoad
 
@@ -318,9 +318,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // FIXME - Comment this
     [self updateTableColumnsSettings];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Initialize property 'profileName'
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
     [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
     
@@ -340,9 +340,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     [self setupSettingsTabBar];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup Payload Arrays
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [_arrayPayloadProfile removeAllObjects];
     [self setupManifestLibraryApple:[enabledPayloadDomains copy]];
     [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
@@ -350,27 +350,27 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self sortArrayPayloadProfile];
     [self updateProfileHeader];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup TableView "Payload Profile"
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self selectTableViewPayloadProfile:nil];
     [self setTableViewPayloadProfileSelectedRow:-1];
     [_tableViewPayloadProfile setTableViewDelegate:self];
     //[[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
     [_tableViewPayloadProfile reloadData];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup TableView "Payload Library"
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self selectTableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
     [_tableViewPayloadLibrary setTableViewDelegate:self];
     //[[_tableViewPayloadLibrary layer] setBorderWidth:0.0f];
     [_tableViewPayloadLibrary reloadData];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Setup TableView "Settings"
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [_tableViewSettings setTableViewDelegate:self];
     
     // -------------------------------------------------------------------------
@@ -778,19 +778,19 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         DDLogVerbose(@"Setting tab index selected to: %ld", ( _tabIndexSelected - 1 ));
         [self setTabIndexSelected:( _tabIndexSelected - 1 )];
         
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Save the currently selected tab in user settings
-        // -------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         [self saveTabIndexSelected:_tabIndexSelected forManifestDomain:_selectedManifest[PFCManifestKeyDomain]];
         
-        // --------------------------------------------------------------------
+        // -----------------------------------------------------------------------
         //  Closed tab was left of the current selection, update the tab selected
-        // --------------------------------------------------------------------
+        // -----------------------------------------------------------------------
         [self tabIndexSelected:_tabIndexSelected saveSettings:NO sender:self];
         
-        // -----------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Hide the tab bar when there's only one payload configured
-        // -----------------------------------------------------------------
+        // ---------------------------------------------------------------------
         if ( [_arrayPayloadTabs count] == 1 ) {
             [self hideSettingsTabBar];
         }
@@ -934,9 +934,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnSettings"] ) {
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Padding
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             if ( [cellType isEqualToString:PFCCellTypePadding] ) {
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
                 
@@ -949,145 +949,145 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                     localSettingsDict = _settingsLocalManifest[identifier];
                 }
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Checkbox
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
                     CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  CheckboxNoDescription
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
                     CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsCheckboxNoDescription:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  DatePicker
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
                     CellViewSettingsDatePicker *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePicker" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewDatePicker:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  DatePickerNoTitle
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ) {
                     CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewDatePickerNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  File
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
                     CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsFile:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  PopUpButton
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
                     CellViewSettingsPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButton" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewPopUpButton:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  PopUpButtonLeft
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
                     CellViewSettingsPopUpButtonLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsPopUpButtonLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  PopUpButtonNoTitle
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
                     CellViewSettingsPopUpButtonNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsPopUpButtonNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  SegmentedControl
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
                     CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsSegmentedControl:cellView manifest:manifestContentDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TableView
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
                     CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTableView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextField
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextField] ) {
                     CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewTextField:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldCheckbox
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ) {
                     CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldDaysHoursNoTitle
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
                     CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldHostPort
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ) {
                     CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldHostPortCheckbox
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
                     CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldNoTitle
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ) {
                     CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewTextFieldNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldNumber
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumber] ) {
                     CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldNumber:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
                     
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                     //  TextFieldNumberLeft
-                    // ---------------------------------------------------------------------
+                    // ---------------------------------------------------------
                 } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
                     CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
@@ -1202,9 +1202,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 return;
             }
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  It the cell is disabled, change cell background to grey
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             if ( _settingsManifest[identifier][PFCSettingsKeyEnabled] != nil ) {
                 if ( ! [_settingsManifest[identifier][PFCSettingsKeyEnabled] boolValue] ) {
                     [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
@@ -1212,9 +1212,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 }
             }
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  It the cell is hidden, change cell background to grey
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             if ( manifestContentDict[PFCManifestKeyHidden] != nil ) {
                 if ( [manifestContentDict[PFCManifestKeyHidden] boolValue] ) {
                     [rowView setBackgroundColor:[NSColor quaternaryLabelColor]];
@@ -1510,16 +1510,16 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Make sure it's a text field
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if ( ! [[[sender object] class] isSubclassOfClass:[NSTextField class]] ) {
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get text field's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSTextField *textField = [sender object];
     NSNumber *textFieldTag = @([textField tag]);
     if ( textFieldTag == nil ) {
@@ -1528,15 +1528,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     NSInteger row = [textFieldTag integerValue];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get current entered text
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSDictionary *userInfo = [sender userInfo];
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
     
@@ -1548,9 +1548,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Another verification of text field type
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if (
         [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPort class]] ||
         [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
@@ -1634,9 +1634,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *buttonTag = @([checkbox tag]);
     if ( buttonTag == nil ) {
         DDLogError(@"Checkbox: %@ has no tag", checkbox);
@@ -1651,9 +1651,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // ---------------------------------------------------------------------
         if ( ( row < [_arrayPayloadProfile count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewPayloadProfile viewAtColumn:[_tableViewPayloadProfile columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Store the cell dict for move
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             NSDictionary *manifestDict = [_arrayPayloadProfile objectAtIndex:row];
             NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
             DDLogInfo(@"Removing manifest with domain: %@ from table view profile", manifestDomain);
@@ -1681,9 +1681,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             }
             DDLogDebug(@"Clicked manifest payload library: %ld", (long)payloadLibrary);
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Remove the cell dict from table view profile
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             [_tableViewPayloadProfile beginUpdates];
             [_arrayPayloadProfile removeObjectAtIndex:(NSUInteger)row];
             [_tableViewPayloadProfile reloadData];
@@ -1702,9 +1702,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 [self setTableViewPayloadProfileSelectedRow:selectedRow];
             }
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Add the cell dict to table view payload library
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewPayloadLibrary selectedRow];
             DDLogDebug(@"Table view payload library selected row: %ld", (long)tableViewPayloadLibrarySelectedRow);
             
@@ -1734,9 +1734,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             if ( 0 <= tableViewPayloadLibrarySelectedRow && tableViewPayloadProfileSelectedRow != row ) {
                 DDLogDebug(@"Current selection was not clicked. Restoring selection to table view payload library.");
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 NSUInteger row = [_arrayPayloadLibrary indexOfObject:tableViewPayloadLibrarySelectedManifest];
                 DDLogDebug(@"Table view payload library new selected row: %ld", (long)row);
                 
@@ -1757,15 +1757,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             if ( tableViewPayloadProfileSelectedRow == row && payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment ) {
                 DDLogDebug(@"Current selection was clicked. Moving selection to table view payload library");
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Deselect items in table view profile
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 [_tableViewPayloadProfile deselectAll:self];
                 [self setTableViewPayloadProfileSelectedRow:-1];
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 NSUInteger row = [_arrayPayloadLibrary indexOfObject:manifestDict];
                 DDLogDebug(@"Table view payload library new selected row: %ld", (long)row);
                 
@@ -1799,23 +1799,23 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [settingsManifestRoot removeObjectForKey:@"PayloadLibrary"];
             _settingsProfile[manifestDomain] = [settingsManifestRoot mutableCopy];
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Check if checkbox is in table view payload library
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
         } else if ( ( row < [_arrayPayloadLibrary count] ) && checkbox == [(CellViewMenuEnabled *)[_tableViewPayloadLibrary viewAtColumn:[_tableViewPayloadLibrary columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox] ) {
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Store the cell dict for move
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             NSDictionary *manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
             DDLogVerbose(@"Clicked manifest: %@", manifestDict);
             
             NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
             DDLogInfo(@"Adding manifest with domain: %@ to profile", manifestDomain);
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Remove the cell dict from table view payload library
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewPayloadLibrary selectedRow];
             DDLogDebug(@"Table view payload library selected row: %ld", (long)tableViewPayloadLibrarySelectedRow);
             
@@ -1837,9 +1837,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 [self setTableViewPayloadLibrarySelectedRow:selectedRow];
             }
             
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             //  Add the cell dict to table view profile
-            // ---------------------------------------------------------------------
+            // -----------------------------------------------------------------
             NSInteger tableViewPayloadProfileSelectedRow = [_tableViewPayloadProfile selectedRow];
             DDLogDebug(@"Table view profile selected row: %ld", (long)tableViewPayloadProfileSelectedRow);
             
@@ -1861,9 +1861,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             if ( 0 <= tableViewPayloadProfileSelectedRow && tableViewPayloadLibrarySelectedRow != row ) {
                 DDLogDebug(@"Current selection was not clicked. Restoring selection to table view profile.");
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Find index of current selection select it
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 NSUInteger row = [_arrayPayloadProfile indexOfObject:tableViewPayloadProfileSelectedManifest];
                 DDLogDebug(@"Table view profile new selected row: %ld", (long)row);
                 
@@ -1877,21 +1877,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 }
             }
             
-            // -----------------------------------------------------------------------------
+            // -------------------------------------------------------------------------
             //  If current cell dict was selected, move selection to table view profile
-            // -----------------------------------------------------------------------------
+            // -------------------------------------------------------------------------
             if ( tableViewPayloadLibrarySelectedRow == row ) {
                 DDLogDebug(@"Current selection was clicked. Moving selection to table view payload library");
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Deselect items in table view payload library
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 [_tableViewPayloadLibrary deselectAll:self];
                 [self setTableViewPayloadLibrarySelectedRow:-1];
                 
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
-                // ---------------------------------------------------------------------
+                // -------------------------------------------------------------
                 NSUInteger row = [_arrayPayloadProfile indexOfObject:manifestDict];
                 DDLogDebug(@"Table view profile new selected row: %ld", (long)row);
                 
@@ -1924,9 +1924,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)checkbox:(NSButton *)checkbox {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *buttonTag = @([checkbox tag]);
     if ( buttonTag == nil ) {
         NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
@@ -1934,14 +1934,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     NSInteger row = [buttonTag integerValue];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get current checkbox state
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     BOOL state = [checkbox state];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get current cell's key in the settings dict
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
     NSMutableDictionary *settingsDict;
@@ -1990,25 +1990,25 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     
     _settingsManifest[identifier] = [settingsDict copy];
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Add subkeys for selected state
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [self updateTableViewSettingsFromManifestContentDict:manifestContentDict atRow:row];
 } // checkbox
 
 - (void)datePickerSelection:(NSDatePicker *)datePicker {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Make sure it's a settings date picker
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if ( ! [[[datePicker superview] class] isSubclassOfClass:[CellViewSettingsDatePickerNoTitle class]] ) {
         NSLog(@"[ERROR] DatePicker: %@ superview class is: %@", datePicker, [[datePicker superview] class]);
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get date picker's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *datePickerTag = @([datePicker tag]);
     if ( datePickerTag == nil ) {
         NSLog(@"[ERROR] DatePicker: %@ tag is nil", datePicker);
@@ -2027,9 +2027,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // ------------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsDatePickerNoTitle date picker
-    // ---------------------------------------------------------------------
+    // ------------------------------------------------------------------------------
     if ( datePicker == [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker] ) {
         
         unsigned int flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
@@ -2058,9 +2058,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Make sure it's a settings popup button
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if (
         ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButton class]] &&
         ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButtonNoTitle class]] ) {
@@ -2068,9 +2068,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get popup button's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *popUpButtonTag = @([popUpButton tag]);
     if ( popUpButtonTag == nil ) {
         DDLogError(@"PopUpButton: %@ has no tag", popUpButton);
@@ -2089,9 +2089,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsPopUp popup button
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if (
         popUpButton == [(CellViewSettingsPopUpButton *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
         popUpButton == [(CellViewSettingsPopUpButtonNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
@@ -2112,18 +2112,18 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)selectFile:(NSButton *)button {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Make sure it's a settings button
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // FIXME - Might be able to remove/change this check
     if ( ! [[[button superview] class] isSubclassOfClass:[CellViewSettingsFile class]] ) {
         DDLogError(@"Button: %@ superview class is: %@", button, [[button superview] class]);
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get button's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *buttonTag = @([button tag]);
     if ( buttonTag == nil ) {
         DDLogError(@"Button: %@ has no tag", button);
@@ -2142,20 +2142,20 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsFile button
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // FIXME - Might be able to remove/change this check
     if ( button == [(CellViewSettingsFile *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
         
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Get open dialog prompt
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         NSString *prompt = manifestContentDict[PFCManifestKeyFilePrompt] ?: @"Select File";
         
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Get open dialog allowed file types
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         NSMutableArray *allowedFileTypes = [[NSMutableArray alloc] init];
         if ( manifestContentDict[PFCManifestKeyAllowedFileTypes] != nil && [manifestContentDict[PFCManifestKeyAllowedFileTypes] isKindOfClass:[NSArray class]] ) {
             [allowedFileTypes addObjectsFromArray:manifestContentDict[PFCManifestKeyAllowedFileTypes] ?: @[]];
@@ -2166,9 +2166,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         }
         
         
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  Setup open dialog
-        // --------------------------------------------------------------
+        // ---------------------------------------------------------------------
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
         [openPanel setTitle:prompt];
         [openPanel setPrompt:@"Select"];
@@ -2200,17 +2200,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl {
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Make sure it's a settings segmented control
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if ( ! [[[segmentedControl superview] class] isSubclassOfClass:[CellViewSettingsSegmentedControl class]] ) {
         NSLog(@"[ERROR] SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
         return;
     }
     
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Get segmented control's row in the table view
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSNumber *segmentedControlTag = @([segmentedControl tag]);
     if ( segmentedControlTag == nil ) {
         NSLog(@"[ERROR] SegmentedControl: %@ tag is nil", segmentedControl);
@@ -2218,9 +2218,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     NSInteger row = [segmentedControlTag integerValue];
     
-    // ---------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsSegmentedControl segmented control
-    // ---------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------
     if ( segmentedControl == [(CellViewSettingsSegmentedControl *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingSegmentedControl] ) {
         
         NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
