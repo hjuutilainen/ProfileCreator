@@ -93,37 +93,103 @@
 - (NSArray *)profiles {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    // FIXME - Handle unsaved profiles as well
-    return [self savedProfiles];
+    if ( ! [self shouldUpdateProfileCache] ) {
+        return [self allProfiles];
+    } else {
+        [self updateProfileCache];
+        return [self allProfiles];
+    }
 } // profiles
 
-- (NSArray *)savedProfiles {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    // FIXME -  Don't know if checking modification date of save folder is the best way of determining to return cache for this data.
-    //          Am happy for better ideas.
-    
-    NSError *error = nil;
-    
+- (NSDate *)savedProfilesFolderModificationDate {
     if ( ! _savedProfilesFolderURL ) {
         [self setSavedProfilesFolderURL:[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles]];
     }
     
+    NSError *error = nil;
+    
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_savedProfilesFolderURL path] ?: @"" error:&error];
     if ( [attributes count] != 0 ) {
-        NSDate *modificationDate = (NSDate *)[attributes objectForKey: NSFileModificationDate];
+        return (NSDate *)[attributes objectForKey: NSFileModificationDate];
+    }
+    return nil;
+}
+
+- (BOOL)shouldUpdateProfileCache {
+    
+    // FIXME -  Don't know if checking modification date of save folder is the best way of determining to return cache for this data.
+    //          Am happy for better ideas.
+    
+    NSDate *modificationDate = [self savedProfilesFolderModificationDate];
+    if ( modificationDate ) {
         DDLogDebug(@"Profile save folder modification date: %@", modificationDate);
         DDLogDebug(@"Profile save folder cached modification date: %@", _savedProfilesModificationDate);
         
         if ( _savedProfilesModificationDate ) {
             if ( [modificationDate isEqualToDate:_savedProfilesModificationDate] ) {
                 DDLogDebug(@"Profile save folder have not changed, returning cached profile array");
-                
-                return [self allProfiles];
+                return NO;
             } else {
                 DDLogDebug(@"Profile save folder have changed, reloading saved profiles from disk...");
             }
         }
+    }
+    return YES;
+}
+
+- (void)addUnsavedProfile:(NSDictionary *)profile {
+    [_arrayUnsavedProfiles addObject:profile];
+    NSString *uuid = profile[@"Config"][PFCProfileTemplateKeyUUID];
+    _dictUnsavedProfiles[uuid] = profile;
+    _profilesDict[uuid] = profile;
+} // addUnsavedProfile
+
+- (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
+    NSInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
+    }];
+    
+    if ( index != NSNotFound ) {
+        [_arrayUnsavedProfiles removeObjectAtIndex:index];
+    }
+    
+    [_dictUnsavedProfiles removeObjectForKey:uuid];
+    [_profilesDict removeObjectForKey:uuid];
+} // removeUnsavedProfileWithUUID
+
+- (NSArray *)allProfiles {
+    NSMutableArray *profiles = [[NSMutableArray alloc] initWithArray:_arraySavedProfiles];
+    [profiles addObjectsFromArray:_arrayUnsavedProfiles];
+    return [profiles copy];
+} // allProfiles
+
+- (NSArray *)allProfileUUIDs {
+    if ( [self shouldUpdateProfileCache] ) {
+        [self updateProfileCache];
+    }
+    return [_profilesDict allKeys];
+} // allProfileUUIDs
+
+- (NSArray *)allProfileNamesExceptProfileWithUUID:(NSString *)profileUUID {
+    if ( [self shouldUpdateProfileCache] ) {
+        [self updateProfileCache];
+    }
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    [[_profilesDict allKeys] enumerateObjectsUsingBlock:^(NSString * _Nonnull uuid, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ( ! [profileUUID isEqualToString:uuid] ) {
+            NSDictionary *profile = _profilesDict[uuid] ?: @{};
+            [names addObject:profile[@"Config"][PFCProfileTemplateKeyName] ?: @""];
+        }
+    }];
+    [names removeObject:@""];
+    return [names copy];
+} // allProfileNames
+
+- (void)updateProfileCache {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSDate *modificationDate = [self savedProfilesFolderModificationDate];
+    if ( modificationDate ) {
         DDLogDebug(@"Updating profile save folder modification date to: %@", modificationDate);
         [self setSavedProfilesModificationDate:modificationDate];
     }
@@ -163,7 +229,7 @@
         
         NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path],
                                             @"Config" : profileDict };
-
+        
         
         
         [_arraySavedProfiles addObject:savedProfileDict];
@@ -171,40 +237,7 @@
     }
     
     [_profilesDict addEntriesFromDictionary:_dictSavedProfiles];
-    
-    return [self allProfiles];
-} // savedProfiles
-
-- (void)addUnsavedProfile:(NSDictionary *)profile {
-    [_arrayUnsavedProfiles addObject:profile];
-    NSString *uuid = profile[@"Config"][PFCProfileTemplateKeyUUID];
-    _dictUnsavedProfiles[uuid] = profile;
-    _profilesDict[uuid] = profile;
-} // addUnsavedProfile
-
-- (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
-    NSInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-        return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
-    }];
-    
-    if ( index != NSNotFound ) {
-        [_arrayUnsavedProfiles removeObjectAtIndex:index];
-    }
-    
-    [_dictUnsavedProfiles removeObjectForKey:uuid];
-    [_profilesDict removeObjectForKey:uuid];
-} // removeUnsavedProfileWithUUID
-
-- (NSArray *)allProfiles {
-    NSMutableArray *profiles = [[NSMutableArray alloc] initWithArray:_arraySavedProfiles];
-    [profiles addObjectsFromArray:_arrayUnsavedProfiles];
-    return [profiles copy];
-} // allProfiles
-
-- (NSArray *)allProfileUUIDs {
-    [self profiles]; // Update if needed
-    return [_profilesDict allKeys];
-} // allProfileUUIDs
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -215,33 +248,40 @@
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Profile UUIDs: %@", profileUUIDs);
-    [self profiles]; // Update if needed
+    if ( [self shouldUpdateProfileCache] ) {
+        [self updateProfileCache];
+    }
     NSMutableArray *profileDicts = [[NSMutableArray alloc] init];
     for ( NSString *uuid in profileUUIDs ) {
         [profileDicts addObject:_profilesDict[uuid] ?: @{}];
     }
     [profileDicts removeObject:@{}];
-
+    
     return [profileDicts copy];
-
+    
 } // profilesWithUUIDs
 
 - (NSDictionary *)profileWithUUID:(NSString *)uuid {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Profile UUID: %@", uuid);
-    [self profiles]; // Update if needed
+    if ( [self shouldUpdateProfileCache] ) {
+        [self updateProfileCache];
+    }
     return _profilesDict[uuid] ?: @{};
-    
-        /*
-        NSArray *profiles = [self profiles];
-        NSUInteger index = [profiles indexOfObjectPassingTest:^BOOL(NSDictionary *  _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-            return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:profileUUID];
-        }];
-        
-        if ( index != NSNotFound ) {
-            return profiles[index];
-        }
-         */
 } // profileWithUUID
+
+- (BOOL)deleteProfileWithUUID:(NSString *)uuid error:(NSError **)error {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Profile UUID: %@", uuid);
+    
+    NSDictionary *profile = [self profileWithUUID:uuid];
+    
+    NSString *profilePath = profile[PFCProfileTemplateKeyPath] ?: @"";
+    NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
+    if ( [profileURL checkResourceIsReachableAndReturnError:nil] ) {
+        return [[NSFileManager defaultManager] removeItemAtURL:profileURL error:error];
+    }
+    return YES;
+}
 
 @end

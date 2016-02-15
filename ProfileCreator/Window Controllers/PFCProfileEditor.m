@@ -30,6 +30,7 @@
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
 #import "PFCGeneralUtility.h"
+#import "PFCProfileUtility.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -1501,7 +1502,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
         NSDictionary *userInfo = [sender userInfo];
         NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
-        if ( [inputText isEqualToString:PFCDefaultProfileName] || [inputText length] == 0 ) {
+        if ( [inputText hasPrefix:@"Untitled Profile"] || [[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:nil] containsObject:inputText] || [inputText length] == 0 ) {
             [_buttonSaveSheetProfileName setEnabled:NO];
         } else {
             [_buttonSaveSheetProfileName setEnabled:YES];
@@ -2340,6 +2341,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         profileDict[@"Config"] = [configurationDict copy];
         [self setProfileDict:[profileDict copy]];
         DDLogDebug(@"_profileDict=%@", _profileDict);
+        
         // ---------------------------------------------------------------------
         //  Update main window with new settings for the saved profile
         // ---------------------------------------------------------------------
@@ -2744,14 +2746,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (IBAction)buttonSave:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    if ( [_profileDict[@"Config"][PFCProfileTemplateKeyName] isEqualToString:PFCDefaultProfileName] ) {
+    if ( [_profileName hasPrefix:@"Untitled Profile"] ) {
         
-        // -------------------------------------------------------------------------
-        //  Populate sheet with the current name, and disable the save button
-        //  When typing the save button state is handled in -controlTextDidChange
-        // -------------------------------------------------------------------------
-        // FIXME - Need to do a check in library if _profileName exist already, and set enabled of save button accordingly
         [_buttonSaveSheetProfileName setEnabled:NO];
+        [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
+        [_textFieldSheetProfileNameMessage setStringValue:@""];
+        [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
+        
+        [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
+            // All actions are handled in the IBActions: -buttonCancelSheetProfileName, -buttonSaveSheetProfileName
+        }];
+    } else if ( [[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:_profileUUID] containsObject:_profileName] ) {
+        
+        [_buttonSaveSheetProfileName setEnabled:NO];
+        [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
+        [_textFieldSheetProfileNameMessage setStringValue:[NSString stringWithFormat:@"There already exist a profile with name: \"%@\". Please choose a unique name for your profile.", _profileName]];
         [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
         
         [[NSApp mainWindow] beginSheet:_sheetProfileName completionHandler:^(NSModalResponse __unused returnCode) {
@@ -2765,47 +2774,35 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (IBAction)buttonSaveSheetProfileName:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
+    // -------------------------------------------------------------------------
+    //  Get new name from text filed in sheet
+    // -------------------------------------------------------------------------
+    NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
+    
+    // -----------------------------------------------------------------------------
+    //  Update the profile dict stored in this window controller with the same name
+    // -----------------------------------------------------------------------------
+    NSMutableDictionary *profileDict = [_profileDict mutableCopy];
+    NSMutableDictionary *configDict = [_profileDict[@"Config"] mutableCopy];
+    configDict[PFCProfileTemplateKeyName] = newName;
+    profileDict[@"Config"] = [configDict copy];
+    [self setProfileDict:[profileDict copy]];
+    
     // -----------------------------------------------------------------------------------------
-    //  Verify that the parent object (PFCController) responds to renameProfileWithName:newName
+    //  Update the profile name property (Profile Name TextField in the Profile Editor Window)
     // -----------------------------------------------------------------------------------------
-    // FIXME -  This is just for testing, and feels weak to search for Name, and also limits the possibility to have profiles with the same name.
-    //          Should use a unique identifier instead of name to identify the profile.
-    //          -(void)renameProfileWithIdentifier: or -(void)renameProfileWithDomain
-    /*
-    if ( [_parentObject respondsToSelector:@selector(updateProfileWithUUID:)] ) {
-        
-        NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
-        
-        // -----------------------------------------------------------------------------------------
-        //  Call -(void)renameProfileWithName:newName to rename profile in the main menu
-        // -----------------------------------------------------------------------------------------
-        [_parentObject renameProfileWithUUID:@"" newName:newName];
-        
-        // -----------------------------------------------------------------------------------------
-        //  Update the profile dict stored in this window controller with the same name
-        // -----------------------------------------------------------------------------------------
-        NSMutableDictionary *profileDict = [_profileDict mutableCopy];
-        NSMutableDictionary *configDict = [_profileDict[@"Config"] mutableCopy];
-        configDict[PFCProfileTemplateKeyName] = newName;
-        profileDict[@"Config"] = [configDict copy];
-        [self setProfileDict:[profileDict copy]];
-        
-        // -----------------------------------------------------------------------------------------
-        //  Update the profile name property (Profile Name TextField in the Profile Editor Window)
-        // -----------------------------------------------------------------------------------------
-        [self setProfileName:newName];
-        
-        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
-        [_sheetProfileName orderOut:self];
-        
-        [self saveProfile];
-    } else {
-        
-        // FIXME - If renaming fails here, should notify the user
-        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
-        [_sheetProfileName orderOut:self];
-    }
-     */
+    [self setProfileName:newName];
+    
+    // -------------------------------------------------------------------------
+    //  Remove the modal sheet
+    // -------------------------------------------------------------------------
+    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    [_sheetProfileName orderOut:self];
+    
+    // -------------------------------------------------------------------------
+    //  Save profile settings to disk
+    // -------------------------------------------------------------------------
+    [self saveProfile];
 } // buttonSaveSheetProfileName
 
 

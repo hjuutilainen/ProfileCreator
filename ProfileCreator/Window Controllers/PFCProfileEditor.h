@@ -258,6 +258,8 @@
 //  Sheet - Profile Name
 // -------------------------------------------------------------------------
 @property (strong)  IBOutlet NSWindow                   *sheetProfileName;
+@property (weak)    IBOutlet NSTextField                *textFieldSheetProfileNameTitle;
+@property (weak)    IBOutlet NSTextField                *textFieldSheetProfileNameMessage;
 @property (weak)    IBOutlet NSTextField                *textFieldSheetProfileName;
 @property (weak)    IBOutlet NSButton                   *buttonSaveSheetProfileName;
 

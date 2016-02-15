@@ -19,10 +19,15 @@
 //  Utility Methods
 // -----------------------------------------------------------------------------
 - (NSArray *)allProfileUUIDs;
+- (NSArray *)allProfileNamesExceptProfileWithUUID:(NSString *)uuid;
+
+- (void)updateProfileCache;
+
 - (NSArray *)profiles;
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs;
 - (NSDictionary *)profileWithUUID:(NSString *)profileUUID;
 - (void)addUnsavedProfile:(NSDictionary *)profile;
 - (void)removeUnsavedProfileWithUUID:(NSString *)uuid;
+- (BOOL)deleteProfileWithUUID:(NSString *)uuid error:(NSError **)error;
 
 @end
