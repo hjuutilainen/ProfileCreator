@@ -950,7 +950,9 @@ int const PFCTableViewGroupsRowHeight = 24;
         NSInteger clickedRow = [sender clickedRow];
         DDLogDebug(@"Profile library selected row: %ld", (long)clickedRow);
         
-        [self openProfileEditorForProfileWithUUID:_arrayProfileLibrary[clickedRow] ?: @""];
+        if ( 0 <= clickedRow ) {
+            [self openProfileEditorForProfileWithUUID:_arrayProfileLibrary[clickedRow] ?: @""];
+        }
     }
 } // editSelectedProfile
 
@@ -1031,6 +1033,13 @@ int const PFCTableViewGroupsRowHeight = 24;
     
     NSDictionary *profileDict = @{ PFCRuntimeKeyPath : [PFCGeneralUtility newProfilePath],
                                    @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName,
+                                                  PFCProfileTemplateKeyDisplaySettings : @{
+                                                          PFCProfileDisplaySettingsKeyPlatform : @{
+                                                                  PFCProfileDisplaySettingsKeyPlatformOSX : @YES,
+                                                                  PFCProfileDisplaySettingsKeyPlatformiOS : @NO
+                                                                  },
+                                                          PFCProfileDisplaySettingsKeySupervised : @NO
+                                                          },
                                                   PFCProfileTemplateKeyUUID : uuid }};
     
     [[PFCProfileUtility sharedUtility] addUnsavedProfile:profileDict];
@@ -1136,7 +1145,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             [self updatePreviewWithProfileDict:profileDict];
         }
     }
-}
+} // updateProfileWithUUID
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -1148,7 +1157,9 @@ int const PFCTableViewGroupsRowHeight = 24;
     if ( [sender selectedSegment] == 0 ) {
         [self createNewProfile];
     } else {
-        [self removeProfilesAtSelectedIndexes:_tableViewProfileLibrarySelectedRows];
+        if ( [_tableViewProfileLibrarySelectedRows count] != 0 ) {
+            [self removeProfilesAtSelectedIndexes:_tableViewProfileLibrarySelectedRows];
+        }
     }
 } // segmentedControlProfileLibraryFooterAddRemove
 

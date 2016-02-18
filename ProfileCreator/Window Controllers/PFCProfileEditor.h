@@ -88,12 +88,16 @@
 @property (weak)    IBOutlet NSView                     *viewProfileSettings;
 @property (weak)    IBOutlet NSButton                   *checkboxPlatformOSX;
 @property (weak)    IBOutlet NSButton                   *checkboxPlatformiOS;
-@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformOSXLowest;
-@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformOSXHighest;
-@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSLowest;
-@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSHighest;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformOSXMinVersion;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformOSXMaxVersion;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSMinVersion;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSMaxVersion;
 @property                    BOOL                       includePlatformOSX;
+@property                    NSString                   *osxMaxVersion;
+@property                    NSString                   *osxMinVersion;
 @property                    BOOL                       includePlatformiOS;
+@property                    NSString                   *iosMaxVersion;
+@property                    NSString                   *iosMinVersion;
 @property                    BOOL                       isSupervised;
 @property                    BOOL                       showAdvancedSettings;
 
@@ -170,7 +174,6 @@
 - (IBAction)menuItemAddMobileconfig:(id)sender;
 - (IBAction)menuItemAddPlist:(id)sender;
 
-
 // -------------------------------------------------------------------------
 //  SettingsHeader
 // -------------------------------------------------------------------------
@@ -191,7 +194,6 @@
 @property                    NSMutableArray             *arrayPayloadTabs;
 
 - (IBAction)buttonAddPayload:(id)sender;
-
 
 // -------------------------------------------------------------------------
 //  Settings

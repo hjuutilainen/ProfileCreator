@@ -189,8 +189,22 @@ extern NSString *const PFCDefaultProfileGroupName;
 extern NSString *const PFCProfileTemplateKeyName;
 extern NSString *const PFCProfileTemplateKeyPath;
 extern NSString *const PFCProfileTemplateKeySettings;
+extern NSString *const PFCProfileTemplateKeyDisplaySettings;
 extern NSString *const PFCProfileTemplateKeyUUID;
 extern NSString *const PFCProfileTemplateExtension;
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark PFCProfileDisplaySettingsKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatform;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformOSX;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMinVersion;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformiOS;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion;
+extern NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMinVersion;
+extern NSString *const PFCProfileDisplaySettingsKeySupervised;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileGroupKeys

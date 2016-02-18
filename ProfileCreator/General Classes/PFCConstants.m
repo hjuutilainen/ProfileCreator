@@ -182,8 +182,22 @@ NSString *const PFCDefaultProfileGroupName = @"Untitled Group";
 NSString *const PFCProfileTemplateKeyName = @"Name";
 NSString *const PFCProfileTemplateKeyPath = @"Path";
 NSString *const PFCProfileTemplateKeySettings = @"Settings";
+NSString *const PFCProfileTemplateKeyDisplaySettings = @"DisplaySettings";
 NSString *const PFCProfileTemplateKeyUUID = @"UUID";
 NSString *const PFCProfileTemplateExtension = @"pfcconf";
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark PFCProfileDisplaySettingsKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings = @"AdvancedSettings";
+NSString *const PFCProfileDisplaySettingsKeyPlatform = @"Platform";
+NSString *const PFCProfileDisplaySettingsKeyPlatformOSX = @"OSX";
+NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion = @"OSXMaxVersion";
+NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMinVersion = @"OSXMinVersion";
+NSString *const PFCProfileDisplaySettingsKeyPlatformiOS = @"iOS";
+NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion = @"iOSMaxVersion";
+NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMinVersion = @"iOSMinVersion";
+NSString *const PFCProfileDisplaySettingsKeySupervised = @"Supervied";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileGroupKeys

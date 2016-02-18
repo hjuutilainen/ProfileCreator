@@ -239,6 +239,36 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self initialSetup];
 } // windowDidLoad
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    NSMenu *menu = [menuItem menu];
+    if ( menu == [_popUpButtonPlatformOSXMinVersion menu] ) {
+        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
+    } else if ( menu == [_popUpButtonPlatformOSXMaxVersion menu] ) {
+        return [self version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+    } else if ( menu == [_popUpButtonPlatformiOSMinVersion menu] ) {
+        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
+    } else if ( menu == [_popUpButtonPlatformiOSMaxVersion menu] ) {
+        return [self version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+    }
+    return YES;
+} // validateMenuItem
+
+- (BOOL)version:(NSString *)version1 isLaterThanVersion:(NSString *)version2 {
+    if ( [version1 isEqualToString:@"Latest"] ) {
+        version1 = @"999";
+    }
+    
+    if ( [version2 isEqualToString:@"Latest"] ) {
+        version2 = @"999";
+    }
+    
+    if ( [version1 isEqualToString:version2] ) {
+        return YES;
+    } else {
+        return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
+    }
+} // version:isLaterThanVersion
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark NSWindow Delegate Methods
@@ -318,12 +348,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // FIXME - Comment this
     [self updateTableColumnsSettings];
     
-    // -------------------------------------------------------------------------
-    //  Initialize property 'profileName'
-    // -------------------------------------------------------------------------
-    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
-    [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
-    
     // ------------------------------------------------------------------------------------------
     //  Populate (NSMutableArray)enabledPayloadDomains with all manifest domains that's selected
     // ------------------------------------------------------------------------------------------
@@ -334,6 +358,11 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [enabledPayloadDomains addObject:payloadDomain];
         }
     }
+    
+    // -------------------------------------------------------------------------
+    //  Setup profile settings
+    // -------------------------------------------------------------------------
+    [self setupProfileSettings];
     
     // -------------------------------------------------------------------------
     //  Setup settings tab bar
@@ -390,26 +419,16 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self setupPopUpButtonOsVersion];
     
     // -------------------------------------------------------------------------
+    //  Setup Display Settings
+    // -------------------------------------------------------------------------
+    [self setupDisplaySettings];
+    
+    // -------------------------------------------------------------------------
     //  Select frst responder depending on profile state
     // -------------------------------------------------------------------------
     [self selectFirstResponder];
     
 } // setupTableViews
-
-- (void)setupSettingsTabBar {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
-    
-    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
-    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
-    [newTabView setDelegate:self];
-    [_arrayPayloadTabs addObject:newTabView];
-    [_stackViewTabBar addView:newTabView inGravity:NSStackViewGravityTrailing];
-    
-    [self hideSettingsTabBar];
-} // setupSettingsTabBar
 
 - (void)selectFirstResponder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -433,32 +452,77 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
 } // selectFirstResponder
 
-- (void)sortArrayPayloadProfile {
+- (void)setupProfileSettings {
+    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
+    [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
+} // setupProfileSettings
+
+- (void)setupDisplaySettings {
+    DDLogDebug(@"%s", __PRETTY_FUNCTION__);
+    NSDictionary *displaySettings = _profileDict[@"Config"][PFCProfileTemplateKeyDisplaySettings] ?: @{};
+    NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
+    
+    // -------------------------------------------------------------------------
+    //  Set "Advanced Settings" and "Supervised"
+    // -------------------------------------------------------------------------
+    [self setAdvancedSettings:[platform[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
+    [self setIsSupervised:[platform[PFCProfileDisplaySettingsKeySupervised] boolValue]];
+    
+    // -------------------------------------------------------------------------
+    //  Platform: OS X
+    // -------------------------------------------------------------------------
+    [self setIncludePlatformOSX:[platform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]];
+    NSString *osxMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"";
+    DDLogDebug(@"OS X Max Version: %@", osxMaxVersion);
+    if ( [osxMaxVersion length] != 0 && [[_popUpButtonPlatformOSXMaxVersion itemTitles] containsObject:osxMaxVersion] ) {
+        [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:osxMaxVersion];
+    } else {
+        [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:@"Latest"];
+    }
+    
+    NSString *osxMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"";
+    DDLogDebug(@"OS X Min Version: %@", osxMinVersion);
+    if ( [osxMinVersion length] != 0 && [[_popUpButtonPlatformOSXMinVersion itemTitles] containsObject:osxMinVersion] ) {
+        [_popUpButtonPlatformOSXMinVersion selectItemWithTitle:osxMinVersion];
+    } else {
+        [_popUpButtonPlatformOSXMinVersion selectItemWithTitle:@"10.7"];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Platform: iOS
+    // -------------------------------------------------------------------------
+    [self setIncludePlatformiOS:[platform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]];
+    NSString *iosMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"";
+    DDLogDebug(@"iOS Max Version: %@", iosMaxVersion);
+    if ( [iosMaxVersion length] != 0 && [[_popUpButtonPlatformiOSMaxVersion itemTitles] containsObject:iosMaxVersion] ) {
+        [_popUpButtonPlatformiOSMaxVersion selectItemWithTitle:iosMaxVersion];
+    } else {
+        [_popUpButtonPlatformiOSMaxVersion selectItemWithTitle:@"Latest"];
+    }
+    
+    NSString *iosMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"";
+    DDLogDebug(@"iOS Min Version: %@", iosMinVersion);
+    if ( [iosMinVersion length] != 0 && [[_popUpButtonPlatformiOSMinVersion itemTitles] containsObject:iosMinVersion] ) {
+        [_popUpButtonPlatformiOSMinVersion selectItemWithTitle:iosMinVersion];
+    } else {
+        [_popUpButtonPlatformiOSMinVersion selectItemWithTitle:@"7.0"];
+    }
+} // setupDisplaySettings
+
+- (void)setupSettingsTabBar {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    // -------------------------------------------------------------------------
-    //  Sort array payload profile
-    // -------------------------------------------------------------------------
-    [_arrayPayloadProfile sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
     
-    // -------------------------------------------------------------------------
-    //  Find index of menu item com.apple.general
-    // -------------------------------------------------------------------------
-    NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-        return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
-    }];
+    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
+    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    [newTabView setDelegate:self];
+    [_arrayPayloadTabs addObject:newTabView];
+    [_stackViewTabBar addView:newTabView inGravity:NSStackViewGravityTrailing];
     
-    // -------------------------------------------------------------------------
-    //  Move menu item com.apple.general to the top of array payload profile
-    // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
-        [_arrayPayloadProfile removeObjectAtIndex:idx];
-        [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
-    } else {
-        NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
-    }
-} // sortArrayPayloadProfile
+    [self hideSettingsTabBar];
+} // setupSettingsTabBar
 
 - (void)setupManifestLibraryApple:(NSArray *)enabledPayloadDomains {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -517,6 +581,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
 } // setupManifestLibraryUserLibrary
 
+- (void)selectOSVersion:(id)sender {
+    // Dummy Action to be able to disable menu items
+} // selectOSVersion
+
 - (void)setupPopUpButtonOsVersion {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
@@ -524,13 +592,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Create base menu
     // -------------------------------------------------------------------------
     NSMenu *menu = [[NSMenu alloc] init];
-    [menu setAutoenablesItems:NO];
+    [menu setAutoenablesItems:YES];
     
     // -------------------------------------------------------------------------
     //  MenuItem: Latest
     // -------------------------------------------------------------------------
     NSMenuItem *menuItemLatest = [[NSMenuItem alloc] init];
     [menuItemLatest setTarget:self];
+    [menuItemLatest setAction:@selector(selectOSVersion:)];
     [menuItemLatest setTitle:@"Latest"];
     [menu addItem:menuItemLatest];
     
@@ -542,6 +611,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Read OSVersions plist from bundle contents
     // -------------------------------------------------------------------------
+    // FIXME - This should be a downloadable setting, read from appsupport first
     NSError *error = nil;
     NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
     if ( ! [osVersionsPlistURL checkResourceIsReachableAndReturnError:&error] ) {
@@ -568,6 +638,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         int lastMajorVersion = 0;
         NSMenuItem *menuItemOSXVersion = [[NSMenuItem alloc] init];
         [menuItemOSXVersion setTarget:self];
+        [menuItemOSXVersion setAction:@selector(selectOSVersion:)];
         for ( NSString *osxVersion in osVersionsOSX ) {
             
             // -----------------------------------------------------------------
@@ -585,8 +656,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [menuOSX addItem:[menuItemOSXVersion copy]];
         }
         
-        [_popUpButtonPlatformOSXLowest setMenu:[menuOSX copy]];
-        [_popUpButtonPlatformOSXHighest setMenu:[menuOSX copy]];
+        [_popUpButtonPlatformOSXMinVersion setMenu:[menuOSX copy]];
+        [_popUpButtonPlatformOSXMaxVersion setMenu:[menuOSX copy]];
     }
     
     // -------------------------------------------------------------------------
@@ -602,6 +673,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         int lastMajorVersion = 0;
         NSMenuItem *menuItemiOSVersion = [[NSMenuItem alloc] init];
         [menuItemiOSVersion setTarget:self];
+        [menuItemiOSVersion setAction:@selector(selectOSVersion:)];
         for ( NSString *iosVersion in osVersionsiOS ) {
             
             // -----------------------------------------------------------------
@@ -619,8 +691,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             [menuiOS addItem:[menuItemiOSVersion copy]];
         }
         
-        [_popUpButtonPlatformiOSLowest setMenu:[menuiOS copy]];
-        [_popUpButtonPlatformiOSHighest setMenu:[menuiOS copy]];
+        [_popUpButtonPlatformiOSMinVersion setMenu:[menuiOS copy]];
+        [_popUpButtonPlatformiOSMaxVersion setMenu:[menuiOS copy]];
     }
 } // setupPopUpButtonOsVersion
 
@@ -1341,6 +1413,33 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             break;
     }
 } // saveArray:forPayloadLibrary
+
+- (void)sortArrayPayloadProfile {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    // -------------------------------------------------------------------------
+    //  Sort array payload profile
+    // -------------------------------------------------------------------------
+    [_arrayPayloadProfile sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES]]];
+    
+    // -------------------------------------------------------------------------
+    //  Find index of menu item com.apple.general
+    // -------------------------------------------------------------------------
+    NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
+    }];
+    
+    // -------------------------------------------------------------------------
+    //  Move menu item com.apple.general to the top of array payload profile
+    // -------------------------------------------------------------------------
+    if (idx != NSNotFound) {
+        NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
+        [_arrayPayloadProfile removeObjectAtIndex:idx];
+        [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
+    } else {
+        NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
+    }
+} // sortArrayPayloadProfile
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2810,59 +2909,59 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     /*
-    BOOL isCollapsed = [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]];
-    DDLogDebug(@"View info is collapsed: %@", isCollapsed ? @"YES" : @"NO");
-    
-    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
-    
-    // -------------------------------------------------------------------------
-    //  Set the holding priorities for window resizing
-    // -------------------------------------------------------------------------
-    NSLayoutPriority viewCenterPruiority = [_splitViewWindow holdingPriorityForSubviewAtIndex:1];
-    NSLayoutPriority viewInfoPriority = [_splitViewWindow holdingPriorityForSubviewAtIndex:2];
-    [_splitViewWindow setHoldingPriority:NSLayoutPriorityDefaultHigh forSubviewAtIndex:1];
-    [_splitViewWindow setHoldingPriority:1 forSubviewAtIndex:2];
-    
-    // -------------------------------------------------------------------------
-    //  Update window size
-    // -------------------------------------------------------------------------
-    NSRect windowFrame = [[self window] frame];
-    CGFloat minimumSize = 1.0f;
-    if ( isCollapsed ) {
-        
-        // -------------------------------------------------------------------------
-        //  Uncollapse
-        // -------------------------------------------------------------------------
-        [_splitViewWindow setPosition:minimumSize ofDividerAtIndex:1];
-        windowFrame.size.width += minimumSize;
-        windowFrame.origin.x -= minimumSize;
-        [[self window] setFrame:windowFrame display:YES animate:NO];
-        
-        CGFloat expandedWidth = 220;
-        windowFrame.size.width += expandedWidth;
-        windowFrame.origin.x -= expandedWidth;
-        [[self window] setFrame:windowFrame display:YES animate:YES];
-    } else {
-        
-        // -------------------------------------------------------------------------
-        //  Animate the window smaller
-        // -------------------------------------------------------------------------
-        windowFrame.size.width -= NSWidth(viewInfo.frame) - minimumSize;
-        //windowFrame.origin.x += NSWidth(viewInfo.frame) - minimumSize;
-        [[self window] setFrame:windowFrame display:YES animate:YES];
-        
-        // -------------------------------------------------------------------------
-        //  Collapse it
-        // -------------------------------------------------------------------------
-        [_splitViewWindow setPosition:0 ofDividerAtIndex:1];
-        windowFrame.size.width -= minimumSize;
-        //windowFrame.origin.x += minimumSize;
-        [[self window] setFrame:windowFrame display:YES animate:NO];
-    }
-    
-    [_splitViewWindow setHoldingPriority:viewInfoPriority forSubviewAtIndex:2];
-    [_splitViewWindow setHoldingPriority:viewCenterPruiority forSubviewAtIndex:1];
-    */
+     BOOL isCollapsed = [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]];
+     DDLogDebug(@"View info is collapsed: %@", isCollapsed ? @"YES" : @"NO");
+     
+     NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+     
+     // -------------------------------------------------------------------------
+     //  Set the holding priorities for window resizing
+     // -------------------------------------------------------------------------
+     NSLayoutPriority viewCenterPruiority = [_splitViewWindow holdingPriorityForSubviewAtIndex:1];
+     NSLayoutPriority viewInfoPriority = [_splitViewWindow holdingPriorityForSubviewAtIndex:2];
+     [_splitViewWindow setHoldingPriority:NSLayoutPriorityDefaultHigh forSubviewAtIndex:1];
+     [_splitViewWindow setHoldingPriority:1 forSubviewAtIndex:2];
+     
+     // -------------------------------------------------------------------------
+     //  Update window size
+     // -------------------------------------------------------------------------
+     NSRect windowFrame = [[self window] frame];
+     CGFloat minimumSize = 1.0f;
+     if ( isCollapsed ) {
+     
+     // -------------------------------------------------------------------------
+     //  Uncollapse
+     // -------------------------------------------------------------------------
+     [_splitViewWindow setPosition:minimumSize ofDividerAtIndex:1];
+     windowFrame.size.width += minimumSize;
+     windowFrame.origin.x -= minimumSize;
+     [[self window] setFrame:windowFrame display:YES animate:NO];
+     
+     CGFloat expandedWidth = 220;
+     windowFrame.size.width += expandedWidth;
+     windowFrame.origin.x -= expandedWidth;
+     [[self window] setFrame:windowFrame display:YES animate:YES];
+     } else {
+     
+     // -------------------------------------------------------------------------
+     //  Animate the window smaller
+     // -------------------------------------------------------------------------
+     windowFrame.size.width -= NSWidth(viewInfo.frame) - minimumSize;
+     //windowFrame.origin.x += NSWidth(viewInfo.frame) - minimumSize;
+     [[self window] setFrame:windowFrame display:YES animate:YES];
+     
+     // -------------------------------------------------------------------------
+     //  Collapse it
+     // -------------------------------------------------------------------------
+     [_splitViewWindow setPosition:0 ofDividerAtIndex:1];
+     windowFrame.size.width -= minimumSize;
+     //windowFrame.origin.x += minimumSize;
+     [[self window] setFrame:windowFrame display:YES animate:NO];
+     }
+     
+     [_splitViewWindow setHoldingPriority:viewInfoPriority forSubviewAtIndex:2];
+     [_splitViewWindow setHoldingPriority:viewCenterPruiority forSubviewAtIndex:1];
+     */
     
     if ( [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
         [self uncollapseSplitViewInfo];
@@ -3886,6 +3985,17 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     _settingsProfile[manifestDomain] = [settingsManifestRoot mutableCopy];
 } // saveTabIndexSelected:forManifestDomain
 
+- (IBAction)popUpButtonPlatformOSXMinVersion:(id)sender {
+}
+
+- (IBAction)popUpButtonPlatformOSXMaxVersoin:(id)sender {
+}
+
+- (IBAction)popUpButtonPlatformiOSMinVersion:(id)sender {
+}
+
+- (IBAction)popUpButtonPlatformiOSMaxVersion:(id)sender {
+}
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

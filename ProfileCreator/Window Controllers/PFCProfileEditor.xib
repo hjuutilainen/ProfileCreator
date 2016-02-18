@@ -24,10 +24,10 @@
                 <outlet property="linePayloadLibraryMenuTop" destination="3lR-qU-rYj" id="Chd-pT-1Wn"/>
                 <outlet property="menuButtonAdd" destination="IZ9-bM-bjJ" id="YrK-1C-DeB"/>
                 <outlet property="popOverSettings" destination="T5w-2R-PdB" id="xsu-Cj-QtK"/>
-                <outlet property="popUpButtonPlatformOSXHighest" destination="agN-0l-935" id="xTl-hA-wxq"/>
-                <outlet property="popUpButtonPlatformOSXLowest" destination="YIM-0v-pAM" id="S3q-bL-9bn"/>
-                <outlet property="popUpButtonPlatformiOSHighest" destination="YSX-jt-Qcq" id="4tf-dq-f3D"/>
-                <outlet property="popUpButtonPlatformiOSLowest" destination="p6Y-ks-bKA" id="bfe-wK-Rgf"/>
+                <outlet property="popUpButtonPlatformOSXMaxVersion" destination="agN-0l-935" id="CtY-HD-ipS"/>
+                <outlet property="popUpButtonPlatformOSXMinVersion" destination="YIM-0v-pAM" id="ckZ-mM-rt2"/>
+                <outlet property="popUpButtonPlatformiOSMaxVersion" destination="YSX-jt-Qcq" id="AP0-yN-Y1r"/>
+                <outlet property="popUpButtonPlatformiOSMinVersion" destination="p6Y-ks-bKA" id="FwJ-sh-2cj"/>
                 <outlet property="progressIndicatorSettingsStatusLoading" destination="62d-W7-dn9" id="IWe-qv-vgl"/>
                 <outlet property="searchFieldPayloadLibrary" destination="KCr-4M-8Bj" id="aTs-m9-iTj"/>
                 <outlet property="segmentedControlPayloadLibrary" destination="pFH-O0-wrl" id="Yte-zX-bjw"/>
@@ -2519,22 +2519,6 @@ Gw
                         </binding>
                     </connections>
                 </popUpButton>
-                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p6Y-ks-bKA">
-                    <rect key="frame" x="188" y="244" width="34" height="22"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" enabled="NO" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="5wa-5B-0jl">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                        <menu key="menu" id="Dhg-pw-sjl"/>
-                    </popUpButtonCell>
-                    <connections>
-                        <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="zCu-It-7fn"/>
-                        <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="zCu-It-7fn" id="5NZ-Hn-BGR">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </popUpButton>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YSX-jt-Qcq">
                     <rect key="frame" x="239" y="244" width="34" height="22"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" enabled="NO" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="mEM-83-zBz">
@@ -2724,6 +2708,22 @@ Gw
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p6Y-ks-bKA">
+                    <rect key="frame" x="188" y="244" width="34" height="22"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" enabled="NO" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="5wa-5B-0jl">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystem"/>
+                        <menu key="menu" id="Dhg-pw-sjl"/>
+                    </popUpButtonCell>
+                    <connections>
+                        <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="zCu-It-7fn"/>
+                        <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="zCu-It-7fn" id="5NZ-Hn-BGR">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </popUpButton>
             </subviews>
             <constraints>
                 <constraint firstItem="FHJ-8w-UpA" firstAttribute="centerY" secondItem="7Th-ob-fO5" secondAttribute="centerY" id="00x-DE-ddf"/>
@@ -2782,7 +2782,7 @@ Gw
                 <constraint firstItem="Dye-rI-POj" firstAttribute="leading" secondItem="AYd-oG-HlP" secondAttribute="leading" constant="20" symbolic="YES" id="wZV-rZ-7I8"/>
                 <constraint firstItem="Sm1-vL-zYg" firstAttribute="top" secondItem="SY5-pF-HbU" secondAttribute="bottom" constant="10" id="xna-Ik-wRI"/>
             </constraints>
-            <point key="canvasLocation" x="-2065.5" y="-1074.5"/>
+            <point key="canvasLocation" x="-1996.5" y="-1099.5"/>
         </customView>
         <customView focusRingType="none" id="A03-7W-IGN">
             <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>
