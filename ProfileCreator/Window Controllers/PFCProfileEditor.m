@@ -428,14 +428,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)setupDisplaySettings {
     DDLogDebug(@"%s", __PRETTY_FUNCTION__);
     NSDictionary *displaySettings = _profileDict[@"Config"][PFCProfileTemplateKeyDisplaySettings] ?: @{};
-    NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
-    
+
     // -------------------------------------------------------------------------
     //  Set "Advanced Settings" and "Supervised"
     // -------------------------------------------------------------------------
-    [self setAdvancedSettings:[platform[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
-    [self setIsSupervised:[platform[PFCProfileDisplaySettingsKeySupervised] boolValue]];
+    [self setAdvancedSettings:[displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
+    [self setIsSupervised:[displaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]];
     
+    
+    NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
     // -------------------------------------------------------------------------
     //  Platform: OS X
     // -------------------------------------------------------------------------
@@ -3368,7 +3369,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     NSInteger selectedSegment = [_segmentedControlPayloadLibrary selectedSegment];
-    
+    DDLogDebug(@"Selected segment: %ld", (long)selectedSegment);
+    DDLogDebug(@"kPFCPayloadLibraryCustom=%ld", (long)kPFCPayloadLibraryCustom);
     // -------------------------------------------------------------------------
     //  If the selected segment already is selected, stop here
     // -------------------------------------------------------------------------
@@ -3383,6 +3385,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self showButtonAdd];
     } else if ( selectedSegment != 2 && ! _buttonAddHidden ) {
         [self hideButtonAdd];
+    } else {
+        DDLogError(@"Should not end up here!");
     }
     
     // --------------------------------------------------------------------------------------------
@@ -3726,14 +3730,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSDictionary *manifestDict = [tableViewArray objectAtIndex:row];
     
     // -------------------------------------------------------------------------------
-    //  MenuItem - "Show Original In Finder"
+    //  MenuItem - "Show Source In Finder"
     //  Remove this menu item unless runtime key 'PlistPath' is set in the manifest
     // -------------------------------------------------------------------------------
-    NSMenuItem *menuItemShowOriginalInFinder = [menu itemWithTitle:@"Show Original In Finder"];
+    NSMenuItem *menuItemShowSourceInFinder = [menu itemWithTitle:@"Show Source In Finder"];
     if ( [manifestDict[PFCRuntimeKeyPlistPath] length] != 0 ) {
-        [menuItemShowOriginalInFinder setEnabled:YES];
+        [menuItemShowSourceInFinder setEnabled:YES];
     } else {
-        [menu removeItem:menuItemShowOriginalInFinder];
+        [menu removeItem:menuItemShowSourceInFinder];
     }
 } // validateMenu:forTableViewWithIdentifier:row
 

@@ -765,7 +765,7 @@
                 <constraint firstItem="c3t-cy-O6H" firstAttribute="top" secondItem="HFd-4b-AbU" secondAttribute="bottom" id="riU-98-umP"/>
                 <constraint firstItem="IT8-nJ-ksM" firstAttribute="leading" secondItem="Xq1-Gr-Qwx" secondAttribute="leading" constant="25" id="upo-Lw-Ojq"/>
             </constraints>
-            <point key="canvasLocation" x="-713" y="179.5"/>
+            <point key="canvasLocation" x="-1129" y="98.5"/>
         </customView>
         <menu id="eVJ-PH-bnh">
             <items>

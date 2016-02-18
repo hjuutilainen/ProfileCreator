@@ -2190,7 +2190,6 @@ Gw
             </constraints>
             <point key="canvasLocation" x="-2388" y="-692"/>
         </customView>
-        <customObject id="srB-68-ofc" customClass="PFCPayloadLibraryTableView"/>
         <popover behavior="t" id="T5w-2R-PdB">
             <connections>
                 <outlet property="contentViewController" destination="aQ1-lO-naI" id="ia7-Eh-PfK"/>
@@ -2203,7 +2202,7 @@ Gw
         </viewController>
         <menu id="Dz4-LU-gBY">
             <items>
-                <menuItem title="Show Original In Finder" id="XJU-HK-qma">
+                <menuItem title="Show Source In Finder" id="XJU-HK-qma">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="menuItemShowInFinder:" target="-2" id="elS-ER-Cdb"/>
@@ -2430,17 +2429,8 @@ Gw
         </customView>
         <menu id="IZ9-bM-bjJ">
             <items>
-                <menuItem title="Add .mobileconfig..." id="ljq-fk-Jqe">
+                <menuItem title="Not Implemented Yet" id="ljq-fk-Jqe">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="menuItemAddMobileconfig:" target="-2" id="nfu-TO-1qy"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Add .plist..." id="1wu-8L-h7u">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="menuItemAddPlist:" target="-2" id="clF-KK-NjX"/>
-                    </connections>
                 </menuItem>
             </items>
             <point key="canvasLocation" x="-2316" y="-335.5"/>
@@ -2782,7 +2772,7 @@ Gw
                 <constraint firstItem="Dye-rI-POj" firstAttribute="leading" secondItem="AYd-oG-HlP" secondAttribute="leading" constant="20" symbolic="YES" id="wZV-rZ-7I8"/>
                 <constraint firstItem="Sm1-vL-zYg" firstAttribute="top" secondItem="SY5-pF-HbU" secondAttribute="bottom" constant="10" id="xna-Ik-wRI"/>
             </constraints>
-            <point key="canvasLocation" x="-1996.5" y="-1099.5"/>
+            <point key="canvasLocation" x="-1853.5" y="-1102.5"/>
         </customView>
         <customView focusRingType="none" id="A03-7W-IGN">
             <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>

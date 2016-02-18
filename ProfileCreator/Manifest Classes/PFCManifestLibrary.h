@@ -11,8 +11,8 @@
 typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
     kPFCPayloadLibraryApple = 0,
     kPFCPayloadLibraryUserPreferences,
-    kPFCPayloadLibraryLibraryPreferences,
-    kPFCPayloadLibraryCustom
+    kPFCPayloadLibraryCustom,
+    kPFCPayloadLibraryLibraryPreferences
 };
 
 @interface PFCManifestLibrary : NSObject

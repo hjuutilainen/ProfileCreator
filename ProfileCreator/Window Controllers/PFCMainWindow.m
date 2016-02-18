@@ -428,8 +428,6 @@ int const PFCTableViewGroupsRowHeight = 24;
     NSString *tableViewIdentifier = [tableView identifier];
     if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileLibrary] ) {
         
-        DDLogDebug(@"_arrayProfileLibrary=%@", _arrayProfileLibrary);
-        NSLog(@"[_arrayProfileLibrary count]=%lu", (unsigned long)[_arrayProfileLibrary count]);
         // ---------------------------------------------------------------------
         //  Verify the profile array isn't empty, if so stop here
         // ---------------------------------------------------------------------
@@ -905,20 +903,51 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict {
     
     // -------------------------------------------------------------------------
-    //  Clean up previews preview content
+    //  Clean up previous preview content
     // -------------------------------------------------------------------------
     [_arrayStackViewPreview removeAllObjects];
     for ( NSView *view in [_stackViewPreview views] ) {
         [view removeFromSuperview];
     }
-    
-    // -------------------------------------------------------------------------
-    //  Clean up previews preview content
-    // -------------------------------------------------------------------------
+
     NSDictionary *profileSettings = profileDict[@"Config"];
+    NSDictionary *profileDisplaySettings = profileSettings[PFCProfileTemplateKeyDisplaySettings];
     
+    // -------------------------------------------------------------------------
+    //  Name
+    // -------------------------------------------------------------------------
     NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
     [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
+    
+    // -------------------------------------------------------------------------
+    //  Platform
+    // -------------------------------------------------------------------------
+    NSDictionary *profileDisplaySettingsPlatform = profileDisplaySettings[PFCProfileDisplaySettingsKeyPlatform];
+    NSMutableString *platform = [[NSMutableString alloc] init];
+    if ( [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
+        [platform appendString:@"OS X"];
+        if (
+            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] isEqualToString:@"10.7"] ||
+            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] isEqualToString:@"Latest"] ) {
+            [platform appendString:[NSString stringWithFormat:@" (%@-%@)", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"10.7", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"Latest"]];
+        }
+    }
+    
+    if ( [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
+        [platform appendString:[NSString stringWithFormat:@"%@iOS", ([platform length] == 0) ? @"" : @", "]];
+        if (
+            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] isEqualToString:@"7.0"] ||
+            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] isEqualToString:@"Latest"] ) {
+            [platform appendString:[NSString stringWithFormat:@" (%@-%@)", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"7.0", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"Latest"]];
+        }
+    }
+    
+    [_textFieldPlatform setStringValue:platform];
+    
+    // -------------------------------------------------------------------------
+    //  Supervised
+    // -------------------------------------------------------------------------
+    [_textFieldSupervised setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]) ? @"YES" : @"NO"]];
     
     for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
         DDLogDebug(@"Payload domain: %@", domain);
@@ -959,7 +988,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
     
     return preview;
-}
+} // previewForMainfest:domain
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -1421,7 +1450,26 @@ int const PFCTableViewGroupsRowHeight = 24;
     NSIndexSet *selectedRowIndexes = [_tableViewProfileLibrary selectedRowIndexes];
     DDLogDebug(@"Table view profile library selected rows: %@", selectedRowIndexes);
     
-    if ( 1 < [selectedRowIndexes count] ) {
+    if ( [selectedRowIndexes count] == 0 ) {
+        
+        // ---------------------------------------------------------------------
+        //  Update the selection properties with the current value
+        // ---------------------------------------------------------------------
+        DDLogDebug(@"Updating table view profile library selected row");
+        [self setTableViewProfileLibrarySelectedRows:selectedRowIndexes];
+        
+        // -----------------------------------------------------------------
+        //  Hide profile preview and show no selection
+        // -----------------------------------------------------------------
+        [self showProfilePreviewNoSelection];
+        
+        // -----------------------------------------------------------------
+        //  Unset the SelectedProfileUUID
+        // -----------------------------------------------------------------
+        DDLogDebug(@"Removing selected profile uuid");
+        [self setSelectedProfileUUID:nil];
+        
+    } else if ( 1 < [selectedRowIndexes count] ) {
         
         // ---------------------------------------------------------------------
         //  Update the selection properties with the current value
