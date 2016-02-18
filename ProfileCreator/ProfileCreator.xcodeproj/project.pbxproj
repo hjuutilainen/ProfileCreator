@@ -66,6 +66,7 @@
 		532DF2381C5665E700369513 /* PFCProfileCreationTab.xib in Resources */ = {isa = PBXBuildFile; fileRef = 532DF2361C5665E700369513 /* PFCProfileCreationTab.xib */; };
 		53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */; };
 		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
+		5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341818A1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m */; };
 		5341D3171C15EFB00014F5A7 /* PFCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCAppDelegate.m */; };
 		5341D3261C15F3500014F5A7 /* PFCProfileEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3241C15F3500014F5A7 /* PFCProfileEditor.m */; };
 		5341D3271C15F3500014F5A7 /* PFCProfileEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5341D3251C15F3500014F5A7 /* PFCProfileEditor.xib */; };
@@ -357,6 +358,8 @@
 		53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsMenu.m; path = "TableView CellViews/PFCTableViewCellsMenu.m"; sourceTree = "<group>"; };
 		53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettings.h; path = "TableView CellViews/PFCTableViewCellsSettings.h"; sourceTree = "<group>"; };
 		53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsSettings.m; path = "TableView CellViews/PFCTableViewCellsSettings.m"; sourceTree = "<group>"; };
+		534181891C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsProfileInfo.h; path = "TableView CellViews/PFCTableViewCellsProfileInfo.h"; sourceTree = "<group>"; };
+		5341818A1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsProfileInfo.m; path = "TableView CellViews/PFCTableViewCellsProfileInfo.m"; sourceTree = "<group>"; };
 		5341D3151C15EFB00014F5A7 /* PFCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCAppDelegate.h; path = ProfileCreator/PFCAppDelegate.h; sourceTree = "<group>"; };
 		5341D3161C15EFB00014F5A7 /* PFCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCAppDelegate.m; path = ProfileCreator/PFCAppDelegate.m; sourceTree = "<group>"; };
 		5341D3231C15F3500014F5A7 /* PFCProfileEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditor.h; path = "Window Controllers/PFCProfileEditor.h"; sourceTree = "<group>"; };
@@ -530,6 +533,8 @@
 				5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */,
 				53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */,
 				53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */,
+				534181891C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.h */,
+				5341818A1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m */,
 				5364EEEA1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.h */,
 				5364EEEB1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m */,
 			);
@@ -1101,6 +1106,7 @@
 				537612F81C662D8E00CFCE1D /* PFCProfileGroupTitle.m in Sources */,
 				5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
+				5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */,
 				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
 				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
 				53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */,

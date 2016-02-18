@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -333,8 +333,8 @@ Gw
                         </constraints>
                         <holdingPriorities>
                             <real value="490"/>
-                            <real value="1"/>
-                            <real value="490"/>
+                            <real value="225"/>
+                            <real value="250"/>
                         </holdingPriorities>
                         <connections>
                             <outlet property="delegate" destination="-2" id="r9u-HE-GYs"/>
@@ -351,7 +351,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-2359" y="-1053"/>
+            <point key="canvasLocation" x="-2107" y="-1085"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -636,7 +636,7 @@ Gw
                 <constraint firstAttribute="trailing" secondItem="cfv-5T-W6x" secondAttribute="trailing" id="SKT-aj-Qm8"/>
                 <constraint firstItem="cfv-5T-W6x" firstAttribute="top" secondItem="WTy-Uf-bja" secondAttribute="top" id="pGm-XX-pjI"/>
             </constraints>
-            <point key="canvasLocation" x="-2534" y="-1514.5"/>
+            <point key="canvasLocation" x="-2410" y="-1513.5"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="Zf9-0g-a6x">
             <rect key="frame" x="0.0" y="0.0" width="194" height="115"/>
@@ -2897,7 +2897,7 @@ Gw
                 <constraint firstAttribute="trailing" secondItem="OxA-xf-cyg" secondAttribute="trailing" id="qMO-rZ-Oib"/>
                 <constraint firstItem="OxA-xf-cyg" firstAttribute="top" secondItem="A03-7W-IGN" secondAttribute="top" id="wAt-U8-2se"/>
             </constraints>
-            <point key="canvasLocation" x="-2525" y="-1106"/>
+            <point key="canvasLocation" x="-2466" y="-1137"/>
         </customView>
         <customView focusRingType="none" appearanceType="aqua" id="4kG-5i-EVH">
             <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>

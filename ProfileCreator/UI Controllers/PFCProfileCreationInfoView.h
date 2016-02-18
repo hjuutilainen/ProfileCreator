@@ -31,16 +31,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileCreationInfoView
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCProfileCreationInfoView : NSViewController
+@interface PFCProfileCreationInfoView : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
 
 // ------------------------------------------------------
 //  Delegate
 // ------------------------------------------------------
 @property (nonatomic, weak) id delegate;
 
-@property (weak) IBOutlet NSTableView *tableViewInfoPayload;
+@property (weak) IBOutlet NSScrollView *scrollViewPayloadInfo;
+@property (weak) IBOutlet NSTableView *tableViewPayloadInfo;
 
-@property NSMutableArray *arrayInfoPayload;
+@property NSMutableArray *arrayPayloadInfo;
 
 // ------------------------------------------------------
 //  Manifest Content View

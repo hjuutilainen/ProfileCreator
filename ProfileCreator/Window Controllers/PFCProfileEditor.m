@@ -843,7 +843,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         if ( dividerIndex == 0 ) {
             return proposedMaximumPosition - 510;
         } else if ( dividerIndex == 1 ) {
-            return proposedMaximumPosition - 190;
+            return proposedMaximumPosition - 220;
         }
     }
     
@@ -855,7 +855,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return proposedMinimumPosition + 88;
     } else if ( splitView == _splitViewWindow ) {
         if ( dividerIndex == 0 ) {
-            return  proposedMinimumPosition + 190;
+            return  proposedMinimumPosition + 220;
         } else if ( dividerIndex == 1 ) {
             return proposedMinimumPosition + 510;
         }
@@ -2627,7 +2627,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Set new sizes
     // -------------------------------------------------------------------------
-    [viewCenter setFrameSize:NSMakeSize(splitViewWindowFrame.size.width,viewCenterFrame.size.height)];
+    [viewCenter setFrameSize:NSMakeSize(splitViewWindowFrame.size.width, viewCenterFrame.size.height)];
     
     // -------------------------------------------------------------------------
     //  Update the UI
@@ -2808,6 +2808,61 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (IBAction)buttonToggleInfo:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    /*
+    BOOL isCollapsed = [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]];
+    DDLogDebug(@"View info is collapsed: %@", isCollapsed ? @"YES" : @"NO");
+    
+    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+    
+    // -------------------------------------------------------------------------
+    //  Set the holding priorities for window resizing
+    // -------------------------------------------------------------------------
+    NSLayoutPriority viewCenterPruiority = [_splitViewWindow holdingPriorityForSubviewAtIndex:1];
+    NSLayoutPriority viewInfoPriority = [_splitViewWindow holdingPriorityForSubviewAtIndex:2];
+    [_splitViewWindow setHoldingPriority:NSLayoutPriorityDefaultHigh forSubviewAtIndex:1];
+    [_splitViewWindow setHoldingPriority:1 forSubviewAtIndex:2];
+    
+    // -------------------------------------------------------------------------
+    //  Update window size
+    // -------------------------------------------------------------------------
+    NSRect windowFrame = [[self window] frame];
+    CGFloat minimumSize = 1.0f;
+    if ( isCollapsed ) {
+        
+        // -------------------------------------------------------------------------
+        //  Uncollapse
+        // -------------------------------------------------------------------------
+        [_splitViewWindow setPosition:minimumSize ofDividerAtIndex:1];
+        windowFrame.size.width += minimumSize;
+        windowFrame.origin.x -= minimumSize;
+        [[self window] setFrame:windowFrame display:YES animate:NO];
+        
+        CGFloat expandedWidth = 220;
+        windowFrame.size.width += expandedWidth;
+        windowFrame.origin.x -= expandedWidth;
+        [[self window] setFrame:windowFrame display:YES animate:YES];
+    } else {
+        
+        // -------------------------------------------------------------------------
+        //  Animate the window smaller
+        // -------------------------------------------------------------------------
+        windowFrame.size.width -= NSWidth(viewInfo.frame) - minimumSize;
+        //windowFrame.origin.x += NSWidth(viewInfo.frame) - minimumSize;
+        [[self window] setFrame:windowFrame display:YES animate:YES];
+        
+        // -------------------------------------------------------------------------
+        //  Collapse it
+        // -------------------------------------------------------------------------
+        [_splitViewWindow setPosition:0 ofDividerAtIndex:1];
+        windowFrame.size.width -= minimumSize;
+        //windowFrame.origin.x += minimumSize;
+        [[self window] setFrame:windowFrame display:YES animate:NO];
+    }
+    
+    [_splitViewWindow setHoldingPriority:viewInfoPriority forSubviewAtIndex:2];
+    [_splitViewWindow setHoldingPriority:viewCenterPruiority forSubviewAtIndex:1];
+    */
     
     if ( [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]] ) {
         [self uncollapseSplitViewInfo];
