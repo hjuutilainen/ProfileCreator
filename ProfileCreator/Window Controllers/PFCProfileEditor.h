@@ -23,27 +23,12 @@
 #import "PFCSplitViews.h"
 #import "PFCProfileCreationInfoView.h"
 #import "PFCProfileCreationTab.h"
-@class PFCPayloadLibraryTableView;
-@class PFCSettingsTableView;
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark Protocol: PFCPayloadLibraryTableViewDelegate
-////////////////////////////////////////////////////////////////////////////////
-@protocol PFCPayloadLibraryTableViewDelegate <NSObject>
--(void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark Protocol: PFCSettingsTableViewDelegate
-////////////////////////////////////////////////////////////////////////////////
-@protocol PFCSettingsTableViewDelegate <NSObject>
-- (void)didClickRow:(NSInteger)row;
-@end
+#import "PFCTableViews.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileCreationWindowController
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCProfileEditor : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCPayloadLibraryTableViewDelegate, PFCSettingsTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileCreationTabDelegate>
+@interface PFCProfileEditor : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileCreationTabDelegate>
 
 // -------------------------------------------------------------------------
 //  Unsorted
@@ -112,7 +97,7 @@
 // -------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView                     *viewPayloadProfileSuperview;
 @property (weak)    IBOutlet NSView                     *viewPayloadProfileSplitView;
-@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadProfile;
+@property (weak)    IBOutlet PFCTableView               *tableViewPayloadProfile;
 @property (readwrite)        NSMutableArray             *arrayPayloadProfile;
 @property (readwrite)        NSInteger                  tableViewPayloadProfileSelectedRow;
 
@@ -130,7 +115,7 @@
 @property (weak)    IBOutlet NSBox                      *linePayloadLibraryMenuBottom;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryNoMatches;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryNoManifests;
-@property (weak)    IBOutlet PFCPayloadLibraryTableView *tableViewPayloadLibrary;
+@property (weak)    IBOutlet PFCTableView               *tableViewPayloadLibrary;
 @property (weak)    IBOutlet NSSegmentedControl         *segmentedControlPayloadLibrary;
 @property (readwrite)        NSMutableArray             *arrayPayloadLibrary;
 @property (readwrite)        NSInteger                  tableViewPayloadLibrarySelectedRow;
@@ -203,7 +188,7 @@
 @property (weak)    IBOutlet NSView                     *viewSettingsStatus;
 @property (weak)    IBOutlet NSProgressIndicator        *progressIndicatorSettingsStatusLoading;
 @property (weak)    IBOutlet NSTextField                *textFieldSettingsStatus;
-@property (weak)    IBOutlet PFCSettingsTableView       *tableViewSettings;
+@property (weak)    IBOutlet PFCTableView               *tableViewSettings;
 @property (readwrite)        NSMutableArray             *arraySettings;
 @property (readwrite)        NSMutableDictionary        *settingsProfile;
 @property (readwrite)        NSMutableDictionary        *settingsManifest;
@@ -253,7 +238,6 @@
 // -------------------------------------------------------------------------
 @property (readwrite)        NSString                   *clickedPayloadTableViewIdentifier;
 @property (readwrite)        NSInteger                  clickedPayloadTableViewRow;
-
 - (IBAction)menuItemShowInFinder:(id)sender;
 
 // -------------------------------------------------------------------------
@@ -281,22 +265,4 @@
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Class: PFCPayloadLibraryTableView
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@interface PFCPayloadLibraryTableView : NSTableView
-@property id <PFCPayloadLibraryTableViewDelegate>tableViewDelegate;
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Class: PFCSettingsTableView
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@interface PFCSettingsTableView : NSTableView
-@property id <PFCSettingsTableViewDelegate>tableViewDelegate;
 @end

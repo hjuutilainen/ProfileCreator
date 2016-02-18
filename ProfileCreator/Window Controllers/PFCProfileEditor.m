@@ -239,36 +239,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self initialSetup];
 } // windowDidLoad
 
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    NSMenu *menu = [menuItem menu];
-    if ( menu == [_popUpButtonPlatformOSXMinVersion menu] ) {
-        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
-    } else if ( menu == [_popUpButtonPlatformOSXMaxVersion menu] ) {
-        return [self version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
-    } else if ( menu == [_popUpButtonPlatformiOSMinVersion menu] ) {
-        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
-    } else if ( menu == [_popUpButtonPlatformiOSMaxVersion menu] ) {
-        return [self version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
-    }
-    return YES;
-} // validateMenuItem
-
-- (BOOL)version:(NSString *)version1 isLaterThanVersion:(NSString *)version2 {
-    if ( [version1 isEqualToString:@"Latest"] ) {
-        version1 = @"999";
-    }
-    
-    if ( [version2 isEqualToString:@"Latest"] ) {
-        version2 = @"999";
-    }
-    
-    if ( [version1 isEqualToString:version2] ) {
-        return YES;
-    } else {
-        return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
-    }
-} // version:isLaterThanVersion
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark NSWindow Delegate Methods
@@ -384,8 +354,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     [self selectTableViewPayloadProfile:nil];
     [self setTableViewPayloadProfileSelectedRow:-1];
-    [_tableViewPayloadProfile setTableViewDelegate:self];
-    //[[_tableViewPayloadProfile layer] setBorderWidth:0.0f];
+    [_tableViewPayloadProfile setDelegate:self];
     [_tableViewPayloadProfile reloadData];
     
     // -------------------------------------------------------------------------
@@ -393,14 +362,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     [self selectTableViewPayloadLibrary:nil];
     [self setTableViewPayloadLibrarySelectedRow:-1];
-    [_tableViewPayloadLibrary setTableViewDelegate:self];
-    //[[_tableViewPayloadLibrary layer] setBorderWidth:0.0f];
+    [_tableViewPayloadLibrary setDelegate:self];
     [_tableViewPayloadLibrary reloadData];
     
     // -------------------------------------------------------------------------
     //  Setup TableView "Settings"
     // -------------------------------------------------------------------------
-    [_tableViewSettings setTableViewDelegate:self];
+    [_tableViewSettings setDelegate:self];
     
     // -------------------------------------------------------------------------
     //  Setup Headers
@@ -2342,6 +2310,42 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark Validating Menu Items
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    NSMenu *menu = [menuItem menu];
+    if ( menu == [_popUpButtonPlatformOSXMinVersion menu] ) {
+        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
+    } else if ( menu == [_popUpButtonPlatformOSXMaxVersion menu] ) {
+        return [self version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+    } else if ( menu == [_popUpButtonPlatformiOSMinVersion menu] ) {
+        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
+    } else if ( menu == [_popUpButtonPlatformiOSMaxVersion menu] ) {
+        return [self version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+    }
+    return YES;
+} // validateMenuItem
+
+- (BOOL)version:(NSString *)version1 isLaterThanVersion:(NSString *)version2 {
+    if ( [version1 isEqualToString:@"Latest"] ) {
+        version1 = @"999";
+    }
+    
+    if ( [version2 isEqualToString:@"Latest"] ) {
+        version2 = @"999";
+    }
+    
+    if ( [version1 isEqualToString:version2] ) {
+        return YES;
+    } else {
+        return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
+    }
+} // version:isLaterThanVersion
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark Saving
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -2432,6 +2436,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self setSettingsProfile:[settingsProfile mutableCopy]];
     configurationDict[PFCProfileTemplateKeyName] = _profileName ?: @"";
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
+    configurationDict[PFCProfileTemplateKeyDisplaySettings] = [self currentDisplaySettings] ?: @{};
     
     // -------------------------------------------------------------------------
     //  Write the profile template to disk and update
@@ -2450,6 +2455,22 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSLog(@"[ERROR] Saving profile template failed!");
     }
 } // saveProfile
+
+- (NSDictionary *)currentDisplaySettings {
+    NSMutableDictionary *displaySettings = [[NSMutableDictionary alloc] init];
+    
+    displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @(_advancedSettings);
+    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_isSupervised);
+    displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
+                                                              PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
+                                                              PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem] ?: @"",
+                                                              PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] ?: @"",
+                                                              PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
+                                                              PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
+                                                              PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] ?: @""
+                                                              };
+    return [displaySettings copy];
+}
 
 - (void)saveSelectedManifest {
     
@@ -3718,9 +3739,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (IBAction)menuItemShowInFinder:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
+
     NSArray *tableViewArray = [self arrayForTableViewWithIdentifier:_clickedPayloadTableViewIdentifier];
-    
+
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
@@ -3984,80 +4005,5 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     settingsManifestRoot[@"SelectedTab"] = @(tabIndexSelected);
     _settingsProfile[manifestDomain] = [settingsManifestRoot mutableCopy];
 } // saveTabIndexSelected:forManifestDomain
-
-- (IBAction)popUpButtonPlatformOSXMinVersion:(id)sender {
-}
-
-- (IBAction)popUpButtonPlatformOSXMaxVersoin:(id)sender {
-}
-
-- (IBAction)popUpButtonPlatformiOSMinVersion:(id)sender {
-}
-
-- (IBAction)popUpButtonPlatformiOSMaxVersion:(id)sender {
-}
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Class: PFCPayloadLibraryTableView
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-@implementation PFCPayloadLibraryTableView
-
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent {
-    
-    // ------------------------------------------------------------------------------
-    //  Get what row in the TableView the mouse is pointing at when the user clicked
-    // ------------------------------------------------------------------------------
-    NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    NSInteger row = [self rowAtPoint:mousePoint];
-    
-    if ( row < 0 ) {
-        return nil;
-    }
-    
-    // ----------------------------------------------------------------------------------------
-    //  Get what table view responded when the user clicked
-    // ----------------------------------------------------------------------------------------
-    NSString *tableViewIdentifier = [self identifier];
-    
-    // ----------------------------------------------------------------------------------------
-    //  Create an instance of the context menu bound to the TableView's menu outlet
-    // ----------------------------------------------------------------------------------------
-    NSMenu *menu = [[self menu] copy];
-    [menu setAutoenablesItems:NO];
-    
-    // -----------------------------------------------------------------------------------------------------------
-    //  Send menu to delegate for validation to add, enable and disable menu items depending on TableView and row
-    // -----------------------------------------------------------------------------------------------------------
-    [_delegate validateMenu:menu forTableViewWithIdentifier:tableViewIdentifier row:row];
-    
-    return menu;
-} // menuForEvent
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Class: PFCSettingsTableView
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-@implementation PFCSettingsTableView
-
-- (void)mouseDown:(NSEvent *)theEvent {
-    
-    NSPoint globalLocation = [theEvent locationInWindow];
-    NSPoint localLocation = [self convertPoint:globalLocation fromView:nil];
-    NSInteger clickedRow = [self rowAtPoint:localLocation];
-    
-    [super mouseDown:theEvent];
-    
-    if (clickedRow != -1) {
-        [_delegate didClickRow:clickedRow];
-    }
-}
 
 @end

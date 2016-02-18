@@ -249,7 +249,88 @@ int const PFCTableViewGroupsRowHeight = 24;
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
     [_tableViewProfileLibrary setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
+    
+    NSMenu *menu = [[NSMenu alloc] init];
+    [menu setAutoenablesItems:YES];
+    
+    NSMenuItem *menuItemShowInFinder = [[NSMenuItem alloc] init];
+    [menuItemShowInFinder setTitle:@"Show In Finder"];
+    [menuItemShowInFinder setTarget:self];
+    [menuItemShowInFinder setAction:@selector(menuItemShowInFinder:)];
+    
+    [menu addItem:menuItemShowInFinder];
+    
+    [_tableViewProfileLibrary setMenu:menu];
 } // setupProfileLibrary
+
+- (void)menuItemShowInFinder:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSArray *tableViewArray = [self arrayForTableViewWithIdentifier:_clickedTableViewIdentifier];
+    
+    // ----------------------------------------------------------------------------------------
+    //  Sanity check so that row isn't less than 0 and that it's within the count of the array
+    // ----------------------------------------------------------------------------------------
+    if ( _clickedTableViewRow < 0 || [tableViewArray count] < _clickedTableViewRow ) {
+        return;
+    }
+    
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[tableViewArray objectAtIndex:_clickedTableViewRow] ?: @""];
+    
+    // ----------------------------------------------------------------------------------------
+    //  If key 'Path' is set, check if it's a valid path. If it is, open it in Finder
+    // ----------------------------------------------------------------------------------------
+    if ( [profileDict[PFCRuntimeKeyPath] length] != 0 ) {
+        NSError *error = nil;
+        NSString *filePath = profileDict[PFCRuntimeKeyPath] ?: @"";
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
+        } else {
+            NSLog(@"[ERROR] %@", [error localizedDescription]);
+        }
+    }
+}
+
+- (NSArray *)arrayForTableViewWithIdentifier:(NSString *)tableViewIdentifier {
+    if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileLibrary] ) {
+        return [_arrayProfileLibrary copy];
+    } else {
+        return nil;
+    }
+} // arrayForTableViewWithIdentifier
+
+- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    // ---------------------------------------------------------------------
+    //  Store which TableView and row the user right clicked on.
+    // ---------------------------------------------------------------------
+    [self setClickedTableViewIdentifier:tableViewIdentifier];
+    [self setClickedTableViewRow:row];
+    NSArray *tableViewArray = [self arrayForTableViewWithIdentifier:tableViewIdentifier];
+    
+    // ----------------------------------------------------------------------------------------
+    //  Sanity check so that row isn't less than 0 and that it's within the count of the array
+    // ----------------------------------------------------------------------------------------
+    if ( row < 0 || [tableViewArray count] < row ) {
+        menu = nil;
+        return;
+    }
+    
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[tableViewArray objectAtIndex:row] ?: @""];
+    
+    // -------------------------------------------------------------------------------
+    //  MenuItem - "Show In Finder"
+    //  Remove this menu item unless runtime key 'Path' is set in the manifest
+    // -------------------------------------------------------------------------------
+    NSMenuItem *menuItemShowInFinder = [menu itemWithTitle:@"Show In Finder"];
+    if ( [profileDict[PFCRuntimeKeyPath] length] != 0 ) {
+        [menuItemShowInFinder setEnabled:YES];
+    } else {
+        [menu removeItem:menuItemShowInFinder];
+    }
+} // validateMenu:forTableViewWithIdentifier:row
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

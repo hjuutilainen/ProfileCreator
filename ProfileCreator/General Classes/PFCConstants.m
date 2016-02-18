@@ -197,7 +197,7 @@ NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMinVersion = @"OSXMinVers
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOS = @"iOS";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion = @"iOSMaxVersion";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMinVersion = @"iOSMinVersion";
-NSString *const PFCProfileDisplaySettingsKeySupervised = @"Supervied";
+NSString *const PFCProfileDisplaySettingsKeySupervised = @"Supervised";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileGroupKeys

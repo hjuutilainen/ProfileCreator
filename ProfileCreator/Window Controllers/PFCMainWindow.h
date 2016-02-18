@@ -21,12 +21,12 @@
 #import "PFCViews.h"
 #import "PFCProfileGroupTitle.h"
 #import "PFCAlert.h"
-
+#import "PFCTableViews.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCMainWindow
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCMainWindow : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCProfileGroupDelegate, PFCAlertDelegate>
+@interface PFCMainWindow : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCProfileGroupDelegate, PFCAlertDelegate, PFCTableViewDelegate>
 
 // -----------------------------------------------------------------------------
 //  Unsorted
@@ -89,10 +89,17 @@
 @property (weak)    IBOutlet NSView                     *viewProfileLibraryFooterSplitView;
 @property (weak)    IBOutlet NSView                     *viewProfileLibraryTableViewSuperview;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileLibrary;
+@property (weak)    IBOutlet NSMenu                     *menuTableViewProfileLibrary;
 @property                    NSIndexSet                 *tableViewProfileLibrarySelectedRows;
 @property                    NSMutableArray             *arrayProfileLibrary;
 
 - (IBAction) selectTableViewProfileLibrary:(id)sender;
+
+// -------------------------------------------------------------------------
+//  Payload Context Menu
+// -------------------------------------------------------------------------
+@property (readwrite)        NSString                   *clickedTableViewIdentifier;
+@property (readwrite)        NSInteger                  clickedTableViewRow;
 
 // -----------------------------------------------------------------------------
 //  SplitView Preview

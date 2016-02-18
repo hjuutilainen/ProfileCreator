@@ -457,7 +457,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="194" height="115"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierPayloadProfile" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="xAs-Je-CWh" customClass="PFCPayloadLibraryTableView">
+                            <tableView identifier="TableViewIdentifierPayloadProfile" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="44" rowSizeStyle="automatic" viewBased="YES" id="xAs-Je-CWh" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="190" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -647,7 +647,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="194" height="88"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierPayloadLibrary" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl" customClass="PFCPayloadLibraryTableView">
+                            <tableView identifier="TableViewIdentifierPayloadLibrary" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="dRl-rc-zHl" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="190" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
@@ -716,7 +716,7 @@ Gw
                 <constraint firstItem="w0w-p9-Wd4" firstAttribute="leading" secondItem="Zf9-0g-a6x" secondAttribute="leading" id="z6t-gh-Ir2"/>
                 <constraint firstItem="NWj-Ps-yH3" firstAttribute="top" secondItem="w0w-p9-Wd4" secondAttribute="bottom" id="zzh-wu-QpI"/>
             </constraints>
-            <point key="canvasLocation" x="-1213" y="-1233.5"/>
+            <point key="canvasLocation" x="-1584" y="-1262.5"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="bwR-yz-4m2" userLabel="View Settings Superview">
             <rect key="frame" x="0.0" y="0.0" width="320" height="1498"/>
@@ -727,7 +727,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="320" height="1474"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings" customClass="PFCSettingsTableView">
+                            <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="1474"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2210,7 +2210,7 @@ Gw
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="-759.5" y="-683.5"/>
+            <point key="canvasLocation" x="-1711" y="-1129.5"/>
         </menu>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-St-D7R" userLabel="view PopUp Advanced Settings">
             <rect key="frame" x="0.0" y="0.0" width="183" height="86"/>

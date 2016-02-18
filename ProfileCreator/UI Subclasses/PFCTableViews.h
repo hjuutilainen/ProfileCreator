@@ -9,7 +9,10 @@
 #import <Cocoa/Cocoa.h>
 
 @protocol PFCTableViewDelegate <NSTableViewDelegate>
--(BOOL)deleteKeyPressedForTableView:(id)sender;
+@optional
+- (BOOL)deleteKeyPressedForTableView:(id)sender;
+- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
+- (void)didClickRow:(NSInteger)row;
 @end
 
 @interface PFCTableView : NSTableView

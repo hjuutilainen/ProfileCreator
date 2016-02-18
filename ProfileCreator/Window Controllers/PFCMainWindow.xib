@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="buttonProfileEdit" destination="mRM-Rs-tVe" id="Jhe-2J-2ls"/>
                 <outlet property="buttonProfileExport" destination="9YF-gT-6Zg" id="N3S-eC-J4s"/>
+                <outlet property="menuTableViewProfileLibrary" destination="eVJ-PH-bnh" id="U0V-V2-JjY"/>
                 <outlet property="popUpButtonProfileLibraryFooter" destination="hy3-b7-yU8" id="OLU-eb-rox"/>
                 <outlet property="scrollViewProfileGroups" destination="XjV-ub-3jF" id="fDH-lz-wiV"/>
                 <outlet property="scrollViewProfileSmartGroups" destination="7K3-G1-rh7" id="3rf-Qq-dmK"/>
@@ -243,6 +244,7 @@
                                     <action selector="selectTableViewProfileLibrary:" target="-2" id="Wcr-Il-7AA"/>
                                     <outlet property="dataSource" destination="-2" id="tbB-X9-luM"/>
                                     <outlet property="delegate" destination="-2" id="k8N-NI-Tw9"/>
+                                    <outlet property="menu" destination="eVJ-PH-bnh" id="0tO-lL-j7g"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -369,7 +371,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="1"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -765,6 +767,14 @@
             </constraints>
             <point key="canvasLocation" x="-713" y="179.5"/>
         </customView>
+        <menu id="eVJ-PH-bnh">
+            <items>
+                <menuItem title="Show In Finder" id="L6S-yL-T6z">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-1314" y="-108.5"/>
+        </menu>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
