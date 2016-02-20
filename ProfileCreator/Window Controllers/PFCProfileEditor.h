@@ -59,9 +59,14 @@
 @property (weak)    IBOutlet NSView                     *viewProfileHeader;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileHeader;
 @property (weak)    IBOutlet NSTextField                *textFieldProfileName;
+@property (weak)    IBOutlet NSTextField                *textFieldProfileIdentifier;
+@property (weak)    IBOutlet NSTextField                *textFieldProfileIdentifierFormat;
+
 @property (strong)  IBOutlet NSLayoutConstraint         *constraintProfileHeaderHeight;
 @property                    NSString                   *profileUUID;
 @property (readwrite)        NSString                   *profileName;
+@property                    NSString                   *profileIdentifier;
+@property                    NSString                   *profileIdentifierFormat;
 @property (readwrite)        NSString                   *profileDescription;
 @property (readwrite)        BOOL                       profileHeaderHidden;
 
@@ -77,6 +82,8 @@
 @property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformOSXMaxVersion;
 @property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSMinVersion;
 @property (weak)    IBOutlet NSPopUpButton              *popUpButtonPlatformiOSMaxVersion;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonCertificateSigning;
+@property (weak)    IBOutlet NSPopUpButton              *popUpButtonCertificateEncryption;
 @property                    BOOL                       includePlatformOSX;
 @property                    NSString                   *osxMaxVersion;
 @property                    NSString                   *osxMinVersion;
@@ -85,6 +92,8 @@
 @property                    NSString                   *iosMinVersion;
 @property                    BOOL                       isSupervised;
 @property                    BOOL                       showAdvancedSettings;
+@property                    BOOL                       signProfile;
+@property                    BOOL                       encryptProfile;
 
 // -------------------------------------------------------------------------
 //  Payload
@@ -156,8 +165,6 @@
 
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
 - (IBAction)buttonAdd:(id)sender;
-- (IBAction)menuItemAddMobileconfig:(id)sender;
-- (IBAction)menuItemAddPlist:(id)sender;
 
 // -------------------------------------------------------------------------
 //  SettingsHeader

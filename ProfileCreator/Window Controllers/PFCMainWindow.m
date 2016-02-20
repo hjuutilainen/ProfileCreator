@@ -909,7 +909,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     for ( NSView *view in [_stackViewPreview views] ) {
         [view removeFromSuperview];
     }
-
+    
     NSDictionary *profileSettings = profileDict[@"Config"];
     NSDictionary *profileDisplaySettings = profileSettings[PFCProfileTemplateKeyDisplaySettings];
     
@@ -963,7 +963,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             
             NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:payloadLibrary withDomain:domain];
             if ( [manifest count] != 0 ) {
-                PFCPayloadPreview *preview = [self previewForMainfest:manifest domain:domain];
+                PFCPayloadPreview *preview = [self previewForMainfest:manifest domain:domain settings:domainSettings];
                 [_arrayStackViewPreview addObject:preview];
                 [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
             } else {
@@ -975,12 +975,28 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
 }
 
-- (PFCPayloadPreview *)previewForMainfest:(NSDictionary *)manifest domain:(NSString *)domain {
+- (PFCPayloadPreview *)previewForMainfest:(NSDictionary *)manifest domain:(NSString *)domain settings:(NSDictionary *)settings {
     
     PFCPayloadPreview *preview = [[PFCPayloadPreview alloc] init];
     
-    [preview setPayloadDomain:manifest[PFCManifestKeyTitle] ?: domain];
+    [preview setPayloadName:manifest[PFCManifestKeyTitle] ?: domain];
     [preview setPayloadDescription:manifest[PFCManifestKeyDescription] ?: @""];
+    
+    // -------------------------------------------------------------------------
+    //  Error Count
+    // -------------------------------------------------------------------------
+    NSArray *settingsError = settings[@"SettingsError"] ?: @[];
+    __block NSInteger errorCount = 0;
+    if ( [settingsError count] != 0 ) {
+        
+        
+        [settingsError enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
+            errorCount += [[dict allKeys] count] ?: 0;
+        }];
+    }
+    DDLogDebug(@"Setting Payload Error Count: %@", [@(errorCount) stringValue]);
+    [preview setPayloadErrorCount:[@(errorCount) stringValue]];
+
     
     NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
     if ( icon ) {
@@ -1143,6 +1159,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     
     NSDictionary *profileDict = @{ PFCRuntimeKeyPath : [PFCGeneralUtility newProfilePath],
                                    @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName,
+                                                  PFCProfileTemplateKeyIdentifier : PFCDefaultProfileIdentifierFormat,
                                                   PFCProfileTemplateKeyDisplaySettings : @{
                                                           PFCProfileDisplaySettingsKeyPlatform : @{
                                                                   PFCProfileDisplaySettingsKeyPlatformOSX : @YES,
@@ -1534,7 +1551,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         //  Load the current profile from the array
         // ---------------------------------------------------------------------
         NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[row] ?: @""];
-
+        
         // ---------------------------------------------------------------------
         //  Verify the profile has any content
         // ---------------------------------------------------------------------

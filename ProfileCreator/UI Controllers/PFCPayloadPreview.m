@@ -8,6 +8,7 @@
 
 #import "PFCPayloadPreview.h"
 #import "PFCTableViewCellsPayloadPreview.h"
+#import "PFCLog.h"
 
 @interface PFCPayloadPreview ()
 
@@ -19,10 +20,31 @@
     self = [super initWithNibName:@"PFCPayloadPreview" bundle:nil];
     if (self != nil) {
         [[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self addObserver:self forKeyPath:@"payloadErrorCount" options:0 context:nil];
         [self setIsCollapsed:YES];
     }
     return self;
 } // init
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ( [keyPath isEqualToString:@"payloadErrorCount"] ) {
+        
+        // Error is inverted, didn't find a good name.
+        BOOL error = ( [_payloadErrorCount integerValue] == 0 );
+        [_textFieldPayloadErrorCount setHidden:error];
+        if ( error ) {
+            [_textFieldPayloadName setTextColor:[NSColor labelColor]];
+            [_textFieldPayloadDescription setTextColor:[NSColor secondaryLabelColor]];
+        } else {
+            [_textFieldPayloadName setTextColor:[NSColor redColor]];
+            [_textFieldPayloadDescription setTextColor:[NSColor redColor]];
+        }
+    }
+}
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"payloadErrorCount"];
+} // dealloc
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -69,7 +91,6 @@
     }
     
     NSDictionary *infoDict = _arrayPayloadInfo[row];
-    NSLog(@"infoDict=%@", infoDict);
     if ( [[tableColumn identifier] isEqualToString:@"TableColumnInfoTitle"] ) {
         CellViewInfoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewInfoTitle" owner:self];
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).

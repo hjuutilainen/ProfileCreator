@@ -421,9 +421,26 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // selectFirstResponder
 
 - (void)setupProfileSettings {
-    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @"Unknown Profile"];
+    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: PFCDefaultProfileName];
     [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
+    [self setProfileIdentifierFormat:_profileDict[@"Config"][PFCProfileTemplateKeyIdentifier] ?: PFCDefaultProfileIdentifierFormat];
+    [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:nil]];
+    
 } // setupProfileSettings
+
+- (NSString *)expandVariablesInString:(NSString *)string overrideValues:(NSDictionary *)overrideValues {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    if ( overrideValues[@"%NAME%"] != nil ) {
+        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
+    } else {
+        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:_profileName];
+    }
+    
+    string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+
+    DDLogDebug(@"Returning string: %@", string);
+    return string;
+} // expandVariables:overrideValues
 
 - (void)setupDisplaySettings {
     DDLogDebug(@"%s", __PRETTY_FUNCTION__);
@@ -1567,14 +1584,21 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (void)controlTextDidChange:(NSNotification *)sender {
     
+    // -------------------------------------------------------------------------
+    //  Get current entered text
+    // -------------------------------------------------------------------------
+    NSDictionary *userInfo = [sender userInfo];
+    NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+    
     if ( [[sender object] isEqualTo:_textFieldSheetProfileName] ) {
-        NSDictionary *userInfo = [sender userInfo];
-        NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
         if ( [inputText hasPrefix:@"Untitled Profile"] || [[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:nil] containsObject:inputText] || [inputText length] == 0 ) {
             [_buttonSaveSheetProfileName setEnabled:NO];
         } else {
             [_buttonSaveSheetProfileName setEnabled:YES];
         }
+        return;
+    } else if ( [[sender object] isEqualTo:_textFieldProfileName] ) {
+        [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:@{ @"%NAME%" : inputText }]];
         return;
     }
     
@@ -1595,12 +1619,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     NSInteger row = [textFieldTag integerValue];
-    
-    // -------------------------------------------------------------------------
-    //  Get current entered text
-    // -------------------------------------------------------------------------
-    NSDictionary *userInfo = [sender userInfo];
-    NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+
     
     // -------------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
@@ -1875,10 +1894,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             // -----------------------------------------------------------------
             //  Store the cell dict for move
             // -----------------------------------------------------------------
-            NSDictionary *manifestDict = [_arrayPayloadLibrary objectAtIndex:row];
-            DDLogVerbose(@"Clicked manifest: %@", manifestDict);
+            NSDictionary *manifest = [_arrayPayloadLibrary objectAtIndex:row];
+            DDLogVerbose(@"Clicked manifest: %@", manifest);
             
-            NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
+            NSString *manifestDomain = manifest[PFCManifestKeyDomain];
             DDLogInfo(@"Adding manifest with domain: %@ to profile", manifestDomain);
             
             // -----------------------------------------------------------------
@@ -1918,7 +1937,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             }
             
             [_tableViewPayloadProfile beginUpdates];
-            [_arrayPayloadProfile addObject:manifestDict];
+            [_arrayPayloadProfile addObject:manifest];
             [self sortArrayPayloadProfile];
             [_tableViewPayloadProfile reloadData];
             [_tableViewPayloadProfile endUpdates];
@@ -1960,7 +1979,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // -------------------------------------------------------------
-                NSUInteger row = [_arrayPayloadProfile indexOfObject:manifestDict];
+                NSUInteger row = [_arrayPayloadProfile indexOfObject:manifest];
                 DDLogDebug(@"Table view profile new selected row: %ld", (long)row);
                 
                 if ( row != NSNotFound ) {
@@ -1978,6 +1997,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             settingsManifestRoot[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
             _settingsProfile[manifestDomain] = [settingsManifestRoot mutableCopy];
             DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
+            
+            // -----------------------------------------------------------------
+            //  Update errors for manifest
+            // -----------------------------------------------------------------
+            [self errorForManifest:manifest updateTabBar:YES];
+            [self updateErrorsForManifest:manifest];
         }
     } else {
         NSLog(@"[ERROR] Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
@@ -2352,6 +2377,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 ////////////////////////////////////////////////////////////////////////////////
 
 - (BOOL)settingsSaved {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
     //  Check if there's a path saved for the profile
@@ -2377,8 +2403,41 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return NO;
     } else {
         [self saveSelectedManifest];
-        return [profileDict[PFCProfileTemplateKeySettings] isEqualToDictionary:_settingsProfile];
+        
+        //FIXME - Maybe check all before returning for logging purposes?
+        
+        DDLogDebug(@"Saved 'Name': %@", profileDict[PFCProfileTemplateKeyName]);
+        DDLogDebug(@"Current 'Name': %@", _profileName);
+        
+        if ( ! [profileDict[PFCProfileTemplateKeyName] isEqualToString:_profileName] ) {
+            return NO;
+        }
+        
+        DDLogDebug(@"Saved 'UUID': %@", profileDict[PFCProfileTemplateKeyUUID]);
+        DDLogDebug(@"Current 'UUID': %@", _profileUUID);
+        
+        if ( ! [profileDict[PFCProfileTemplateKeyUUID] isEqualToString:_profileUUID] ) {
+            return NO;
+        }
+        
+        // FIXME - Should this be a single dict, or is this ok? Should I be rewrite how settings are handled.
+        
+        DDLogDebug(@"Saved 'DisplaySettings': %@", profileDict[PFCProfileTemplateKeyDisplaySettings]);
+        DDLogDebug(@"Current 'DisplaySettings': %@", [self currentDisplaySettings]);
+        
+        if ( ! [profileDict[PFCProfileTemplateKeyDisplaySettings] isEqualToDictionary:[self currentDisplaySettings] ?: @{}] ) {
+            return NO;
+        }
+        
+        DDLogDebug(@"Saved 'Settings': %@", profileDict[PFCProfileTemplateKeySettings]);
+        DDLogDebug(@"Current 'Settings' : %@", _settingsProfile);
+        
+        if ( ! [profileDict[PFCProfileTemplateKeySettings] isEqualToDictionary:_settingsProfile] ) {
+            return NO;
+        }
     }
+    
+    return YES;
 } // settingsSaved
 
 - (void)saveProfile {
@@ -2424,6 +2483,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSMutableDictionary *settingsProfile = [_settingsProfile mutableCopy];
     for ( NSString *domain in [settingsProfile allKeys] ?: @[] ) {
         NSMutableArray *manifestSettings = [[NSMutableArray alloc] init];
+        NSMutableDictionary *domainSettings = [settingsProfile[domain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         for ( NSDictionary *settings in settingsProfile[domain][@"Settings"] ?: @[] ) {
             NSMutableDictionary *settingsMutable = [settings mutableCopy];
             if ( [settingsMutable[PFCProfileTemplateKeyUUID] length] == 0 ) {
@@ -2431,11 +2491,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             }
             [manifestSettings addObject:[settingsMutable copy]];
         }
-        settingsProfile[domain][@"Settings"] = [manifestSettings copy];
+        domainSettings[@"Settings"] = [manifestSettings copy];
+        settingsProfile[domain] = [domainSettings copy];
     }
     
     [self setSettingsProfile:[settingsProfile mutableCopy]];
     configurationDict[PFCProfileTemplateKeyName] = _profileName ?: @"";
+    configurationDict[PFCProfileTemplateKeyIdentifier] = _profileIdentifier ?: @"";
+    configurationDict[PFCProfileTemplateKeyIdentifierFormat] = _profileIdentifierFormat ?: PFCDefaultProfileIdentifierFormat;
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
     configurationDict[PFCProfileTemplateKeyDisplaySettings] = [self currentDisplaySettings] ?: @{};
     
@@ -2445,7 +2508,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     if ( [configurationDict writeToURL:profileURL atomically:YES] ) {
         profileDict[@"Config"] = [configurationDict copy];
         [self setProfileDict:[profileDict copy]];
-        DDLogDebug(@"_profileDict=%@", _profileDict);
         
         // ---------------------------------------------------------------------
         //  Update main window with new settings for the saved profile
@@ -3125,8 +3187,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 
                 // Fix to get the first tab to also get an initial error count, could possibly be done somewhere else
                 if ( manifestTabCount == 1 ) {
-                    NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
-                    NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+                    NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
+                    NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
                     [self updatePayloadTabErrorCount:errorCount tabIndex:0];
                 }
                 [self errorForManifest:_selectedManifest updateTabBar:YES];
@@ -3303,8 +3365,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 
                 // Fix to get the first tab to also get an initial error count, could possibly be done somewhere else
                 if ( manifestTabCount == 1 ) {
-                    NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
-                    NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+                    NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
+                    NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
                     [self updatePayloadTabErrorCount:errorCount tabIndex:0];
                 }
                 [self errorForManifest:_selectedManifest updateTabBar:YES];
@@ -3545,16 +3607,25 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
-    //  Check that manifest array contains any settings dict, else stop
-    //  Also check if manifestTabIndex is higher than settings count, then stop
+    //  Remove 'Settings'
     // -------------------------------------------------------------------------
-    NSMutableArray *manifestSettings = [_settingsProfile[manifestDomain][@"Settings"] mutableCopy] ?: [[NSMutableArray alloc] init];
-    if ( [manifestSettings count] == 0 || [manifestSettings count] < manifestTabIndex  ) {
-        return;
+    NSMutableDictionary *manifestDomainSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    NSMutableArray *manifestSettings = [manifestDomainSettings[@"Settings"] mutableCopy] ?: [[NSMutableArray alloc] init];
+    if ( [manifestSettings count] != 0 || manifestTabIndex < [manifestSettings count] ) {
+        [manifestSettings removeObjectAtIndex:manifestTabIndex];
+        manifestDomainSettings[@"Settings"] = [manifestSettings mutableCopy];
+        _settingsProfile[manifestDomain] = [manifestDomainSettings mutableCopy];
     }
     
-    [manifestSettings removeObjectAtIndex:manifestTabIndex];
-    _settingsProfile[manifestDomain][@"Settings"] = manifestSettings;
+    // -------------------------------------------------------------------------
+    //  Remove 'SettingsError'
+    // -------------------------------------------------------------------------
+    NSMutableArray *manifestSettingsError = [manifestDomainSettings[@"SettingsError"] mutableCopy] ?: [[NSMutableArray alloc] init];
+    if ( [manifestSettingsError count] != 0 || manifestTabIndex < [manifestSettingsError count] ) {
+        [manifestSettingsError removeObjectAtIndex:manifestTabIndex];
+        manifestDomainSettings[@"SettingsError"] = [manifestSettingsError mutableCopy];
+        _settingsProfile[manifestDomain] = [manifestDomainSettings mutableCopy];
+    }
 } // removeSettingsForManifestWithDomain:manifestTabIndex
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3845,8 +3916,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Update new tab with errors
     // -------------------------------------------------------------------------
-    NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{}];
-    NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+    NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{}];
+    NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
     [self updatePayloadTabErrorCount:errorCount tabIndex:newIndex];
     [self updateErrorsForManifest:_selectedManifest];
     
@@ -3898,17 +3969,23 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Update all tabs with saved values
     // -----------------------------------------------------------------
     NSArray *manifestContent = manifest[PFCManifestKeyManifestContent];
+    
     NSString *manifestDomain = manifest[PFCManifestKeyDomain];
     DDLogDebug(@"Manifest domain: %@", manifestDomain);
     
-    NSArray *manifestSettings;
+    // -------------------------------------------------------------------------
+    //  Add empty settings so the enumeration always will run atleast once
+    // -------------------------------------------------------------------------
+    NSArray *manifestSettings = @[ @{} ];
     NSString *payloadTabTitleIndex = manifest[PFCManifestKeyPayloadTabTitle] ?: @"";
     DDLogDebug(@"Payload tab title index: %@", payloadTabTitleIndex);
     
     if ( [payloadTabTitleIndex length] != 0 ) {
-        manifestSettings = _settingsProfile[manifestDomain][@"Settings"];
+        manifestSettings = _settingsProfile[manifestDomain][@"Settings"] ?: @[ @{} ];
     }
     __block NSInteger combinedErrors = 0;
+    
+    NSMutableArray *settingsError = [[NSMutableArray alloc] init];
     
     DDLogDebug(@"Enumerating all manifest settings (%lu) for manifest domain: %@ and updating errors", (unsigned long)[manifestSettings count], manifestDomain);
     [manifestSettings enumerateObjectsUsingBlock:^(id  _Nonnull __unused obj, NSUInteger idx, BOOL * _Nonnull __unused stop) {
@@ -3926,8 +4003,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             }
             DDLogDebug(@"Tab settings: %@", settings);
             
-            NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestContent settings:settings];
-            NSNumber *errorCount = @([verificationReport[[@(kPFCSeverityError) stringValue]] count]) ?: @0;
+            NSDictionary *verificationReport = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings] ?: @{};
+            [settingsError addObject:verificationReport];
+            
+            NSNumber *errorCount = @([[verificationReport allKeys] count]) ?: @0;
             DDLogDebug(@"Tab errors: %ld", (long)[errorCount integerValue]);
             
             combinedErrors += [errorCount integerValue];
@@ -3941,6 +4020,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         }
     }];
     
+    NSMutableDictionary *manifestDomainSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    manifestDomainSettings[@"SettingsError"] = [settingsError copy] ?: @[];
+    _settingsProfile[manifestDomain] = [manifestDomainSettings copy];
+
     return combinedErrors;
 } // updateTabBarErrors
 

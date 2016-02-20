@@ -175,6 +175,7 @@ NSString *const PFCRuntimeKeyProfileExporter = @"ProfileExporter";
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCDefaultProfileName = @"Untitled Profile...";
 NSString *const PFCDefaultProfileGroupName = @"Untitled Group";
+NSString *const PFCDefaultProfileIdentifierFormat = @"com.github.ProfileCreator.%NAME%";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileTemplateKeys
@@ -182,6 +183,7 @@ NSString *const PFCDefaultProfileGroupName = @"Untitled Group";
 NSString *const PFCProfileTemplateKeyName = @"Name";
 NSString *const PFCProfileTemplateKeyPath = @"Path";
 NSString *const PFCProfileTemplateKeySettings = @"Settings";
+NSString *const PFCProfileTemplateKeySettingsError = @"SettingsError";
 NSString *const PFCProfileTemplateKeyDisplaySettings = @"DisplaySettings";
 NSString *const PFCProfileTemplateKeyUUID = @"UUID";
 NSString *const PFCProfileTemplateExtension = @"pfcconf";
@@ -206,6 +208,8 @@ NSString *const PFCProfileGroupKeyName = @"Name";
 NSString *const PFCProfileGroupKeyPath = @"Path";
 NSString *const PFCProfileGroupKeyProfiles = @"Profiles";
 NSString *const PFCProfileGroupKeyUUID = @"UUID";
+NSString *const PFCProfileTemplateKeyIdentifier = @"Identifier";
+NSString *const PFCProfileTemplateKeyIdentifierFormat = @"IdentifierFormat";
 NSString *const PFCProfileGroupExtension = @"pfcgrp";
 
 ////////////////////////////////////////////////////////////////////////////////

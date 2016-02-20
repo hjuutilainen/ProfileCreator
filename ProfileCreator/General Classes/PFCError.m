@@ -24,16 +24,10 @@
 
 + (NSDictionary *)verificationReportWithMessage:(NSString *)message severity:(int)severity manifestContentDict:(NSDictionary *)manifestContentDict {
     return @{
-             [@(severity) stringValue] : @[[PFCError verificationMessage:message manifestContentDict:manifestContentDict]]
-             };
-} // verificationReportWithMessage:severity:manifestContentDict
-
-+ (NSDictionary *)verificationMessage:(NSString *)message manifestContentDict:(NSDictionary *)manifestContentDict {
-    return @{
+             @"Severity" : [@(severity) stringValue],
              @"Message" : message ?: @"",
-             PFCManifestKeyIdentifier : manifestContentDict[PFCManifestKeyIdentifier] ?: @"Unknown",
              PFCManifestKeyPayloadKey : manifestContentDict[PFCManifestKeyPayloadKey] ?: @"Unknown"
              };
-} // verificationMessage:severity:manifestContentDict
+} // verificationReportWithMessage:severity:manifestContentDict
 
 @end

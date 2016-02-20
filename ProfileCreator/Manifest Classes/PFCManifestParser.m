@@ -744,35 +744,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)verifyManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings {
-    NSMutableArray *array = [NSMutableArray array];
-    
-    // ------------------------------------------------------------------------------
-    //  Loop throgh all manifest content dicts in the current manifest content array
-    // ------------------------------------------------------------------------------
-    for ( NSDictionary *manifestContentDict in manifestContent ) {
-        
-        // -----------------------------------------------------------------------------------
-        //  If manifest content dict contains key 'PayloadValue' or 'SharedKey'. Continue.
-        //  These keys are only used in sub dicts to define a value or a link to a shared key.
-        // -----------------------------------------------------------------------------------
-        if ( manifestContentDict[PFCManifestKeyPayloadValue] || manifestContentDict[PFCManifestKeySharedKey] ) {
-            continue;
-        }
-        
-        // ----------------------------------------------------------------------------------------------
-        //  Verify the current manifest dict, and add all errors and warnings to the verification report
-        // ----------------------------------------------------------------------------------------------
-        NSDictionary *verificationReport = [self verifyManifestContentDict:manifestContentDict settings:settings];
-        if ( [verificationReport count] != 0 ) {
-            [array addObject:verificationReport];
-        }
-    }
-    
-    return [self verificationReportFromArray:array];
-} // verifyManifestContent:settings
-
-- (NSDictionary *)verifyManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
+- (NSDictionary *)settingsErrorForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     
     // -------------------------------------------------------------------------------------------
     //  Get current manifest content dict 'CellType' and call the correct method for verification
@@ -783,13 +755,13 @@
     //  Checkbox
     // ---------------------------------------------------------------------
     if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
-        return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypeCheckbox:manifestContentDict settings:settings];
         
         // ---------------------------------------------------------------------
         //  CheckboxNoDescription
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
-        return [self verifyCellTypeCheckbox:manifestContentDict settingsDict:settings];
+        return [self verifyCellTypeCheckbox:manifestContentDict settings:settings];
         
         // ---------------------------------------------------------------------
         //  DatePicker
@@ -888,14 +860,47 @@
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return [self verifyCellTypeTextFieldNumber:manifestContentDict settings:settings];
+        
     } else if ( [cellType length] != 0 ) {
+        
         DDLogError(@"Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
     } else {
+        
         //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
     
     return @{};
-} // verifyManifestContentDict:settings
+}
+
+- (NSDictionary *)settingsErrorForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSMutableDictionary *report = [[NSMutableDictionary alloc] init];
+    
+    // ------------------------------------------------------------------------------
+    //  Loop throgh all manifest content dicts in the current manifest content array
+    // ------------------------------------------------------------------------------
+    for ( NSDictionary *manifestContentDict in manifestContent ) {
+        
+        // -----------------------------------------------------------------------------------
+        //  If manifest content dict contains key 'PayloadValue' or 'SharedKey'. Continue.
+        //  These keys are only used in sub dicts to define a value or a link to a shared key.
+        // -----------------------------------------------------------------------------------
+        if ( manifestContentDict[PFCManifestKeyPayloadValue] || manifestContentDict[PFCManifestKeySharedKey] ) {
+            continue;
+        }
+        
+        // ----------------------------------------------------------------------------------------------
+        //  Verify the current manifest dict, and add all errors and warnings to the verification report
+        // ----------------------------------------------------------------------------------------------
+        NSDictionary *settingsError = [self settingsErrorForManifestContentDict:manifestContentDict settings:settings];
+        if ( [settingsError count] != 0 ) {
+            [report addEntriesFromDictionary:settingsError];
+        }
+    }
+    
+    return [report copy];
+} // verifyManifestContent:settings
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -924,7 +929,7 @@
     }
     
     if ( required && [value length] == 0 ) {
-        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     return nil;
@@ -952,7 +957,7 @@
     }
     
     if ( required && [value length] == 0 ) {
-        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     return nil;
@@ -980,7 +985,7 @@
     }
     
     if ( required && value == nil ) {
-        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     return nil;
@@ -1016,7 +1021,7 @@
     }
     
     if ( requiredHost && [valueHost length] == 0 ) {
-        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
     
     
@@ -1033,11 +1038,11 @@
     }
     
     if ( requiredPort && [valuePort length] == 0 ) {
-        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
     
     if ( [array count] != 0 ) {
-        return @{ [@(kPFCSeverityError) stringValue] : [array copy] };
+        return @{ identifier : [array copy] };
     }
     
     return nil;
@@ -1073,7 +1078,7 @@
     }
     
     if ( requiredHost && [valueHost length] == 0 ) {
-        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
     
     
@@ -1090,11 +1095,11 @@
     }
     
     if ( requiredPort && valuePort == nil ) {
-        [array addObject:[PFCError verificationMessage:@"" manifestContentDict:manifestContentDict]];
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
     
     if ( [array count] != 0 ) {
-        return @{ [@(kPFCSeverityError) stringValue] : [array copy] };
+        return @{ identifier : [array copy] };
     }
     
     return nil;
@@ -1124,18 +1129,18 @@
     NSNumber *maxValue = manifestContentDict[@"MaxValue"];
     
     if ( required && ( value == nil || value <= minValue || maxValue < value ) ) {
-        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     return nil;
 }
 
-- (NSDictionary *)verifyCellTypeCheckbox:(NSDictionary *)cellDict settingsDict:(NSDictionary *)settingsDict {
+- (NSDictionary *)verifyCellTypeCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     
-    NSString *checkboxState = [settingsDict[PFCSettingsKeyValue] boolValue] ? @"True" : @"False";
-    NSDictionary *valueKeys = cellDict[@"ValueKeys"];
+    NSString *checkboxState = [settings[PFCSettingsKeyValue] boolValue] ? @"True" : @"False";
+    NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"];
     if ( valueKeys[checkboxState] ) {
-        return [self verifyManifestContent:valueKeys[checkboxState] settings:settingsDict];
+        return [self settingsErrorForManifestContent:valueKeys[checkboxState] settings:settings];
     }
     
     return nil;
@@ -1160,7 +1165,7 @@
     NSURL *fileURL = [NSURL fileURLWithPath:filePath ?: @""];
     NSError *error = nil;
     if ( ! [fileURL checkResourceIsReachableAndReturnError:&error] ) {
-        return [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     NSArray *allowedFileTypes = manifestContentDict[@"AllowedFileTypes"];
@@ -1178,7 +1183,7 @@
             }];
             
             if ( ! validFileType ) {
-                return [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+                return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
             }
         } else {
             NSLog(@"[ERROR] %@", [error localizedDescription]);
@@ -1190,68 +1195,45 @@
 
 - (NSDictionary *)verifyCellTypePopUpButton:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
     
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ( [identifier length] == 0 ) {
+        return nil;
+    }
+    
     NSString *selectedItem = settings[PFCSettingsKeyValue];
     if ( [selectedItem length] == 0 ) {
         selectedItem = manifestContentDict[@"DefaultValue"];
     }
     
     if ( [selectedItem length] == 0 ) {
-        return [PFCError verificationReportWithMessage:@"No Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"No Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     if ( ! [manifestContentDict[@"AvailableValues"] ?: @[] containsObject:selectedItem] ) {
-        return [PFCError verificationReportWithMessage:@"Invalid Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict];
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
     
     NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"];
     if ( valueKeys[selectedItem] ) {
-        return [self verifyManifestContent:valueKeys[selectedItem] settings:settings];
+        return [self settingsErrorForManifestContent:valueKeys[selectedItem] settings:settings];
     }
     
     return nil;
 }
 
 - (NSDictionary *)verifyCellTypeSegmentedControl:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings {
-    NSMutableArray *array = [NSMutableArray array];
+    NSMutableDictionary *report = [[NSMutableDictionary alloc] init];
     NSDictionary *valueKeys = manifestContentDict[@"ValueKeys"];
     for ( NSString *selection in manifestContentDict[@"AvailableValues"] ?: @[] ) {
-        NSDictionary *verificationReport = [self verifyManifestContent:valueKeys[selection] settings:settings];
-        if ( [verificationReport count] != 0 ) {
-            [array addObject:verificationReport];
+        NSDictionary *settingsError = [self settingsErrorForManifestContent:valueKeys[selection] settings:settings];
+        if ( [settingsError count] != 0 ) {
+            [report addEntriesFromDictionary:settingsError];
         }
     }
-    return [self verificationReportFromArray:array];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Verify Manifest Utility Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (NSDictionary *)verificationReportFromArray:(NSArray *)array {
-    
-    NSMutableArray *error = [NSMutableArray array];
-    NSMutableArray *warning = [NSMutableArray array];
-    
-    for ( NSDictionary *dict in array ) {
-        if ( [dict[[@(kPFCSeverityError) stringValue]] count] != 0 ) {
-            [error addObjectsFromArray:dict[[@(kPFCSeverityError) stringValue]]];
-        }
-        if ( [dict[[@(kPFCSeverityWarning) stringValue]] count] != 0 ) {
-            [warning addObjectsFromArray:dict[[@(kPFCSeverityWarning) stringValue]]];
-        }
-    }
-    
-    NSMutableDictionary *verificationReport = [NSMutableDictionary dictionary];
-    if ( [warning count] != 0 ) {
-        verificationReport[[@(kPFCSeverityWarning) stringValue]] = [warning copy];
-    }
-    if ( [error count] != 0 ) {
-        verificationReport[[@(kPFCSeverityError) stringValue]] = [error copy];
-    }
-    
-    return verificationReport;
+    return [report copy];
 }
 
 @end

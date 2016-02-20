@@ -127,7 +127,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
+        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
         if ( [verificationReport count] != 0 ) {
             NSArray *warnings = verificationReport[[@(kPFCSeverityWarning) stringValue]];
             for ( NSDictionary *warningDict in warnings ) {
@@ -186,7 +186,7 @@
     for ( NSDictionary *manifestDict in manifestDicts ) {
         NSString *manifestDomain = manifestDict[@"Domain"];
         NSDictionary *settingsDict = selectedDict[manifestDomain];
-        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] verifyManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
+        NSDictionary *verificationReport = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestDict[@"ManifestContent"] settings:settingsDict];
         if ( [verificationReport count] != 0 ) {
             NSArray *warnings = verificationReport[@"Warning"];
             for ( NSDictionary *warningDict in warnings ) {

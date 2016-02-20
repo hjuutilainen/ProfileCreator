@@ -35,6 +35,5 @@ typedef NS_ENUM(NSInteger, PFCVerificationSeverity) {
 @interface PFCError : NSObject
 
 + (NSDictionary *)verificationReportWithMessage:(NSString *)message severity:(int)severity manifestContentDict:(NSDictionary *)manifestContentDict;
-+ (NSDictionary *)verificationMessage:(NSString *)message manifestContentDict:(NSDictionary *)manifestContentDict;
 
 @end
