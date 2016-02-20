@@ -763,6 +763,8 @@ int const PFCTableViewGroupsRowHeight = 24;
         [self showProfilePreviewNoSelection];
     }
     
+    [[PFCProfileUtility sharedUtility] updateProfileCache];
+    
     [_tableViewProfileLibrary beginUpdates];
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
@@ -947,7 +949,17 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     //  Supervised
     // -------------------------------------------------------------------------
-    [_textFieldSupervised setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]) ? @"YES" : @"NO"]];
+    [_textFieldSupervised setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]) ? @"Yes" : @"No"]];
+    
+    // -------------------------------------------------------------------------
+    //  Sign
+    // -------------------------------------------------------------------------
+    [_textFieldSign setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileTemplateKeySign] boolValue]) ? @"Yes" : @"No"]];
+    
+    // -------------------------------------------------------------------------
+    //  Encrypt
+    // -------------------------------------------------------------------------
+    [_textFieldEncrypt setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileTemplateKeyEncrypt] boolValue]) ? @"Yes" : @"No"]];
     
     for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
         DDLogDebug(@"Payload domain: %@", domain);

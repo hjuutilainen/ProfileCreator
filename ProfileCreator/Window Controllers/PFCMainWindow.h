@@ -122,6 +122,8 @@
 
 @property (weak) IBOutlet NSTextField *textFieldPlatform;
 @property (weak) IBOutlet NSTextField *textFieldSupervised;
+@property (weak) IBOutlet NSTextField *textFieldSign;
+@property (weak) IBOutlet NSTextField *textFieldEncrypt;
 @property (weak) IBOutlet NSStackView *stackViewPreview;
 @property NSMutableArray *arrayStackViewPreview;
 

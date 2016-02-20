@@ -2498,6 +2498,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self setSettingsProfile:[settingsProfile mutableCopy]];
     configurationDict[PFCProfileTemplateKeyName] = _profileName ?: @"";
     configurationDict[PFCProfileTemplateKeyIdentifier] = _profileIdentifier ?: @"";
+    configurationDict[PFCProfileTemplateKeySign] = @(_signProfile);
+    configurationDict[PFCProfileTemplateKeyEncrypt] = @(_encryptProfile);
     configurationDict[PFCProfileTemplateKeyIdentifierFormat] = _profileIdentifierFormat ?: PFCDefaultProfileIdentifierFormat;
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
     configurationDict[PFCProfileTemplateKeyDisplaySettings] = [self currentDisplaySettings] ?: @{};

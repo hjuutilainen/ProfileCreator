@@ -30,7 +30,7 @@
     } else {
         groupList = [[NSMutableString alloc] init];
         for ( NSString *groupName in groupNames ) {
-            [groupList appendString:[NSString stringWithFormat:@"\t• %@", groupName]];
+            [groupList appendString:[NSString stringWithFormat:@"   • %@\n", groupName]];
         }
     }
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to remove %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
@@ -52,7 +52,7 @@
     } else {
         profileList = [[NSMutableString alloc] init];
         for ( NSString *profileName in profileNames ) {
-            [profileList appendString:[NSString stringWithFormat:@"   • %@", profileName]];
+            [profileList appendString:[NSString stringWithFormat:@"   • %@\n", profileName]];
         }
     }
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete %@ %@ %@", (profileCount == 1) ? @"the profile" : @"following profiles:\n", profileList, (profileCount == 1) ? @"?" : @""]];

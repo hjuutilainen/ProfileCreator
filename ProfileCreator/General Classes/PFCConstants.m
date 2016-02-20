@@ -186,6 +186,12 @@ NSString *const PFCProfileTemplateKeySettings = @"Settings";
 NSString *const PFCProfileTemplateKeySettingsError = @"SettingsError";
 NSString *const PFCProfileTemplateKeyDisplaySettings = @"DisplaySettings";
 NSString *const PFCProfileTemplateKeyUUID = @"UUID";
+NSString *const PFCProfileTemplateKeyIdentifier = @"Identifier";
+NSString *const PFCProfileTemplateKeyIdentifierFormat = @"IdentifierFormat";
+NSString *const PFCProfileTemplateKeySign = @"Sign";
+NSString *const PFCProfileTemplateKeySigningCertificate = @"SigningCertificate";
+NSString *const PFCProfileTemplateKeyEncrypt = @"Encrypt";
+NSString *const PFCProfileTemplateKeyEncryptionCertificate = @"EncryptionCertificate";
 NSString *const PFCProfileTemplateExtension = @"pfcconf";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -208,8 +214,6 @@ NSString *const PFCProfileGroupKeyName = @"Name";
 NSString *const PFCProfileGroupKeyPath = @"Path";
 NSString *const PFCProfileGroupKeyProfiles = @"Profiles";
 NSString *const PFCProfileGroupKeyUUID = @"UUID";
-NSString *const PFCProfileTemplateKeyIdentifier = @"Identifier";
-NSString *const PFCProfileTemplateKeyIdentifierFormat = @"IdentifierFormat";
 NSString *const PFCProfileGroupExtension = @"pfcgrp";
 
 ////////////////////////////////////////////////////////////////////////////////
