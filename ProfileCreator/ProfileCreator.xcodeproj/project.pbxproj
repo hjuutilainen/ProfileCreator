@@ -129,6 +129,7 @@
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53F8D6001C6D206A00D7E2ED /* ModelTemplate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F8D5FF1C6D206A00D7E2ED /* ModelTemplate.plist */; };
 		53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */; };
+		53FC42DB1C79D40B00F3A7AD /* PFCProfileExport.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
 		53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
 		53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
@@ -445,6 +446,8 @@
 		53F8D5FF1C6D206A00D7E2ED /* ModelTemplate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = ModelTemplate.plist; path = "Supporting Files/Property Lists/Examples/ModelTemplate.plist"; sourceTree = SOURCE_ROOT; };
 		53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsProfiles.h; path = "TableView CellViews/PFCTableViewCellsProfiles.h"; sourceTree = "<group>"; };
 		53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsProfiles.m; path = "TableView CellViews/PFCTableViewCellsProfiles.m"; sourceTree = "<group>"; };
+		53FC42D91C79D40B00F3A7AD /* PFCProfileExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileExport.h; path = "Profile Classes/PFCProfileExport.h"; sourceTree = "<group>"; };
+		53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileExport.m; path = "Profile Classes/PFCProfileExport.m"; sourceTree = "<group>"; };
 		53FCF0041C1F538000E440CB /* MenuIconLDAP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconLDAP.png; path = "../Supporting Files/Graphics/MenuIconLDAP.png"; sourceTree = "<group>"; };
 		53FCF0061C1F539300E440CB /* com.apple.ldap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ldap.plist"; sourceTree = "<group>"; };
 		53FCF0091C1F561900E440CB /* com.apple.messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.messages.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.messages.plist"; sourceTree = "<group>"; };
@@ -704,6 +707,8 @@
 			children = (
 				538B392A1C67F60F0076E09E /* PFCProfileUtility.h */,
 				538B392B1C67F60F0076E09E /* PFCProfileUtility.m */,
+				53FC42D91C79D40B00F3A7AD /* PFCProfileExport.h */,
+				53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */,
 			);
 			name = "Profile Classes";
 			sourceTree = "<group>";
@@ -1123,6 +1128,7 @@
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
 				53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */,
 				538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */,
+				53FC42DB1C79D40B00F3A7AD /* PFCProfileExport.m in Sources */,
 				532DF2371C5665E700369513 /* PFCProfileCreationTab.m in Sources */,
 				537B02261C61449F0072093C /* PFCMainWindow.m in Sources */,
 				53897E341C59571B00B1D868 /* PFCLog.m in Sources */,

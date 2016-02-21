@@ -44,6 +44,21 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (NSArray *)libraryAll:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
+    
+    if ( acceptCached && _cachedLibraryAll ) {
+        return _cachedLibraryAll;
+    }
+    
+    NSMutableArray *libraryAll = [[NSMutableArray alloc] init];
+    [libraryAll addObjectsFromArray:[self libraryApple:nil acceptCached:acceptCached]];
+    [libraryAll addObjectsFromArray:[self libraryUserLibraryPreferencesLocal:nil acceptCached:acceptCached]];
+    [libraryAll addObjectsFromArray:[self libraryLibraryPreferencesLocal:nil acceptCached:acceptCached]];
+    
+    _cachedLibraryAll = [libraryAll copy];
+    return _cachedLibraryAll;
+}
+
 - (NSArray *)libraryApple:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
     
     if ( acceptCached && _cachedLibraryApple ) {
@@ -145,37 +160,63 @@
     }
 } // libraryLibraryPreferencesLocal:settingsLocal
 
+- (NSArray *)manifestsWithDomains:(NSArray *)domains {
+
+    NSError *error = nil;
+    NSArray *manifestLibrary = [self libraryAll:&error acceptCached:YES];
+    
+    NSMutableArray *manifests = [[NSMutableArray alloc] init];
+    
+    for ( NSDictionary *manifest in manifestLibrary ) {
+        NSLog(@"manifest=%@", manifest);
+        if ( [domains containsObject:manifest[PFCManifestKeyDomain]] ) {
+            [manifests addObject:manifest];
+        }
+    }
+    return [manifests copy];
+} // manifestsWithDomains
+
 - (NSDictionary *)manifestFromLibrary:(PFCPayloadLibrary)library withDomain:(NSString *)domain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSError *error = nil;
     
-    NSArray *array;
+    NSArray *manifestLibrary;
     switch (library) {
-        case kPFCPayloadLibraryApple:
+        case kPFCPayloadLibraryAll: {
+            DDLogDebug(@"Payload library: All");
+            manifestLibrary = [self libraryAll:&error acceptCached:YES];
+            break;
+        }
+            
+        case kPFCPayloadLibraryApple: {
             DDLogDebug(@"Payload library: Apple");
-            array = [self libraryApple:&error acceptCached:YES];
+            manifestLibrary = [self libraryApple:&error acceptCached:YES];
             break;
+        }
             
-        case kPFCPayloadLibraryUserPreferences:
+        case kPFCPayloadLibraryUserPreferences: {
             DDLogDebug(@"Payload library: Library User Preferences");
-            array = [self libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
+            manifestLibrary = [self libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
             break;
+        }
             
-        case kPFCPayloadLibraryLibraryPreferences:
+        case kPFCPayloadLibraryLibraryPreferences: {
             DDLogDebug(@"Payload library: Library Preferences");
-            array = [self libraryLibraryPreferencesLocal:&error acceptCached:YES];
+            manifestLibrary = [self libraryLibraryPreferencesLocal:&error acceptCached:YES];
             break;
+        }
             
-        case kPFCPayloadLibraryCustom:
+        case kPFCPayloadLibraryCustom: {
             DDLogDebug(@"Payload library: Library Preferences");
             break;
+        }
             
         default:
             break;
     }
 
-    for ( NSDictionary *manifest in array ?: @[] ) {
+    for ( NSDictionary *manifest in manifestLibrary ?: @[] ) {
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         if ( [manifestDomain isEqualToString:domain] ) {
             return manifest;

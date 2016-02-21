@@ -67,10 +67,23 @@
     [self setMainWindowController:[[PFCMainWindow alloc] init]];
     
     // --------------------------------------------------------------
+    //  Setup Menu Items
+    // --------------------------------------------------------------
+    [self setupMenuItems];
+    
+    // --------------------------------------------------------------
     //  Show Main Window
     // --------------------------------------------------------------
     [[_mainWindowController window] makeKeyAndOrderFront:self];
     
 } // applicationWillFinishLaunching
+
+- (void) setupMenuItems {
+    NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
+    NSMenu *menuFile = [[mainMenu itemWithTitle:@"File"] submenu];
+    NSMenuItem *newProfile = [menuFile itemWithTitle:@"New Profile"];
+    [newProfile setTarget:_mainWindowController];
+    [newProfile setAction:@selector(menuItemNewProfile:)];
+}
 
 @end

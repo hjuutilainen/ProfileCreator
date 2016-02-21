@@ -86,7 +86,6 @@
 //  SplitView Library
 // -----------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView                     *viewProfileLibrarySplitView;
-@property (weak)    IBOutlet NSView                     *viewProfileLibraryFooterSplitView;
 @property (weak)    IBOutlet NSView                     *viewProfileLibraryTableViewSuperview;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileLibrary;
 @property (weak)    IBOutlet NSMenu                     *menuTableViewProfileLibrary;
@@ -120,12 +119,18 @@
 - (IBAction) buttonProfileExport:(id)sender;
 - (IBAction) segmentedControlProfileLibraryFooterAddRemove:(id)sender;
 
+@property (weak) IBOutlet NSScrollView *scrollViewProfilePreview;
+
 @property (weak) IBOutlet NSTextField *textFieldPlatform;
 @property (weak) IBOutlet NSTextField *textFieldSupervised;
 @property (weak) IBOutlet NSTextField *textFieldSign;
 @property (weak) IBOutlet NSTextField *textFieldEncrypt;
 @property (weak) IBOutlet NSStackView *stackViewPreview;
+@property (strong) NSArray *stackViewPreviewConstraints;
 @property NSMutableArray *arrayStackViewPreview;
+
+
+- (IBAction)menuItemNewProfile:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  Instance Methods

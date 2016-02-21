@@ -21,3 +21,6 @@
 
 @interface PFCViewInfo : NSView
 @end
+
+@interface PFCClipView : NSClipView
+@end

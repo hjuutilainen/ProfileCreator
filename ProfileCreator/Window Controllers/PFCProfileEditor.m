@@ -392,13 +392,13 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [self setupDisplaySettings];
     
     // -------------------------------------------------------------------------
-    //  Select frst responder depending on profile state
+    //  Set first responder depending on profile state
     // -------------------------------------------------------------------------
-    [self selectFirstResponder];
+    [self setFirstResponder];
     
 } // setupTableViews
 
-- (void)selectFirstResponder {
+- (void)setFirstResponder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
@@ -437,7 +437,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     }
     
     string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
-
+    
     DDLogDebug(@"Returning string: %@", string);
     return string;
 } // expandVariables:overrideValues
@@ -445,7 +445,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)setupDisplaySettings {
     DDLogDebug(@"%s", __PRETTY_FUNCTION__);
     NSDictionary *displaySettings = _profileDict[@"Config"][PFCProfileTemplateKeyDisplaySettings] ?: @{};
-
+    
     // -------------------------------------------------------------------------
     //  Set "Advanced Settings" and "Supervised"
     // -------------------------------------------------------------------------
@@ -1184,21 +1184,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = manifestDict[PFCManifestKeyCellType];
-            
-            NSDictionary *manifestSettings;
-            if ( _tableViewPayloadProfileSelectedRow == -1 && _tableViewPayloadLibrarySelectedRow == -1 ) {
-                NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
-                manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
-            } else {
-                manifestSettings = _settingsManifest;
-            }
-            
+
             if ( [cellType isEqualToString:PFCCellTypeMenu] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
                 [cellView setIdentifier:nil];
                 return [cellView populateCellViewMenu:cellView
                                          manifestDict:manifestDict
                                            errorCount:@([self errorForManifest:manifestDict updateTabBar:NO])
+                                         payloadCount:@([_settingsProfile[manifestDict[PFCManifestKeyDomain]][@"Settings"] ?: @[@{}] count])
                                                   row:row];
             } else {
                 NSLog(@"[ERROR] Unknown CellType: %@", cellType);
@@ -1619,7 +1612,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         return;
     }
     NSInteger row = [textFieldTag integerValue];
-
+    
     
     // -------------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
@@ -3816,9 +3809,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (IBAction)menuItemShowInFinder:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+    
     NSArray *tableViewArray = [self arrayForTableViewWithIdentifier:_clickedPayloadTableViewIdentifier];
-
+    
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
@@ -4025,7 +4018,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     NSMutableDictionary *manifestDomainSettings = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     manifestDomainSettings[@"SettingsError"] = [settingsError copy] ?: @[];
     _settingsProfile[manifestDomain] = [manifestDomainSettings copy];
-
+    
     return combinedErrors;
 } // updateTabBarErrors
 

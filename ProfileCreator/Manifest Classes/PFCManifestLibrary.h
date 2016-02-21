@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
-    kPFCPayloadLibraryApple = 0,
+    kPFCPayloadLibraryAll = 0,
+    kPFCPayloadLibraryApple,
     kPFCPayloadLibraryUserPreferences,
     kPFCPayloadLibraryCustom,
     kPFCPayloadLibraryLibraryPreferences
@@ -25,6 +26,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 // -----------------------------------------------------------------------------
 //  Cache properties
 // -----------------------------------------------------------------------------
+@property NSArray *cachedLibraryAll;
 @property NSArray *cachedLibraryApple;
 @property NSArray *cachedLibraryUserLibraryPreferencesLocal;
 @property NSArray *cachedLibraryLibraryPreferencesLocal;
@@ -37,5 +39,6 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 - (NSArray *)libraryUserLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
 - (NSArray *)libraryLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
 - (NSDictionary *)manifestFromLibrary:(PFCPayloadLibrary)library withDomain:(NSString *)domain;
+- (NSArray *)manifestsWithDomains:(NSArray *)domains;
 
 @end

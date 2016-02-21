@@ -169,14 +169,37 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     //  Setup TableView "Profile Preview"
     // -------------------------------------------------------------------------
-    [self showProfilePreviewNoSelection];
+    [self setupProfilePreview];
     
     // -------------------------------------------------------------------------
     //  Select "All Profiles"
     // -------------------------------------------------------------------------
     [self selectTableViewProfileGroupAllRow:0];
     [_tableViewProfileGroupAll selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    
+    // -------------------------------------------------------------------------
+    //  Set first responder
+    // -------------------------------------------------------------------------
+    [self setFirstResponder];
 } // initialSetup
+
+- (void)setupProfilePreview {
+    
+    [_scrollViewProfilePreview setDocumentView:_stackViewPreview];
+    
+    NSDictionary *viewsDict = NSDictionaryOfVariableBindings(_stackViewPreview);
+    _stackViewPreviewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_stackViewPreview]-0-|" options:0 metrics:nil views:viewsDict];
+    [_scrollViewProfilePreview addConstraints:_stackViewPreviewConstraints];
+    
+    [self showProfilePreviewNoSelection];
+    
+}
+
+- (void)setFirstResponder {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    [[self window] setInitialFirstResponder:_tableViewProfileGroupAll];
+} // setFirstResponder
 
 - (void)setupProfileGroupAll {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -246,10 +269,11 @@ int const PFCTableViewGroupsRowHeight = 24;
 
 - (void)setupProfileLibrary {
     [self setTableViewProfileLibrarySelectedRows:[NSIndexSet indexSet]];
+    
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
     [_tableViewProfileLibrary setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
-    
+
     NSMenu *menu = [[NSMenu alloc] init];
     [menu setAutoenablesItems:YES];
     
@@ -261,6 +285,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     [menu addItem:menuItemShowInFinder];
     
     [_tableViewProfileLibrary setMenu:menu];
+    [_tableViewProfileLibrary reloadData];
 } // setupProfileLibrary
 
 - (void)menuItemShowInFinder:(id)sender {
@@ -546,7 +571,12 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // insertProfileUUIDs:inTableViewWithIdentifier:row
 
 - (NSInteger)insertProfileInTableView:(id)profile {
-    NSInteger index = [_tableViewProfileLibrary selectedRow];
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    NSIndexSet *indexSet = [_tableViewProfileLibrary selectedRowIndexes];
+    NSInteger index = [indexSet lastIndex];
+    if ( index == NSNotFound ) {
+        index = -1;
+    }
     index++;
     [_tableViewProfileLibrary beginUpdates];
     [_tableViewProfileLibrary insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationEffectNone];
@@ -557,6 +587,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // insertProfileInTableView
 
 - (NSInteger)insertProfileGroupInTableView:(NSDictionary *)profileDict {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     NSInteger index = [_tableViewProfileGroups selectedRow];
     index++;
     [_tableViewProfileGroups beginUpdates];
@@ -1610,11 +1641,46 @@ int const PFCTableViewGroupsRowHeight = 24;
 }
 
 - (IBAction)buttonProfileExport:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
+    
+    NSString *uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
+    DDLogDebug(@"Export profile with UUID: %@", uuid);
+    
+    NSDictionary *settings = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
+    DDLogDebug(@"Current settings: %@", settings);
+    
+    // FIXME -  Verify that settings doesn't contain any critical errors
+    //          If any noticable warnings arer here, should show warning panel first
+
+    if ( [settings count] != 0 ) {
+        NSString *profileName = settings[@"Config"][PFCProfileTemplateKeyName] ?: @"";
+        
+        NSSavePanel *panel = [NSSavePanel savePanel];
+        
+        //[panel setAccessoryView:_viewExportPanel]; // Activate later for custom exports
+        
+        [panel setAllowedFileTypes:@[ @"com.apple.mobileconfig" ]];
+        [panel setCanCreateDirectories:YES];
+        [panel setTitle:@"Export Profile"];
+        [panel setPrompt:@"Export"];
+        [panel setNameFieldStringValue:profileName];
+        [panel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
+            if (result == NSFileHandlingPanelOKButton) {
+                NSURL *saveURL = [panel URL];
+                DDLogInfo(@"Save Path: %@", [saveURL path]);
+            }
+        }];
+    }
 }
 
 - (IBAction)buttonProfileEdit:(id)sender {
     [self openProfileEditorForProfileWithUUID:_selectedProfileUUID];
 } // buttonProfileEdit
+
+
+- (IBAction)menuItemNewProfile:(id)sender {
+    [self createNewProfile];
+} // menuItemNewProfile
 
 @end

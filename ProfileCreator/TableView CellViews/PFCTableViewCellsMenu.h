@@ -33,7 +33,7 @@
 @property (weak) IBOutlet NSTextField *menuTitle;
 @property (weak) IBOutlet NSTextField *menuDescription;
 @property (weak) IBOutlet NSImageView *menuIcon;
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row;
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount payloadCount:(NSNumber *)payloadCount row:(NSInteger)row;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -25,3 +25,9 @@
     NSRectFill([self bounds]);
 }
 @end
+
+@implementation PFCClipView
+- (BOOL)isFlipped {
+    return YES;
+}
+@end

@@ -9,6 +9,7 @@
 #import "PFCPayloadPreview.h"
 #import "PFCTableViewCellsPayloadPreview.h"
 #import "PFCLog.h"
+@import QuartzCore;
 
 @interface PFCPayloadPreview ()
 
@@ -58,17 +59,25 @@
 
 - (IBAction)buttonDisclosureTriangle:(id)sender {
     if ( _isCollapsed ) {
-        [self setIsCollapsed:NO];
         [[self view] removeConstraint:_layoutConstraintDescriptionBottom];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [context setAllowsImplicitAnimation:YES];
+            [[[self view] superview] layoutSubtreeIfNeeded];
+        } completionHandler:^{
+            [self setIsCollapsed:NO];
+        }];
     } else {
-        [self setIsCollapsed:YES];
         [[self view] addConstraint:_layoutConstraintDescriptionBottom];
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [context setAllowsImplicitAnimation:YES];
+            [[[self view] superview] layoutSubtreeIfNeeded];
+        } completionHandler:^{
+            [self setIsCollapsed:YES];
+        }];
     }
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-        [context setDuration:0.15f];
-        [context setAllowsImplicitAnimation:YES];
-        [[[self view] superview] layoutSubtreeIfNeeded];
-    } completionHandler:NULL];
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////

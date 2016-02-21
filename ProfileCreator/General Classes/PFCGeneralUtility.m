@@ -67,12 +67,12 @@
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|"
+    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|"
                                                                       options:0
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(subview)]];
     
-    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|"
+    [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[subview]-0-|"
                                                                       options:0
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(subview)]];

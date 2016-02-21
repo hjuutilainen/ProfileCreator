@@ -37,7 +37,7 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
+- (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount payloadCount:(NSNumber *)payloadCount row:(NSInteger)row {
     
     // -------------------------------------------------------------------------
     //  Error Counter
@@ -57,7 +57,7 @@
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView menuDescription] setStringValue:manifestDict[PFCManifestKeyDescription] ?: @""];
+    [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ( [payloadCount intValue] == 1 ) ? @"Payload" : @"Payloads"]];
     
     // -------------------------------------------------------------------------
     //  Icon
