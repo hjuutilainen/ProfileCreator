@@ -31,6 +31,7 @@
 #import "PFCPayloadPreview.h"
 #import "PFCManifestLibrary.h"
 #import "PFCManifestUtility.h"
+#import "PFCProfileExport.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -275,13 +276,32 @@ int const PFCTableViewGroupsRowHeight = 24;
     [_tableViewProfileLibrary setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
 
     NSMenu *menu = [[NSMenu alloc] init];
-    [menu setAutoenablesItems:YES];
+    [menu setAutoenablesItems:NO];
     
+    // -------------------------------------------------------------------------
+    //  Add item: "New Profile"
+    // -------------------------------------------------------------------------
+    NSMenuItem *menuItemNewProfile = [[NSMenuItem alloc] init];
+    [menuItemNewProfile setTitle:@"New Profile"];
+    [menuItemNewProfile setKeyEquivalent:@"n"];
+    [menuItemNewProfile setKeyEquivalentModifierMask:NSCommandKeyMask];
+    [menuItemNewProfile setEnabled:YES];
+    [menuItemNewProfile setTarget:self];
+    [menuItemNewProfile setAction:@selector(menuItemNewProfile)];
+    [menu addItem:menuItemNewProfile];
+    
+    // -------------------------------------------------------------------------
+    //  Add item separator
+    // -------------------------------------------------------------------------
+    [menu addItem:[NSMenuItem separatorItem]];
+    
+    // -------------------------------------------------------------------------
+    //  Add item: "Show In Finder"
+    // -------------------------------------------------------------------------
     NSMenuItem *menuItemShowInFinder = [[NSMenuItem alloc] init];
     [menuItemShowInFinder setTitle:@"Show In Finder"];
     [menuItemShowInFinder setTarget:self];
     [menuItemShowInFinder setAction:@selector(menuItemShowInFinder:)];
-    
     [menu addItem:menuItemShowInFinder];
     
     [_tableViewProfileLibrary setMenu:menu];
@@ -325,8 +345,9 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
 } // arrayForTableViewWithIdentifier
 
-- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
+- (void)validateMenu:(NSMenu *)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Validate menu for row: %ld in table view with identifier: %@", (long)row, tableViewIdentifier);
     
     // ---------------------------------------------------------------------
     //  Store which TableView and row the user right clicked on.
@@ -335,10 +356,16 @@ int const PFCTableViewGroupsRowHeight = 24;
     [self setClickedTableViewRow:row];
     NSArray *tableViewArray = [self arrayForTableViewWithIdentifier:tableViewIdentifier];
     
+    [menu setAutoenablesItems:NO];
+    NSMenuItem *menuItemShowInFinder = [menu itemWithTitle:@"Show In Finder"];
+    
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
     if ( row < 0 || [tableViewArray count] < row ) {
+        
+        DDLogDebug(@"Disable: \"Show In Finder\"");
+        [menuItemShowInFinder setEnabled:NO];
         menu = nil;
         return;
     }
@@ -349,12 +376,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     //  MenuItem - "Show In Finder"
     //  Remove this menu item unless runtime key 'Path' is set in the manifest
     // -------------------------------------------------------------------------------
-    NSMenuItem *menuItemShowInFinder = [menu itemWithTitle:@"Show In Finder"];
-    if ( [profileDict[PFCRuntimeKeyPath] length] != 0 ) {
-        [menuItemShowInFinder setEnabled:YES];
-    } else {
-        [menu removeItem:menuItemShowInFinder];
-    }
+    [menuItemShowInFinder setEnabled:( [profileDict[PFCRuntimeKeyPath] length] != 0 )];
 } // validateMenu:forTableViewWithIdentifier:row
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -992,15 +1014,17 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     [_textFieldEncrypt setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileTemplateKeyEncrypt] boolValue]) ? @"Yes" : @"No"]];
     
+    NSMutableArray *selectedDomains = [[NSMutableArray alloc] init];
     for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
         DDLogDebug(@"Payload domain: %@", domain);
         
         NSDictionary *domainSettings = profileSettings[@"Settings"][domain];
-        if ( ! [domain isEqualToString:@"com.apple.general"] && ! [domainSettings[@"Selected"] boolValue] ) {
+        if ( ! [domain isEqualToString:@"com.apple.general"] && ! [domainSettings[PFCSettingsKeySelected] boolValue] ) {
             continue;
         }
         
-        if ( [domain isEqualToString:@"com.apple.general"] || domainSettings[@"PayloadLibrary"] != nil ) {
+        if ( [domain isEqualToString:@"com.apple.general"] || ( [domainSettings[PFCSettingsKeySelected] boolValue] && domainSettings[@"PayloadLibrary"] != nil ) ) {
+            [selectedDomains addObject:domain];
             NSInteger payloadLibrary = [domainSettings[@"PayloadLibrary"] integerValue] ?: 0;
             DDLogDebug(@"Payload library: %ld", (long)payloadLibrary);
             
@@ -1015,6 +1039,14 @@ int const PFCTableViewGroupsRowHeight = 24;
         } else {
             DDLogError(@"Payload is selected but doesn't contain a \"PayloadLibrary\"");
         }
+    }
+    
+    if ( [selectedDomains count] <= 1 ) {
+        [_textFieldExportError setStringValue:@"No Payload Selected"];
+        [_buttonProfileExport setEnabled:NO];
+    } else {
+        [_textFieldExportError setStringValue:@""];
+        [_buttonProfileExport setEnabled:YES];
     }
 }
 
@@ -1643,19 +1675,33 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (IBAction)buttonProfileExport:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    
     NSString *uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
-    DDLogDebug(@"Export profile with UUID: %@", uuid);
     
-    NSDictionary *settings = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
-    DDLogDebug(@"Current settings: %@", settings);
+    NSDictionary *settingsProfile = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
     
-    // FIXME -  Verify that settings doesn't contain any critical errors
-    //          If any noticable warnings arer here, should show warning panel first
-
-    if ( [settings count] != 0 ) {
-        NSString *profileName = settings[@"Config"][PFCProfileTemplateKeyName] ?: @"";
+    // -------------------------------------------------------------------------
+    //  Get only settings and domains for selected payloads.
+    //  THe application saves all settings, even if they are made in payloads that's not enabled
+    // -------------------------------------------------------------------------
+    NSDictionary *settingsAll = settingsProfile[@"Config"][PFCProfileTemplateKeySettings] ?: @{};
+    NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+    
+    for ( NSString *domain in [settingsAll allKeys] ) {
+        if ( ! [settingsAll[domain][PFCSettingsKeySelected] boolValue] && ! [domain isEqualToString:@"com.apple.general"] ) {
+            continue;
+        }
         
+        settings[domain] = settingsAll[domain];
+    }
+    NSArray *selectedDomains = [settings allKeys];
+    NSArray *selectedManifests = [[PFCManifestLibrary sharedLibrary] manifestsWithDomains:selectedDomains];
+    
+    // FIXME - HERE DO VERIFICATION!
+    
+    if ( [settings count] != 0 ) {
+        PFCProfileExport *export = [[PFCProfileExport alloc] initWithProfileSettings:settingsProfile mainWindow:self];
+        
+        NSString *profileName = settingsProfile[@"Config"][PFCProfileTemplateKeyName] ?: @"";
         NSSavePanel *panel = [NSSavePanel savePanel];
         
         //[panel setAccessoryView:_viewExportPanel]; // Activate later for custom exports
@@ -1668,7 +1714,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         [panel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
             if (result == NSFileHandlingPanelOKButton) {
                 NSURL *saveURL = [panel URL];
-                DDLogInfo(@"Save Path: %@", [saveURL path]);
+                [export exportProfileToURL:saveURL manifests:selectedManifests settings:settings];
             }
         }];
     }
@@ -1679,7 +1725,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 } // buttonProfileEdit
 
 
-- (IBAction)menuItemNewProfile:(id)sender {
+- (void)menuItemNewProfile {
     [self createNewProfile];
 } // menuItemNewProfile
 

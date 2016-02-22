@@ -12,6 +12,6 @@
 @interface PFCProfileExport : NSObject
 
 - (id)initWithProfileSettings:(NSDictionary *)settings mainWindow:(PFCMainWindow *)mainWindow;
-- (void)exportProfileToURL:(NSURL *)url;
+- (void)exportProfileToURL:(NSURL *)url manifests:(NSArray *)manifests settings:(NSDictionary *)settings;
 
 @end

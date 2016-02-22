@@ -83,7 +83,7 @@
     NSMenu *menuFile = [[mainMenu itemWithTitle:@"File"] submenu];
     NSMenuItem *newProfile = [menuFile itemWithTitle:@"New Profile"];
     [newProfile setTarget:_mainWindowController];
-    [newProfile setAction:@selector(menuItemNewProfile:)];
+    [newProfile setAction:@selector(menuItemNewProfile)];
 }
 
 @end

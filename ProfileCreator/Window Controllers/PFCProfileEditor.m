@@ -1150,6 +1150,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                     CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
                     [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
                     return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                    
+                } else {
+                    DDLogDebug(@"Unknown cell type: %@", cellType);
                 }
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
@@ -3440,7 +3443,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // --------------------------------------------------------------------------
     if ( selectedSegment == kPFCPayloadLibraryCustom && _buttonAddHidden ) {
         [self showButtonAdd];
-    } else if ( selectedSegment != 2 && ! _buttonAddHidden ) {
+    } else if ( selectedSegment != kPFCPayloadLibraryCustom && ! _buttonAddHidden ) {
         [self hideButtonAdd];
     } else {
         DDLogError(@"Should not end up here!");

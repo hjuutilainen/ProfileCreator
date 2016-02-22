@@ -20,6 +20,7 @@
                 <outlet property="tableViewProfileLibrary" destination="Flb-rs-hgU" id="gVE-MB-Ng0"/>
                 <outlet property="tableViewProfileSmartGroups" destination="E2l-i3-Zvc" id="k85-cs-4IT"/>
                 <outlet property="textFieldEncrypt" destination="VsQ-aW-wHN" id="qtz-9x-6hZ"/>
+                <outlet property="textFieldExportError" destination="rh0-OW-r67" id="XXx-LR-UqG"/>
                 <outlet property="textFieldPlatform" destination="qnr-PA-iNt" id="2zZ-dL-hbK"/>
                 <outlet property="textFieldPreviewProfileName" destination="r7v-N8-wug" id="ohu-Ra-n1e"/>
                 <outlet property="textFieldPreviewSelectionUnavailable" destination="LQh-Ez-yrs" id="ZQl-Vl-3le"/>
@@ -732,8 +733,17 @@
                         <action selector="buttonProfileExport:" target="-2" id="8tu-Ok-5Uc"/>
                     </connections>
                 </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rh0-OW-r67">
+                    <rect key="frame" x="164" y="489" width="450" height="14"/>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" id="ulf-lS-tKA">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="rh0-OW-r67" secondAttribute="trailing" constant="20" symbolic="YES" id="1xL-Es-tZd"/>
                 <constraint firstItem="4Ew-Hw-KbI" firstAttribute="width" secondItem="Vhh-7N-dd2" secondAttribute="width" id="229-XI-4Zu"/>
                 <constraint firstAttribute="trailing" secondItem="doR-ER-en6" secondAttribute="trailing" constant="20" symbolic="YES" id="2FD-iv-7Tb"/>
                 <constraint firstItem="7Hg-Ep-WYM" firstAttribute="top" secondItem="YUt-gX-UYc" secondAttribute="bottom" constant="8" symbolic="YES" id="44o-PO-D5k"/>
@@ -746,6 +756,7 @@
                 <constraint firstItem="q1f-Q6-k0P" firstAttribute="trailing" secondItem="wZV-NA-TVb" secondAttribute="trailing" id="NYN-d0-69C"/>
                 <constraint firstItem="8IV-8f-ZTs" firstAttribute="baseline" secondItem="9As-zN-mFX" secondAttribute="baseline" id="Nhz-HU-zxc"/>
                 <constraint firstItem="r7v-N8-wug" firstAttribute="top" secondItem="Xq1-Gr-Qwx" secondAttribute="top" constant="20" symbolic="YES" id="O5j-Y9-V5h"/>
+                <constraint firstItem="rh0-OW-r67" firstAttribute="leading" secondItem="4Ew-Hw-KbI" secondAttribute="trailing" constant="8" symbolic="YES" id="ONu-pg-6AW"/>
                 <constraint firstItem="9As-zN-mFX" firstAttribute="trailing" secondItem="wZV-NA-TVb" secondAttribute="trailing" id="Ocg-Sz-xV0"/>
                 <constraint firstItem="HFd-4b-AbU" firstAttribute="top" secondItem="dzb-yt-z9v" secondAttribute="bottom" constant="8" symbolic="YES" id="Owk-jQ-1Np"/>
                 <constraint firstItem="8IV-8f-ZTs" firstAttribute="leading" secondItem="qnr-PA-iNt" secondAttribute="leading" id="QS5-nu-ybQ"/>
@@ -774,6 +785,7 @@
                 <constraint firstItem="YUt-gX-UYc" firstAttribute="trailing" secondItem="q1f-Q6-k0P" secondAttribute="trailing" id="moC-Vc-KN1"/>
                 <constraint firstItem="wZV-NA-TVb" firstAttribute="leading" secondItem="IT8-nJ-ksM" secondAttribute="leading" constant="20" id="mwj-U5-uXp"/>
                 <constraint firstItem="Tzb-wK-XZN" firstAttribute="leading" secondItem="r7v-N8-wug" secondAttribute="leading" id="o1H-JJ-yYq"/>
+                <constraint firstItem="rh0-OW-r67" firstAttribute="baseline" secondItem="4Ew-Hw-KbI" secondAttribute="baseline" id="pdZ-US-vnC"/>
                 <constraint firstItem="YUt-gX-UYc" firstAttribute="leading" secondItem="q1f-Q6-k0P" secondAttribute="leading" id="qum-oY-YQj"/>
                 <constraint firstItem="t1w-JL-VVF" firstAttribute="baseline" secondItem="q1f-Q6-k0P" secondAttribute="baseline" id="rWj-f7-MFg"/>
                 <constraint firstAttribute="trailing" secondItem="HFd-4b-AbU" secondAttribute="trailing" constant="20" symbolic="YES" id="uXB-2N-Fk3"/>
@@ -783,19 +795,14 @@
                 <constraint firstItem="Vhh-7N-dd2" firstAttribute="top" secondItem="Tzb-wK-XZN" secondAttribute="bottom" constant="18" id="zRX-J9-5P9"/>
                 <constraint firstItem="Vhh-7N-dd2" firstAttribute="leading" secondItem="r7v-N8-wug" secondAttribute="leading" id="zgn-cj-NZA"/>
             </constraints>
-            <point key="canvasLocation" x="-1467" y="62"/>
+            <point key="canvasLocation" x="-1278" y="9"/>
         </customView>
-        <menu id="eVJ-PH-bnh">
-            <items>
-                <menuItem title="Show In Finder" id="L6S-yL-T6z">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="-1314" y="-108.5"/>
+        <menu autoenablesItems="NO" id="eVJ-PH-bnh">
+            <point key="canvasLocation" x="-1516.5" y="-187.5"/>
         </menu>
         <stackView orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalClippingResistancePriority="250" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Mhu-bu-j1t">
             <rect key="frame" x="0.0" y="0.0" width="552" height="143"/>
-            <point key="canvasLocation" x="-1500" y="-423.5"/>
+            <point key="canvasLocation" x="-1293" y="-387.5"/>
         </stackView>
     </objects>
 </document>

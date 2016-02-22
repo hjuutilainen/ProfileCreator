@@ -168,7 +168,6 @@
     NSMutableArray *manifests = [[NSMutableArray alloc] init];
     
     for ( NSDictionary *manifest in manifestLibrary ) {
-        NSLog(@"manifest=%@", manifest);
         if ( [domains containsObject:manifest[PFCManifestKeyDomain]] ) {
             [manifests addObject:manifest];
         }

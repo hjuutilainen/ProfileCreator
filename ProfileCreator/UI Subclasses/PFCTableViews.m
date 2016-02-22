@@ -49,11 +49,7 @@
     // ------------------------------------------------------------------------------
     NSPoint mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSInteger row = [self rowAtPoint:mousePoint];
-    
-    if ( row < 0 ) {
-        return nil;
-    }
-    
+        
     // ----------------------------------------------------------------------------------------
     //  Get what table view responded when the user clicked
     // ----------------------------------------------------------------------------------------

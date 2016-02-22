@@ -112,6 +112,7 @@
 @property (weak)    IBOutlet NSButton                   *buttonProfileExport;
 @property (weak)    IBOutlet NSTextField                *textFieldPreviewProfileName;
 @property (weak)    IBOutlet NSTextField                *textFieldPreviewSelectionUnavailable;
+@property (weak)    IBOutlet NSTextField                *textFieldExportError;
 @property                    BOOL                       profilePreviewHidden;
 @property                    BOOL                       profilePreviewSelectionUnavailableHidden;
 
@@ -130,7 +131,7 @@
 @property NSMutableArray *arrayStackViewPreview;
 
 
-- (IBAction)menuItemNewProfile:(id)sender;
+- (void)menuItemNewProfile;
 
 // -----------------------------------------------------------------------------
 //  Instance Methods
