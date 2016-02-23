@@ -248,7 +248,7 @@
                 <constraint firstAttribute="trailing" secondItem="kgS-ch-DaF" secondAttribute="trailing" id="piz-E8-BwS"/>
                 <constraint firstItem="kgS-ch-DaF" firstAttribute="leading" secondItem="azA-lO-Z5V" secondAttribute="leading" id="tw7-Sd-3cb"/>
             </constraints>
-            <point key="canvasLocation" x="-1251.5" y="174.5"/>
+            <point key="canvasLocation" x="-1649.5" y="-54.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf">
             <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>
@@ -353,7 +353,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="149" height="1"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -570,7 +570,7 @@
                 <constraint firstItem="LQh-Ez-yrs" firstAttribute="centerY" secondItem="GG8-PD-6eg" secondAttribute="centerY" id="7l3-rn-JOw"/>
                 <constraint firstItem="LQh-Ez-yrs" firstAttribute="centerX" secondItem="GG8-PD-6eg" secondAttribute="centerX" id="E45-LC-cPJ"/>
             </constraints>
-            <point key="canvasLocation" x="-660.5" y="305"/>
+            <point key="canvasLocation" x="-992.5" y="31"/>
         </customView>
         <customView id="Xq1-Gr-Qwx">
             <rect key="frame" x="0.0" y="0.0" width="632" height="590"/>
@@ -795,7 +795,7 @@
                 <constraint firstItem="Vhh-7N-dd2" firstAttribute="top" secondItem="Tzb-wK-XZN" secondAttribute="bottom" constant="18" id="zRX-J9-5P9"/>
                 <constraint firstItem="Vhh-7N-dd2" firstAttribute="leading" secondItem="r7v-N8-wug" secondAttribute="leading" id="zgn-cj-NZA"/>
             </constraints>
-            <point key="canvasLocation" x="-1278" y="9"/>
+            <point key="canvasLocation" x="-1141" y="-9"/>
         </customView>
         <menu autoenablesItems="NO" id="eVJ-PH-bnh">
             <point key="canvasLocation" x="-1516.5" y="-187.5"/>
