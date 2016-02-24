@@ -14,6 +14,11 @@
 	<string>General</string>
 	<key>IconName</key>
 	<string>MenuIconGeneral.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.profile</string>
+		<string>com.apple.profileRemovalPassword</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

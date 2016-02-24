@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
-    kPFCPayloadLibraryAll = 0,
-    kPFCPayloadLibraryApple,
+    kPFCPayloadLibraryApple = 0,
     kPFCPayloadLibraryUserPreferences,
     kPFCPayloadLibraryCustom,
+    kPFCPayloadLibraryAll,
     kPFCPayloadLibraryLibraryPreferences
 };
 

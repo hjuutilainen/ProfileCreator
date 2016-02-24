@@ -423,7 +423,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)setupProfileSettings {
     [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: PFCDefaultProfileName];
     [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
-    [self setProfileIdentifierFormat:_profileDict[@"Config"][PFCProfileTemplateKeyIdentifier] ?: PFCDefaultProfileIdentifierFormat];
+    [self setProfileIdentifierFormat:_profileDict[@"Config"][PFCProfileTemplateKeyIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat];
     [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:nil]];
     
 } // setupProfileSettings
@@ -434,6 +434,12 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
     } else {
         string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:_profileName];
+    }
+    
+    if ( overrideValues[@"%PROFILEUUID%"] != nil ) {
+        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:overrideValues[@"%PROFILEUUID%"]];
+    } else {
+        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:_profileUUID];
     }
     
     string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
@@ -1187,7 +1193,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnMenu"] ) {
             NSString *cellType = manifestDict[PFCManifestKeyCellType];
-
+            
             if ( [cellType isEqualToString:PFCCellTypeMenu] ) {
                 CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
                 [cellView setIdentifier:nil];
@@ -1744,14 +1750,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             NSInteger tableViewPayloadProfileSelectedRow = [_tableViewPayloadProfile selectedRow];
             DDLogDebug(@"Table view profile selected row: %ld", (long)tableViewPayloadProfileSelectedRow);
             
-            NSMutableDictionary *manifestSettings;
-            if ( tableViewPayloadProfileSelectedRow == row ) {
-                manifestSettings = _settingsManifest;
-            } else {
-                manifestSettings = [self settingsForManifestWithDomain:manifestDomain manifestTabIndex:_tabIndexSelected];
-            }
+            NSMutableDictionary *manifestSettings = _settingsProfile[manifestDomain];
             DDLogVerbose(@"Clicked manifest settings: %@", manifestSettings);
-            
+
             // -------------------------------------------------------------------------------------------
             //  Sanity check, any manifest in table view profile should have setting key "PayloadLibrary"
             // -------------------------------------------------------------------------------------------
@@ -2482,8 +2483,16 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSMutableDictionary *domainSettings = [settingsProfile[domain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         for ( NSDictionary *settings in settingsProfile[domain][@"Settings"] ?: @[] ) {
             NSMutableDictionary *settingsMutable = [settings mutableCopy];
-            if ( [settingsMutable[PFCProfileTemplateKeyUUID] length] == 0 ) {
-                settingsMutable[PFCProfileTemplateKeyUUID] = [[NSUUID UUID] UUIDString];
+            NSDictionary *manifest = [[[PFCManifestLibrary sharedLibrary] manifestsWithDomains:@[ domain ]] firstObject] ?: @{};
+            if ( [manifest[PFCManifestKeyPayloadTypes] count] == 0 ) {
+                DDLogError(@"Manifest with domain: %@ is missing the required %@ array. Please add that to enable manifest for export.", manifest[PFCManifestKeyDomain], PFCManifestKeyPayloadTypes);
+            } else {
+                for ( NSString *payloadType in manifest[PFCManifestKeyPayloadTypes] ?: @[] ) {
+                    if ( [settingsMutable[payloadType] count] == 0 ) {
+                        settingsMutable[payloadType] = @{ PFCManifestKeyPayloadVersion : @1,
+                                                          @"UUID" : [[NSUUID UUID] UUIDString] };
+                    }
+                }
             }
             [manifestSettings addObject:[settingsMutable copy]];
         }
@@ -3428,9 +3437,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self uncollapsePayloadLibrary];
     }
     
-    NSInteger selectedSegment = [_segmentedControlPayloadLibrary selectedSegment];
+    NSInteger selectedSegment = [_segmentedControlPayloadLibrary selectedSegment] ;
     DDLogDebug(@"Selected segment: %ld", (long)selectedSegment);
-    DDLogDebug(@"kPFCPayloadLibraryCustom=%ld", (long)kPFCPayloadLibraryCustom);
+    
     // -------------------------------------------------------------------------
     //  If the selected segment already is selected, stop here
     // -------------------------------------------------------------------------

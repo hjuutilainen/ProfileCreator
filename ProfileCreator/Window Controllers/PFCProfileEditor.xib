@@ -81,7 +81,7 @@
         <window title="Profile Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" visibleAtLaunch="NO" appearanceType="aqua" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="240" width="892" height="550"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" focusRingType="none" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="892" height="550"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -361,7 +361,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="464" height="165"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="ZPH-fG-Mc4">
                 <rect key="frame" x="0.0" y="0.0" width="464" height="165"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -732,7 +732,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="qTU-Yc-Ri1" userLabel="TableViewSettings" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="1474"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320.5" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -2147,7 +2147,7 @@ Gw
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="nmT-eL-xmu">
+                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="nmT-eL-xmu">
                         <rect key="frame" x="0.0" y="1483" width="511" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -2312,7 +2312,7 @@ Gw
                 <constraint firstItem="liF-VU-ZNy" firstAttribute="top" secondItem="lfW-a3-D7Q" secondAttribute="bottom" constant="10" id="qiE-ec-a1c"/>
                 <constraint firstAttribute="bottom" secondItem="liF-VU-ZNy" secondAttribute="bottom" id="tAw-Up-rvF"/>
             </constraints>
-            <point key="canvasLocation" x="-2322.5" y="-1080"/>
+            <point key="canvasLocation" x="-1958.5" y="-1195"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="tgs-uz-mix">
             <rect key="frame" x="0.0" y="0.0" width="479" height="152"/>
@@ -2366,9 +2366,9 @@ Gw
                     <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="VP9-1H-PzM">
                         <font key="font" metaFont="smallSystem"/>
                         <segments>
-                            <segment label="Apple" selected="YES"/>
-                            <segment label="Library" tag="1"/>
-                            <segment label="Custom"/>
+                            <segment label="Apple" selected="YES" tag="1"/>
+                            <segment label="Library" tag="2"/>
+                            <segment label="Custom" tag="3"/>
                         </segments>
                     </segmentedCell>
                     <connections>
@@ -2399,7 +2399,7 @@ Gw
                 <constraint firstItem="3lR-qU-rYj" firstAttribute="top" secondItem="DDH-xY-2Kw" secondAttribute="top" id="sSp-fD-8ML"/>
                 <constraint firstAttribute="bottom" secondItem="CZ0-F1-m54" secondAttribute="bottom" id="tue-qk-iXj"/>
             </constraints>
-            <point key="canvasLocation" x="-1383" y="-1260.5"/>
+            <point key="canvasLocation" x="-2060" y="-1463.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="FVl-Hk-IRj" customClass="PFCViewInfo">
             <rect key="frame" x="0.0" y="0.0" width="190" height="20"/>

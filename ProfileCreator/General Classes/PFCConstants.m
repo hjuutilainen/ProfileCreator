@@ -108,6 +108,7 @@ NSString *const PFCManifestKeyPayloadParentValueType = @"PayloadParentValueType"
 NSString *const PFCManifestKeyPayloadScope = @"PayloadScope";
 NSString *const PFCManifestKeyPayloadTabTitle = @"PayloadTabTitle";
 NSString *const PFCManifestKeyPayloadType = @"PayloadType";
+NSString *const PFCManifestKeyPayloadTypes = @"PayloadTypes";
 NSString *const PFCManifestKeyPayloadTypeCheckbox = @"PayloadTypeCheckbox";
 NSString *const PFCManifestKeyPayloadTypeTextField = @"PayloadTypeTextField";
 NSString *const PFCManifestKeyPayloadUUID = @"PayloadUUID";
@@ -184,7 +185,7 @@ NSString *const PFCRuntimeKeyProfileExporter = @"ProfileExporter";
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCDefaultProfileName = @"Untitled Profile...";
 NSString *const PFCDefaultProfileGroupName = @"Untitled Group";
-NSString *const PFCDefaultProfileIdentifierFormat = @"com.github.ProfileCreator.%NAME%";
+NSString *const PFCDefaultProfileIdentifierFormat = @"com.github.ProfileCreator.%PROFILEUUID%";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ProfileTemplateKeys

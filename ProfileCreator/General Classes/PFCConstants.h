@@ -115,6 +115,7 @@ extern NSString *const PFCManifestKeyPayloadParentValueType;
 extern NSString *const PFCManifestKeyPayloadScope;
 extern NSString *const PFCManifestKeyPayloadTabTitle;
 extern NSString *const PFCManifestKeyPayloadType;
+extern NSString *const PFCManifestKeyPayloadTypes;
 extern NSString *const PFCManifestKeyPayloadTypeCheckbox;
 extern NSString *const PFCManifestKeyPayloadTypeTextField;
 extern NSString *const PFCManifestKeyPayloadUUID;

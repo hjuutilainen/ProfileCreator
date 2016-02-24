@@ -18,6 +18,10 @@
 	<true/>
 	<key>PayloadTabTitle</key>
 	<string>CC84A191-01D5-4E45-8419-84FCCD456C6D</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.caldav.account</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

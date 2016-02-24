@@ -1234,7 +1234,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     
     NSDictionary *profileDict = @{ PFCRuntimeKeyPath : [PFCGeneralUtility newProfilePath],
                                    @"Config" : @{ PFCProfileTemplateKeyName : PFCDefaultProfileName,
-                                                  PFCProfileTemplateKeyIdentifier : PFCDefaultProfileIdentifierFormat,
+                                                  PFCProfileTemplateKeyIdentifierFormat : PFCDefaultProfileIdentifierFormat,
                                                   PFCProfileTemplateKeyDisplaySettings : @{
                                                           PFCProfileDisplaySettingsKeyPlatform : @{
                                                                   PFCProfileDisplaySettingsKeyPlatformOSX : @YES,
@@ -1674,6 +1674,14 @@ int const PFCTableViewGroupsRowHeight = 24;
 
 - (IBAction)buttonProfileExport:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    if ( [_tableViewProfileLibrarySelectedRows count] == 0 ) {
+        if ( [[_tableViewProfileLibrary selectedRowIndexes] count] == 0 ) {
+            return;
+        } else {
+            [self setTableViewProfileLibrarySelectedRows:[_tableViewProfileLibrary selectedRowIndexes]];
+        }
+    }
     
     NSString *uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
     
