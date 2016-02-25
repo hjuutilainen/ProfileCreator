@@ -739,7 +739,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)removeProfilesAtSelectedIndexes:(NSIndexSet *)selectedRows {
+- (void)removeProfilesAtIndexes:(NSIndexSet *)selectedRows {
     
     NSArray *selectedProfiles = [_arrayProfileLibrary objectsAtIndexes:selectedRows];
     
@@ -773,7 +773,7 @@ int const PFCTableViewGroupsRowHeight = 24;
                                                                                      @"GroupUUID" : groupUUID,
                                                                                      @"Group" : @(group) }];
     }
-} // removeProfilesAtSelectedIndexes
+} // removeProfilesAtIndexes
 
 - (void)deleteProfilesWithUUIDs:(NSArray *)profileUUIDs {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -1299,7 +1299,7 @@ int const PFCTableViewGroupsRowHeight = 24;
                                                                      @"TableViewIdentifier" : [sender identifier] }];
         }
     } else if ( [[sender identifier] isEqualToString:PFCTableViewIdentifierProfileLibrary] ) {
-        [self removeProfilesAtSelectedIndexes:selectedRows];
+        [self removeProfilesAtIndexes:selectedRows];
     } else {
         return NO;
     }
@@ -1360,7 +1360,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         [self createNewProfile];
     } else {
         if ( [_tableViewProfileLibrarySelectedRows count] != 0 ) {
-            [self removeProfilesAtSelectedIndexes:_tableViewProfileLibrarySelectedRows];
+            [self removeProfilesAtIndexes:_tableViewProfileLibrarySelectedRows];
         }
     }
 } // segmentedControlProfileLibraryFooterAddRemove

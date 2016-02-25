@@ -42,6 +42,7 @@ NSString *const PFCCellTypeTextFieldHostPortCheckbox = @"TextFieldHostPortCheckb
 NSString *const PFCCellTypeTextFieldNoTitle = @"TextFieldNoTitle";
 NSString *const PFCCellTypeTextFieldNumber = @"TextFieldNumber";
 NSString *const PFCCellTypeTextFieldNumberLeft = @"TextFieldNumberLeft";
+NSString *const PFCCellTypeTextView = @"TextView";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ValueType
@@ -231,6 +232,7 @@ NSString *const PFCProfileGroupExtension = @"pfcgrp";
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCSettingsKeyEnabled = @"Enabled";
 NSString *const PFCSettingsKeyFilePath = @"FilePath";
+NSString *const PFCSettingsKeyPayloadLibrary = @"PayloadLibrary";
 NSString *const PFCSettingsKeySelected = @"Selected";
 NSString *const PFCSettingsKeyTableViewContent = @"TableViewContent";
 NSString *const PFCSettingsKeyValue = @"Value";

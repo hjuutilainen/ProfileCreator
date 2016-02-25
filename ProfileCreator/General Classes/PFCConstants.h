@@ -49,6 +49,7 @@ extern NSString *const PFCCellTypeTextFieldHostPortCheckbox;
 extern NSString *const PFCCellTypeTextFieldNoTitle;
 extern NSString *const PFCCellTypeTextFieldNumber;
 extern NSString *const PFCCellTypeTextFieldNumberLeft;
+extern NSString *const PFCCellTypeTextView;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ValueType
@@ -238,6 +239,7 @@ extern NSString *const PFCProfileGroupExtension;
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCSettingsKeyEnabled;
 extern NSString *const PFCSettingsKeyFilePath;
+extern NSString *const PFCSettingsKeyPayloadLibrary;
 extern NSString *const PFCSettingsKeySelected;
 extern NSString *const PFCSettingsKeyTableViewContent;
 extern NSString *const PFCSettingsKeyValue;

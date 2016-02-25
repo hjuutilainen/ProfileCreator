@@ -138,7 +138,7 @@
 - (void)updateErrorCount:(NSNumber *)errorCount {
     NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
     [_textFieldErrorCount setAttributedStringValue:errorCountString];
-    if ( errorCount == 0 ) {
+    if ( [errorCount integerValue] == 0 ) {
         [_textFieldErrorCount setHidden:YES];
     } else {
         [_textFieldErrorCount setHidden:NO];

@@ -182,6 +182,13 @@
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return @[ manifestContentDict ];
+        
+        // ---------------------------------------------------------------------
+        //  TextView
+        // ---------------------------------------------------------------------
+    } else if ( [cellType isEqualToString:PFCCellTypeTextView] ) {
+        return @[ manifestContentDict ];
+        
     } else if ( [cellType length] != 0 ) {
         NSLog(@"[ERROR] Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
     } else {
@@ -860,6 +867,12 @@
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         return [self verifyCellTypeTextFieldNumber:manifestContentDict settings:settings];
+        
+        // ---------------------------------------------------------------------
+        //  TextView
+        // ---------------------------------------------------------------------
+    } else if ( [cellType isEqualToString:PFCCellTypeTextView] ) {
+        return [self verifyCellTypeTextField:manifestContentDict settings:settings];
         
     } else if ( [cellType length] != 0 ) {
         

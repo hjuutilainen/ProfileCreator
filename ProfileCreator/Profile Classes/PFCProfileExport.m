@@ -513,6 +513,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  TextFieldHostPortCheckbox
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
+        [self createPayloadFromCellTypeTextFieldHostPortCheckbox:manifestContentDict settings:settings payloads:payloads];
         
         // ---------------------------------------------------------------------
         //  TextFieldNoTitle
@@ -531,7 +532,6 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
     } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
         [self createPayloadFromCellTypeTextFieldNumber:manifestContentDict settings:settings payloads:payloads];
-        
         
     } else {
         DDLogDebug(@"Unknown cell type: %@", cellType);
@@ -1074,6 +1074,118 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         [*payloads addObject:[payloadDictDict copy]];
     }
 } // createPayloadFromCellTypeTextFieldHostPort:settings:payloads
+
+- (void)createPayloadFromCellTypeTextFieldHostPortCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
+    
+    // -------------------------------------------------------------------------
+    //  Verify required keys for CellType: 'TextFieldHostPortCheckbox'
+    // -------------------------------------------------------------------------
+    if ( ! [self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier,
+                                                          PFCManifestKeyPayloadType ]
+                                   manifestContentDict:manifestContentDict] ) {
+        return;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get value for Checkbox
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    id valueCheckbox = contentDictSettings[PFCSettingsKeyValueCheckbox];
+    if ( valueCheckbox == nil ) {
+        valueCheckbox = manifestContentDict[PFCManifestKeyDefaultValueCheckbox];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Verify CheckboxValue is of the expected class type(s)
+    // -------------------------------------------------------------------------
+    BOOL checkboxState = NO;
+    if ( valueCheckbox == nil ) {
+        DDLogWarn(@"CheckboxValue is empty");
+        
+        if ( [manifestContentDict[PFCManifestKeyOptional] boolValue] ) {
+            // FIXME - Log this different, if checkbox payload key is empty for example, or log both payload keys?
+            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]);
+            return;
+        }
+    } else if ( ! [[valueCheckbox class] isEqualTo:[@(YES) class]] && ! [[valueCheckbox class] isEqualTo:[@(0) class]] ) {
+        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valueCheckbox class]), @[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]);
+    } else {
+        checkboxState = [(NSNumber *)valueCheckbox boolValue];
+        DDLogDebug(@"CheckboxValue: %@", (checkboxState) ? @"YES" : @"NO");
+    }
+    
+    // -------------------------------------------------------------------------
+    //  If Checkbox is enabled
+    // -------------------------------------------------------------------------
+    // FIXME - Here i could check if there are any payloadKeys for host/port, but they should be required
+    if ( checkboxState ) {
+        
+        // ------------------------------------------------------------------------
+        //  All keys are equal to TextFieldHostPort, so use that to add to payload
+        // ------------------------------------------------------------------------
+        [self createPayloadFromCellTypeTextFieldHostPort:manifestContentDict settings:settings payloads:payloads];
+    }
+    
+    if ( ! [self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyPayloadKeyCheckbox ]
+                                   manifestContentDict:manifestContentDict] ) {
+        return;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Resolve any nested payload keys
+    //  FIXME - Need to implement this for nested keys
+    // -------------------------------------------------------------------------
+    //NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+    
+    //  FIXME - Add UUID for PayloadTypeTextField/Checkbox
+    //  FIXME - Rename PFCProfileTemplateKeyUUID to PayloadUUID and use a SettingsKey
+    NSString *payloadTypeCheckbox;
+    NSString *payloadUUIDCheckbox;
+    if ( manifestContentDict[PFCManifestKeyPayloadTypeCheckbox] != nil ) {
+        payloadTypeCheckbox = manifestContentDict[PFCManifestKeyPayloadTypeCheckbox];
+        payloadUUIDCheckbox = settings[@"PayloadUUIDCheckbox"] ?: settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
+    } else {
+        payloadTypeCheckbox = manifestContentDict[PFCManifestKeyPayloadType];
+        payloadUUIDCheckbox = settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get index of current payload in payload array
+    // -------------------------------------------------------------------------
+    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
+    }];
+    
+    // ----------------------------------------------------------------------------------
+    //  Create mutable version of current payload, or create new payload if none existed
+    // ----------------------------------------------------------------------------------
+    NSMutableDictionary *payloadDictDict;
+    if ( idx != NSNotFound ) {
+        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    } else {
+        payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeCheckbox payloadUUID:payloadUUIDCheckbox];
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]] = @(checkboxState);
+    
+    // -------------------------------------------------------------------------
+    //  Save payload to payload array
+    // -------------------------------------------------------------------------
+    if ( idx != NSNotFound ) {
+        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    } else {
+        [*payloads addObject:[payloadDictDict copy]];
+    }
+    
+    // -------------------------------------------------------------------------
+    //
+    // -------------------------------------------------------------------------
+    [self createPayloadFromValueKey:( checkboxState ) ? @"True" : @"False" availableValues:manifestContentDict[PFCManifestKeyAvailableValues] manifestContentDict:manifestContentDict settings:settings payloadKey:manifestContentDict[PFCManifestKeyPayloadKeyCheckbox] payloadType:payloadTypeCheckbox payloadUUID:payloadUUIDCheckbox payloads:payloads];
+    
+} // createPayloadFromCellTypeTextFieldHostPortCheckbox:settings:payloads
 
 - (void)createPayloadFromCellTypeTextFieldNumber:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
     

@@ -20,6 +20,7 @@
 #import "PFCTableViewCellsSettingsTableView.h"
 #import "PFCTableViewCellsSettings.h"
 #import "PFCConstants.h"
+#import "PFCCellTypeTableView.h"
 
 @implementation PFCTableViewCellsSettingsTableView
 @end

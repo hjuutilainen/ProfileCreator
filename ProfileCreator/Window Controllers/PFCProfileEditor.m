@@ -31,6 +31,14 @@
 #import "PFCManifestLibrary.h"
 #import "PFCGeneralUtility.h"
 #import "PFCProfileUtility.h"
+#import "PFCCellTypes.h"
+
+#import "PFCCellTypeDatePicker.h"
+#import "PFCCellTypeFile.h"
+#import "PFCCellTypePopUpButton.h"
+#import "PFCCellTypeSegmentedControl.h"
+#import "PFCCellTypeTextField.h"
+#import "PFCCellTypeTextFieldHostPort.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -767,7 +775,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Get view that sent close notification and remove it form the stack view
     // -------------------------------------------------------------------------
     if ( ! [sender isKindOfClass:[PFCProfileCreationTabView class]] ) {
-        DDLogError(@"Class %@ not allowed to send -tabIndexClose", [sender class]);
+        DDLogError(@"Class %@ is not allowed to send -tabIndexClose", [sender class]);
         return;
     }
     
@@ -877,9 +885,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [_tableViewSettings beginUpdates];
         [_tableViewSettings reloadData];
         [_tableViewSettings endUpdates];
-    } else if (
-               [keyPath isEqualToString:@"showKeysDisabled"] ||
-               [keyPath isEqualToString:@"showKeysHidden"] ) {
+    } else if ( [keyPath isEqualToString:@"showKeysDisabled"] || [keyPath isEqualToString:@"showKeysHidden"] ) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
     }
 } // observeValueForKeyPath:ofObject:change:context
@@ -944,13 +950,11 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // splitView:shouldHideDividerAtIndex
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)notification {
-    id splitView = [notification object];
-    if ( splitView == _splitViewPayload ) {
+    if ( [notification object] == _splitViewPayload ) {
         if ( [_splitViewPayload isSubviewCollapsed:[_splitViewPayload subviews][1]] ) {
             [self hidePayloadFooter];
         } else if ( _payloadLibrarySplitViewCollapsed ) {
             [self showPayloadFooter];
-            
         }
     }
 } // splitViewDidResizeSubviews
@@ -995,6 +999,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         NSString *tableColumnIdentifier = [tableColumn identifier];
         NSDictionary *manifestContentDict = _arraySettings[(NSUInteger)row];
         NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+        NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
         
         if ( [tableColumnIdentifier isEqualToString:@"ColumnSettings"] ) {
             
@@ -1003,163 +1008,14 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             // -----------------------------------------------------------------
             if ( [cellType isEqualToString:PFCCellTypePadding] ) {
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
-                
             } else {
-                
-                NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-                NSDictionary *userSettingsDict = _settingsManifest[identifier];
-                NSDictionary *localSettingsDict;
-                if ( _showSettingsLocal ) {
-                    localSettingsDict = _settingsLocalManifest[identifier];
-                }
-                
-                // -------------------------------------------------------------
-                //  Checkbox
-                // -------------------------------------------------------------
-                if ( [cellType isEqualToString:PFCCellTypeCheckbox] ) {
-                    CellViewSettingsCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckbox" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  CheckboxNoDescription
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
-                    CellViewSettingsCheckboxNoDescription *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsCheckboxNoDescription" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsCheckboxNoDescription:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  DatePicker
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
-                    CellViewSettingsDatePicker *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePicker" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewDatePicker:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  DatePickerNoTitle
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ) {
-                    CellViewSettingsDatePickerNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsDatePickerNoTitle" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewDatePickerNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  File
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
-                    CellViewSettingsFile *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsFile" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsFile:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  PopUpButton
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypePopUpButton] ) {
-                    CellViewSettingsPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButton" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewPopUpButton:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  PopUpButtonLeft
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
-                    CellViewSettingsPopUpButtonLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonLeft" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpButtonLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  PopUpButtonNoTitle
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ) {
-                    CellViewSettingsPopUpButtonNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsPopUpButtonNoTitle" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsPopUpButtonNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  SegmentedControl
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
-                    CellViewSettingsSegmentedControl *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsSegmentedControl" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsSegmentedControl:cellView manifest:manifestContentDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TableView
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
-                    CellViewSettingsTableView *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTableView" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTableView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextField
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextField] ) {
-                    CellViewSettingsTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextField" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewTextField:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldCheckbox
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ) {
-                    CellViewSettingsTextFieldCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldCheckbox" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldDaysHoursNoTitle
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
-                    CellViewSettingsTextFieldDaysHoursNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldDaysHoursNoTitle" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldDaysHoursNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldHostPort
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ) {
-                    CellViewSettingsTextFieldHostPort *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPort" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldHostPort:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldHostPortCheckbox
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
-                    CellViewSettingsTextFieldHostPortCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldHostPortCheckbox" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldHostPortCheckbox:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldNoTitle
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ) {
-                    CellViewSettingsTextFieldNoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNoTitle" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewTextFieldNoTitle:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldNumber
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumber] ) {
-                    CellViewSettingsTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumber" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldNumber:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                    // ---------------------------------------------------------
-                    //  TextFieldNumberLeft
-                    // ---------------------------------------------------------
-                } else if ( [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
-                    CellViewSettingsTextFieldNumberLeft *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsTextFieldNumberLeft" owner:self];
-                    [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                    return [cellView populateCellViewSettingsTextFieldNumberLeft:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
-                    
-                } else {
-                    DDLogDebug(@"Unknown cell type: %@", cellType);
-                }
+                return [[PFCCellTypes sharedInstance] cellViewForCellType:cellType
+                                                                tableView:tableView
+                                                      manifestContentDict:manifestContentDict
+                                                         userSettingsDict:_settingsManifest[identifier] ?: @{}
+                                                        localSettingsDict:( _showSettingsLocal ) ? _settingsLocalManifest[identifier] : @{}
+                                                                      row:row
+                                                                   sender:self];
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"] ) {
             
@@ -1167,8 +1023,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
             } else {
                 
-                NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-                NSDictionary *cellSettingsDict = _settingsManifest[identifier];
+                NSDictionary *userSettingsDict = _settingsManifest[identifier];
                 NSDictionary *localSettingsDict;
                 if ( _showSettingsLocal ) {
                     localSettingsDict = _settingsLocalManifest[identifier];
@@ -1176,7 +1031,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 
                 CellViewSettingsEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewSettingsEnabled" owner:self];
                 [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellViewEnabled:cellView manifest:manifestContentDict settings:cellSettingsDict settingsLocal:localSettingsDict row:row sender:self];
+                return [cellView populateCellViewEnabled:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
             }
         }
     } else if ( [tableViewIdentifier isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
@@ -1289,50 +1144,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
     if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadSettings] ) {
-        
-        // ---------------------------------------------------------------------
-        //  Verify the settings array isn't empty, if so stop here
-        // ---------------------------------------------------------------------
-        if ( [_arraySettings count] < row || [_arraySettings count] == 0 ) {
-            return 1;
-        }
-        
-        NSDictionary *manifestContentDict = _arraySettings[(NSUInteger)row];
-        NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
-        if ( [cellType isEqualToString:PFCCellTypePadding] ) {
-            return 20;
-        } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
-            return 33;
-        } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
-            return 38;
-        } else if (
-                   [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
-            return 39;
-        } else if (
-                   [cellType isEqualToString:PFCCellTypeCheckbox] ) {
-            return 52;
-        } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
-            return 53;
-        } else if (
-                   [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ||
-                   [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
-            return 54;
-        } else if (
-                   [cellType isEqualToString:PFCCellTypeTextField] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ||
-                   [cellType isEqualToString:PFCCellTypePopUpButton] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldNumber] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ||
-                   [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
-            return 80;
-        } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
-            return 83;
-        } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
-            return 192;
-        } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
-            return 212;
+        if ( 0 < [_arraySettings count] && row < [_arraySettings count] ) {
+            NSDictionary *manifestContentDict = _arraySettings[(NSUInteger)row] ?: @{};
+            return [[PFCCellTypes sharedInstance] rowHeightForCellType:manifestContentDict[PFCManifestKeyCellType]];
         }
     } else if ( [[tableView identifier] isEqualToString:PFCTableViewIdentifierPayloadProfile] ) {
         return 42;
@@ -1641,8 +1455,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Another verification of text field type
     // -------------------------------------------------------------------------
     if (
-        [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPort class]] ||
-        [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
+        [[[textField superview] class] isSubclassOfClass:[PFCTextFieldHostPortCellView class]] ||
+        [[[textField superview] class] isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]
         ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldHost] ) {
             settingsDict[@"ValueHost"] = [inputText copy];
@@ -1660,24 +1474,24 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             BOOL requiredPort = [manifestContentDict[PFCManifestKeyRequiredPort] boolValue];
             
             if ( required || requiredHost || requiredPort ) {
-                if ( required && ( [settingsDict[@"ValueHost"] length] == 0 || [settingsDict[@"ValuePort"] length] == 0 ) ) {
+                if ( required && ( [settingsDict[PFCSettingsKeyValueHost] length] == 0 || [settingsDict[PFCSettingsKeyValuePort] length] == 0 ) ) {
                     showRequired = YES;
                 }
                 
-                if ( requiredHost && [settingsDict[@"ValueHost"] length] == 0 ) {
+                if ( requiredHost && [settingsDict[PFCSettingsKeyValueHost] length] == 0 ) {
                     showRequired = YES;
                 }
                 
-                if ( requiredPort && [settingsDict[@"ValuePort"] length] == 0 ) {
+                if ( requiredPort && [settingsDict[PFCSettingsKeyValuePort] length] == 0 ) {
                     showRequired = YES;
                 }
                 
-                [(CellViewSettingsTextFieldHostPort *)[textField superview] showRequired:showRequired];
+                [(PFCTextFieldHostPortCellView *)[textField superview] showRequired:showRequired];
             }
         }
-    } else if ( [[[textField superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ) {
+    } else if ( [[[textField superview] class] isSubclassOfClass:[PFCTextFieldCheckboxCellView class]] ) {
         if ( textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField] ) {
-            settingsDict[@"ValueTextField"] = [inputText copy];
+            settingsDict[PFCSettingsKeyValueTextField] = [inputText copy];
         } else {
             NSLog(@"[ERROR] Unknown text field!");
             return;
@@ -1687,9 +1501,9 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             settingsDict[PFCSettingsKeyValue] = [inputText copy];
             if ( [[textField superview] respondsToSelector:@selector(showRequired:)] ) {
                 if ( [manifestContentDict[PFCManifestKeyRequired] boolValue] && [inputText length] == 0 ) {
-                    [(CellViewSettingsTextField *)[textField superview] showRequired:YES];
+                    [(PFCTextFieldCellView *)[textField superview] showRequired:YES];
                 } else if ( [manifestContentDict[PFCManifestKeyRequired] boolValue] ) {
-                    [(CellViewSettingsTextField *)[textField superview] showRequired:NO];
+                    [(PFCTextFieldCellView *)[textField superview] showRequired:NO];
                 }
             }
         } else {
@@ -1757,8 +1571,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
             //  Sanity check, any manifest in table view profile should have setting key "PayloadLibrary"
             // -------------------------------------------------------------------------------------------
             NSInteger payloadLibrary;
-            if ( manifestSettings[@"PayloadLibrary"] != nil ) {
-                payloadLibrary = [manifestSettings[@"PayloadLibrary"] integerValue];
+            if ( manifestSettings[PFCSettingsKeyPayloadLibrary] != nil ) {
+                payloadLibrary = [manifestSettings[PFCSettingsKeyPayloadLibrary] integerValue];
             } else {
                 DDLogError(@"Manifest settings is missing required information about originating library");
                 payloadLibrary = 2;
@@ -2064,10 +1878,10 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         
         
     } else if (
-               [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsTextFieldCheckbox class]] ||
-               [[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsTextFieldHostPortCheckbox class]]
+               [[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldCheckboxCellView class]] ||
+               [[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]
                ) {
-        if ( checkbox == [(CellViewSettingsTextFieldCheckbox *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox] ) {
+        if ( checkbox == [(PFCTextFieldCheckboxCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox] ) {
             settingsDict[PFCSettingsKeyValueCheckbox] = @(state);
         }
         
@@ -2087,15 +1901,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // checkbox
 
 - (void)datePickerSelection:(NSDatePicker *)datePicker {
-    
-    // -------------------------------------------------------------------------
-    //  Make sure it's a settings date picker
-    // -------------------------------------------------------------------------
-    if ( ! [[[datePicker superview] class] isSubclassOfClass:[CellViewSettingsDatePickerNoTitle class]] ) {
-        NSLog(@"[ERROR] DatePicker: %@ superview class is: %@", datePicker, [[datePicker superview] class]);
-        return;
-    }
-    
+
     // -------------------------------------------------------------------------
     //  Get date picker's row in the table view
     // -------------------------------------------------------------------------
@@ -2120,7 +1926,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // ------------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsDatePickerNoTitle date picker
     // ------------------------------------------------------------------------------
-    if ( datePicker == [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker] ) {
+    if ( datePicker == [(PFCDatePickerNoTitleCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker] ) {
         
         unsigned int flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
         NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
@@ -2141,7 +1947,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         // ---------------------------------------------------------------------
         //  Update description with time interval from today to selected date
         // ---------------------------------------------------------------------
-        NSTextField *description = [(CellViewSettingsDatePickerNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDateDescription];
+        NSTextField *description = [(PFCDatePickerNoTitleCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDateDescription];
         [description setStringValue:[self dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
 } // datePickerSelection
@@ -2152,8 +1958,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Make sure it's a settings popup button
     // -------------------------------------------------------------------------
     if (
-        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButton class]] &&
-        ! [[[popUpButton superview] class] isSubclassOfClass:[CellViewSettingsPopUpButtonNoTitle class]] ) {
+        ! [[[popUpButton superview] class] isSubclassOfClass:[PFCPopUpButtonCellView class]] &&
+        ! [[[popUpButton superview] class] isSubclassOfClass:[PFCPopUpButtonLeftCellView class]] ) {
         DDLogError(@"PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
         return;
     }
@@ -2183,8 +1989,8 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Another verification this is a CellViewSettingsPopUp popup button
     // -------------------------------------------------------------------------
     if (
-        popUpButton == [(CellViewSettingsPopUpButton *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
-        popUpButton == [(CellViewSettingsPopUpButtonNoTitle *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
+        popUpButton == [(PFCPopUpButtonCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
+        popUpButton == [(PFCPopUpButtonLeftCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
         
         // ---------------------------------------------------------------------
         //  Save selection
@@ -2201,15 +2007,6 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 } // popUpButtonSelection
 
 - (void)selectFile:(NSButton *)button {
-    
-    // -------------------------------------------------------------------------
-    //  Make sure it's a settings button
-    // -------------------------------------------------------------------------
-    // FIXME - Might be able to remove/change this check
-    if ( ! [[[button superview] class] isSubclassOfClass:[CellViewSettingsFile class]] ) {
-        DDLogError(@"Button: %@ superview class is: %@", button, [[button superview] class]);
-        return;
-    }
     
     // -------------------------------------------------------------------------
     //  Get button's row in the table view
@@ -2236,7 +2033,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     //  Another verification this is a CellViewSettingsFile button
     // -------------------------------------------------------------------------
     // FIXME - Might be able to remove/change this check
-    if ( button == [(CellViewSettingsFile *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
+    if ( button == [(PFCFileCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingButtonAdd] ) {
         
         // ---------------------------------------------------------------------
         //  Get open dialog prompt
@@ -2293,7 +2090,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     //  Make sure it's a settings segmented control
     // -------------------------------------------------------------------------
-    if ( ! [[[segmentedControl superview] class] isSubclassOfClass:[CellViewSettingsSegmentedControl class]] ) {
+    if ( ! [[[segmentedControl superview] class] isSubclassOfClass:[PFCSegmentedControlCellView class]] ) {
         NSLog(@"[ERROR] SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
         return;
     }
@@ -2311,7 +2108,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -----------------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsSegmentedControl segmented control
     // -----------------------------------------------------------------------------------
-    if ( segmentedControl == [(CellViewSettingsSegmentedControl *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingSegmentedControl] ) {
+    if ( segmentedControl == [(PFCSegmentedControlCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingSegmentedControl] ) {
         
         NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
         if ( [selectedSegment length] == 0 ) {

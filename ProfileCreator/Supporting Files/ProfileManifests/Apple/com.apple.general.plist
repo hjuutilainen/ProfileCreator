@@ -41,7 +41,27 @@
 		</dict>
 		<dict>
 			<key>Identifier</key>
+			<string>E2E64509-BDE4-4743-8AE9-D46B76E0CDA8</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>Organization</string>
+			<key>PayloadType</key>
+			<string>com.apple.profile</string>
+			<key>PayloadKey</key>
+			<string>PayloadOrganization</string>
+			<key>Description</key>
+			<string>Name of the organization which created the profile</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>A human-readable string containing the name of the organization that provided the profile.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
 			<string>65377BE1-1799-40D8-93E7-4C7CB0E7B9B4</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
 			<string>Description</string>
 			<key>PayloadType</key>
@@ -51,25 +71,27 @@
 			<key>Description</key>
 			<string>Brief description of the contents or purpose of the profile</string>
 			<key>CellType</key>
-			<string>TextField</string>
+			<string>TextView</string>
 			<key>ToolTipDescription</key>
 			<string>A description of the profile, shown on the Detail screen for the profile. This should be descriptive enough to help the user decide whether to install the profile.</string>
 		</dict>
 		<dict>
 			<key>Identifier</key>
-			<string>E2E64509-BDE4-4743-8AE9-D46B76E0CDA8</string>
+			<string>C06F890D-3C4D-4149-8B1C-C49CBB64D0BC</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
-			<string>Organization</string>
+			<string>Consent Message</string>
 			<key>PayloadType</key>
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
-			<string>PayloadOrganization</string>
+			<string>ConsentText</string>
 			<key>Description</key>
-			<string>Name of the organization for the profile</string>
+			<string>A message that will be displayed during profile installation</string>
 			<key>CellType</key>
-			<string>TextField</string>
+			<string>TextView</string>
 			<key>ToolTipDescription</key>
-			<string>A human-readable string containing the name of the organization that provided the profile.</string>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Identifier</key>
