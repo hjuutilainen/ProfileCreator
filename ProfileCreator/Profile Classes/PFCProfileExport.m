@@ -534,7 +534,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         [self createPayloadFromCellTypeTextFieldNumber:manifestContentDict settings:settings payloads:payloads];
         
     } else {
-        DDLogDebug(@"Unknown cell type: %@", cellType);
+        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }
 } // createPayloadFromManifestContentDict:settings:payloads
 

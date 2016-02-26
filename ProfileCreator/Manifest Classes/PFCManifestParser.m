@@ -190,7 +190,7 @@
         return @[ manifestContentDict ];
         
     } else if ( [cellType length] != 0 ) {
-        NSLog(@"[ERROR] Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
+        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     } else {
         //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
@@ -876,7 +876,7 @@
         
     } else if ( [cellType length] != 0 ) {
         
-        DDLogError(@"Unknown CellType: %@ for Identifier: %@", cellType ?: @"-", manifestContentDict[PFCManifestKeyIdentifier] ?: @"-");
+        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     } else {
         
         //NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);

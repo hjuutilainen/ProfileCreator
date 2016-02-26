@@ -20,8 +20,6 @@
                 <outlet property="constraintSearchFieldLeading" destination="Es4-eR-ead" id="1XJ-tt-kJS"/>
                 <outlet property="constraintSettingsHeaderHeight" destination="hWv-vi-8Yc" id="FsC-qF-w2a"/>
                 <outlet property="imageViewSettingsHeaderIcon" destination="iww-aM-jdR" id="HM3-Py-sZU"/>
-                <outlet property="linePayloadLibraryMenuBottom" destination="CZ0-F1-m54" id="YSs-Yd-Q0y"/>
-                <outlet property="linePayloadLibraryMenuTop" destination="3lR-qU-rYj" id="Chd-pT-1Wn"/>
                 <outlet property="menuButtonAdd" destination="IZ9-bM-bjJ" id="YrK-1C-DeB"/>
                 <outlet property="popOverSettings" destination="T5w-2R-PdB" id="xsu-Cj-QtK"/>
                 <outlet property="popUpButtonCertificateEncryption" destination="HEB-sl-dvU" id="CLs-cx-iZ1"/>
@@ -32,7 +30,6 @@
                 <outlet property="popUpButtonPlatformiOSMinVersion" destination="p6Y-ks-bKA" id="FwJ-sh-2cj"/>
                 <outlet property="progressIndicatorSettingsStatusLoading" destination="62d-W7-dn9" id="IWe-qv-vgl"/>
                 <outlet property="searchFieldPayloadLibrary" destination="KCr-4M-8Bj" id="aTs-m9-iTj"/>
-                <outlet property="segmentedControlPayloadLibrary" destination="pFH-O0-wrl" id="Yte-zX-bjw"/>
                 <outlet property="sheetProfileName" destination="vmu-y3-Ojw" id="nm6-hb-dfg"/>
                 <outlet property="splitViewPayload" destination="9Ys-zS-lNa" id="e8C-1D-9IY"/>
                 <outlet property="splitViewWindow" destination="tba-0L-UoO" id="y9C-aM-a64"/>
@@ -56,7 +53,6 @@
                 <outlet property="viewInfoSplitView" destination="yEZ-hH-ZF6" id="KTz-T0-Hey"/>
                 <outlet property="viewPayloadFooterSearch" destination="B10-jz-8SV" id="nhX-Lp-69N"/>
                 <outlet property="viewPayloadFooterSuperview" destination="aiU-07-iM2" id="T1o-ru-904"/>
-                <outlet property="viewPayloadLibraryMenu" destination="DDH-xY-2Kw" id="owz-rJ-aD6"/>
                 <outlet property="viewPayloadLibraryMenuSuperview" destination="w0w-p9-Wd4" id="XHf-iA-aHL"/>
                 <outlet property="viewPayloadLibraryNoManifests" destination="4kG-5i-EVH" id="uqa-xX-LFc"/>
                 <outlet property="viewPayloadLibraryNoMatches" destination="Ecf-Iz-xGo" id="MOh-7x-o1j"/>
@@ -237,14 +233,14 @@ Gw
                                                 </connections>
                                             </button>
                                             <button translatesAutoresizingMaskIntoConstraints="NO" id="dpF-Pa-cM0">
-                                                <rect key="frame" x="8" y="7" width="14" height="14"/>
+                                                <rect key="frame" x="8" y="5" width="17" height="17"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="14" id="Fei-rW-n8s"/>
+                                                    <constraint firstAttribute="height" constant="17" id="Fei-rW-n8s"/>
                                                     <constraint firstAttribute="width" secondItem="dpF-Pa-cM0" secondAttribute="height" multiplier="1:1" id="GFB-yi-HAq"/>
                                                 </constraints>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" controlSize="small" imageScaling="proportionallyUpOrDown" inset="2" id="1MI-Lu-yfQ">
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Menu-17" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="1MI-Lu-yfQ">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <connections>
                                                     <action selector="buttonPopOverSettings:" target="-2" id="ivS-r8-h4w"/>
@@ -1712,7 +1708,7 @@ Gw
                                                     <outlet property="settingDatePicker" destination="sBU-rw-aEN" id="rC3-rH-h7E"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="TextFieldDaysHoursNoTitle" id="5Hf-2c-rOA" customClass="PFCTextFieldDaysHoursNoTitleCellView">
+                                            <tableCellView identifier="TextFieldDaysHoursNoTitle" misplaced="YES" id="5Hf-2c-rOA" customClass="PFCTextFieldDaysHoursNoTitleCellView">
                                                 <rect key="frame" x="45" y="1088" width="354" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -2375,7 +2371,7 @@ Gw
                 <constraint firstItem="liF-VU-ZNy" firstAttribute="top" secondItem="lfW-a3-D7Q" secondAttribute="bottom" constant="10" id="qiE-ec-a1c"/>
                 <constraint firstAttribute="bottom" secondItem="liF-VU-ZNy" secondAttribute="bottom" id="tAw-Up-rvF"/>
             </constraints>
-            <point key="canvasLocation" x="-1958.5" y="-1195"/>
+            <point key="canvasLocation" x="-2272.5" y="-1228"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="tgs-uz-mix">
             <rect key="frame" x="0.0" y="0.0" width="479" height="152"/>
@@ -2420,49 +2416,6 @@ Gw
                 <constraint firstItem="Odz-JC-77A" firstAttribute="centerX" secondItem="Ecf-Iz-xGo" secondAttribute="centerX" id="qqy-Rn-3dj"/>
             </constraints>
             <point key="canvasLocation" x="-2086" y="-1196"/>
-        </customView>
-        <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="DDH-xY-2Kw">
-            <rect key="frame" x="0.0" y="0.0" width="198" height="27"/>
-            <subviews>
-                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pFH-O0-wrl">
-                    <rect key="frame" x="17" y="3" width="165" height="20"/>
-                    <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="VP9-1H-PzM">
-                        <font key="font" metaFont="smallSystem"/>
-                        <segments>
-                            <segment label="Apple" selected="YES" tag="1"/>
-                            <segment label="Library" tag="2"/>
-                            <segment label="Custom" tag="3"/>
-                        </segments>
-                    </segmentedCell>
-                    <connections>
-                        <action selector="selectSegmentedControlPayloadLibrary:" target="-2" id="jKK-Yv-aHM"/>
-                    </connections>
-                </segmentedControl>
-                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="3lR-qU-rYj">
-                    <rect key="frame" x="10" y="24" width="178" height="5"/>
-                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <font key="titleFont" metaFont="system"/>
-                </box>
-                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="CZ0-F1-m54">
-                    <rect key="frame" x="10" y="-2" width="178" height="5"/>
-                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <font key="titleFont" metaFont="system"/>
-                </box>
-            </subviews>
-            <constraints>
-                <constraint firstItem="3lR-qU-rYj" firstAttribute="leading" secondItem="DDH-xY-2Kw" secondAttribute="leading" constant="10" id="DQW-se-9tp"/>
-                <constraint firstAttribute="trailing" secondItem="3lR-qU-rYj" secondAttribute="trailing" constant="10" id="K0k-MZ-rTy"/>
-                <constraint firstItem="CZ0-F1-m54" firstAttribute="leading" secondItem="DDH-xY-2Kw" secondAttribute="leading" constant="10" id="Kkp-eq-dBx"/>
-                <constraint firstAttribute="trailing" secondItem="CZ0-F1-m54" secondAttribute="trailing" constant="10" id="LBD-a5-QDb"/>
-                <constraint firstAttribute="bottom" secondItem="pFH-O0-wrl" secondAttribute="bottom" constant="5" id="be1-Yq-AMl"/>
-                <constraint firstItem="pFH-O0-wrl" firstAttribute="centerX" secondItem="DDH-xY-2Kw" secondAttribute="centerX" id="c6k-uG-anl"/>
-                <constraint firstItem="pFH-O0-wrl" firstAttribute="top" secondItem="DDH-xY-2Kw" secondAttribute="top" constant="4" id="fyn-CC-1m1"/>
-                <constraint firstItem="3lR-qU-rYj" firstAttribute="top" secondItem="DDH-xY-2Kw" secondAttribute="top" id="sSp-fD-8ML"/>
-                <constraint firstAttribute="bottom" secondItem="CZ0-F1-m54" secondAttribute="bottom" id="tue-qk-iXj"/>
-            </constraints>
-            <point key="canvasLocation" x="-2060" y="-1463.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="FVl-Hk-IRj" customClass="PFCViewInfo">
             <rect key="frame" x="0.0" y="0.0" width="190" height="20"/>
@@ -3154,8 +3107,8 @@ Gw
         </customView>
     </objects>
     <resources>
+        <image name="Menu-17" width="17" height="17"/>
         <image name="MenuIconAccessibility" width="80" height="80"/>
-        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSInvalidDataFreestandingTemplate" width="14" height="14"/>

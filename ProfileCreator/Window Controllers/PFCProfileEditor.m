@@ -33,6 +33,8 @@
 #import "PFCProfileUtility.h"
 #import "PFCCellTypes.h"
 
+#import "PFCProfileEditorPayloadLibraryMenu.h"
+
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypeFile.h"
 #import "PFCCellTypePopUpButton.h"
@@ -47,6 +49,12 @@ NSString *const PFCTableViewIdentifierPayloadProfile = @"TableViewIdentifierPayl
 NSString *const PFCTableViewIdentifierPayloadLibrary = @"TableViewIdentifierPayloadLibrary";
 NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPayloadSettings";
 NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfileHeader";
+
+@interface PFCProfileEditor ()
+
+@property PFCProfileEditorPayloadLibraryMenu *viewPayloadLibraryMenu;
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Implementation
@@ -150,6 +158,11 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         _arraySettings = [[NSMutableArray alloc] init];
         
         // ---------------------------------------------------------------------
+        //  Initialize Views
+        // ---------------------------------------------------------------------
+        _viewPayloadLibraryMenu = [[PFCProfileEditorPayloadLibraryMenu alloc] initWithProfileEditor:self];
+        
+        // ---------------------------------------------------------------------
         //  Initialize Settings
         // ---------------------------------------------------------------------
         _settingsProfile = [profileDict[@"Config"][PFCProfileTemplateKeySettings] mutableCopy] ?: [[NSMutableDictionary alloc] init];
@@ -209,7 +222,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
     
     // -------------------------------------------------------------------------
@@ -1058,7 +1071,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                                          payloadCount:@([_settingsProfile[manifestDict[PFCManifestKeyDomain]][@"Settings"] ?: @[@{}] count])
                                                   row:row];
             } else {
-                NSLog(@"[ERROR] Unknown CellType: %@", cellType);
+                DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -1083,7 +1096,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
                 [cellView setIdentifier:nil];
                 return [cellView populateCellViewMenuLibrary:cellView manifestDict:manifestDict errorCount:nil row:row];
             } else {
-                NSLog(@"[ERROR] Unknown CellType: %@", cellType);
+                DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
             }
         } else if ( [tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"] ) {
             CellViewMenuEnabled *cellView = [_tableViewPayloadProfile makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -2432,7 +2445,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_viewPayloadFooterSearch setHidden:NO];
     [_linePayloadLibraryMenuTop setHidden:NO];
     [_linePayloadLibraryMenuBottom setHidden:NO];
-    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
 } // showPayloadFooter
 
 - (void)hidePayloadFooter {
@@ -2440,7 +2453,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_viewPayloadFooterSearch setHidden:YES];
     [_linePayloadLibraryMenuTop setHidden:YES];
     [_linePayloadLibraryMenuBottom setHidden:YES];
-    [PFCGeneralUtility insertSubview:_viewPayloadLibraryMenu inSuperview:_viewPayloadFooterSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadFooterSuperview hidden:NO];
 } // hidePayloadFooter
 
 - (void)showSettingsLoading {
@@ -3224,7 +3237,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
     [_tableViewSettings endUpdates];
 } // selectTableViewPayloadLibraryRow
 
-- (IBAction)selectSegmentedControlPayloadLibrary:(id)sender {
+- (void)selectPayloadLibrary:(PFCPayloadLibrary)payloadLibrary {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     // -------------------------------------------------------------------------
@@ -3234,7 +3247,7 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
         [self uncollapsePayloadLibrary];
     }
     
-    NSInteger selectedSegment = [_segmentedControlPayloadLibrary selectedSegment] ;
+    NSInteger selectedSegment = payloadLibrary;
     DDLogDebug(@"Selected segment: %ld", (long)selectedSegment);
     
     // -------------------------------------------------------------------------

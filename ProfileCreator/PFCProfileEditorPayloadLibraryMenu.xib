@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCProfileEditorPayloadLibraryMenu">
+            <connections>
+                <outlet property="buttonLibraryApple" destination="HMw-66-4aJ" id="wk0-OD-FkT"/>
+                <outlet property="buttonLibraryCustom" destination="eEB-hC-8is" id="KUH-bf-Its"/>
+                <outlet property="buttonLibraryLocal" destination="QKa-Hd-c7f" id="O7g-H8-Ma0"/>
+                <outlet property="view" destination="Aqv-fg-Skp" id="KDw-bA-QVZ"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView focusRingType="none" id="Aqv-fg-Skp">
+            <rect key="frame" x="0.0" y="0.0" width="198" height="27"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="rds-xD-PDT">
+                    <rect key="frame" x="0.0" y="24" width="198" height="5"/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="XSb-Of-zIu">
+                    <rect key="frame" x="0.0" y="-2" width="198" height="5"/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="jB4-Oe-L8j">
+                    <rect key="frame" x="52" y="0.0" width="95" height="27"/>
+                    <subviews>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="HMw-66-4aJ">
+                            <rect key="frame" x="10" y="4" width="18" height="18"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="18" id="viZ-Qq-QgC"/>
+                            </constraints>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Approval-18" imagePosition="only" alignment="center" alternateImage="Approval Filled-18" imageScaling="proportionallyDown" inset="2" id="MSr-aY-BpQ">
+                                <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="buttonLibraryApple:" target="-2" id="fyw-zk-dBi"/>
+                            </connections>
+                        </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="QKa-Hd-c7f">
+                            <rect key="frame" x="40" y="6" width="15" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="15" id="lqf-50-uiN"/>
+                            </constraints>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Home-15" imagePosition="only" alignment="center" alternateImage="Home Filled-15" imageScaling="proportionallyUpOrDown" inset="2" id="yV4-RU-OUL">
+                                <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="buttonLibraryLocal:" target="-2" id="Etf-wE-sOr"/>
+                            </connections>
+                        </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="eEB-hC-8is">
+                            <rect key="frame" x="69" y="5" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="16" id="du3-2r-F4F"/>
+                            </constraints>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Settings-16" imagePosition="only" alignment="center" alternateImage="Settings Filled-16" imageScaling="proportionallyUpOrDown" inset="2" id="Ud1-A2-MYT">
+                                <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="buttonLibraryCustom:" target="-2" id="6ZG-Gg-9wI"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="QKa-Hd-c7f" firstAttribute="width" secondItem="QKa-Hd-c7f" secondAttribute="height" multiplier="1:1" id="47E-QV-DFX"/>
+                        <constraint firstItem="QKa-Hd-c7f" firstAttribute="leading" secondItem="HMw-66-4aJ" secondAttribute="trailing" constant="12" id="9KD-8z-slz"/>
+                        <constraint firstItem="HMw-66-4aJ" firstAttribute="leading" secondItem="jB4-Oe-L8j" secondAttribute="leading" constant="10" id="Mgz-D0-itL"/>
+                        <constraint firstItem="QKa-Hd-c7f" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" id="NXk-0z-kVc"/>
+                        <constraint firstAttribute="trailing" secondItem="eEB-hC-8is" secondAttribute="trailing" constant="10" id="Uzi-Ws-7UM"/>
+                        <constraint firstItem="eEB-hC-8is" firstAttribute="leading" secondItem="QKa-Hd-c7f" secondAttribute="trailing" constant="14" id="XHZ-MN-pMS"/>
+                        <constraint firstItem="HMw-66-4aJ" firstAttribute="width" secondItem="HMw-66-4aJ" secondAttribute="height" multiplier="1:1" id="XZE-jz-Jcg"/>
+                        <constraint firstItem="HMw-66-4aJ" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" constant="1" id="fhU-Tf-45q"/>
+                        <constraint firstItem="eEB-hC-8is" firstAttribute="width" secondItem="eEB-hC-8is" secondAttribute="height" multiplier="1:1" id="loy-Df-kbU"/>
+                        <constraint firstItem="eEB-hC-8is" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" constant="1" id="ncn-g7-eiP"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="XSb-Of-zIu" secondAttribute="bottom" id="2rC-t0-sd3"/>
+                <constraint firstAttribute="trailing" secondItem="rds-xD-PDT" secondAttribute="trailing" id="6Q1-Sl-QKX"/>
+                <constraint firstAttribute="bottom" secondItem="jB4-Oe-L8j" secondAttribute="bottom" id="GhE-bb-sBq"/>
+                <constraint firstItem="jB4-Oe-L8j" firstAttribute="top" secondItem="Aqv-fg-Skp" secondAttribute="top" id="LUK-l5-S7T"/>
+                <constraint firstItem="XSb-Of-zIu" firstAttribute="leading" secondItem="Aqv-fg-Skp" secondAttribute="leading" id="PBS-Iq-Woa"/>
+                <constraint firstItem="jB4-Oe-L8j" firstAttribute="centerX" secondItem="Aqv-fg-Skp" secondAttribute="centerX" id="aNu-Mr-NMV"/>
+                <constraint firstAttribute="trailing" secondItem="XSb-Of-zIu" secondAttribute="trailing" id="oZK-vX-YfY"/>
+                <constraint firstItem="rds-xD-PDT" firstAttribute="top" secondItem="Aqv-fg-Skp" secondAttribute="top" id="pMU-qR-2Jl"/>
+                <constraint firstItem="rds-xD-PDT" firstAttribute="leading" secondItem="Aqv-fg-Skp" secondAttribute="leading" id="wCR-Fm-SEf"/>
+            </constraints>
+            <point key="canvasLocation" x="-2246" y="-1145.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="Approval Filled-18" width="18" height="18"/>
+        <image name="Approval-18" width="18" height="18"/>
+        <image name="Home Filled-15" width="15" height="15"/>
+        <image name="Home-15" width="15" height="15"/>
+        <image name="Settings Filled-16" width="16" height="16"/>
+        <image name="Settings-16" width="16" height="16"/>
+    </resources>
+</document>

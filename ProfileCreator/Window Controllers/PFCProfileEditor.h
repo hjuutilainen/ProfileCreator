@@ -24,6 +24,7 @@
 #import "PFCProfileCreationInfoView.h"
 #import "PFCProfileCreationTab.h"
 #import "PFCTableViews.h"
+#import "PFCManifestLibrary.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileCreationWindowController
@@ -118,7 +119,6 @@
 @property (weak)    IBOutlet NSView                     *viewPayloadLibrarySuperview;
 @property (weak)    IBOutlet RFOverlayScrollView        *viewPayloadLibraryScrollView;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibrarySplitView;
-@property (weak)    IBOutlet NSView                     *viewPayloadLibraryMenu;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryMenuSuperview;
 @property (weak)    IBOutlet NSBox                      *linePayloadLibraryMenuTop;
 @property (weak)    IBOutlet NSBox                      *linePayloadLibraryMenuBottom;
@@ -132,7 +132,7 @@
 @property (readwrite)        NSInteger                  segmentedControlPayloadLibrarySelectedSegment;
 
 - (IBAction)selectTableViewPayloadLibrary:(id)sender;
-- (IBAction)selectSegmentedControlPayloadLibrary:(id)sender;
+- (void)selectPayloadLibrary:(PFCPayloadLibrary)payloadLibrary;
 
 // PayloadLibraryApple
 @property (readwrite)        NSMutableArray             *arrayPayloadLibraryApple;
