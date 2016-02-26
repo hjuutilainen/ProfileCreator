@@ -838,7 +838,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     if ( tabIndex == _tabIndexSelected ) {
         DDLogVerbose(@"Currently selected tab was closed");
         
-        if ( tabIndex == 0 || [_arrayPayloadTabs count] == 1 ) {
+        if ( [_arrayPayloadTabs count] == 1 ) {
             
             // -----------------------------------------------------------------
             //  If there is only one tab remaining in the array, select it
