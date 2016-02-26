@@ -46,8 +46,6 @@
 		534324C81C80E5EA00893351 /* Approval-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C21C80E5EA00893351 /* Approval-18.png */; };
 		534324C91C80E5EA00893351 /* Home Filled-15.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C31C80E5EA00893351 /* Home Filled-15.png */; };
 		534324CA1C80E5EA00893351 /* Home-15.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C41C80E5EA00893351 /* Home-15.png */; };
-		534324D81C80E71B00893351 /* Menu-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324D71C80E71B00893351 /* Menu-16.png */; };
-		534324DB1C80E75D00893351 /* Menu-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324D91C80E75D00893351 /* Menu-18.png */; };
 		534324DC1C80E75D00893351 /* Menu-17.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324DA1C80E75D00893351 /* Menu-17.png */; };
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
@@ -335,8 +333,6 @@
 		534324C21C80E5EA00893351 /* Approval-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Approval-18.png"; sourceTree = "<group>"; };
 		534324C31C80E5EA00893351 /* Home Filled-15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home Filled-15.png"; sourceTree = "<group>"; };
 		534324C41C80E5EA00893351 /* Home-15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home-15.png"; sourceTree = "<group>"; };
-		534324D71C80E71B00893351 /* Menu-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Menu-16.png"; sourceTree = "<group>"; };
-		534324D91C80E75D00893351 /* Menu-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Menu-18.png"; sourceTree = "<group>"; };
 		534324DA1C80E75D00893351 /* Menu-17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Menu-17.png"; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.plist"; sourceTree = "<group>"; };
 		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestParser.h; path = "Manifest Classes/PFCManifestParser.h"; sourceTree = "<group>"; };
@@ -467,9 +463,7 @@
 		53232EB81C5EA6FA004630F8 /* UI Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				534324D91C80E75D00893351 /* Menu-18.png */,
 				534324DA1C80E75D00893351 /* Menu-17.png */,
-				534324D71C80E71B00893351 /* Menu-16.png */,
 				534324BF1C80E5EA00893351 /* Settings Filled-16.png */,
 				534324C01C80E5EA00893351 /* Settings-16.png */,
 				534324C11C80E5EA00893351 /* Approval Filled-18.png */,
@@ -1066,7 +1060,6 @@
 				534324C81C80E5EA00893351 /* Approval-18.png in Resources */,
 				53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */,
 				537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */,
-				534324D81C80E71B00893351 /* Menu-16.png in Resources */,
 				53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */,
 				53751FFD1C1B864400FF3CB0 /* MenuIconContacts.png in Resources */,
 				53751FEB1C1B832D00FF3CB0 /* MenuIconExchange.png in Resources */,
@@ -1075,7 +1068,6 @@
 				53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */,
 				534324DC1C80E75D00893351 /* Menu-17.png in Resources */,
 				532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */,
-				534324DB1C80E75D00893351 /* Menu-18.png in Resources */,
 				53897E361C5958F700B1D868 /* Defaults.plist in Resources */,
 				53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */,
 				537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */,

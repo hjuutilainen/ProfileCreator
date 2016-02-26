@@ -13,8 +13,6 @@
 
 @property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
-@property (weak) IBOutlet NSView *viewButtons;
-
 @property (weak) IBOutlet NSButton *buttonLibraryApple;
 - (IBAction)buttonLibraryApple:(id)sender;
 
@@ -38,6 +36,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [_buttonLibraryApple setState:NSOnState];
 }
 
 - (IBAction)buttonLibraryApple:(id)sender {

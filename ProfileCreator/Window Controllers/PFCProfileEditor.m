@@ -49,6 +49,7 @@ NSString *const PFCTableViewIdentifierPayloadProfile = @"TableViewIdentifierPayl
 NSString *const PFCTableViewIdentifierPayloadLibrary = @"TableViewIdentifierPayloadLibrary";
 NSString *const PFCTableViewIdentifierPayloadSettings = @"TableViewIdentifierPayloadSettings";
 NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfileHeader";
+NSInteger const PFCMaximumPayloadCount = 8;
 
 @interface PFCProfileEditor ()
 
@@ -67,12 +68,20 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-// FIXME - All of these could possible move to it's own class to clean up this window controller and make the available to other parts if needed
 
-//- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
-// Works fine, but can't click the buttons
-//return [_viewPayloadLibraryMenu convertRect:[_viewPayloadLibraryMenu bounds] fromView:splitView];
-//}
+- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
+    // FIXME - This only catches half the divider, I don't know how to split up the divider rects in 3 (and also keep the 1 pixel across the top)
+    if ( splitView == _splitViewPayload ) {
+        NSRect viewBounds = [[_viewPayloadLibraryMenu view] bounds];
+        NSRect viewButtonBounds = [[_viewPayloadLibraryMenu viewButtons] bounds];
+        CGFloat dividerSpace = ((viewBounds.size.width - viewButtonBounds.size.width ) / 2 );
+        //NSRect leftRect = NSMakeRect(0, 0, dividerSpace, viewBounds.size.height);
+        NSRect rightRect = NSMakeRect((viewBounds.size.width - dividerSpace), 0, dividerSpace, viewBounds.size.height);
+        return [[_viewPayloadLibraryMenu view] convertRect:rightRect fromView:splitView];
+        //return [[_viewPayloadLibraryMenu view] convertRect:[[_viewPayloadLibraryMenu view] bounds] fromView:splitView]; // <-- Entire divider
+    }
+    return NSZeroRect;
+}
 
 - (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
     
@@ -3694,6 +3703,15 @@ NSString *const PFCTableViewIdentifierProfileHeader = @"TableViewIdentifierProfi
 - (void)addTabShouldSaveSettings:(BOOL)saveSettings {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Should save settings: %@", saveSettings ? @"YES" : @"NO");
+    
+    if ( PFCMaximumPayloadCount <= [_arrayPayloadTabs count] ) {
+        NSAlert *alert = [NSAlert alertWithError:[NSError errorWithDomain:@"com.github.ProfileCreator" code:100 userInfo:@{ NSLocalizedDescriptionKey : @"Maximum Payload Count Reached",
+                                                                                                                            NSLocalizedRecoverySuggestionErrorKey : [NSString stringWithFormat:@"Current maximum payload count is %ld during beta, this is because no implementation to hande scrolling tabs has been implemented yet.\n\nAdd a feature request if this is something you need to push it up the priority list.", (long)PFCMaximumPayloadCount] }]];
+        [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+
+        }];
+        return;
+    }
     
     // -------------------------------------------------------------------------
     //  Create a new view controller and extract the tab view
