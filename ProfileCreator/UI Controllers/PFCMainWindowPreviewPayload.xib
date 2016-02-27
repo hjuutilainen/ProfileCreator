@@ -11,6 +11,7 @@
                 <outlet property="buttonDisclosureTriangle" destination="qPq-eQ-673" id="UyE-IF-PbF"/>
                 <outlet property="imageViewPayload" destination="fvl-EB-kAb" id="Ioj-Af-MK2"/>
                 <outlet property="layoutConstraintDescriptionBottom" destination="VGH-PL-ipB" id="7pr-id-QUL"/>
+                <outlet property="scrollViewTableView" destination="dak-vv-bab" id="Si8-rx-8iF"/>
                 <outlet property="tableViewPayloadInfo" destination="1HJ-fr-anQ" id="XPX-MR-KMD"/>
                 <outlet property="textFieldPayloadDescription" destination="GnL-Kc-rXu" id="39C-Nk-8Xg"/>
                 <outlet property="textFieldPayloadErrorCount" destination="49B-vp-Nb5" id="tUO-1i-bz2"/>
@@ -224,7 +225,7 @@
                 <constraint firstItem="qPq-eQ-673" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="xQI-wb-WDa"/>
                 <constraint firstItem="GnL-Kc-rXu" firstAttribute="leading" secondItem="rXo-oY-8bo" secondAttribute="leading" id="z3l-6d-aDr"/>
             </constraints>
-            <point key="canvasLocation" x="-473" y="242.5"/>
+            <point key="canvasLocation" x="-462" y="258.5"/>
         </customView>
     </objects>
     <resources>

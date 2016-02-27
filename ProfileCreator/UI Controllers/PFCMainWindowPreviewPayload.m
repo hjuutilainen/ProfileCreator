@@ -9,9 +9,12 @@
 #import "PFCMainWindowPreviewPayload.h"
 #import "PFCTableViewCellsPayloadPreview.h"
 #import "PFCLog.h"
+#import "NSView+NSLayoutConstraintFilter.h"
 @import QuartzCore;
 
 @interface PFCMainWindowPreviewPayload ()
+
+@property (weak) IBOutlet NSScrollView *scrollViewTableView;
 
 @end
 
@@ -57,21 +60,27 @@
     [_tableViewPayloadInfo reloadData];
 } // viewDidLoad
 
+- (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
+    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
+    [constraint setConstant:tableHeight];
+} // setTableViewHeight
+
 - (IBAction)buttonDisclosureTriangle:(id)sender {
     if ( _isCollapsed ) {
-        [[self view] removeConstraint:_layoutConstraintDescriptionBottom];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
             [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-            [context setAllowsImplicitAnimation:YES];
+            self.layoutConstraintDescriptionBottom.animator.constant += ( [[_scrollViewTableView constraintForAttribute:NSLayoutAttributeHeight] constant] + 7 );
             [[[self view] superview] layoutSubtreeIfNeeded];
         } completionHandler:^{
+            [[self view] removeConstraint:_layoutConstraintDescriptionBottom];
             [self setIsCollapsed:NO];
         }];
     } else {
+        [_layoutConstraintDescriptionBottom setConstant:( self.view.bounds.size.height - 47.0f )];
         [[self view] addConstraint:_layoutConstraintDescriptionBottom];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
             [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-            [context setAllowsImplicitAnimation:YES];
+            [[_layoutConstraintDescriptionBottom animator] setConstant:7];
             [[[self view] superview] layoutSubtreeIfNeeded];
         } completionHandler:^{
             [self setIsCollapsed:YES];
