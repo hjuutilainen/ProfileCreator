@@ -6,7 +6,7 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="PFCPayloadPreview">
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCMainWindowPreviewPayload">
             <connections>
                 <outlet property="buttonDisclosureTriangle" destination="qPq-eQ-673" id="UyE-IF-PbF"/>
                 <outlet property="imageViewPayload" destination="fvl-EB-kAb" id="Ioj-Af-MK2"/>
@@ -170,7 +170,7 @@
                         <constraint firstAttribute="width" secondItem="fvl-EB-kAb" secondAttribute="height" multiplier="1:1" id="m0I-is-vAI"/>
                         <constraint firstAttribute="width" constant="34" id="ylP-d2-bLy"/>
                     </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="706-cloud" id="bca-IF-ZDA"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="MenuIconAccessibility" id="bca-IF-ZDA"/>
                     <connections>
                         <binding destination="-2" name="value" keyPath="self.payloadIcon" id="T3X-9u-yss"/>
                     </connections>
@@ -224,10 +224,10 @@
                 <constraint firstItem="qPq-eQ-673" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="xQI-wb-WDa"/>
                 <constraint firstItem="GnL-Kc-rXu" firstAttribute="leading" secondItem="rXo-oY-8bo" secondAttribute="leading" id="z3l-6d-aDr"/>
             </constraints>
-            <point key="canvasLocation" x="-327" y="250.5"/>
+            <point key="canvasLocation" x="-473" y="242.5"/>
         </customView>
     </objects>
     <resources>
-        <image name="706-cloud" width="28" height="18"/>
+        <image name="MenuIconAccessibility" width="80" height="80"/>
     </resources>
 </document>

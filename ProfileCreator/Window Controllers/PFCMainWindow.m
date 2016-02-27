@@ -28,10 +28,10 @@
 #import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCTableViews.h"
 #import "PFCProfileGroupTitle.h"
-#import "PFCPayloadPreview.h"
 #import "PFCManifestLibrary.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileExport.h"
+#import "PFCMainWindowPreview.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -42,6 +42,12 @@ NSString *const PFCTableViewIdentifierProfileGroups = @"TableViewIdentifierProfi
 NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifierProfileSmartGroups";
 NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 int const PFCTableViewGroupsRowHeight = 24;
+
+@interface PFCMainWindow ()
+
+@property PFCMainWindowPreview *preview;
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Implementation
@@ -67,7 +73,6 @@ int const PFCTableViewGroupsRowHeight = 24;
         _arrayProfileGroupAll = [[NSMutableArray alloc] init];
         _arrayProfileGroups = [[NSMutableArray alloc] init];
         _arrayProfileSmartGroups = [[NSMutableArray alloc] init];
-        _arrayStackViewPreview = [[NSMutableArray alloc] init];
         
         // ---------------------------------------------------------------------
         //  Initialize Dictionaries
@@ -89,11 +94,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         [[(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] textFieldTitle] setStringValue:@"Smart Groups"];
         _viewAddSmartGroupsTitle = (PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view];
         
-        // ---------------------------------------------------------------------
-        //  Initialize BOOLs (for clarity)
-        // ---------------------------------------------------------------------
-        _profilePreviewHidden = YES;
-        _profilePreviewSelectionUnavailableHidden = YES;
+        _preview = [[PFCMainWindowPreview alloc] initWithMainWindow:self];
     }
     return self;
 } // init
@@ -125,12 +126,12 @@ int const PFCTableViewGroupsRowHeight = 24;
     [PFCGeneralUtility insertSubview:_viewAddGroupsTitle inSuperview:_viewAddGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewAddSmartGroupsTitle inSuperview:_viewAddSmartGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileLibraryTableViewSuperview inSuperview:_viewProfileLibrarySplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:_viewPreviewSuperview inSuperview:_viewPreviewSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[_preview viewPreviewSuperview] inSuperview:_viewPreviewSplitView hidden:YES];
     
     // -------------------------------------------------------------------------
     //  Add error views to content views
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:_viewPreviewSelectionUnavailable inSuperview:_viewPreviewSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[_preview viewPreviewSelectionUnavailable] inSuperview:_viewPreviewSplitView hidden:NO];
     
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -168,11 +169,6 @@ int const PFCTableViewGroupsRowHeight = 24;
     [self setupProfileLibrary];
     
     // -------------------------------------------------------------------------
-    //  Setup TableView "Profile Preview"
-    // -------------------------------------------------------------------------
-    [self setupProfilePreview];
-    
-    // -------------------------------------------------------------------------
     //  Select "All Profiles"
     // -------------------------------------------------------------------------
     [self selectTableViewProfileGroupAllRow:0];
@@ -183,18 +179,6 @@ int const PFCTableViewGroupsRowHeight = 24;
     // -------------------------------------------------------------------------
     [self setFirstResponder];
 } // initialSetup
-
-- (void)setupProfilePreview {
-    
-    [_scrollViewProfilePreview setDocumentView:_stackViewPreview];
-    
-    NSDictionary *viewsDict = NSDictionaryOfVariableBindings(_stackViewPreview);
-    _stackViewPreviewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_stackViewPreview]-0-|" options:0 metrics:nil views:viewsDict];
-    [_scrollViewProfilePreview addConstraints:_stackViewPreviewConstraints];
-    
-    [self showProfilePreviewNoSelection];
-    
-}
 
 - (void)setFirstResponder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -629,7 +613,7 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)controlTextDidEndEditing:(NSNotification *)notification {
     
     // FIXME -  Should possibly get this somewhere else, but felt nice to get the info form the actual object
-    //          The only thin is to get the actual table view, now only groups is available
+    //          The only thing is to get the actual table view, now only groups is available
     NSInteger row = [_tableViewProfileGroups rowForView:[[notification object] superview]];
     
     if ( row <= [_arrayProfileGroups count] ) {
@@ -638,11 +622,20 @@ int const PFCTableViewGroupsRowHeight = 24;
         
         NSDictionary *userInfo = [notification userInfo];
         NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
+        BOOL reloadTableView = NO;
+        if ( [inputText length] == 0 ) {
+            inputText = PFCDefaultProfileGroupName;
+            reloadTableView = YES;
+        }
         DDLogDebug(@"New name for group: %@", inputText);
         
         groupConfig[PFCProfileGroupKeyName] = inputText ?: @"";
         group[@"Config"] = [groupConfig copy];
         [_arrayProfileGroups replaceObjectAtIndex:row withObject:[group copy]];
+        
+        if ( reloadTableView ) {
+            [_tableViewProfileGroups reloadData];
+        }
         
         NSError *error = nil;
         if ( ! [self saveGroup:group error:&error] ) {
@@ -813,7 +806,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     DDLogDebug(@"Selected profile UUID: %@", _selectedProfileUUID);
     if ( [profileUUIDs containsObject:_selectedProfileUUID ?: @""] ) {
         [_tableViewProfileLibrary deselectAll:self];
-        [self showProfilePreviewNoSelection];
+        [_preview showProfilePreviewNoSelection];
     }
     
     [[PFCProfileUtility sharedUtility] updateProfileCache];
@@ -948,188 +941,6 @@ int const PFCTableViewGroupsRowHeight = 24;
         DDLogError(@"%@", [error localizedDescription]);
     }
 } // deleteGroupWithUUID:inGroup
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Preview
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict {
-    
-    // -------------------------------------------------------------------------
-    //  Clean up previous preview content
-    // -------------------------------------------------------------------------
-    [_arrayStackViewPreview removeAllObjects];
-    for ( NSView *view in [_stackViewPreview views] ) {
-        [view removeFromSuperview];
-    }
-    
-    NSDictionary *profileSettings = profileDict[@"Config"];
-    NSDictionary *profileDisplaySettings = profileSettings[PFCProfileTemplateKeyDisplaySettings];
-    
-    // -------------------------------------------------------------------------
-    //  Name
-    // -------------------------------------------------------------------------
-    NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
-    [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
-    
-    // -------------------------------------------------------------------------
-    //  Platform
-    // -------------------------------------------------------------------------
-    NSDictionary *profileDisplaySettingsPlatform = profileDisplaySettings[PFCProfileDisplaySettingsKeyPlatform];
-    NSMutableString *platform = [[NSMutableString alloc] init];
-    if ( [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
-        [platform appendString:@"OS X"];
-        if (
-            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] isEqualToString:@"10.7"] ||
-            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] isEqualToString:@"Latest"] ) {
-            [platform appendString:[NSString stringWithFormat:@" (%@-%@)", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"10.7", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"Latest"]];
-        }
-    }
-    
-    if ( [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
-        [platform appendString:[NSString stringWithFormat:@"%@iOS", ([platform length] == 0) ? @"" : @", "]];
-        if (
-            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] isEqualToString:@"7.0"] ||
-            ! [profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] isEqualToString:@"Latest"] ) {
-            [platform appendString:[NSString stringWithFormat:@" (%@-%@)", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"7.0", profileDisplaySettingsPlatform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"Latest"]];
-        }
-    }
-    
-    [_textFieldPlatform setStringValue:platform];
-    
-    // -------------------------------------------------------------------------
-    //  Supervised
-    // -------------------------------------------------------------------------
-    [_textFieldSupervised setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]) ? @"Yes" : @"No"]];
-    
-    // -------------------------------------------------------------------------
-    //  Sign
-    // -------------------------------------------------------------------------
-    [_textFieldSign setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileTemplateKeySign] boolValue]) ? @"Yes" : @"No"]];
-    
-    // -------------------------------------------------------------------------
-    //  Encrypt
-    // -------------------------------------------------------------------------
-    [_textFieldEncrypt setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileTemplateKeyEncrypt] boolValue]) ? @"Yes" : @"No"]];
-    
-    NSMutableArray *selectedDomains = [[NSMutableArray alloc] init];
-    for ( NSString *domain in [profileSettings[@"Settings"] allKeys] ?: @[] ) {
-        DDLogDebug(@"Payload domain: %@", domain);
-        
-        NSDictionary *domainSettings = profileSettings[@"Settings"][domain];
-        if ( ! [domain isEqualToString:@"com.apple.general"] && ! [domainSettings[PFCSettingsKeySelected] boolValue] ) {
-            continue;
-        }
-        
-        if ( [domain isEqualToString:@"com.apple.general"] || ( [domainSettings[PFCSettingsKeySelected] boolValue] && domainSettings[@"PayloadLibrary"] != nil ) ) {
-            [selectedDomains addObject:domain];
-            NSInteger payloadLibrary = [domainSettings[@"PayloadLibrary"] integerValue] ?: 0;
-            DDLogDebug(@"Payload library: %ld", (long)payloadLibrary);
-            
-            NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:payloadLibrary withDomain:domain];
-            if ( [manifest count] != 0 ) {
-                PFCPayloadPreview *preview = [self previewForMainfest:manifest domain:domain settings:domainSettings];
-                [_arrayStackViewPreview addObject:preview];
-                [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
-            } else {
-                DDLogError(@"No manifest returned from payload library: %ld with domain: %@", (long)payloadLibrary, domain);
-            }
-        } else {
-            DDLogError(@"Payload is selected but doesn't contain a \"PayloadLibrary\"");
-        }
-    }
-    
-    if ( [selectedDomains count] <= 1 ) {
-        [_textFieldExportError setStringValue:@"No Payload Selected"];
-        [_buttonProfileExport setEnabled:NO];
-    } else {
-        [_textFieldExportError setStringValue:@""];
-        [_buttonProfileExport setEnabled:YES];
-    }
-}
-
-- (PFCPayloadPreview *)previewForMainfest:(NSDictionary *)manifest domain:(NSString *)domain settings:(NSDictionary *)settings {
-    
-    PFCPayloadPreview *preview = [[PFCPayloadPreview alloc] init];
-    
-    [preview setPayloadName:manifest[PFCManifestKeyTitle] ?: domain];
-    [preview setPayloadDescription:manifest[PFCManifestKeyDescription] ?: @""];
-    
-    // -------------------------------------------------------------------------
-    //  Error Count
-    // -------------------------------------------------------------------------
-    NSArray *settingsError = settings[@"SettingsError"] ?: @[];
-    __block NSInteger errorCount = 0;
-    if ( [settingsError count] != 0 ) {
-        
-        
-        [settingsError enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
-            errorCount += [[dict allKeys] count] ?: 0;
-        }];
-    }
-    DDLogDebug(@"Setting Payload Error Count: %@", [@(errorCount) stringValue]);
-    [preview setPayloadErrorCount:[@(errorCount) stringValue]];
-
-    
-    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
-    if ( icon ) {
-        [preview setPayloadIcon:icon];
-    }
-    
-    return preview;
-} // previewForMainfest:domain
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark UI Updates
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (void)showProfilePreview {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [_viewPreviewSuperview setHidden:NO];
-    [self setProfilePreviewHidden:NO];
-    
-    [_viewPreviewSelectionUnavailable setHidden:YES];
-    [_textFieldPreviewSelectionUnavailable setStringValue:@""];
-    [self setProfilePreviewSelectionUnavailableHidden:YES];
-} // showProfilePreview
-
-- (void)showProfilePreviewError {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [_textFieldPreviewSelectionUnavailable setStringValue:@"Error Reading Selected Profile"];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-    
-    [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
-} // showProfilePreviewError
-
-- (void)showProfilePreviewNoSelection {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [_textFieldPreviewSelectionUnavailable setStringValue:@"No Profile Selected"];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-    
-    [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
-} // showProfilePreviewNoSelection
-
-- (void)showProfilePreviewMultipleSelections:(NSNumber *)count {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    [_textFieldPreviewSelectionUnavailable setStringValue:[NSString stringWithFormat:@"%@ %@ Selected", [count stringValue], ([count intValue] == 1) ? @"Profile" : @"Profiles"]];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-    
-    [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
-} // showProfilePreviewNoSelection
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -1344,7 +1155,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     if ( [_selectedProfileUUID isEqualToString:uuid] ) {
         NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
         if ( [profileDict count] != 0 ) {
-            [self updatePreviewWithProfileDict:profileDict];
+            [_preview updatePreviewWithProfileDict:profileDict];
         }
     }
 } // updateProfileWithUUID
@@ -1425,8 +1236,8 @@ int const PFCTableViewGroupsRowHeight = 24;
                 rowIndexes = _tableViewProfileLibrarySelectedRows;
             }
         } else {
-            if ( [_selectedProfileUUID length] == 0 && _profilePreviewSelectionUnavailableHidden ) {
-                [self showProfilePreviewNoSelection];
+            if ( [_selectedProfileUUID length] == 0 && [_preview profilePreviewSelectionUnavailableHidden] ) {
+                [_preview showProfilePreviewNoSelection];
             }
         }
     } else {
@@ -1504,7 +1315,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             }
         } else {
             if ( [_selectedProfileUUID length] == 0 ) {
-                [self showProfilePreviewNoSelection];
+                [_preview showProfilePreviewNoSelection];
             }
         }
     } else {
@@ -1553,7 +1364,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         // -----------------------------------------------------------------
         //  Hide profile preview and show no selection
         // -----------------------------------------------------------------
-        [self showProfilePreviewNoSelection];
+        [_preview showProfilePreviewNoSelection];
         
         // -----------------------------------------------------------------
         //  Unset the SelectedProfileUUID
@@ -1572,7 +1383,7 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Hide profile preview and show count of selected profiles
         // ---------------------------------------------------------------------
-        [self showProfilePreviewMultipleSelections:@([selectedRowIndexes count])];
+        [_preview showProfilePreviewMultipleSelections:@([selectedRowIndexes count])];
         
         // ---------------------------------------------------------------------
         //  Unset the SelectedProfileUUID
@@ -1604,7 +1415,7 @@ int const PFCTableViewGroupsRowHeight = 24;
             // -----------------------------------------------------------------
             //  Hide profile preview and show no selection
             // -----------------------------------------------------------------
-            [self showProfilePreviewNoSelection];
+            [_preview showProfilePreviewNoSelection];
             
             // -----------------------------------------------------------------
             //  Unset the SelectedProfileUUID
@@ -1631,8 +1442,8 @@ int const PFCTableViewGroupsRowHeight = 24;
         //  Verify the profile has any content
         // ---------------------------------------------------------------------
         if ( [profileDict count] == 0 ) {
-            if ( _profilePreviewSelectionUnavailableHidden ) {
-                [self showProfilePreviewError];
+            if ( [_preview profilePreviewSelectionUnavailableHidden] ) {
+                [_preview showProfilePreviewError];
             }
             return;
         }
@@ -1644,8 +1455,8 @@ int const PFCTableViewGroupsRowHeight = 24;
         DDLogDebug(@"Selected profile UUID: %@", profileUUID);
         
         if ( [profileUUID length] == 0 ) {
-            if ( _profilePreviewSelectionUnavailableHidden ) {
-                [self showProfilePreviewError];
+            if ( [_preview profilePreviewSelectionUnavailableHidden] ) {
+                [_preview showProfilePreviewError];
             }
             return;
         }
@@ -1654,13 +1465,13 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Populate the preview view with the selected profile
         // ---------------------------------------------------------------------
-        [self updatePreviewWithProfileDict:profileDict];
+        [_preview updatePreviewWithProfileDict:profileDict];
         
         // ---------------------------------------------------------------------
         //  Show selected profile preview (of not already visible)
         // ---------------------------------------------------------------------
-        if ( _profilePreviewHidden ) {
-            [self showProfilePreview];
+        if ( [_preview profilePreviewHidden] ) {
+            [_preview showProfilePreview];
         }
     } else {
         
@@ -1672,7 +1483,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     }
 }
 
-- (IBAction)buttonProfileExport:(id)sender {
+- (void)exportProfileWithUUID:(NSString *)uuid {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     if ( [_tableViewProfileLibrarySelectedRows count] == 0 ) {
@@ -1683,7 +1494,9 @@ int const PFCTableViewGroupsRowHeight = 24;
         }
     }
     
-    NSString *uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
+    if ( [uuid length] == 0 ) {
+        uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
+    }
     
     NSDictionary *settingsProfile = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
     
@@ -1727,11 +1540,6 @@ int const PFCTableViewGroupsRowHeight = 24;
         }];
     }
 }
-
-- (IBAction)buttonProfileEdit:(id)sender {
-    [self openProfileEditorForProfileWithUUID:_selectedProfileUUID];
-} // buttonProfileEdit
-
 
 - (void)menuItemNewProfile {
     [self createNewProfile];

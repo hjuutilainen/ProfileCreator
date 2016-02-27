@@ -104,38 +104,14 @@
 //  SplitView Preview
 // -----------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView                     *viewPreviewSplitView;
-@property (weak)    IBOutlet NSView                     *viewPreviewSuperview;
-@property (weak)    IBOutlet NSView                     *viewPreviewSelectionUnavailable;
-@property (weak)    IBOutlet NSPopUpButton              *popUpButtonProfileLibraryFooter;
-@property (weak)    IBOutlet NSSegmentedControl         *segmentedControlProfileLibraryFooterAddRemove;
-@property (weak)    IBOutlet NSButton                   *buttonProfileEdit;
-@property (weak)    IBOutlet NSButton                   *buttonProfileExport;
-@property (weak)    IBOutlet NSTextField                *textFieldPreviewProfileName;
-@property (weak)    IBOutlet NSTextField                *textFieldPreviewSelectionUnavailable;
-@property (weak)    IBOutlet NSTextField                *textFieldExportError;
-@property                    BOOL                       profilePreviewHidden;
-@property                    BOOL                       profilePreviewSelectionUnavailableHidden;
-
-- (IBAction) buttonProfileEdit:(id)sender;
-- (IBAction) buttonProfileExport:(id)sender;
-- (IBAction) segmentedControlProfileLibraryFooterAddRemove:(id)sender;
-
-@property (weak) IBOutlet NSScrollView *scrollViewProfilePreview;
-
-@property (weak) IBOutlet NSTextField *textFieldPlatform;
-@property (weak) IBOutlet NSTextField *textFieldSupervised;
-@property (weak) IBOutlet NSTextField *textFieldSign;
-@property (weak) IBOutlet NSTextField *textFieldEncrypt;
-@property (weak) IBOutlet NSStackView *stackViewPreview;
-@property (strong) NSArray *stackViewPreviewConstraints;
-@property NSMutableArray *arrayStackViewPreview;
-
 
 - (void)menuItemNewProfile;
 
 // -----------------------------------------------------------------------------
 //  Instance Methods
 // -----------------------------------------------------------------------------
+- (void)exportProfileWithUUID:(NSString *)uuid;
+- (void)openProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)updateProfileWithUUID:(NSString *)uuid;
 

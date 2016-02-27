@@ -6,19 +6,19 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCPayloadPreview.h"
+#import "PFCMainWindowPreviewPayload.h"
 #import "PFCTableViewCellsPayloadPreview.h"
 #import "PFCLog.h"
 @import QuartzCore;
 
-@interface PFCPayloadPreview ()
+@interface PFCMainWindowPreviewPayload ()
 
 @end
 
-@implementation PFCPayloadPreview
+@implementation PFCMainWindowPreviewPayload
 
 - (id)init {
-    self = [super initWithNibName:@"PFCPayloadPreview" bundle:nil];
+    self = [super initWithNibName:@"PFCMainWindowPreviewPayload" bundle:nil];
     if (self != nil) {
         [[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addObserver:self forKeyPath:@"payloadErrorCount" options:0 context:nil];
