@@ -11,6 +11,8 @@
                 <outlet property="buttonLibraryApple" destination="HMw-66-4aJ" id="wk0-OD-FkT"/>
                 <outlet property="buttonLibraryCustom" destination="eEB-hC-8is" id="KUH-bf-Its"/>
                 <outlet property="buttonLibraryLocal" destination="QKa-Hd-c7f" id="O7g-H8-Ma0"/>
+                <outlet property="lineBottom" destination="XSb-Of-zIu" id="iDn-sl-eBa"/>
+                <outlet property="lineTop" destination="rds-xD-PDT" id="dU8-Ye-7uW"/>
                 <outlet property="view" destination="Aqv-fg-Skp" id="KDw-bA-QVZ"/>
                 <outlet property="viewButtons" destination="jB4-Oe-L8j" id="P92-AK-trC"/>
             </connections>

@@ -119,12 +119,9 @@
 @property (weak)    IBOutlet RFOverlayScrollView        *viewPayloadLibraryScrollView;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibrarySplitView;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryMenuSuperview;
-@property (weak)    IBOutlet NSBox                      *linePayloadLibraryMenuTop;
-@property (weak)    IBOutlet NSBox                      *linePayloadLibraryMenuBottom;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryNoMatches;
 @property (weak)    IBOutlet NSView                     *viewPayloadLibraryNoManifests;
 @property (weak)    IBOutlet PFCTableView               *tableViewPayloadLibrary;
-@property (weak)    IBOutlet NSSegmentedControl         *segmentedControlPayloadLibrary;
 @property (readwrite)        NSMutableArray             *arrayPayloadLibrary;
 @property (readwrite)        NSInteger                  tableViewPayloadLibrarySelectedRow;
 @property (readwrite)        NSInteger                  tableViewPayloadLibrarySelectedRowSegment;

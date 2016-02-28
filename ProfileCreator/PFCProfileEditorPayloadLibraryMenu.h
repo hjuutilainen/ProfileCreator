@@ -12,6 +12,8 @@
 @interface PFCProfileEditorPayloadLibraryMenu : NSViewController
 
 @property (weak) IBOutlet NSView *viewButtons;
+@property (weak) IBOutlet NSBox *lineTop;
+@property (weak) IBOutlet NSBox *lineBottom;
 
 - (id)initWithProfileEditor:(PFCProfileEditor *)profileEditor;
 

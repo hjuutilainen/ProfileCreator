@@ -2394,7 +2394,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             //  If not the currently selected segment, read the manifest from the manifest's segment's array
             // ---------------------------------------------------------------------------------------------------------------
             NSMutableArray *selectedSegmentArray;
-            if ( _tableViewPayloadLibrarySelectedRowSegment == [_segmentedControlPayloadLibrary selectedSegment] ) {
+            if ( _tableViewPayloadLibrarySelectedRowSegment == _segmentedControlPayloadLibrarySelectedSegment ) {
                 selectedSegmentArray = _arrayPayloadLibrary;
             } else {
                 selectedSegmentArray = [self arrayForPayloadLibrary:_tableViewPayloadLibrarySelectedRowSegment];
@@ -2455,16 +2455,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
 - (void)showPayloadFooter {
     [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:NO];
-    [_linePayloadLibraryMenuTop setHidden:NO];
-    [_linePayloadLibraryMenuBottom setHidden:NO];
+    [[_viewPayloadLibraryMenu lineTop] setHidden:NO];
+    [[_viewPayloadLibraryMenu lineBottom] setHidden:NO];
     [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
 } // showPayloadFooter
 
 - (void)hidePayloadFooter {
     [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:YES];
-    [_linePayloadLibraryMenuTop setHidden:YES];
-    [_linePayloadLibraryMenuBottom setHidden:YES];
+    [[_viewPayloadLibraryMenu lineTop] setHidden:YES];
+    [[_viewPayloadLibraryMenu lineBottom] setHidden:YES];
     [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadFooterSuperview hidden:NO];
 } // hidePayloadFooter
 
@@ -3075,6 +3075,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
     NSInteger selectedRow = [_tableViewPayloadLibrary selectedRow];
+    DDLogDebug(@"Selected Row: %ld", (long)selectedRow);
+    DDLogDebug(@"Saved Selected Row: %ld", (long)_tableViewPayloadLibrarySelectedRow);
     if ( selectedRow == -1 || selectedRow != _tableViewPayloadLibrarySelectedRow ) {
         [self selectTableViewPayloadLibraryRow:selectedRow];
     }
@@ -3095,7 +3097,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_tableViewProfileHeader deselectAll:self];
     [self setTableViewPayloadProfileSelectedRow:-1];
     [self setTableViewPayloadLibrarySelectedRow:row];
-    [self setTableViewPayloadLibrarySelectedRowSegment:[_segmentedControlPayloadLibrary selectedSegment]];
+    [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
     
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
@@ -3261,6 +3263,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     
     NSInteger selectedSegment = payloadLibrary;
     DDLogDebug(@"Selected segment: %ld", (long)selectedSegment);
+    DDLogDebug(@"Saved Selected Segment: %ld", (long)_segmentedControlPayloadLibrarySelectedSegment);
     
     // -------------------------------------------------------------------------
     //  If the selected segment already is selected, stop here
@@ -3276,8 +3279,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
         [self showButtonAdd];
     } else if ( selectedSegment != kPFCPayloadLibraryCustom && ! _buttonAddHidden ) {
         [self hideButtonAdd];
-    } else {
-        DDLogError(@"Should not end up here!");
     }
     
     // --------------------------------------------------------------------------------------------
