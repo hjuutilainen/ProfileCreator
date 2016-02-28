@@ -21,5 +21,6 @@ typedef NS_ENUM(NSInteger, PFCFolders) {
 + (NSString *)newProfileGroupPath;
 + (NSURL *)profileCreatorFolder:(NSInteger)folder;
 + (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden;
++ (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2;
 
 @end

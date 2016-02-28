@@ -80,4 +80,25 @@
     [subview setHidden:hidden];
 } // insertSubview:inSuperview:hidden
 
++ (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2 {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Is version: %@ lower than version: %@", version1, version2);
+    
+    if ( [version1 isEqualToString:@"Latest"] ) {
+        version1 = @"999";
+    }
+    
+    if ( [version2 isEqualToString:@"Latest"] ) {
+        version2 = @"999";
+    }
+    DDLogDebug(@"version1=%@", version1);
+    DDLogDebug(@"version2=%@", version2);
+    DDLogDebug(@"ascending=%@", ([version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending) ? @"YES" : @"NO");
+    if ( [version1 isEqualToString:version2] ) {
+        return YES;
+    } else {
+        return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
+    }
+} // version:isLaterThanVersion
+
 @end

@@ -139,11 +139,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (NSDictionary *)displayKeys {
     return @{ PFCProfileDisplaySettingsKeyPlatformOSX           : @(_includePlatformOSX),
-              PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
-              PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem] ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] ?: @"",
               PFCProfileDisplaySettingsKeyPlatformiOS           : @(_includePlatformiOS),
-              PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
-              PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
               PFCManifestKeyDisabled                            : @(_showKeysDisabled),
               PFCManifestKeyHidden                              : @(_showKeysHidden),
               PFCManifestKeySupervisedOnly                      : @(_showKeysSupervised)};
@@ -2178,32 +2178,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     NSMenu *menu = [menuItem menu];
     if ( menu == [_popUpButtonPlatformOSXMinVersion menu] ) {
-        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
     } else if ( menu == [_popUpButtonPlatformOSXMaxVersion menu] ) {
-        return [self version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+        return [PFCGeneralUtility version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLowerThanVersion:[menuItem title]];
     } else if ( menu == [_popUpButtonPlatformiOSMinVersion menu] ) {
-        return [self version:[menuItem title] isLaterThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
     } else if ( menu == [_popUpButtonPlatformiOSMaxVersion menu] ) {
-        return [self version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLaterThanVersion:[menuItem title]];
+        return [PFCGeneralUtility version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLowerThanVersion:[menuItem title]];
     }
     return YES;
 } // validateMenuItem
-
-- (BOOL)version:(NSString *)version1 isLaterThanVersion:(NSString *)version2 {
-    if ( [version1 isEqualToString:@"Latest"] ) {
-        version1 = @"999";
-    }
-    
-    if ( [version2 isEqualToString:@"Latest"] ) {
-        version2 = @"999";
-    }
-    
-    if ( [version1 isEqualToString:version2] ) {
-        return YES;
-    } else {
-        return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
-    }
-} // version:isLaterThanVersion
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
