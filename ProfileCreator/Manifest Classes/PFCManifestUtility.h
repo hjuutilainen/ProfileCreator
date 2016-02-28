@@ -34,6 +34,6 @@
 - (BOOL)hideKey:(NSString *)key;
 - (NSString *)typeStringFromValue:(id)value;
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString;
-- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden;
+- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
 - (NSString *)toolTipForManifestContentDict:(NSDictionary *)manifestContentDict;
 @end

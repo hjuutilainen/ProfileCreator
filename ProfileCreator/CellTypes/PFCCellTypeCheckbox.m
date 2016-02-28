@@ -7,6 +7,7 @@
 //
 
 #import "PFCCellTypeCheckbox.h"
+#import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
@@ -25,23 +26,25 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCCheckboxCellView *)populateCellView:(PFCCheckboxCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCCheckboxCellView *)populateCellView:(PFCCheckboxCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
     
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    
     // ---------------------------------------------------------------------
     //  Title (of the Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     
     // ---------------------------------------------------------------------
     //  Description
@@ -108,23 +111,25 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCCheckboxNoDescriptionCellView *)populateCellView:(PFCCheckboxNoDescriptionCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCCheckboxNoDescriptionCellView *)populateCellView:(PFCCheckboxNoDescriptionCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
     
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    
     // ---------------------------------------------------------------------
     //  Title (of the Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     
     // ---------------------------------------------------------------------
     //  FontWeight of the Title

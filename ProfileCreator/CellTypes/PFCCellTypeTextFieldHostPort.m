@@ -7,6 +7,7 @@
 //
 
 #import "PFCCellTypeTextFieldHostPort.h"
+#import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "NSColor+PFCColors.h"
@@ -27,25 +28,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCTextFieldHostPortCellView *)populateCellView:(PFCTextFieldHostPortCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCTextFieldHostPortCellView *)populateCellView:(PFCTextFieldHostPortCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL requiredHost;
-    if ( manifest[PFCManifestKeyRequiredHost] != nil ) {
-        requiredHost = [manifest[PFCManifestKeyRequiredHost] boolValue];
-    } else {
-        requiredHost = [manifest[PFCManifestKeyRequired] boolValue];
-    }
-    
-    BOOL requiredPort;
-    if ( manifest[PFCManifestKeyRequiredPort] != nil ) {
-        requiredPort = [manifest[PFCManifestKeyRequiredPort] boolValue];
-    } else {
-        requiredPort = [manifest[PFCManifestKeyRequired] boolValue];
-    }
+    BOOL requiredHost = [[PFCCellTypes sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredPort = [[PFCCellTypes sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ( ! requiredHost || ! requiredPort ) && settings[PFCSettingsKeyEnabled] != nil ) {
@@ -188,25 +178,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCTextFieldHostPortCheckboxCellView *)populateCellView:(PFCTextFieldHostPortCheckboxCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCTextFieldHostPortCheckboxCellView *)populateCellView:(PFCTextFieldHostPortCheckboxCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL requiredHost;
-    if ( manifest[PFCManifestKeyRequiredHost] != nil ) {
-        requiredHost = [manifest[PFCManifestKeyRequiredHost] boolValue];
-    } else {
-        requiredHost = [manifest[PFCManifestKeyRequired] boolValue];
-    }
-    
-    BOOL requiredPort;
-    if ( manifest[PFCManifestKeyRequiredPort] != nil ) {
-        requiredPort = [manifest[PFCManifestKeyRequiredPort] boolValue];
-    } else {
-        requiredPort = [manifest[PFCManifestKeyRequired] boolValue];
-    }
+    BOOL requiredHost = [[PFCCellTypes sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredPort = [[PFCCellTypes sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ( ! requiredHost || ! requiredPort ) && settings[PFCSettingsKeyEnabled] != nil ) {

@@ -6,6 +6,7 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
+#import "PFCCellTypes.h"
 #import "PFCCellTypeTextFieldNumber.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
@@ -28,13 +29,13 @@
     [super drawRect:dirtyRect];
 }
 
-- (PFCTextFieldNumberCellView *)populateCellView:(PFCTextFieldNumberCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCTextFieldNumberCellView *)populateCellView:(PFCTextFieldNumberCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
@@ -141,13 +142,13 @@
     [super drawRect:dirtyRect];
 }
 
-- (PFCTextFieldNumberLeftCellView *)populateCellView:(PFCTextFieldNumberLeftCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCTextFieldNumberLeftCellView *)populateCellView:(PFCTextFieldNumberLeftCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {

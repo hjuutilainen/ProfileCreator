@@ -100,6 +100,8 @@
 		538BC07B1C6D06990099F779 /* PFCMainWindowPreviewPayload.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538BC0791C6D06990099F779 /* PFCMainWindowPreviewPayload.xib */; };
 		538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 538C31801C5E94E100D0125C /* PFCManifestLibrary.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
+		539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */; };
+		539616661C823FDB00FE6470 /* com.apple.applicationaccess.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */; };
 		53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */; };
 		53A47E751C693CE2000F4035 /* PFCTableViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E741C693CE2000F4035 /* PFCTableViews.m */; };
 		53A47E871C693FEF000F4035 /* PFCAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E861C693FEF000F4035 /* PFCAlert.m */; };
@@ -263,6 +265,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				539616661C823FDB00FE6470 /* com.apple.applicationaccess.plist in Copy Manifests */,
 				53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */,
 				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,
 				5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */,
@@ -408,6 +411,7 @@
 		538C31801C5E94E100D0125C /* PFCManifestLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLibrary.m; path = "Manifest Classes/PFCManifestLibrary.m"; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
 		53908EAC1C540FA4009468F0 /* PFCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCError.m; path = "General Classes/PFCError.m"; sourceTree = SOURCE_ROOT; };
+		539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.applicationaccess.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.applicationaccess.plist"; sourceTree = "<group>"; };
 		53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+NSLayoutConstraintFilter.h"; sourceTree = "<group>"; };
 		53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+NSLayoutConstraintFilter.m"; sourceTree = "<group>"; };
 		53A47E731C693CE2000F4035 /* PFCTableViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViews.h; path = "UI Subclasses/PFCTableViews.h"; sourceTree = "<group>"; };
@@ -721,6 +725,7 @@
 			children = (
 				532B6C501C17289700297025 /* com.apple.general.plist */,
 				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
+				539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
 				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
@@ -1098,6 +1103,7 @@
 				537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */,
 				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
 				53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */,
+				539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */,
 				53FCF0171C1F5DB500E440CB /* com.apple.proxies.plist in Resources */,
 				53751FFB1C1B84C400FF3CB0 /* MenuIconPasscode.png in Resources */,
 				532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */,

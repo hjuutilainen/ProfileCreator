@@ -16,7 +16,8 @@
 @interface PFCMainWindowPreview ()
 
 @property (weak) IBOutlet NSScrollView *scrollViewProfilePreview;
-@property (weak) IBOutlet NSTextField *textFieldPreviewProfileName;
+@property (weak) IBOutlet NSTextField *textFieldProfileName;
+@property (weak) IBOutlet NSTextField *textFieldPayloadCount;
 @property (weak) IBOutlet NSTextField *textFieldPreviewSelectionUnavailable;
 @property (weak) IBOutlet NSTextField *textFieldExportError;
 @property (weak) IBOutlet NSTextField *textFieldPlatform;
@@ -24,6 +25,7 @@
 @property (weak) IBOutlet NSTextField *textFieldSign;
 @property (weak) IBOutlet NSTextField *textFieldEncrypt;
 @property (weak) IBOutlet NSStackView *stackViewPreview;
+@property NSNumber *payloadErrorCount;
 @property (strong) NSArray *stackViewPreviewConstraints;
 @property NSMutableArray *arrayStackViewPreview;
 @property PFCMainWindow *mainWindow;
@@ -132,6 +134,7 @@
     // -------------------------------------------------------------------------
     //  Clean up previous preview content
     // -------------------------------------------------------------------------
+    [self setPayloadErrorCount:@0];
     [_arrayStackViewPreview removeAllObjects];
     for ( NSView *view in [_stackViewPreview views] ) {
         [view removeFromSuperview];
@@ -149,7 +152,7 @@
     //  Name
     // -------------------------------------------------------------------------
     NSString *profileName = profileSettings[PFCProfileTemplateKeyName];
-    [_textFieldPreviewProfileName setStringValue:profileName ?: @""];
+    [_textFieldProfileName setStringValue:profileName ?: @""];
     DDLogDebug(@"Profile Name: %@", profileName);
     
     // -------------------------------------------------------------------------
@@ -221,13 +224,26 @@
         }
     }
     
+    // -------------------------------------------------------------------------
+    //  Payload Count
+    // -------------------------------------------------------------------------
+    // FIXME - This is incorrect when multiple payloads are selected from the same manifest
+    [_textFieldPayloadCount setStringValue:[NSString stringWithFormat:@"%lu %@", (unsigned long)[selectedDomains count], ([selectedDomains count] == 1) ? @"Payload" : @"Payloads" ]];
+    
     if ( [selectedDomains count] <= 1 ) {
         [_textFieldExportError setStringValue:@"No Payload Selected"];
         [_buttonProfileExport setEnabled:NO];
-    } else {
-        [_textFieldExportError setStringValue:@""];
-        [_buttonProfileExport setEnabled:YES];
+        return;
     }
+    
+    if ( 0 < [_payloadErrorCount integerValue] ) {
+        [_textFieldExportError setStringValue:[NSString stringWithFormat:@"%ld Payload %@ Need To Be Resolved", (long)[_payloadErrorCount integerValue], ([_payloadErrorCount integerValue] == 1) ? @"Error" : @"Errors" ]];
+        [_buttonProfileExport setEnabled:NO];
+        return;
+    }
+    
+    [_textFieldExportError setStringValue:@""];
+    [_buttonProfileExport setEnabled:YES];
 }
 
 - (PFCMainWindowPreviewPayload *)previewForMainfest:(NSDictionary *)manifest domain:(NSString *)domain settings:(NSDictionary *)settings {
@@ -249,6 +265,9 @@
             errorCount += [[dict allKeys] count] ?: 0;
         }];
     }
+    
+    [self setPayloadErrorCount:@( [_payloadErrorCount integerValue] + errorCount )];
+    
     DDLogDebug(@"Setting Payload Error Count: %@", [@(errorCount) stringValue]);
     [preview setPayloadErrorCount:[@(errorCount) stringValue]];
     

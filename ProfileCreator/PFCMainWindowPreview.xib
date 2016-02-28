@@ -13,9 +13,10 @@
                 <outlet property="stackViewPreview" destination="Vl7-af-sBq" id="PdC-uz-eLZ"/>
                 <outlet property="textFieldEncrypt" destination="5ki-yL-ora" id="nBs-s8-iWs"/>
                 <outlet property="textFieldExportError" destination="kyc-bl-t5d" id="wZF-8t-yRR"/>
+                <outlet property="textFieldPayloadCount" destination="TXd-ff-stv" id="YcR-Ac-ro6"/>
                 <outlet property="textFieldPlatform" destination="FyI-DW-gdt" id="8vi-yd-SST"/>
-                <outlet property="textFieldPreviewProfileName" destination="ASE-hA-x6e" id="Dhl-KS-gga"/>
                 <outlet property="textFieldPreviewSelectionUnavailable" destination="ckN-Cm-S1I" id="rVJ-6Q-Bh7"/>
+                <outlet property="textFieldProfileName" destination="ASE-hA-x6e" id="deO-jw-BpM"/>
                 <outlet property="textFieldSign" destination="ZhM-sE-Y4X" id="qTo-3z-3vQ"/>
                 <outlet property="textFieldSupervised" destination="efD-B1-jXj" id="2dq-ye-DjB"/>
                 <outlet property="view" destination="U70-8M-cvg" id="d7J-M0-nIz"/>
@@ -156,7 +157,7 @@
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TXd-ff-stv">
                     <rect key="frame" x="28" y="523" width="586" height="18"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Name" id="Mot-Wb-y6Y">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Payload Count" id="Mot-Wb-y6Y">
                         <font key="font" metaFont="system" size="14"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

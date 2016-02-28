@@ -7,6 +7,7 @@
 //
 
 #import "PFCCellTypePopUpButton.h"
+#import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
@@ -25,13 +26,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonCellView *)populateCellView:(PFCPopUpButtonCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCPopUpButtonCellView *)populateCellView:(PFCPopUpButtonCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
@@ -120,13 +121,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonLeftCellView *)populateCellView:(PFCPopUpButtonLeftCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCPopUpButtonLeftCellView *)populateCellView:(PFCPopUpButtonLeftCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
@@ -203,13 +204,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonNoTitleCellView *)populateCellView:(PFCPopUpButtonNoTitleCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCPopUpButtonNoTitleCellView *)populateCellView:(PFCPopUpButtonNoTitleCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {

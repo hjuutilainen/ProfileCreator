@@ -137,6 +137,18 @@ NSInteger const PFCMaximumPayloadCount = 8;
     return [manifestContent copy];
 } // manifestContentForManifest
 
+- (NSDictionary *)displayKeys {
+    return @{ PFCProfileDisplaySettingsKeyPlatformOSX           : @(_includePlatformOSX),
+              PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformiOS           : @(_includePlatformiOS),
+              PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
+              PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
+              PFCManifestKeyDisabled                            : @(_showKeysDisabled),
+              PFCManifestKeyHidden                              : @(_showKeysHidden),
+              PFCManifestKeySupervisedOnly                      : @(_showKeysSupervised)};
+} // displayKeys
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Init/Dealloc
@@ -206,6 +218,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
+    [self removeObserver:self forKeyPath:@"showKeysSupervised" context:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,6 +275,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"showKeysSupervised" options:NSKeyValueObservingOptionNew context:nil];
     
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -486,7 +500,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //  Set "Advanced Settings" and "Supervised"
     // -------------------------------------------------------------------------
     [self setAdvancedSettings:[displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
-    [self setIsSupervised:[displaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]];
+    [self setShowKeysSupervised:[displaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]];
     
     
     NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
@@ -909,6 +923,10 @@ NSInteger const PFCMaximumPayloadCount = 8;
         [_tableViewSettings endUpdates];
     } else if ( [keyPath isEqualToString:@"showKeysDisabled"] || [keyPath isEqualToString:@"showKeysHidden"] ) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
+    } else if ( [keyPath isEqualToString:@"showKeysSupervised"] ) {
+        if ( [[_tableViewProfileHeader selectedRowIndexes] count] == 0 ) {
+            [self updateTableViewSettingsFromManifest:_selectedManifest];
+        }
     }
 } // observeValueForKeyPath:ofObject:change:context
 
@@ -1036,6 +1054,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                                                       manifestContentDict:manifestContentDict
                                                          userSettingsDict:_settingsManifest[identifier] ?: @{}
                                                         localSettingsDict:( _showSettingsLocal ) ? _settingsLocalManifest[identifier] : @{}
+                                                              displayKeys:[self displayKeys]
                                                                       row:row
                                                                    sender:self];
             }
@@ -1294,7 +1313,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
-    NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
+    NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
     
     // ------------------------------------------------------------------------------------------
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -1588,7 +1607,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             
             NSMutableDictionary *manifestSettings = _settingsProfile[manifestDomain];
             DDLogVerbose(@"Clicked manifest settings: %@", manifestSettings);
-
+            
             // -------------------------------------------------------------------------------------------
             //  Sanity check, any manifest in table view profile should have setting key "PayloadLibrary"
             // -------------------------------------------------------------------------------------------
@@ -1923,7 +1942,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 } // checkbox
 
 - (void)datePickerSelection:(NSDatePicker *)datePicker {
-
+    
     // -------------------------------------------------------------------------
     //  Get date picker's row in the table view
     // -------------------------------------------------------------------------
@@ -2349,7 +2368,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSMutableDictionary *displaySettings = [[NSMutableDictionary alloc] init];
     
     displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @(_advancedSettings);
-    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_isSupervised);
+    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_showKeysSupervised);
     displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
                                                               PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
                                                               PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem] ?: @"",
@@ -2983,7 +3002,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:manifest];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
         
         // ------------------------------------------------------------------------------------------
         //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -3161,7 +3180,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  If the manifest content dict array is empty, show "Error Reading Settings"
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
-        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest showDisabled:_showKeysDisabled showHidden:_showKeysHidden];
+        NSArray *manifestContentArray = [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
         
         // ------------------------------------------------------------------------------------------
         //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -3708,7 +3727,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         NSAlert *alert = [NSAlert alertWithError:[NSError errorWithDomain:@"com.github.ProfileCreator" code:100 userInfo:@{ NSLocalizedDescriptionKey : @"Maximum Payload Count Reached",
                                                                                                                             NSLocalizedRecoverySuggestionErrorKey : [NSString stringWithFormat:@"Current maximum payload count is %ld during beta, this is because no implementation to hande scrolling tabs has been implemented yet.\n\nAdd a feature request if this is something you need to push it up the priority list.", (long)PFCMaximumPayloadCount] }]];
         [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
-
+            
         }];
         return;
     }

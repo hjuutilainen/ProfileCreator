@@ -41,12 +41,21 @@
 			<string>The description of the account</string>
 		</dict>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>RequiredHost</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailabilityValue</key>
+					<true/>
+				</dict>
+			</array>
 			<key>Identifier</key>
 			<string>D5551825-A8FB-455B-8C16-EFA22E7E728E</string>
 			<key>Title</key>
 			<string>Account Hostname and Port</string>
-			<key>RequiredHost</key>
-			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKeyHost</key>

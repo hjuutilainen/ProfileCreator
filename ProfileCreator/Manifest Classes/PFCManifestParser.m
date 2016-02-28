@@ -48,17 +48,28 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden {
+- (NSArray *)arrayFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys {
     NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    // -------------------------------------------------------------------------
+    //  Create complete array from manifest content with current settings
+    // -------------------------------------------------------------------------
     for ( NSDictionary *manifestContentDict in manifestContent ) {
+        for ( NSDictionary *resolvedManifestContentDict in [self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil] ) {
+            if ( [[PFCManifestUtility sharedUtility] showManifestContentDict:resolvedManifestContentDict settings:settings displayKeys:displayKeys] ) {
+                [array addObject:resolvedManifestContentDict];
+            }
+        }
+    }
+    
+    [[array copy] enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull manifestContentDict, NSUInteger idx, BOOL * _Nonnull stop) {
         
         // ---------------------------------------------------------------------------------
         //  Check if manifest content dict should be shown agains the current user settings
         // ---------------------------------------------------------------------------------
-        if ( [[PFCManifestUtility sharedUtility] showManifestContentDict:manifestContentDict settings:settings showDisabled:showDisabled showHidden:showHidden] ) {
-            [array addObjectsFromArray:[self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]];
-        }
-    }
+        
+    }];
+    
     return [array copy];
 } // arrayFromManifestContent:settings:settingsLocal
 

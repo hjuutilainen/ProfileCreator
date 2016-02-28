@@ -171,10 +171,10 @@
     return @"Unknown";
 } // cellTypeFromTypeString
 
-- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings showDisabled:(BOOL)showDisabled showHidden:(BOOL)showHidden {
+- (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ( ! showDisabled ) {
+    if ( ! [displayKeys[PFCManifestKeyDisabled] boolValue] ) {
         
         BOOL enabled = YES;
         if ( ! required && settings[identifier][PFCSettingsKeyEnabled] != nil ) {
@@ -186,13 +186,27 @@
         }
     }
     
-    if ( ! showHidden ) {
+    if ( ! [displayKeys[PFCManifestKeyHidden] boolValue] ) {
         BOOL hidden = NO;
         if ( ! required && [manifestContentDict[PFCManifestKeyHidden] boolValue] ) {
             hidden = [manifestContentDict[PFCManifestKeyHidden] boolValue];
         }
         
         if ( hidden ) {
+            return NO;
+        }
+    }
+    
+    if ( ! [displayKeys[PFCManifestKeySupervisedOnly] boolValue] ) {
+        BOOL supervised = NO;
+        
+        // FIXME - Need to handle the availability keys
+        
+        if ( ! required && [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue] ) {
+            supervised = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
+        }
+        
+        if ( supervised ) {
             return NO;
         }
     }

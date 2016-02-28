@@ -80,18 +80,125 @@
             manifestContentDict:(NSDictionary *)manifestContentDict
                userSettingsDict:(NSDictionary *)userSettingsDict
               localSettingsDict:(NSDictionary *)localSettingsDict
+                    displayKeys:(NSDictionary *)displayKeys
                             row:(NSInteger)row
                          sender:(id)sender {
     
     id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
     if ( cellView ) {
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:sender];
+        return [cellView populateCellView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict displayKeys:(NSDictionary *)displayKeys row:row sender:sender];
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }
     return nil;
 }
+
+// ----
+
+- (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
+    
+    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
+        if ( [availabilityDict[@"AvailabilityKey"] isEqualToString:PFCManifestKeyRequired] ) {
+            NSString *os = availabilityDict[@"AvailabilityOS"];
+            
+            // Any
+            if ( [os isEqualToString:@"Any"] ) {
+                return [availabilityDict[@"AvailabilityValue"] boolValue];
+                
+                // OS X
+            } else if ( [os isEqualToString:@"OSX"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+                // iOS
+            } else if ( [os isEqualToString:@"iOS"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+            }
+        }
+
+    }
+    
+    return [manifestContentDict[PFCManifestKeyRequired] boolValue];
+}
+
+- (BOOL)requiredHostForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
+    
+    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
+        if ( [availabilityDict[@"AvailabilityKey"] isEqualToString:PFCManifestKeyRequiredHost] ) {
+            NSString *os = availabilityDict[@"AvailabilityOS"];
+            
+            // Any
+            if ( [os isEqualToString:@"Any"] ) {
+                return [availabilityDict[@"AvailabilityValue"] boolValue];
+                
+                // OS X
+            } else if ( [os isEqualToString:@"OSX"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+                // iOS
+            } else if ( [os isEqualToString:@"iOS"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+            }
+        }
+    }
+    
+    if ( manifestContentDict[PFCManifestKeyRequiredHost] != nil ) {
+        return [manifestContentDict[PFCManifestKeyRequiredHost] boolValue];
+    } else {
+        return [self requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+}
+
+- (BOOL)requiredPortForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
+    
+    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
+        if ( [availabilityDict[@"AvailabilityKey"] isEqualToString:PFCManifestKeyRequiredPort] ) {
+            NSString *os = availabilityDict[@"AvailabilityOS"];
+            
+            // Any
+            if ( [os isEqualToString:@"Any"] ) {
+                return [availabilityDict[@"AvailabilityValue"] boolValue];
+                
+                // OS X
+            } else if ( [os isEqualToString:@"OSX"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+                // iOS
+            } else if ( [os isEqualToString:@"iOS"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
+                if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
+                    
+                } else {
+                    return [availabilityDict[@"AvailabilityValue"] boolValue];
+                }
+            }
+        }
+    }
+    
+    if ( manifestContentDict[PFCManifestKeyRequiredPort] != nil ) {
+        return [manifestContentDict[PFCManifestKeyRequiredPort] boolValue];
+    } else {
+        return [self requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+}
+
+
 
 @end
 

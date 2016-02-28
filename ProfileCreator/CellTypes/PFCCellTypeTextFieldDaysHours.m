@@ -7,6 +7,7 @@
 //
 
 #import "PFCCellTypeTextFieldDaysHours.h"
+#import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
@@ -45,7 +46,7 @@
     }
 } // observeValueForKeyPath
 
-- (PFCTextFieldDaysHoursNoTitleCellView *)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
+- (PFCTextFieldDaysHoursNoTitleCellView *)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
     
     // -------------------------------------------------------------------------
     //  Set sender and sender properties to be used later
@@ -57,7 +58,7 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [manifest[PFCManifestKeyRequired] boolValue];
+    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     
     BOOL enabled = YES;
     if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {

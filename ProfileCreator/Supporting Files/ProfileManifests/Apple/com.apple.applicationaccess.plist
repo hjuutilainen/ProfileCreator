@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.applicationaccess</string>
+	<key>Description</key>
+	<string>Not Configured</string>
+	<key>Title</key>
+	<string>Restrictions</string>
+	<key>IconName</key>
+	<string>MenuIconRestriction</string>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.applicationaccess</string>
+	</array>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Identifier</key>
+			<string>95350C59-33AB-4C37-B898-C528A955B7C7</string>
+			<key>CellType</key>
+			<string>SegmentedControl</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Functionality</string>
+				<string>Apps</string>
+				<string>Media Content</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Functionality</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>3C87D2C4-5BF2-4F20-A57E-EBA0ACC21B71</string>
+						<key>Title</key>
+						<string>Allow use of camera</string>
+						<key>PayloadType</key>
+						<string>com.apple.applicationaccess</string>
+						<key>PayloadKey</key>
+						<string>allowCamera</string>
+						<key>Description</key>
+						<string></string>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+						<key>ToolTipDescription</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>0583510A-8B46-43FF-9860-D5AC77F87308</string>
+						<key>Title</key>
+						<string>Allow FaceTime</string>
+						<key>PayloadType</key>
+						<string>com.apple.applicationaccess</string>
+						<key>PayloadKey</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>EA3A1E90-4D26-42C9-8E87-C1C793753EB3</string>
+						<key>Title</key>
+						<string>Allow AirDrop</string>
+						<key>PayloadType</key>
+						<string>com.apple.applicationaccess</string>
+						<key>PayloadKey</key>
+						<string>allowAirDrop</string>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>PayloadKey</string>
+								<key>AvailableFrom</key>
+								<string>7.0</string>
+							</dict>
+						</array>
+						<key>SupervisedOnly</key>
+						<true/>
+						<key>Description</key>
+						<string></string>
+						<key>CellType</key>
+						<string>CheckboxNoDescription</string>
+						<key>ToolTipDescription</key>
+						<string></string>
+					</dict>
+				</array>
+				<key>Apps</key>
+				<array/>
+				<key>Media Content</key>
+				<array/>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

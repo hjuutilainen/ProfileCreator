@@ -2275,7 +2275,7 @@ Gw
             <point key="canvasLocation" x="-1711" y="-1129.5"/>
         </menu>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-St-D7R" userLabel="view PopUp Advanced Settings">
-            <rect key="frame" x="0.0" y="0.0" width="183" height="86"/>
+            <rect key="frame" x="0.0" y="0.0" width="183" height="104"/>
             <subviews>
                 <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="NiK-2b-YWJ">
                     <rect key="frame" x="7" y="25" width="158" height="18"/>
@@ -2317,23 +2317,36 @@ Gw
                         <binding destination="-2" name="value" keyPath="self.showKeysDisabled" id="Fe0-Vj-TO4"/>
                     </connections>
                 </button>
+                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-kf-ihr">
+                    <rect key="frame" x="7" y="79" width="158" height="18"/>
+                    <buttonCell key="cell" type="check" title="Show supervised keys" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="jfr-yE-0oJ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="smallSystem"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.showKeysSupervised" id="TFn-Cj-lEt"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="IqR-Mx-jTe" secondAttribute="trailing" constant="20" symbolic="YES" id="75f-kU-62S"/>
                 <constraint firstAttribute="trailing" secondItem="DEF-cr-fOe" secondAttribute="trailing" constant="20" symbolic="YES" id="CpO-D2-KeB"/>
                 <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="DEF-cr-fOe" secondAttribute="leading" id="El8-hd-TTN"/>
                 <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="Nqm-St-D7R" secondAttribute="leading" constant="10" id="H71-8E-vHL"/>
-                <constraint firstItem="DEF-cr-fOe" firstAttribute="top" secondItem="Nqm-St-D7R" secondAttribute="top" constant="10" id="J7h-1V-HNQ"/>
                 <constraint firstAttribute="trailing" secondItem="yYL-Fb-Abb" secondAttribute="trailing" constant="20" symbolic="YES" id="MWt-pW-huR"/>
+                <constraint firstItem="DEF-cr-fOe" firstAttribute="leading" secondItem="yWE-kf-ihr" secondAttribute="leading" id="O2c-Al-Fk0"/>
                 <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="NiK-2b-YWJ" secondAttribute="leading" id="QJB-fy-ja7"/>
                 <constraint firstItem="IqR-Mx-jTe" firstAttribute="top" secondItem="NiK-2b-YWJ" secondAttribute="bottom" constant="6" symbolic="YES" id="RRI-iF-Sa3"/>
                 <constraint firstItem="NiK-2b-YWJ" firstAttribute="top" secondItem="yYL-Fb-Abb" secondAttribute="bottom" constant="6" symbolic="YES" id="Sdi-hQ-MjP"/>
                 <constraint firstItem="yYL-Fb-Abb" firstAttribute="top" secondItem="DEF-cr-fOe" secondAttribute="bottom" constant="6" symbolic="YES" id="UCk-hk-CKK"/>
                 <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="yYL-Fb-Abb" secondAttribute="leading" id="Xwr-6j-3Yn"/>
+                <constraint firstItem="yWE-kf-ihr" firstAttribute="top" secondItem="Nqm-St-D7R" secondAttribute="top" constant="10" id="bu6-9D-WL6"/>
                 <constraint firstAttribute="trailing" secondItem="NiK-2b-YWJ" secondAttribute="trailing" constant="20" symbolic="YES" id="hct-Pu-5f5"/>
                 <constraint firstAttribute="bottom" secondItem="IqR-Mx-jTe" secondAttribute="bottom" constant="10" id="iJL-Ga-Y4J"/>
+                <constraint firstAttribute="trailing" secondItem="yWE-kf-ihr" secondAttribute="trailing" constant="20" symbolic="YES" id="ryf-Nc-5e7"/>
+                <constraint firstItem="DEF-cr-fOe" firstAttribute="top" secondItem="yWE-kf-ihr" secondAttribute="bottom" constant="6" symbolic="YES" id="sLH-wu-eaz"/>
             </constraints>
-            <point key="canvasLocation" x="-2016.5" y="-994"/>
+            <point key="canvasLocation" x="-2563.5" y="-1150"/>
         </customView>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="Tw1-BX-GRa">
             <rect key="frame" x="0.0" y="0.0" width="423" height="48"/>
@@ -2671,7 +2684,7 @@ Gw
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.isSupervised" id="ukv-tu-RIc"/>
+                        <binding destination="-2" name="value" keyPath="self.showKeysSupervised" id="1nW-pp-vuM"/>
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fSr-d4-bLG">

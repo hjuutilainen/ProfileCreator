@@ -91,7 +91,6 @@
 @property                    BOOL                       includePlatformiOS;
 @property                    NSString                   *iosMaxVersion;
 @property                    NSString                   *iosMinVersion;
-@property                    BOOL                       isSupervised;
 @property                    BOOL                       showAdvancedSettings;
 @property                    BOOL                       signProfile;
 @property                    BOOL                       encryptProfile;
@@ -214,6 +213,7 @@
 @property (weak)    IBOutlet NSButton                   *buttonToggleInfo;
 @property                    BOOL                       showKeysDisabled;
 @property                    BOOL                       showKeysHidden;
+@property                    BOOL                       showKeysSupervised;
 
 - (IBAction)buttonPopOverSettings:(id)sender;
 - (IBAction)buttonCancel:(id)sender;
