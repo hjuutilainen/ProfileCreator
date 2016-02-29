@@ -27,11 +27,12 @@
 #import "PFCProfileUtility.h"
 #import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCTableViews.h"
-#import "PFCProfileGroupTitle.h"
+#import "PFCMainWindowGroupsTitle.h"
 #import "PFCManifestLibrary.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileExport.h"
 #import "PFCMainWindowPreview.h"
+#import "PFCMainWindowSort.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark Constants
@@ -46,8 +47,14 @@ int const PFCTableViewGroupsRowHeight = 24;
 @interface PFCMainWindow ()
 
 @property PFCMainWindowPreview *preview;
-@property (weak) IBOutlet NSView *viewLibrarySort;
+@property PFCMainWindowSort *sort;
+
 @property (weak) IBOutlet NSView *viewLibrarySortSplitView;
+
+- (IBAction)toolbarItemAdd:(id)sender;
+@property (weak) IBOutlet NSSearchField *searchField;
+- (IBAction)searchField:(id)sender;
+
 
 @end
 
@@ -84,19 +91,20 @@ int const PFCTableViewGroupsRowHeight = 24;
         // ---------------------------------------------------------------------
         //  Initialize Classes
         // ---------------------------------------------------------------------
-        PFCProfileGroupTitle *profileGroupTitleViewController = [[PFCProfileGroupTitle alloc] init];
-        [(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] setDelegate:self];
-        [(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] setProfileGroup:kPFCProfileGroups];
-        [[(PFCProfileGroupTitleView *)[profileGroupTitleViewController view] textFieldTitle] setStringValue:@"Groups"];
-        _viewAddGroupsTitle = (PFCProfileGroupTitleView *)[profileGroupTitleViewController view];
+        PFCMainWindowGroupsTitle *profileGroupTitleViewController = [[PFCMainWindowGroupsTitle alloc] init];
+        [(PFCMainWindowGroupsTitleView *)[profileGroupTitleViewController view] setDelegate:self];
+        [(PFCMainWindowGroupsTitleView *)[profileGroupTitleViewController view] setProfileGroup:kPFCProfileGroups];
+        [[(PFCMainWindowGroupsTitleView *)[profileGroupTitleViewController view] textFieldTitle] setStringValue:@"Groups"];
+        _viewAddGroupsTitle = (PFCMainWindowGroupsTitleView *)[profileGroupTitleViewController view];
         
-        PFCProfileGroupTitle *profileSmartGroupTitleViewController = [[PFCProfileGroupTitle alloc] init];
-        [(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] setDelegate:self];
-        [(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] setProfileGroup:kPFCProfileSmartGroups];
-        [[(PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view] textFieldTitle] setStringValue:@"Smart Groups"];
-        _viewAddSmartGroupsTitle = (PFCProfileGroupTitleView *)[profileSmartGroupTitleViewController view];
+        PFCMainWindowGroupsTitle *profileSmartGroupTitleViewController = [[PFCMainWindowGroupsTitle alloc] init];
+        [(PFCMainWindowGroupsTitleView *)[profileSmartGroupTitleViewController view] setDelegate:self];
+        [(PFCMainWindowGroupsTitleView *)[profileSmartGroupTitleViewController view] setProfileGroup:kPFCProfileSmartGroups];
+        [[(PFCMainWindowGroupsTitleView *)[profileSmartGroupTitleViewController view] textFieldTitle] setStringValue:@"Smart Groups"];
+        _viewAddSmartGroupsTitle = (PFCMainWindowGroupsTitleView *)[profileSmartGroupTitleViewController view];
         
         _preview = [[PFCMainWindowPreview alloc] initWithMainWindow:self];
+        _sort = [[PFCMainWindowSort alloc] init];
     }
     return self;
 } // init
@@ -130,7 +138,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     [PFCGeneralUtility insertSubview:_viewAddSmartGroupsTitle inSuperview:_viewAddSmartGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileLibraryTableViewSuperview inSuperview:_viewProfileLibrarySplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_preview viewPreviewSuperview] inSuperview:_viewPreviewSplitView hidden:YES];
-    [PFCGeneralUtility insertSubview:_viewLibrarySort inSuperview:_viewLibrarySortSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[_sort view] inSuperview:_viewLibrarySortSplitView hidden:NO];
     
     // -------------------------------------------------------------------------
     //  Add error views to content views
@@ -1548,5 +1556,13 @@ int const PFCTableViewGroupsRowHeight = 24;
 - (void)menuItemNewProfile {
     [self createNewProfile];
 } // menuItemNewProfile
+
+- (IBAction)toolbarItemAdd:(id)sender {
+    [self createNewProfile];
+} // toolbarItemAdd
+
+- (IBAction)searchField:(id)sender {
+    
+}
 
 @end

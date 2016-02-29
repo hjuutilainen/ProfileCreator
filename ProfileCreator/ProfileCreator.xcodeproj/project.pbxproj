@@ -60,6 +60,8 @@
 		5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */; };
 		5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EEEB1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m */; };
 		536888FE1C7E47CF00759E68 /* PFCCellTypeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 536888FD1C7E47CF00759E68 /* PFCCellTypeTextView.m */; };
+		536E905D1C84EC2300E1D781 /* PFCMainWindowSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */; };
+		536E905E1C84EC2300E1D781 /* PFCMainWindowSort.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 		537290721C554D43003160EA /* OSVersions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 537290711C554D43003160EA /* OSVersions.plist */; };
@@ -83,8 +85,8 @@
 		537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520041C1B86B100FF3CB0 /* MenuIconXsan.png */; };
 		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
-		537612F81C662D8E00CFCE1D /* PFCProfileGroupTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 537612F61C662D8E00CFCE1D /* PFCProfileGroupTitle.m */; };
-		537612F91C662D8E00CFCE1D /* PFCProfileGroupTitle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537612F71C662D8E00CFCE1D /* PFCProfileGroupTitle.xib */; };
+		537612F81C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */; };
+		537612F91C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */; };
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
@@ -360,6 +362,9 @@
 		5364EEEB1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsPayloadPreview.m; path = "TableView CellViews/PFCTableViewCellsPayloadPreview.m"; sourceTree = "<group>"; };
 		536888FC1C7E47CF00759E68 /* PFCCellTypeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeTextView.h; path = CellTypes/PFCCellTypeTextView.h; sourceTree = "<group>"; };
 		536888FD1C7E47CF00759E68 /* PFCCellTypeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeTextView.m; path = CellTypes/PFCCellTypeTextView.m; sourceTree = "<group>"; };
+		536E905A1C84EC2300E1D781 /* PFCMainWindowSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCMainWindowSort.h; sourceTree = "<group>"; };
+		536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCMainWindowSort.m; sourceTree = "<group>"; };
+		536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PFCMainWindowSort.xib; sourceTree = "<group>"; };
 		536FC5191C15EEDE00B1D7CF /* ProfileCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfileCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		536FC5201C15EEDE00B1D7CF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536FC5251C15EEDE00B1D7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -384,9 +389,9 @@
 		537520041C1B86B100FF3CB0 /* MenuIconXsan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconXsan.png; path = "../Supporting Files/Graphics/MenuIconXsan.png"; sourceTree = "<group>"; };
 		537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconCalendarSubscription.png; path = "../Supporting Files/Graphics/MenuIconCalendarSubscription.png"; sourceTree = "<group>"; };
 		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconDock.png; path = "../Supporting Files/Graphics/MenuIconDock.png"; sourceTree = "<group>"; };
-		537612F51C662D8E00CFCE1D /* PFCProfileGroupTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileGroupTitle.h; path = "UI Controllers/PFCProfileGroupTitle.h"; sourceTree = "<group>"; };
-		537612F61C662D8E00CFCE1D /* PFCProfileGroupTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileGroupTitle.m; path = "UI Controllers/PFCProfileGroupTitle.m"; sourceTree = "<group>"; };
-		537612F71C662D8E00CFCE1D /* PFCProfileGroupTitle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileGroupTitle.xib; path = "UI Controllers/PFCProfileGroupTitle.xib"; sourceTree = "<group>"; };
+		537612F51C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowGroupsTitle.h; path = "UI Controllers/PFCMainWindowGroupsTitle.h"; sourceTree = "<group>"; };
+		537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowGroupsTitle.m; path = "UI Controllers/PFCMainWindowGroupsTitle.m"; sourceTree = "<group>"; };
+		537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowGroupsTitle.xib; path = "UI Controllers/PFCMainWindowGroupsTitle.xib"; sourceTree = "<group>"; };
 		537B02231C61449F0072093C /* PFCMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindow.h; path = "Window Controllers/PFCMainWindow.h"; sourceTree = "<group>"; };
 		537B02241C61449F0072093C /* PFCMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindow.m; path = "Window Controllers/PFCMainWindow.m"; sourceTree = "<group>"; };
 		537B02251C61449F0072093C /* PFCMainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindow.xib; path = "Window Controllers/PFCMainWindow.xib"; sourceTree = "<group>"; };
@@ -755,9 +760,6 @@
 				532DF2341C5665E700369513 /* PFCProfileCreationTab.h */,
 				532DF2351C5665E700369513 /* PFCProfileCreationTab.m */,
 				532DF2361C5665E700369513 /* PFCProfileCreationTab.xib */,
-				537612F51C662D8E00CFCE1D /* PFCProfileGroupTitle.h */,
-				537612F61C662D8E00CFCE1D /* PFCProfileGroupTitle.m */,
-				537612F71C662D8E00CFCE1D /* PFCProfileGroupTitle.xib */,
 			);
 			name = "UI Controllers";
 			sourceTree = "<group>";
@@ -841,6 +843,12 @@
 				53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroups.h */,
 				53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroups.m */,
 				53598C301C81E2C300C6BD2E /* PFCMainWindowGroups.xib */,
+				537612F51C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.h */,
+				537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */,
+				537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */,
+				536E905A1C84EC2300E1D781 /* PFCMainWindowSort.h */,
+				536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */,
+				536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1068,7 +1076,7 @@
 				534324C51C80E5EA00893351 /* Settings Filled-16.png in Resources */,
 				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */,
 				534324B51C80E2FB00893351 /* Horizontal Settings Mixer Filled-50.png in Resources */,
-				537612F91C662D8E00CFCE1D /* PFCProfileGroupTitle.xib in Resources */,
+				537612F91C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib in Resources */,
 				53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */,
 				53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */,
 				537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */,
@@ -1100,6 +1108,7 @@
 				53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */,
 				53751FF11C1B848A00FF3CB0 /* MenuIconFont.png in Resources */,
 				534324C71C80E5EA00893351 /* Approval Filled-18.png in Resources */,
+				536E905E1C84EC2300E1D781 /* PFCMainWindowSort.xib in Resources */,
 				537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */,
 				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
 				53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */,
@@ -1126,7 +1135,7 @@
 				5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */,
 				53908EAD1C540FA4009468F0 /* PFCError.m in Sources */,
 				5341D3261C15F3500014F5A7 /* PFCProfileEditor.m in Sources */,
-				537612F81C662D8E00CFCE1D /* PFCProfileGroupTitle.m in Sources */,
+				537612F81C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m in Sources */,
 				5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
 				5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */,
@@ -1136,6 +1145,7 @@
 				53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */,
 				53ADF6081C7F8C77005BA0FC /* PFCCellTypePopUpButton.m in Sources */,
 				536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */,
+				536E905D1C84EC2300E1D781 /* PFCMainWindowSort.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,
 				53D795641C4AF865006B19E9 /* RFOverlayScrollView.m in Sources */,

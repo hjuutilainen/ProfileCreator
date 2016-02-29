@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCMainWindowSort">
+            <connections>
+                <outlet property="popUpButtonSort" destination="mX5-jE-R19" id="HAl-p5-3hR"/>
+                <outlet property="view" destination="L5i-y7-YmA" id="oV7-cP-jFi"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView wantsLayer="YES" id="L5i-y7-YmA">
+            <rect key="frame" x="0.0" y="0.0" width="186" height="19"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mX5-jE-R19">
+                    <rect key="frame" x="2" y="1" width="26" height="17"/>
+                    <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" id="CV1-WK-oX3">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <font key="font" metaFont="system" size="10"/>
+                        <menu key="menu" id="Ijg-mk-boX">
+                            <items>
+                                <menuItem state="on" hidden="YES" id="Vy5-7J-Pqg">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                                <menuItem isSeparatorItem="YES" id="6z1-X3-Fop"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="popUpButtonSort:" target="-2" id="2Nn-82-fwb"/>
+                    </connections>
+                </popUpButton>
+                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-ql-811">
+                    <rect key="frame" x="0.0" y="-2" width="186" height="5"/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="lf5-ql-811" secondAttribute="trailing" id="HXS-Pz-pDK"/>
+                <constraint firstItem="mX5-jE-R19" firstAttribute="centerY" secondItem="L5i-y7-YmA" secondAttribute="centerY" id="THA-CJ-UQX"/>
+                <constraint firstItem="lf5-ql-811" firstAttribute="leading" secondItem="L5i-y7-YmA" secondAttribute="leading" id="iUC-PM-zla"/>
+                <constraint firstItem="mX5-jE-R19" firstAttribute="leading" secondItem="L5i-y7-YmA" secondAttribute="leading" constant="2" id="lmo-ny-spb"/>
+                <constraint firstAttribute="bottom" secondItem="lf5-ql-811" secondAttribute="bottom" id="pCZ-jQ-tMs"/>
+            </constraints>
+            <point key="canvasLocation" x="-2247" y="-29.5"/>
+        </customView>
+    </objects>
+</document>

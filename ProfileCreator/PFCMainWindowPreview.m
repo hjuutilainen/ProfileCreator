@@ -31,7 +31,7 @@
 @property PFCMainWindow *mainWindow;
 @property (weak) IBOutlet NSButton *buttonProfileEdit;
 @property (weak) IBOutlet NSButton *buttonProfileExport;
-
+@property (weak) IBOutlet NSImageView *imageViewProfileIcon;
 @property NSString *profileUUID;
 
 - (IBAction) buttonProfileEdit:(id)sender;
@@ -67,6 +67,11 @@
     [_scrollViewProfilePreview addConstraints:_stackViewPreviewConstraints];
     
     [self showProfilePreviewNoSelection];
+    
+    NSImage *profileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"];
+    if ( profileIcon ) {
+        [_imageViewProfileIcon setImage:profileIcon];
+    }
 }
 
 - (void)showProfilePreview {

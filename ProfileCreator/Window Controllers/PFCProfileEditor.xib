@@ -138,7 +138,7 @@
                                                             <constraint firstAttribute="width" secondItem="IYS-YD-q0M" secondAttribute="height" multiplier="1:1" id="AVI-bm-Y69"/>
                                                         </constraints>
                                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" inset="2" id="WKl-sn-XKb">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <behavior key="behavior" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
@@ -239,7 +239,7 @@ Gw
                                                     <constraint firstAttribute="width" secondItem="dpF-Pa-cM0" secondAttribute="height" multiplier="1:1" id="GFB-yi-HAq"/>
                                                 </constraints>
                                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Menu-17" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="1MI-Lu-yfQ">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <behavior key="behavior" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <connections>

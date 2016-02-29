@@ -19,7 +19,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PFCViews.h"
-#import "PFCProfileGroupTitle.h"
+#import "PFCMainWindowGroupsTitle.h"
 #import "PFCAlert.h"
 #import "PFCTableViews.h"
 
@@ -65,7 +65,7 @@
 // -----------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView                     *viewAddGroupsSuperview;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileGroups;
-@property                    PFCProfileGroupTitleView   *viewAddGroupsTitle;
+@property                    PFCMainWindowGroupsTitleView   *viewAddGroupsTitle;
 @property                    NSInteger                  tableViewProfileGroupsSelectedRow;
 @property                    NSMutableArray             *arrayProfileGroups;
 
@@ -76,7 +76,7 @@
 // -----------------------------------------------------------------------------
 @property (weak)    IBOutlet NSView                     *viewAddSmartGroupsSuperview;
 @property (weak)    IBOutlet NSTableView                *tableViewProfileSmartGroups;
-@property                    PFCProfileGroupTitleView   *viewAddSmartGroupsTitle;
+@property                    PFCMainWindowGroupsTitleView   *viewAddSmartGroupsTitle;
 @property                    NSInteger                  tableViewProfileSmartGroupsSelectedRow;
 @property                    NSMutableArray             *arrayProfileSmartGroups;
 

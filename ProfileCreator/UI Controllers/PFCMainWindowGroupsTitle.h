@@ -22,10 +22,10 @@ typedef NS_ENUM(NSInteger, PFCProfileGroups) {
 @end
 
 
-@interface PFCProfileGroupTitle : NSViewController
+@interface PFCMainWindowGroupsTitle : NSViewController
 @end
 
-@interface PFCProfileGroupTitleView : NSView
+@interface PFCMainWindowGroupsTitleView : NSView
 
 // ------------------------------------------------------
 //  Delegate

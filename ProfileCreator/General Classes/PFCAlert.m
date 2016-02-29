@@ -55,8 +55,13 @@
             [profileList appendString:[NSString stringWithFormat:@"   • %@\n", profileName]];
         }
     }
-    [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete %@ %@ %@", (profileCount == 1) ? @"the profile" : @"following profiles:\n", profileList, (profileCount == 1) ? @"?" : @""]];
-    [alert setInformativeText:@"This cannot be undone."];
+    if ( profileCount == 1 ) {
+        [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete the profile %@?", profileList]];
+        [alert setInformativeText:@"This cannot be undone."];
+    } else {
+        [alert setMessageText:@"Are you sure you want to delete the following profiles:"];
+        [alert setInformativeText:[NSString stringWithFormat:@"%@\nThis cannot be undone.", profileList]];
+    }
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[_delegate window] completionHandler:^(NSInteger returnCode) {
         [_delegate alertReturnCode:returnCode alertInfo:alertInfo];

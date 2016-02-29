@@ -10,14 +10,16 @@
                 <outlet property="menuTableViewProfileLibrary" destination="eVJ-PH-bnh" id="U0V-V2-JjY"/>
                 <outlet property="scrollViewProfileGroups" destination="XjV-ub-3jF" id="fDH-lz-wiV"/>
                 <outlet property="scrollViewProfileSmartGroups" destination="7K3-G1-rh7" id="3rf-Qq-dmK"/>
+                <outlet property="searchField" destination="xlO-TO-naT" id="guD-mn-eVm"/>
                 <outlet property="splitVewMain" destination="2yG-le-9IZ" id="PNh-pp-BZw"/>
                 <outlet property="tableViewProfileGroupAll" destination="HhK-Tr-dLe" id="BU6-yw-6Zy"/>
                 <outlet property="tableViewProfileGroups" destination="N76-Th-hDv" id="tsg-Vf-T6r"/>
                 <outlet property="tableViewProfileLibrary" destination="Flb-rs-hgU" id="gVE-MB-Ng0"/>
                 <outlet property="tableViewProfileSmartGroups" destination="E2l-i3-Zvc" id="k85-cs-4IT"/>
+                <outlet property="toolbarItemAdd" destination="ya8-r0-P8s" id="1lh-JE-jD9"/>
+                <outlet property="toolbarItemSearch" destination="5a6-ou-IaM" id="OPv-xm-9FT"/>
                 <outlet property="viewAddGroupsSuperview" destination="8by-PY-ydD" id="sTf-9w-GQG"/>
                 <outlet property="viewAddSmartGroupsSuperview" destination="WRI-Es-MnW" id="pk4-yI-q7h"/>
-                <outlet property="viewLibrarySort" destination="9Vl-eq-5pg" id="I5w-bm-J3G"/>
                 <outlet property="viewLibrarySortSplitView" destination="mtW-8x-iUx" id="r0g-fM-p3I"/>
                 <outlet property="viewPreviewSplitView" destination="l9I-XQ-qpi" id="SqP-SB-tT0"/>
                 <outlet property="viewProfileGroupsSplitView" destination="FJa-9M-ioT" id="lg3-ON-dcn"/>
@@ -48,38 +50,16 @@
                                         <rect key="frame" x="0.0" y="0.0" width="149" height="625"/>
                                     </visualEffectView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="FJa-9M-ioT">
-                                        <rect key="frame" x="0.0" y="0.0" width="149" height="598"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="149" height="625"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="149" id="G5f-Gx-mYV"/>
-                                        </constraints>
-                                    </customView>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="Xgn-c5-N3d">
-                                        <rect key="frame" x="0.0" y="598" width="149" height="27"/>
-                                        <subviews>
-                                            <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kAP-2Q-2Be">
-                                                <rect key="frame" x="6" y="2" width="138" height="19"/>
-                                                <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" focusRingType="none" placeholderString="Search" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="7Yc-OV-jl4">
-                                                    <font key="font" metaFont="smallSystem"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </searchFieldCell>
-                                            </searchField>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="kAP-2Q-2Be" secondAttribute="trailing" constant="5" id="4vw-Zu-KaF"/>
-                                            <constraint firstAttribute="height" constant="27" id="NXk-0L-hcX"/>
-                                            <constraint firstItem="kAP-2Q-2Be" firstAttribute="leading" secondItem="Xgn-c5-N3d" secondAttribute="leading" constant="6" id="T8B-fB-q9J"/>
-                                            <constraint firstItem="kAP-2Q-2Be" firstAttribute="top" secondItem="Xgn-c5-N3d" secondAttribute="top" constant="6" id="v2V-9s-JnW"/>
                                         </constraints>
                                     </customView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="yVM-VI-509" secondAttribute="trailing" id="02s-30-Tog"/>
-                                    <constraint firstAttribute="trailing" secondItem="Xgn-c5-N3d" secondAttribute="trailing" id="4W0-Ny-ju1"/>
-                                    <constraint firstItem="Xgn-c5-N3d" firstAttribute="top" secondItem="0hb-ze-c3V" secondAttribute="top" id="Csl-R7-1n8"/>
+                                    <constraint firstItem="FJa-9M-ioT" firstAttribute="top" secondItem="0hb-ze-c3V" secondAttribute="top" id="5fX-lp-KDt"/>
                                     <constraint firstAttribute="bottom" secondItem="FJa-9M-ioT" secondAttribute="bottom" id="IsP-kn-aO5"/>
-                                    <constraint firstItem="FJa-9M-ioT" firstAttribute="top" secondItem="Xgn-c5-N3d" secondAttribute="bottom" id="XrN-S4-OgN"/>
-                                    <constraint firstItem="Xgn-c5-N3d" firstAttribute="leading" secondItem="0hb-ze-c3V" secondAttribute="leading" id="b9b-GD-vf2"/>
                                     <constraint firstItem="yVM-VI-509" firstAttribute="top" secondItem="0hb-ze-c3V" secondAttribute="top" id="ehz-zC-jvq"/>
                                     <constraint firstAttribute="bottom" secondItem="yVM-VI-509" secondAttribute="bottom" id="f5V-6t-cYi"/>
                                     <constraint firstAttribute="trailing" secondItem="FJa-9M-ioT" secondAttribute="trailing" id="i5J-Nz-ecG"/>
@@ -87,7 +67,7 @@
                                     <constraint firstItem="yVM-VI-509" firstAttribute="leading" secondItem="0hb-ze-c3V" secondAttribute="leading" id="trs-Uf-Gvz"/>
                                 </constraints>
                             </customView>
-                            <customView wantsLayer="YES" id="1Yq-2D-nMX">
+                            <customView id="1Yq-2D-nMX">
                                 <rect key="frame" x="150" y="0.0" width="159" height="625"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
@@ -155,10 +135,10 @@
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Llr-gn-EpS"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="WAP-Jm-zme"/>
-                    <toolbarItem implicitItemIdentifier="3EBCFFAB-4AE5-4D51-8F41-60092337B1D4" label="Custom View" paletteLabel="Custom View" image="NSAddTemplate" id="ya8-r0-P8s">
+                    <toolbarItem implicitItemIdentifier="3EBCFFAB-4AE5-4D51-8F41-60092337B1D4" label="Add" paletteLabel="Add" image="NSAddTemplate" id="ya8-r0-P8s">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="40" height="32"/>
-                        <size key="maxSize" width="40" height="32"/>
+                        <size key="minSize" width="39" height="32"/>
+                        <size key="maxSize" width="39" height="32"/>
                         <button key="view" verticalHuggingPriority="750" id="bKa-Ds-SWJ">
                             <rect key="frame" x="0.0" y="14" width="82" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -166,15 +146,38 @@
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
+                            <connections>
+                                <action selector="toolbarItemAdd:" target="-2" id="JK3-fn-gqA"/>
+                            </connections>
                         </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="F3C8AB19-9C9C-48F6-8437-8CD20D0AA6F8" label="Search" paletteLabel="Search" id="5a6-ou-IaM">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="96" height="22"/>
+                        <size key="maxSize" width="250" height="22"/>
+                        <searchField key="view" wantsLayer="YES" verticalHuggingPriority="750" id="xlO-TO-naT">
+                            <rect key="frame" x="0.0" y="14" width="96" height="22"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="yt3-aM-MyS">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </searchFieldCell>
+                            <connections>
+                                <action selector="searchField:" target="-2" id="xVP-ty-iZa"/>
+                            </connections>
+                        </searchField>
                     </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="ya8-r0-P8s"/>
+                    <toolbarItem reference="Llr-gn-EpS"/>
                     <toolbarItem reference="WAP-Jm-zme"/>
+                    <toolbarItem reference="Llr-gn-EpS"/>
+                    <toolbarItem reference="5a6-ou-IaM"/>
                 </defaultToolbarItems>
             </toolbar>
-            <point key="canvasLocation" x="-1523" y="-100.5"/>
+            <point key="canvasLocation" x="-1642" y="-137.5"/>
         </window>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
@@ -374,7 +377,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="1"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -572,42 +575,11 @@
                 <constraint firstAttribute="trailing" secondItem="XjV-ub-3jF" secondAttribute="trailing" id="sRp-d6-Fyg"/>
                 <constraint firstAttribute="trailing" secondItem="7K3-G1-rh7" secondAttribute="trailing" id="wsV-nU-x27"/>
             </constraints>
-            <point key="canvasLocation" x="-2233.5" y="-440.5"/>
+            <point key="canvasLocation" x="-2246.5" y="85.5"/>
         </customView>
         <menu autoenablesItems="NO" id="eVJ-PH-bnh">
             <point key="canvasLocation" x="-1516.5" y="-187.5"/>
         </menu>
-        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Vl-eq-5pg">
-            <rect key="frame" x="0.0" y="0.0" width="186" height="19"/>
-            <subviews>
-                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uc2-K6-Ef1">
-                    <rect key="frame" x="2" y="1" width="118" height="17"/>
-                    <popUpButtonCell key="cell" type="recessed" title="Sort Alphabetically" bezelStyle="recessed" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" selectedItem="pVC-ri-K5d" id="Q1R-e9-xTM">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="system" size="10"/>
-                        <menu key="menu" id="YHL-cy-DqN">
-                            <items>
-                                <menuItem title="Sort Alphabetically" state="on" id="pVC-ri-K5d">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                </menuItem>
-                                <menuItem isSeparatorItem="YES" id="yPt-4E-kfd"/>
-                                <menuItem title="Ascending" state="on" id="XlU-45-3Id">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                </menuItem>
-                                <menuItem title="Descending" id="WNm-H6-xWO">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                </menuItem>
-                            </items>
-                        </menu>
-                    </popUpButtonCell>
-                </popUpButton>
-            </subviews>
-            <constraints>
-                <constraint firstItem="uc2-K6-Ef1" firstAttribute="leading" secondItem="9Vl-eq-5pg" secondAttribute="leading" constant="2" id="dHs-go-YIk"/>
-                <constraint firstItem="uc2-K6-Ef1" firstAttribute="centerY" secondItem="9Vl-eq-5pg" secondAttribute="centerY" id="jKY-Ht-LTi"/>
-            </constraints>
-            <point key="canvasLocation" x="-2247" y="-29.5"/>
-        </customView>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>

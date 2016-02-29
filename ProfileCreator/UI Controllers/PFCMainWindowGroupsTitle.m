@@ -6,16 +6,16 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCProfileGroupTitle.h"
+#import "PFCMainWindowGroupsTitle.h"
 
-@interface PFCProfileGroupTitle ()
+@interface PFCMainWindowGroupsTitle ()
 
 @end
 
-@implementation PFCProfileGroupTitle
+@implementation PFCMainWindowGroupsTitle
 
 - (id)init {
-    self = [super initWithNibName:@"PFCProfileGroupTitle" bundle:nil];
+    self = [super initWithNibName:@"PFCMainWindowGroupsTitle" bundle:nil];
     if (self != nil) {
         
     }
@@ -28,7 +28,7 @@
 
 @end
 
-@implementation PFCProfileGroupTitleView
+@implementation PFCMainWindowGroupsTitleView
 
 - (IBAction)buttonAddGroup:(id)sender {
     if ( _delegate ) {
