@@ -46,6 +46,8 @@ int const PFCTableViewGroupsRowHeight = 24;
 @interface PFCMainWindow ()
 
 @property PFCMainWindowPreview *preview;
+@property (weak) IBOutlet NSView *viewLibrarySort;
+@property (weak) IBOutlet NSView *viewLibrarySortSplitView;
 
 @end
 
@@ -118,6 +120,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     //  Set window background color to white
     // -------------------------------------------------------------------------
     [[self window] setBackgroundColor:[NSColor whiteColor]];
+    [[self window] setTitleVisibility:NSWindowTitleHidden];
     
     // -------------------------------------------------------------------------
     //  Add content views to window
@@ -127,6 +130,7 @@ int const PFCTableViewGroupsRowHeight = 24;
     [PFCGeneralUtility insertSubview:_viewAddSmartGroupsTitle inSuperview:_viewAddSmartGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileLibraryTableViewSuperview inSuperview:_viewProfileLibrarySplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_preview viewPreviewSuperview] inSuperview:_viewPreviewSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_viewLibrarySort inSuperview:_viewLibrarySortSplitView hidden:NO];
     
     // -------------------------------------------------------------------------
     //  Add error views to content views
