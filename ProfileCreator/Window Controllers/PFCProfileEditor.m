@@ -32,6 +32,7 @@
 #import "PFCGeneralUtility.h"
 #import "PFCProfileUtility.h"
 #import "PFCCellTypes.h"
+#import "PFCMainWindow.h"
 
 #import "PFCProfileEditorPayloadLibraryMenu.h"
 
@@ -151,6 +152,26 @@ NSInteger const PFCMaximumPayloadCount = 8;
               PFCManifestKeySupervisedOnly                      : @(_showKeysSupervised)};
 } // displayKeys
 
+- (NSString *)expandVariablesInString:(NSString *)string overrideValues:(NSDictionary *)overrideValues {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    if ( overrideValues[@"%NAME%"] != nil ) {
+        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
+    } else {
+        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:_profileName];
+    }
+    
+    if ( overrideValues[@"%PROFILEUUID%"] != nil ) {
+        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:overrideValues[@"%PROFILEUUID%"]];
+    } else {
+        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:_profileUUID];
+    }
+    
+    string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+    
+    DDLogDebug(@"Returning string: %@", string);
+    return string;
+} // expandVariables:overrideValues
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Init/Dealloc
@@ -177,6 +198,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         _arrayPayloadLibraryApple = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryUserPreferences = [[NSMutableArray alloc] init];
         _arrayPayloadLibraryCustom = [[NSMutableArray alloc] init];
+        _arrayPayloadLibraryMCX = [[NSMutableArray alloc] init];
         _arrayPayloadTabs = [[NSMutableArray alloc] init];
         _arraySettings = [[NSMutableArray alloc] init];
         
@@ -391,6 +413,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_arrayPayloadProfile removeAllObjects];
     [self setupManifestLibraryApple:[enabledPayloadDomains copy]];
     [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
+    [self setupManifestLibraryMCX:[enabledPayloadDomains copy]];
     [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
     [self sortArrayPayloadProfile];
     [self updateProfileHeader];
@@ -473,26 +496,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:nil]];
     
 } // setupProfileSettings
-
-- (NSString *)expandVariablesInString:(NSString *)string overrideValues:(NSDictionary *)overrideValues {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    if ( overrideValues[@"%NAME%"] != nil ) {
-        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
-    } else {
-        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:_profileName];
-    }
-    
-    if ( overrideValues[@"%PROFILEUUID%"] != nil ) {
-        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:overrideValues[@"%PROFILEUUID%"]];
-    } else {
-        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:_profileUUID];
-    }
-    
-    string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
-    
-    DDLogDebug(@"Returning string: %@", string);
-    return string;
-} // expandVariables:overrideValues
 
 - (void)setupDisplaySettings {
     DDLogDebug(@"%s", __PRETTY_FUNCTION__);
@@ -618,6 +621,21 @@ NSInteger const PFCMaximumPayloadCount = 8;
         DDLogError(@"%@", [error localizedDescription]);
     }
 } // setupManifestLibraryUserLibrary
+
+- (void)setupManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    
+    NSError *error = nil;
+    
+    [_arrayPayloadLibraryMCX removeAllObjects];
+    NSArray *libraryMCX = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
+     if ( [libraryMCX count] != 0 ) {
+         DDLogInfo(@"MCX Library: %@", libraryMCX);
+     } else {
+         DDLogError(@"No manifests returned for library mcx");
+         DDLogError(@"%@", [error localizedDescription]);
+     }
+}
 
 - (void)selectOSVersion:(id)sender {
     // Dummy Action to be able to disable menu items
@@ -1236,6 +1254,9 @@ NSInteger const PFCMaximumPayloadCount = 8;
             break;
         case kPFCPayloadLibraryCustom:
             return [_arrayPayloadLibraryCustom mutableCopy];
+            break;
+        case kPFCPayloadLibraryMCX:
+            return [_arrayPayloadLibraryMCX mutableCopy];
             break;
         default:
             return nil;

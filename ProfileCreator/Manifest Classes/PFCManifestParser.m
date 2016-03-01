@@ -504,6 +504,39 @@
     return [manifestDict copy];
 } // manifestForPlistAtURL
 
+- (NSDictionary *)manifestFromMCXManifestAtURL:(NSURL *)fileURL {
+    NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
+    
+    NSError *error = nil;
+    if ( [fileURL checkResourceIsReachableAndReturnError:&error] ) {
+        NSDictionary *mcxManifest = [NSDictionary dictionaryWithContentsOfURL:fileURL];
+        if ( [mcxManifest count] != 0 ) {
+            
+            // ---------------------------------------------------------------------
+            //  Create Manifest Root
+            // ---------------------------------------------------------------------
+            [manifestDict addEntriesFromDictionary:[self manifestRootFromMCXManifest:mcxManifest]];
+            
+            // ---------------------------------------------------------------------
+            //  Create Manifest Content
+            // ---------------------------------------------------------------------
+            manifestDict[PFCManifestKeyManifestContent] = [self manifestContentFromMCXSubkeys:mcxManifest[PFCMCXManifestKeySubkeys]];
+            
+            // ---------------------------------------------------------------------
+            //  Add path to source plist
+            // ---------------------------------------------------------------------
+            manifestDict[PFCRuntimeKeyPlistPath] = [fileURL path];
+            return [manifestDict copy];
+        } else {
+            DDLogError(@"MCX manifest at path: %@ was empty", [fileURL path]);
+        }
+    } else {
+        DDLogError(@"%@", [error localizedDescription]);
+    }
+    
+    return nil;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Create Manifest Root
@@ -563,6 +596,44 @@
             }
         }
     }
+    
+    return [manifest copy];
+}
+
+- (NSDictionary *)manifestRootFromMCXManifest:(NSDictionary *)mcxManifest {
+    
+    NSMutableDictionary *manifest = [[NSMutableDictionary alloc] init];
+    
+    // ---------------------------------------------------------------------
+    //  Set "CellType"
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyCellType] = PFCCellTypeMenu;
+    
+    // ---------------------------------------------------------------------
+    //  Set allow multiple payloads to NO
+    //  FIXME - This might be a setting, need to discuss.
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyAllowMultiplePayloads] = @NO;
+    
+    // ---------------------------------------------------------------------
+    //  Set "Domain"
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyDomain] = mcxManifest[PFCMCXManifestKeyDomain] ?: @"";
+    
+    // ---------------------------------------------------------------------
+    //  Set "Domain"
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyDomain] = mcxManifest[PFCMCXManifestKeyDomain] ?: @"";
+    
+    // ---------------------------------------------------------------------
+    //  Set "Title"
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyTitle] = mcxManifest[PFCMCXManifestKeyTitle] ?: @"";
+    
+    // ---------------------------------------------------------------------
+    //  Set "Description"
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyDescription] = mcxManifest[PFCMCXManifestKeyDescription] ?: @"";
     
     return [manifest copy];
 }
@@ -664,6 +735,28 @@
     
     return [manifestArray copy];
 } // manifestArrayFromDict:settingsDict
+
+- (NSArray *)manifestContentFromMCXSubkeys:(NSArray *)mcxSubkeys {
+    NSMutableArray *manifestArray = [[NSMutableArray alloc] init];
+    
+    // -----------------------------------------------------------------------------------------
+    //  Loop through all subkeys and create an array of "ManifestContent" dictionaries
+    // -----------------------------------------------------------------------------------------
+    for ( NSDictionary *mcxSubkey in mcxSubkeys ) {
+        
+        NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
+        
+        // ---------------------------------------------------------------------------------
+        //  Generate an identifier and add all static key/value pairs like "PayloadKey" etc.
+        // ---------------------------------------------------------------------------------
+        NSString *identifier = [[NSUUID UUID] UUIDString];
+        manifestDict[PFCManifestKeyIdentifier] = identifier;
+        
+        [manifestArray addObject:[manifestDict copy]];
+    }
+    
+    return [manifestArray copy];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

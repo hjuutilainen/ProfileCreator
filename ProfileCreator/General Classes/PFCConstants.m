@@ -185,6 +185,19 @@ NSString *const PFCRuntimeKeyProfileEditor = @"ProfileEditor";
 NSString *const PFCRuntimeKeyProfileExporter = @"ProfileExporter";
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark MCXManifestKeys
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCMCXManifestKeyDescription = @"pfm_description";
+NSString *const PFCMCXManifestKeyDefault = @"pfm_default";
+NSString *const PFCMCXManifestKeyDomain = @"pfm_domain";
+NSString *const PFCMCXManifestKeyName = @"pfm_name";
+NSString *const PFCMCXManifestKeySubkeys = @"pfm_subkeys";
+NSString *const PFCMCXManifestKeyTargets = @"pfm_targets";
+NSString *const PFCMCXManifestKeyTitle = @"pfm_title";
+NSString *const PFCMCXManifestKeyType = @"pfm_type";
+NSString *const PFCMCXManifestKeyVersion = @"pfm_version";
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCDefaultProfileName = @"Untitled Profile...";

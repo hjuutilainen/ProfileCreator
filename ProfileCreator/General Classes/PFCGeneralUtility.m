@@ -80,6 +80,12 @@
     [subview setHidden:hidden];
 } // insertSubview:inSuperview:hidden
 
++ (void)removeSubviewsFromView:(NSView *)superview {
+    for ( NSView *view in [superview subviews] ) {
+        [view removeFromSuperview];
+    }
+}
+
 + (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2 {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Is version: %@ lower than version: %@", version1, version2);

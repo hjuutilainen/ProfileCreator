@@ -145,6 +145,11 @@
 @property (readwrite)        BOOL                       isSearchingPayloadLibraryCustom;
 @property (readwrite)        NSString                   *searchStringPayloadLibraryCustom;
 
+// PayladLibraryMCX
+@property (readwrite)        NSMutableArray             *arrayPayloadLibraryMCX;
+@property (readwrite)        BOOL                       isSearchingPayloadLibraryMCX;
+@property (readwrite)        NSString                   *searchStringPayloadLibraryMCX;
+
 // -------------------------------------------------------------------------
 //  PayloadFooter
 // -------------------------------------------------------------------------

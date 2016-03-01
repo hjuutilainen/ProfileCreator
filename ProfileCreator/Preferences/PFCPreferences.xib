@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCPreferences">
+            <connections>
+                <outlet property="viewPreferences" destination="9de-ZT-PC4" id="Z79-jb-4ju"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <rect key="contentRect" x="897" y="831" width="661" height="331"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="661" height="331"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="9de-ZT-PC4">
+                        <rect key="frame" x="0.0" y="0.0" width="661" height="331"/>
+                    </customView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="9de-ZT-PC4" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="FXK-xR-h3V"/>
+                    <constraint firstAttribute="trailing" secondItem="9de-ZT-PC4" secondAttribute="trailing" id="bC8-Qc-y3T"/>
+                    <constraint firstItem="9de-ZT-PC4" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="lCf-hY-h5r"/>
+                    <constraint firstAttribute="bottom" secondItem="9de-ZT-PC4" secondAttribute="bottom" id="u9t-H1-ahp"/>
+                </constraints>
+            </view>
+            <toolbar key="toolbar" implicitIdentifier="1C7BDD7E-CBCB-4725-AF5A-CD29A1A8C144" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="KY7-qu-X1q">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Oiz-Pb-8m2"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="ciD-r1-OCX"/>
+                    <toolbarItem implicitItemIdentifier="E85E5280-6233-4C02-896A-C43822E18280" label="General" paletteLabel="General" tag="-1" image="NSPreferencesGeneral" id="Eni-gX-f74">
+                        <connections>
+                            <action selector="toolbarItemGeneral:" target="-2" id="n8z-Vz-xC9"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="AC006D29-9A3A-4AFB-8A52-94D48BBF90B6" label="MCX" paletteLabel="MCX" tag="-1" image="NSEveryone" id="nRz-6C-T6e">
+                        <connections>
+                            <action selector="toolbarItemMCX:" target="-2" id="Cer-I2-u7u"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="5FC2B190-C3A0-45AF-B3BA-D8245952A983" label="Logging" paletteLabel="Logging" tag="-1" image="NSCaution" id="2gI-ow-7uO">
+                        <connections>
+                            <action selector="toolbarItemLogging:" target="-2" id="txu-76-lXV"/>
+                        </connections>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="Eni-gX-f74"/>
+                    <toolbarItem reference="nRz-6C-T6e"/>
+                    <toolbarItem reference="2gI-ow-7uO"/>
+                    <toolbarItem reference="ciD-r1-OCX"/>
+                </defaultToolbarItems>
+            </toolbar>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="368.5" y="379.5"/>
+        </window>
+    </objects>
+    <resources>
+        <image name="NSCaution" width="32" height="32"/>
+        <image name="NSEveryone" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+    </resources>
+</document>

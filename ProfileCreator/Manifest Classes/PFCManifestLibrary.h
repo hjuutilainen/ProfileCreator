@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
     kPFCPayloadLibraryUserPreferences,
     kPFCPayloadLibraryCustom,
     kPFCPayloadLibraryAll,
-    kPFCPayloadLibraryLibraryPreferences
+    kPFCPayloadLibraryLibraryPreferences,
+    kPFCPayloadLibraryMCX
 };
 
 @interface PFCManifestLibrary : NSObject
@@ -30,6 +31,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 @property NSArray *cachedLibraryApple;
 @property NSArray *cachedLibraryUserLibraryPreferencesLocal;
 @property NSArray *cachedLibraryLibraryPreferencesLocal;
+@property NSArray *cachedLibraryCustom;
+@property NSArray *cachedLibraryMCX;
 @property NSMutableDictionary *cachedLocalSettings;
 
 // -----------------------------------------------------------------------------
@@ -38,6 +41,8 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 - (NSArray *)libraryApple:(NSError **)error acceptCached:(BOOL)acceptCached;
 - (NSArray *)libraryUserLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
 - (NSArray *)libraryLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryCustom:(NSError **)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryMCX:(NSError **)error acceptCached:(BOOL)acceptCached;
 - (NSDictionary *)manifestFromLibrary:(PFCPayloadLibrary)library withDomain:(NSString *)domain;
 - (NSArray *)manifestsWithDomains:(NSArray *)domains;
 

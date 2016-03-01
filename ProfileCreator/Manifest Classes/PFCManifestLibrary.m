@@ -160,6 +160,45 @@
     }
 } // libraryLibraryPreferencesLocal:settingsLocal
 
+- (NSArray *)libraryCustom:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
+    
+    if ( acceptCached && _cachedLibraryCustom ) {
+        return _cachedLibraryCustom;
+    }
+    
+    return nil;
+}
+
+- (NSArray *)libraryMCX:(NSError *__autoreleasing *)error acceptCached:(BOOL) __unused acceptCached {
+    
+    if ( _cachedLibraryMCX ) {
+        return _cachedLibraryMCX;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get path to core services folder
+    // -------------------------------------------------------------------------
+    NSURL *coreServicesURL = [[NSFileManager defaultManager] URLForDirectory:NSCoreServiceDirectory
+                                                               inDomain:NSSystemDomainMask
+                                                      appropriateForURL:nil
+                                                                 create:NO
+                                                                  error:error];
+    if ( coreServicesURL == nil ) {
+        return nil;
+    }
+    
+    // -------------------------------------------------------------------------
+    //  Get path to managed client's resource folder
+    // -------------------------------------------------------------------------
+    NSURL *managedClientURL = [coreServicesURL URLByAppendingPathComponent:@"/ManagedClient.app/Contents/Resources"];
+    if ( ! [managedClientURL checkResourceIsReachableAndReturnError:error] ) {
+        return nil;
+    } else {
+        _cachedLibraryMCX = [self manifestsFromMCXManifestsAtURL:managedClientURL];
+        return _cachedLibraryMCX;
+    }
+} // libraryMCX:acceptCached
+
 - (NSArray *)manifestsWithDomains:(NSArray *)domains {
 
     NSError *error = nil;
@@ -205,9 +244,15 @@
             manifestLibrary = [self libraryLibraryPreferencesLocal:&error acceptCached:YES];
             break;
         }
+        
+        case kPFCPayloadLibraryMCX: {
+            DDLogDebug(@"Payload library: Library MCX");
+            manifestLibrary = [self libraryMCX:&error acceptCached:YES];
+        }
             
         case kPFCPayloadLibraryCustom: {
             DDLogDebug(@"Payload library: Library Preferences");
+            manifestLibrary = [self libraryCustom:&error acceptCached:YES];
             break;
         }
             
@@ -263,5 +308,28 @@
     // ---------------------------------------------------------------------
     return [library copy];
 } // manifestsAtURL:settingsLocal
+
+- (NSArray *)manifestsFromMCXManifestsAtURL:(NSURL *)folderURL {
+    
+    NSFileManager *localFileManager = [[NSFileManager alloc] init];
+    NSDirectoryEnumerator *dirEnum = [localFileManager enumeratorAtURL:folderURL includingPropertiesForKeys:@[ NSURLIsDirectoryKey ] options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL * _Nonnull url, NSError * _Nonnull error) {
+        DDLogDebug(@"Enumerator Error: %@", [error localizedDescription]);
+        return YES;
+    }];
+    
+    NSURL *file;
+    NSMutableArray *mcxManifestFiles = [[NSMutableArray alloc] init];
+    while ( (file = [dirEnum nextObject]) ) {
+        NSNumber *isDirectory;
+        BOOL success = [file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+        if ( success && ! [isDirectory boolValue] && [[file pathExtension] isEqualToString: @"manifest"] ) {
+            NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromMCXManifestAtURL:file];
+            if ( [manifest count] != 0 ) {
+                [mcxManifestFiles addObject:manifest];
+            }
+        }
+    }
+    return [mcxManifestFiles copy];
+} // manifestsFromMCXManifestsAtURL:folderURL
 
 @end

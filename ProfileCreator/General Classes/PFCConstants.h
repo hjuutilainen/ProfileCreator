@@ -192,6 +192,19 @@ extern NSString *const PFCRuntimeKeyProfileExporter;
 extern NSString *const PFCRuntimeKeyPath;
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark MCXManifestKeys
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCMCXManifestKeyDescription;
+extern NSString *const PFCMCXManifestKeyDefault;
+extern NSString *const PFCMCXManifestKeyDomain;
+extern NSString *const PFCMCXManifestKeyName;
+extern NSString *const PFCMCXManifestKeySubkeys;
+extern NSString *const PFCMCXManifestKeyTargets;
+extern NSString *const PFCMCXManifestKeyTitle;
+extern NSString *const PFCMCXManifestKeyType;
+extern NSString *const PFCMCXManifestKeyVersion;
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark Other
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCDefaultProfileName;

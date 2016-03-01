@@ -131,18 +131,18 @@
                     <constraint firstItem="2yG-le-9IZ" firstAttribute="leading" secondItem="hM9-4C-HuU" secondAttribute="leading" id="ixr-av-wVD"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="928345F1-E45A-403B-AE1F-CD6209D17100" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="dIf-JB-U8N">
+            <toolbar key="toolbar" implicitIdentifier="928345F1-E45A-403B-AE1F-CD6209D17100" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="dIf-JB-U8N">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Llr-gn-EpS"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="WAP-Jm-zme"/>
                     <toolbarItem implicitItemIdentifier="3EBCFFAB-4AE5-4D51-8F41-60092337B1D4" label="Add" paletteLabel="Add" image="NSAddTemplate" id="ya8-r0-P8s">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="39" height="32"/>
-                        <size key="maxSize" width="39" height="32"/>
+                        <size key="minSize" width="30" height="32"/>
+                        <size key="maxSize" width="43" height="32"/>
                         <button key="view" verticalHuggingPriority="750" id="bKa-Ds-SWJ">
-                            <rect key="frame" x="0.0" y="14" width="82" height="32"/>
+                            <rect key="frame" x="0.0" y="14" width="42" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JLO-gd-4hd">
+                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JLO-gd-4hd">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -275,10 +275,10 @@
             <point key="canvasLocation" x="-2233.5" y="-290.5"/>
         </customView>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rrI-fr-qSf">
-            <rect key="frame" x="0.0" y="0.0" width="149" height="121"/>
+            <rect key="frame" x="0.0" y="0.0" width="149" height="201"/>
             <subviews>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bFQ-uc-Kxk">
-                    <rect key="frame" x="0.0" y="86" width="149" height="28"/>
+                    <rect key="frame" x="0.0" y="166" width="149" height="28"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Dra-nf-NYH">
                         <rect key="frame" x="0.0" y="0.0" width="149" height="28"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -365,19 +365,19 @@
                     </scroller>
                 </scrollView>
                 <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="8by-PY-ydD">
-                    <rect key="frame" x="0.0" y="67" width="149" height="19"/>
+                    <rect key="frame" x="0.0" y="147" width="149" height="19"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="19" id="EPD-ds-Z5g"/>
                     </constraints>
                 </customView>
                 <scrollView verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XjV-ub-3jF" customClass="RFOverlayScrollView">
-                    <rect key="frame" x="0.0" y="67" width="149" height="0.0"/>
+                    <rect key="frame" x="0.0" y="147" width="149" height="0.0"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="ki8-Tz-mLz">
                         <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="N76-Th-hDv" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="149" height="1"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -461,19 +461,19 @@
                     </scroller>
                 </scrollView>
                 <customView focusRingType="none" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="WRI-Es-MnW">
-                    <rect key="frame" x="0.0" y="48" width="149" height="19"/>
+                    <rect key="frame" x="0.0" y="128" width="149" height="19"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="19" id="A9U-Tl-1K4"/>
                     </constraints>
                 </customView>
                 <scrollView horizontalHuggingPriority="248" horizontalCompressionResistancePriority="748" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7K3-G1-rh7" customClass="RFOverlayScrollView">
-                    <rect key="frame" x="0.0" y="0.0" width="149" height="48"/>
+                    <rect key="frame" x="0.0" y="0.0" width="149" height="128"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Npt-i1-nRS">
-                        <rect key="frame" x="0.0" y="0.0" width="149" height="48"/>
+                        <rect key="frame" x="0.0" y="0.0" width="149" height="128"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierProfileSmartGroups" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" rowSizeStyle="automatic" viewBased="YES" id="E2l-i3-Zvc" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="143" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="149" height="128"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
@@ -575,7 +575,7 @@
                 <constraint firstAttribute="trailing" secondItem="XjV-ub-3jF" secondAttribute="trailing" id="sRp-d6-Fyg"/>
                 <constraint firstAttribute="trailing" secondItem="7K3-G1-rh7" secondAttribute="trailing" id="wsV-nU-x27"/>
             </constraints>
-            <point key="canvasLocation" x="-2246.5" y="85.5"/>
+            <point key="canvasLocation" x="-2262.5" y="64.5"/>
         </customView>
         <menu autoenablesItems="NO" id="eVJ-PH-bnh">
             <point key="canvasLocation" x="-1516.5" y="-187.5"/>

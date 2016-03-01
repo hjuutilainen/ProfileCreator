@@ -19,6 +19,9 @@
 @property (weak) IBOutlet NSButton *buttonLibraryLocal;
 - (IBAction)buttonLibraryLocal:(id)sender;
 
+@property (weak) IBOutlet NSButton *buttonLibraryMCX;
+- (IBAction)buttonLibraryMCX:(id)sender;
+
 @property (weak) IBOutlet NSButton *buttonLibraryCustom;
 - (IBAction)buttonLibraryCustom:(id)sender;
 
@@ -40,21 +43,31 @@
 }
 
 - (IBAction)buttonLibraryApple:(id)sender {
+    [_buttonLibraryMCX setState:NSOffState];
     [_buttonLibraryCustom setState:NSOffState];
     [_buttonLibraryLocal setState:NSOffState];
     [_profileEditor selectPayloadLibrary:kPFCPayloadLibraryApple];
 }
 
 - (IBAction)buttonLibraryCustom:(id)sender {
+    [_buttonLibraryMCX setState:NSOffState];
     [_buttonLibraryApple setState:NSOffState];
     [_buttonLibraryLocal setState:NSOffState];
     [_profileEditor selectPayloadLibrary:kPFCPayloadLibraryCustom];
 }
 
 - (IBAction)buttonLibraryLocal:(id)sender {
+    [_buttonLibraryMCX setState:NSOffState];
     [_buttonLibraryApple setState:NSOffState];
     [_buttonLibraryCustom setState:NSOffState];
     [_profileEditor selectPayloadLibrary:kPFCPayloadLibraryUserPreferences];
+}
+
+- (IBAction)buttonLibraryMCX:(id)sender {
+    [_buttonLibraryApple setState:NSOffState];
+    [_buttonLibraryLocal setState:NSOffState];
+    [_buttonLibraryCustom setState:NSOffState];
+    [_profileEditor selectPayloadLibrary:kPFCPayloadLibraryMCX];
 }
 
 @end

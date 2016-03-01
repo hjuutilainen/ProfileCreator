@@ -11,6 +11,7 @@
                 <outlet property="buttonLibraryApple" destination="HMw-66-4aJ" id="wk0-OD-FkT"/>
                 <outlet property="buttonLibraryCustom" destination="eEB-hC-8is" id="KUH-bf-Its"/>
                 <outlet property="buttonLibraryLocal" destination="QKa-Hd-c7f" id="O7g-H8-Ma0"/>
+                <outlet property="buttonLibraryMCX" destination="uiO-70-bjx" id="5td-jI-ELc"/>
                 <outlet property="lineBottom" destination="XSb-Of-zIu" id="iDn-sl-eBa"/>
                 <outlet property="lineTop" destination="rds-xD-PDT" id="dU8-Ye-7uW"/>
                 <outlet property="view" destination="Aqv-fg-Skp" id="KDw-bA-QVZ"/>
@@ -36,7 +37,7 @@
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="jB4-Oe-L8j">
-                    <rect key="frame" x="52" y="0.0" width="95" height="27"/>
+                    <rect key="frame" x="37" y="0.0" width="125" height="27"/>
                     <subviews>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="HMw-66-4aJ">
                             <rect key="frame" x="10" y="4" width="18" height="18"/>
@@ -65,7 +66,7 @@
                             </connections>
                         </button>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="eEB-hC-8is">
-                            <rect key="frame" x="69" y="5" width="16" height="16"/>
+                            <rect key="frame" x="99" y="5" width="16" height="16"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="16" id="du3-2r-F4F"/>
                             </constraints>
@@ -77,18 +78,34 @@
                                 <action selector="buttonLibraryCustom:" target="-2" id="6ZG-Gg-9wI"/>
                             </connections>
                         </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="uiO-70-bjx">
+                            <rect key="frame" x="69" y="5" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="uiO-70-bjx" secondAttribute="height" multiplier="1:1" id="FEf-DQ-SOY"/>
+                                <constraint firstAttribute="width" constant="16" id="czD-6G-Mvp"/>
+                            </constraints>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Settings-16" imagePosition="overlaps" alignment="center" alternateImage="Settings Filled-16" imageScaling="proportionallyUpOrDown" inset="2" id="yXu-kp-eZh">
+                                <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="buttonLibraryMCX:" target="-2" id="2XD-5F-1cX"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <constraints>
                         <constraint firstItem="QKa-Hd-c7f" firstAttribute="width" secondItem="QKa-Hd-c7f" secondAttribute="height" multiplier="1:1" id="47E-QV-DFX"/>
                         <constraint firstItem="QKa-Hd-c7f" firstAttribute="leading" secondItem="HMw-66-4aJ" secondAttribute="trailing" constant="12" id="9KD-8z-slz"/>
+                        <constraint firstItem="uiO-70-bjx" firstAttribute="leading" secondItem="QKa-Hd-c7f" secondAttribute="trailing" constant="14" id="In2-3f-P3Y"/>
                         <constraint firstItem="HMw-66-4aJ" firstAttribute="leading" secondItem="jB4-Oe-L8j" secondAttribute="leading" constant="10" id="Mgz-D0-itL"/>
                         <constraint firstItem="QKa-Hd-c7f" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" id="NXk-0z-kVc"/>
+                        <constraint firstItem="uiO-70-bjx" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" constant="1" id="Q3P-J1-SMS"/>
                         <constraint firstAttribute="trailing" secondItem="eEB-hC-8is" secondAttribute="trailing" constant="10" id="Uzi-Ws-7UM"/>
-                        <constraint firstItem="eEB-hC-8is" firstAttribute="leading" secondItem="QKa-Hd-c7f" secondAttribute="trailing" constant="14" id="XHZ-MN-pMS"/>
                         <constraint firstItem="HMw-66-4aJ" firstAttribute="width" secondItem="HMw-66-4aJ" secondAttribute="height" multiplier="1:1" id="XZE-jz-Jcg"/>
                         <constraint firstItem="HMw-66-4aJ" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" constant="1" id="fhU-Tf-45q"/>
                         <constraint firstItem="eEB-hC-8is" firstAttribute="width" secondItem="eEB-hC-8is" secondAttribute="height" multiplier="1:1" id="loy-Df-kbU"/>
                         <constraint firstItem="eEB-hC-8is" firstAttribute="centerY" secondItem="jB4-Oe-L8j" secondAttribute="centerY" constant="1" id="ncn-g7-eiP"/>
+                        <constraint firstItem="eEB-hC-8is" firstAttribute="leading" secondItem="uiO-70-bjx" secondAttribute="trailing" constant="14" id="q25-lj-J5I"/>
                     </constraints>
                 </customView>
             </subviews>

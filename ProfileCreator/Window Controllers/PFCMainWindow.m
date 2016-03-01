@@ -1557,6 +1557,10 @@ int const PFCTableViewGroupsRowHeight = 24;
     [self createNewProfile];
 } // menuItemNewProfile
 
+- (void)menuItemNewGroup {
+    [self createNewGroupOfType:kPFCProfileGroups];
+} // menuItemNewGroup
+
 - (IBAction)toolbarItemAdd:(id)sender {
     [self createNewProfile];
 } // toolbarItemAdd

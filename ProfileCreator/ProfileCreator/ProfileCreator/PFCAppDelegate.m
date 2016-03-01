@@ -19,12 +19,18 @@
 
 #import "PFCAppDelegate.h"
 #import "PFCConstants.h"
-#import "PFCManifestParser.h"
-#import "PFCTableViewCellsProfiles.h"
-#import "PFCProfileExportWindowController.h"
-#import "PFCManifestLibrary.h"
 #import "PFCLog.h"
-#import "PFCGeneralUtility.h"
+
+#import "PFCMainWindow.h"
+#import "PFCPreferences.h"
+#import "PFCManifestLibrary.h"
+
+@interface PFCAppDelegate ()
+
+@property PFCMainWindow *mainWindowController;
+@property PFCPreferences *preferencesController;
+
+@end
 
 @implementation PFCAppDelegate
 
@@ -62,7 +68,7 @@
     [PFCManifestLibrary sharedLibrary];
     
     // --------------------------------------------------------------
-    //  Initialize Main Window Controller
+    //  Initialize Controllers
     // --------------------------------------------------------------
     [self setMainWindowController:[[PFCMainWindow alloc] init]];
     
@@ -78,12 +84,60 @@
     
 } // applicationWillFinishLaunching
 
-- (void) setupMenuItems {
-    NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
-    NSMenu *menuFile = [[mainMenu itemWithTitle:@"File"] submenu];
-    NSMenuItem *newProfile = [menuFile itemWithTitle:@"New Profile"];
-    [newProfile setTarget:_mainWindowController];
-    [newProfile setAction:@selector(menuItemNewProfile)];
+- (void) menuItemPreferences {
+    
+    if ( ! _preferencesController ) {
+        _preferencesController = [[PFCPreferences alloc] init];
+    }
+    
+    if ( _preferencesController ) {
+        [[_preferencesController window] makeKeyAndOrderFront:self];
+    }
 }
+
+- (void) setupMenuItems {
+    
+    // --------------------------------------------------------------
+    //  Get Main Menu
+    // --------------------------------------------------------------
+    NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
+    
+    // --------------------------------------------------------------
+    //  Get Main Menu -> ProfileCreator
+    // --------------------------------------------------------------
+    NSMenu *menuProfileCreator = [[mainMenu itemWithTitle:@"ProfileCreator"] submenu];
+    
+    // --------------------------------------------------------------
+    //  Update Menu Item -> ProfileCreator -> Preferences
+    // --------------------------------------------------------------
+    NSMenuItem *preferences = [menuProfileCreator itemWithTitle:@"Preferences…"];
+    if ( preferences ) {
+        [preferences setTarget:self];
+        [preferences setAction:@selector(menuItemPreferences)];
+    }
+    
+    // --------------------------------------------------------------
+    //  Get Main Menu -> File
+    // --------------------------------------------------------------
+    NSMenu *menuFile = [[mainMenu itemWithTitle:@"File"] submenu];
+    
+    // --------------------------------------------------------------
+    //  Update Menu Item -> File -> "New Profile"
+    // --------------------------------------------------------------
+    NSMenuItem *newProfile = [menuFile itemWithTitle:@"New Profile"];
+    if ( newProfile ) {
+        [newProfile setTarget:_mainWindowController];
+        [newProfile setAction:@selector(menuItemNewProfile)];
+    }
+    
+    // --------------------------------------------------------------
+    //  Update Menu Item -> File -> "New Profile"
+    // --------------------------------------------------------------
+    NSMenuItem *newGroup = [menuFile itemWithTitle:@"New Group"];
+    if ( newGroup ) {
+        [newGroup setTarget:_mainWindowController];
+        [newGroup setAction:@selector(menuItemNewGroup)];
+    }
+} // setupMenuItems
 
 @end

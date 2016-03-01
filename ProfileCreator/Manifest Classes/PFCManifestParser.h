@@ -36,6 +36,7 @@
 //  Create Manifest
 // -----------------------------------------------------------------------------
 - (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings;
+- (NSDictionary *)manifestFromMCXManifestAtURL:(NSURL *)fileURL;
 
 // -----------------------------------------------------------------------------
 //  Verify Manifest

@@ -106,6 +106,7 @@
 @property (weak)    IBOutlet NSView                     *viewPreviewSplitView;
 
 - (void)menuItemNewProfile;
+- (void)menuItemNewGroup;
 
 // -----------------------------------------------------------------------------
 //  Instance Methods
