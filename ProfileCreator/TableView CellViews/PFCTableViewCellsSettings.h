@@ -19,7 +19,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark CellViewSettingsEnabled
@@ -27,7 +26,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsEnabled : NSTableCellView
 @property (weak) IBOutlet NSButton *settingEnabled;
-- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView
+                                            manifest:(NSDictionary *)manifest
+                                            settings:(NSDictionary *)settings
+                                       settingsLocal:(NSDictionary *)settingsLocal
+                                                 row:(NSInteger)row
+                                              sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +41,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsPadding : NSTableCellView
 @end
-
 
 // FIXME - CellViews below are still being tested
 
@@ -57,5 +60,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 @interface CellViewSettingsTemplates : NSTableCellView
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender;
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView
+                                                manifest:(NSDictionary *)manifest
+                                                settings:(NSDictionary *)settings
+                                           settingsLocal:(NSDictionary *)settingsLocal
+                                                     row:(NSInteger)row
+                                                  sender:(id)sender;
 @end

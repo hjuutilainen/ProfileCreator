@@ -6,9 +6,9 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCPreferencesMCX.h"
 #import "PFCLog.h"
 #import "PFCODManager.h"
+#import "PFCPreferencesMCX.h"
 
 @interface PFCPreferencesMCX ()
 
@@ -21,8 +21,7 @@
 
 - (id)init {
     self = [super initWithNibName:@"PFCPreferencesMCX" bundle:nil];
-    if ( self != nil ) {
-        
+    if (self != nil) {
     }
     return self;
 }
@@ -35,25 +34,26 @@
     [sender setEnabled:NO];
     [_progressIndicatorTestOD setHidden:NO];
     [_progressIndicatorTestOD startAnimation:self];
-    
+
     void (^odConnectionStatusAndNodes)(NSError *, NSArray *) = ^void(NSError *error, NSArray *nodes) {
-        if ( error != nil || [nodes count] == 0 ) {
-            [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
-            [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow] completionHandler:^(NSModalResponse returnCode) {
-                
-            }];
-        } else if ( [nodes count] != 0 ) {
-            [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
-            DDLogDebug(@"Nodes returned from Open Directory: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"ODNodes"]);
-        }
-        [sender setEnabled:YES];
-        [_progressIndicatorTestOD setHidden:YES];
-        [_progressIndicatorTestOD stopAnimation:self];
+      if (error != nil || [nodes count] == 0) {
+          [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
+          [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+                                                 completionHandler:^(NSModalResponse returnCode){
+
+                                                 }];
+      } else if ([nodes count] != 0) {
+          [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
+          DDLogDebug(@"Nodes returned from Open Directory: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"ODNodes"]);
+      }
+      [sender setEnabled:YES];
+      [_progressIndicatorTestOD setHidden:YES];
+      [_progressIndicatorTestOD stopAnimation:self];
     };
-    
+
     PFCODManager *odManager = [[PFCODManager alloc] init];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [odManager testConnection:odConnectionStatusAndNodes];
+      [odManager testConnection:odConnectionStatusAndNodes];
     });
 }
 

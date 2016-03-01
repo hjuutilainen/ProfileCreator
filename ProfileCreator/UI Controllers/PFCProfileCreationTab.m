@@ -17,7 +17,6 @@
 - (id)init {
     self = [super initWithNibName:@"PFCProfileCreationTab" bundle:nil];
     if (self != nil) {
-        
     }
     return self;
 } // init
@@ -35,7 +34,7 @@
     _colorSelected = [NSColor clearColor];
     _colorDeSelected = [[NSColor blackColor] colorWithAlphaComponent:0.1f];
     _colorDeSelectedMouseOver = [[NSColor blackColor] colorWithAlphaComponent:0.14f];
-    
+
     // --------------------------------------------------------------
     //  Add Notification Observers
     // --------------------------------------------------------------
@@ -49,7 +48,7 @@
     return self;
 } // initWithFrame
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (id)initWithCoder:(NSCoder *)coder {
     if ((self = [super initWithCoder:coder])) {
         [self customInit];
     }
@@ -61,9 +60,9 @@
     [self removeObserver:self forKeyPath:@"isSelected" context:nil];
 } // dealloc
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *)change context:(void *) __unused context {
-    if ( [keyPath isEqualToString:@"isSelected"] ) {
-        if ( _isSelected ) {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
+    if ([keyPath isEqualToString:@"isSelected"]) {
+        if (_isSelected) {
             [_borderBottom setHidden:YES];
             [self setColor:_colorSelected];
             [self display];
@@ -77,7 +76,7 @@
 
 - (void)tabIndexSelected:(NSNotification *)notification {
     NSInteger indexSelected = [[notification userInfo][@"TabIndex"] integerValue];
-    if ( [self tabIndex] == indexSelected ) {
+    if ([self tabIndex] == indexSelected) {
         [_borderBottom setHidden:YES];
         [self setColor:_colorSelected];
         [self display];
@@ -92,14 +91,14 @@
 
 - (NSInteger)tabIndex {
     id superview = [self superview];
-    if ( [superview isKindOfClass:[NSStackView class]] ) {
+    if ([superview isKindOfClass:[NSStackView class]]) {
         return [[(NSStackView *)superview views] indexOfObject:self];
     }
     return -1;
 } // tabIndex
 
 - (void)selectTab {
-    if ( _delegate ) {
+    if (_delegate) {
         [_delegate tabIndexSelected:[self tabIndex] saveSettings:YES sender:self];
     }
 } // selectTab
@@ -109,20 +108,20 @@
 } // mouseDown
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    
+
     // FIXME - Animate this change like safari tabs
     [_buttonClose setHidden:NO];
-    if ( ! _isSelected ) {
+    if (!_isSelected) {
         [self setColor:_colorDeSelectedMouseOver];
         [self display];
     }
 } // mouseEntered
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    
+
     // FIXME - Animate this change like safari tabs
     [_buttonClose setHidden:YES];
-    if ( _isSelected ) {
+    if (_isSelected) {
         [self setColor:_colorSelected];
         [self display];
     } else {
@@ -136,9 +135,9 @@
 } // updateTitle
 
 - (void)updateErrorCount:(NSNumber *)errorCount {
-    NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
+    NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{NSForegroundColorAttributeName : [NSColor redColor]}];
     [_textFieldErrorCount setAttributedStringValue:errorCountString];
-    if ( [errorCount integerValue] == 0 ) {
+    if ([errorCount integerValue] == 0) {
         [_textFieldErrorCount setHidden:YES];
     } else {
         [_textFieldErrorCount setHidden:NO];
@@ -146,15 +145,12 @@
 } // updateTitle
 
 - (void)updateTrackingAreas {
-    if (_trackingArea != nil ) {
+    if (_trackingArea != nil) {
         [self removeTrackingArea:_trackingArea];
     }
-    
+
     int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
-    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds]
-                                                       options:opts
-                                                         owner:self
-                                                      userInfo:nil]];
+    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas
 
@@ -164,8 +160,8 @@
 } // drawRect
 
 - (IBAction)buttonClose:(id)sender {
-    if ( _delegate ) {
-        if ( [_delegate tabIndexShouldClose:[self tabIndex] sender:self] ) {
+    if (_delegate) {
+        if ([_delegate tabIndexShouldClose:[self tabIndex] sender:self]) {
             [_delegate tabIndexClose:[self tabIndex] sender:self];
         }
     }

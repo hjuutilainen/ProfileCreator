@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
-#import "PFCViews.h"
-#import "PFCMainWindowGroupsTitle.h"
 #import "PFCAlert.h"
+#import "PFCMainWindowGroupsTitle.h"
 #import "PFCTableViews.h"
+#import "PFCViews.h"
+#import <Cocoa/Cocoa.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCMainWindow
@@ -31,79 +31,78 @@
 // -----------------------------------------------------------------------------
 //  Unsorted
 // -----------------------------------------------------------------------------
-@property                    NSMutableDictionary        *selectedGroup;
-@property                    NSMutableDictionary        *profileRuntimeKeys;
-@property                    NSString                   *selectedProfileUUID;
-@property                    NSString                   *selectedTableViewIdentifier;
+@property NSMutableDictionary *selectedGroup;
+@property NSMutableDictionary *profileRuntimeKeys;
+@property NSString *selectedProfileUUID;
+@property NSString *selectedTableViewIdentifier;
 
 // -----------------------------------------------------------------------------
 //  Window
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSSplitView                *splitVewMain;
+@property (weak) IBOutlet NSSplitView *splitVewMain;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - Profile Groups
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSVisualEffectView         *viewProfileGroupsSplitView;
-@property (weak)    IBOutlet NSScrollView               *scrollViewProfileGroups;
-@property (weak)    IBOutlet NSScrollView               *scrollViewProfileSmartGroups;
+@property (weak) IBOutlet NSVisualEffectView *viewProfileGroupsSplitView;
+@property (weak) IBOutlet NSScrollView *scrollViewProfileGroups;
+@property (weak) IBOutlet NSScrollView *scrollViewProfileSmartGroups;
 
-
-@property (weak)    IBOutlet NSView                     *viewProfileGroupsSuperview;
+@property (weak) IBOutlet NSView *viewProfileGroupsSuperview;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "All Profiles"
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSTableView                *tableViewProfileGroupAll;
-@property                    NSInteger                  tableViewProfileGroupAllSelectedRow;
-@property                    NSMutableArray             *arrayProfileGroupAll;
+@property (weak) IBOutlet NSTableView *tableViewProfileGroupAll;
+@property NSInteger tableViewProfileGroupAllSelectedRow;
+@property NSMutableArray *arrayProfileGroupAll;
 
-- (IBAction) selectTableViewProfileGroupAll:(id)sender;
+- (IBAction)selectTableViewProfileGroupAll:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "Groups"
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView                     *viewAddGroupsSuperview;
-@property (weak)    IBOutlet NSTableView                *tableViewProfileGroups;
-@property                    PFCMainWindowGroupsTitleView   *viewAddGroupsTitle;
-@property                    NSInteger                  tableViewProfileGroupsSelectedRow;
-@property                    NSMutableArray             *arrayProfileGroups;
+@property (weak) IBOutlet NSView *viewAddGroupsSuperview;
+@property (weak) IBOutlet NSTableView *tableViewProfileGroups;
+@property PFCMainWindowGroupsTitleView *viewAddGroupsTitle;
+@property NSInteger tableViewProfileGroupsSelectedRow;
+@property NSMutableArray *arrayProfileGroups;
 
-- (IBAction) selectTableViewProfileGroups:(id)sender;
+- (IBAction)selectTableViewProfileGroups:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "Smart Groups"
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView                     *viewAddSmartGroupsSuperview;
-@property (weak)    IBOutlet NSTableView                *tableViewProfileSmartGroups;
-@property                    PFCMainWindowGroupsTitleView   *viewAddSmartGroupsTitle;
-@property                    NSInteger                  tableViewProfileSmartGroupsSelectedRow;
-@property                    NSMutableArray             *arrayProfileSmartGroups;
+@property (weak) IBOutlet NSView *viewAddSmartGroupsSuperview;
+@property (weak) IBOutlet NSTableView *tableViewProfileSmartGroups;
+@property PFCMainWindowGroupsTitleView *viewAddSmartGroupsTitle;
+@property NSInteger tableViewProfileSmartGroupsSelectedRow;
+@property NSMutableArray *arrayProfileSmartGroups;
 
-- (IBAction) selectTableViewProfileSmartGroups:(id)sender;
+- (IBAction)selectTableViewProfileSmartGroups:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  SplitView Library
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView                     *viewProfileLibrarySplitView;
-@property (weak)    IBOutlet NSView                     *viewProfileLibraryTableViewSuperview;
-@property (weak)    IBOutlet NSTableView                *tableViewProfileLibrary;
-@property (weak)    IBOutlet NSMenu                     *menuTableViewProfileLibrary;
-@property                    NSIndexSet                 *tableViewProfileLibrarySelectedRows;
-@property                    NSMutableArray             *arrayProfileLibrary;
+@property (weak) IBOutlet NSView *viewProfileLibrarySplitView;
+@property (weak) IBOutlet NSView *viewProfileLibraryTableViewSuperview;
+@property (weak) IBOutlet NSTableView *tableViewProfileLibrary;
+@property (weak) IBOutlet NSMenu *menuTableViewProfileLibrary;
+@property NSIndexSet *tableViewProfileLibrarySelectedRows;
+@property NSMutableArray *arrayProfileLibrary;
 
-- (IBAction) selectTableViewProfileLibrary:(id)sender;
+- (IBAction)selectTableViewProfileLibrary:(id)sender;
 
 // -------------------------------------------------------------------------
 //  Payload Context Menu
 // -------------------------------------------------------------------------
-@property (readwrite)        NSString                   *clickedTableViewIdentifier;
-@property (readwrite)        NSInteger                  clickedTableViewRow;
+@property (readwrite) NSString *clickedTableViewIdentifier;
+@property (readwrite) NSInteger clickedTableViewRow;
 
 // -----------------------------------------------------------------------------
 //  SplitView Preview
 // -----------------------------------------------------------------------------
-@property (weak)    IBOutlet NSView                     *viewPreviewSplitView;
+@property (weak) IBOutlet NSView *viewPreviewSplitView;
 
 - (void)menuItemNewProfile;
 - (void)menuItemNewGroup;

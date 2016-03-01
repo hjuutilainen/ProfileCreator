@@ -16,7 +16,7 @@
                                    manifest:(NSDictionary *)manifest
                                    settings:(NSDictionary *)settings
                               settingsLocal:(NSDictionary *)settingsLocal
-displayKeys:(NSDictionary *)displayKeys
+                                displayKeys:(NSDictionary *)displayKeys
                                         row:(NSInteger)row
                                      sender:(id)sender;
 
@@ -31,7 +31,7 @@ displayKeys:(NSDictionary *)displayKeys
                                           manifest:(NSDictionary *)manifest
                                           settings:(NSDictionary *)settings
                                      settingsLocal:(NSDictionary *)settingsLocal
-displayKeys:(NSDictionary *)displayKeys
+                                       displayKeys:(NSDictionary *)displayKeys
                                                row:(NSInteger)row
                                             sender:(id)sender;
 

@@ -40,7 +40,11 @@
 @interface CellViewPopUpButton : NSTableCellView
 @property NSString *columnIdentifier;
 @property (weak) IBOutlet NSPopUpButton *popUpButton;
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView
+                                            settings:(NSDictionary *)settings
+                                    columnIdentifier:(NSString *)columnIdentifier
+                                                 row:(NSInteger)row
+                                              sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,5 +66,9 @@
 @interface CellViewTextFieldNumber : NSTableCellView
 @property NSString *columnIdentifier;
 @property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
-- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView
+                                                    settings:(NSDictionary *)settings
+                                            columnIdentifier:(NSString *)columnIdentifier
+                                                         row:(NSInteger)row
+                                                      sender:(id)sender;
 @end

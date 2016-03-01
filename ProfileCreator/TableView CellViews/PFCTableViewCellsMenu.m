@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCTableViewCellsMenu.h"
-#import "PFCProfileEditor.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
+#import "PFCProfileEditor.h"
+#import "PFCTableViewCellsMenu.h"
 
 @implementation PFCTableViewMenuCells
 @end
@@ -38,35 +38,35 @@
 } // drawRect
 
 - (CellViewMenu *)populateCellViewMenu:(CellViewMenu *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount payloadCount:(NSNumber *)payloadCount row:(NSInteger)row {
-    
+
     // -------------------------------------------------------------------------
     //  Error Counter
     // -------------------------------------------------------------------------
-    if ( errorCount != nil && 0 < [errorCount integerValue] ) {
-        NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{ NSForegroundColorAttributeName : [NSColor redColor] }];
+    if (errorCount != nil && 0 < [errorCount integerValue]) {
+        NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{NSForegroundColorAttributeName : [NSColor redColor]}];
         [[cellView errorCount] setAttributedStringValue:errorCountString];
     } else {
         [[cellView errorCount] setStringValue:@""];
     }
-    
+
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
     [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-    
+
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ( [payloadCount intValue] == 1 ) ? @"Payload" : @"Payloads"]];
-    
+    [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ([payloadCount intValue] == 1) ? @"Payload" : @"Payloads"]];
+
     // -------------------------------------------------------------------------
     //  Icon
     // -------------------------------------------------------------------------
     NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
-    if ( icon ) {
+    if (icon) {
         [[cellView menuIcon] setImage:icon];
     }
-    
+
     return cellView;
 } // populateCellViewMenu:manifestDict:row
 
@@ -85,24 +85,24 @@
 } // drawRect
 
 - (CellViewMenuEnabled *)populateCellViewEnabled:(CellViewMenuEnabled *)cellView manifestDict:(NSDictionary *)manifestDict row:(NSInteger)row sender:(id)sender {
-    
+
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
     [[cellView menuCheckbox] setState:[manifestDict[PFCSettingsKeyEnabled] boolValue]];
-    
+
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
     [[cellView menuCheckbox] setHidden:[manifestDict[PFCManifestKeyRequired] boolValue]];
-    
+
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
     [[cellView menuCheckbox] setAction:@selector(checkboxMenuEnabled:)];
     [[cellView menuCheckbox] setTarget:sender];
     [[cellView menuCheckbox] setTag:row];
-    
+
     return cellView;
 } // populateCellViewEnabled:manifestDict:row
 
@@ -121,20 +121,20 @@
 } // drawRect
 
 - (CellViewMenuLibrary *)populateCellViewMenuLibrary:(CellViewMenuLibrary *)cellView manifestDict:(NSDictionary *)manifestDict errorCount:(NSNumber *)errorCount row:(NSInteger)row {
-    
+
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
     [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
-        
+
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
     NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
-    if ( icon ) {
+    if (icon) {
         [[cellView menuIcon] setImage:icon];
     }
-    
+
     return cellView;
 } // populateCellViewMenu:manifestDict:row
 

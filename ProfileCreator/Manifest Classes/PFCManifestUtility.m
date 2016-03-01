@@ -17,9 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCManifestUtility.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
+#import "PFCManifestUtility.h"
 
 @implementation PFCManifestUtility
 
@@ -34,8 +34,8 @@
     static PFCManifestUtility *sharedUtility = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-        sharedUtility = [[self alloc] init];
+      DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+      sharedUtility = [[self alloc] init];
     });
     return sharedUtility;
 } // sharedParser
@@ -49,84 +49,86 @@
 - (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant {
     CGFloat indentationBaseValue = [baseConstant floatValue] ?: 8.0f;
     CGFloat indentationMultiplier;
-    if ( [indentationLevel floatValue] < 1.0f ) {
+    if ([indentationLevel floatValue] < 1.0f) {
         return indentationBaseValue;
-    } else if ( 5.0f < [indentationLevel floatValue] ) {
+    } else if (5.0f < [indentationLevel floatValue]) {
         indentationMultiplier = 5.0f;
     } else {
         indentationMultiplier = [indentationLevel floatValue];
     }
-    
-    return ( indentationBaseValue + ( indentationBaseValue * indentationMultiplier ) );
+
+    return (indentationBaseValue + (indentationBaseValue * indentationMultiplier));
 } // constantForIndentationLevel
 
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
-    
+
     NSImage *icon = [[NSBundle mainBundle] imageForResource:manifest[PFCManifestKeyIconName]];
-    if ( icon ) {
+    if (icon) {
         return icon;
     }
-    
+
     NSURL *iconURL = [NSURL fileURLWithPath:manifest[PFCManifestKeyIconPath] ?: @""];
-    if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
+    if ([iconURL checkResourceIsReachableAndReturnError:nil]) {
         NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-        if ( icon ) {
+        if (icon) {
             return icon;
         }
     }
-    
+
     iconURL = [NSURL fileURLWithPath:manifest[PFCManifestKeyIconPathBundle] ?: @""];
-    if ( [iconURL checkResourceIsReachableAndReturnError:nil] ) {
+    if ([iconURL checkResourceIsReachableAndReturnError:nil]) {
         NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
-        if ( icon ) {
+        if (icon) {
             return icon;
         }
     }
-    
+
     // FIXME - Should probaby return a bundled default icon.
     return nil;
 } // iconForManifest
 
 - (BOOL)hideKey:(NSString *)key {
-    
+
     // -------------------------------------------------------------------------
     //  FIXME - Move keysToHide to plist and write a preferences for this.
     //  This should be a user setting under preferences.
     //  List all "default" disabled, and user can override by adding their own or disable some or all hiding
     // -------------------------------------------------------------------------
-    
+
     NSArray *keysToHide = @[
-                            @"NSWindow",
-                            @"NSNavPanelExpandedSizeForOpenMode",
-                            @"NSNavPanelExpandedSizeForSaveMode",
-                            @"NSNavPanelExpandedStateForSaveMode",
-                            @"NSNavLastRootDirectory",
-                            @"NSSplitView",
-                            @"NSOutlineView",
-                            @"NSTableView",
-                            @"NSToolbar"
-                            ];
-    
+        @"NSWindow",
+        @"NSNavPanelExpandedSizeForOpenMode",
+        @"NSNavPanelExpandedSizeForSaveMode",
+        @"NSNavPanelExpandedStateForSaveMode",
+        @"NSNavLastRootDirectory",
+        @"NSSplitView",
+        @"NSOutlineView",
+        @"NSTableView",
+        @"NSToolbar"
+    ];
+
     __block BOOL hideKey = NO;
-    [keysToHide enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ( [key hasPrefix:obj] ) {
-            hideKey = YES;
-            *stop = YES;
-        }
+    [keysToHide enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+      if ([key hasPrefix:obj]) {
+          hideKey = YES;
+          *stop = YES;
+      }
     }];
     return hideKey;
 } // hideKey
 
 - (NSString *)typeStringFromValue:(id)value {
     id valueClass = [value class];
-    if ( [value isKindOfClass:[NSString class]] )       return PFCValueTypeString;
-    if ( [valueClass isEqualTo:[@(YES) class]] )        return PFCValueTypeBoolean;
-    if ( [valueClass isEqualTo:[@(0) class]] ) {
+    if ([value isKindOfClass:[NSString class]])
+        return PFCValueTypeString;
+    if ([valueClass isEqualTo:[@(YES) class]])
+        return PFCValueTypeBoolean;
+    if ([valueClass isEqualTo:[@(0) class]]) {
         CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
-        
+
         /*
          Use the CFNumberTypes to determine what number type the value is.
-         
+
          kCFNumberSInt8Type     = 1,
          kCFNumberSInt16Type    = 2,
          kCFNumberSInt32Type    = 3,
@@ -145,101 +147,115 @@
          kCFNumberCGFloatType   = 16,
          kCFNumberMaxType       = 16
          */
-        
-        if ( numberType <= 4 )                          return PFCValueTypeInteger;
-        if ( 5 <= numberType && numberType <= 6 )       return PFCValueTypeFloat;
-        
+
+        if (numberType <= 4)
+            return PFCValueTypeInteger;
+        if (5 <= numberType && numberType <= 6)
+            return PFCValueTypeFloat;
+
         NSLog(@"[ERROR] Unknown CFNumberType: %ld", numberType);
         return @"Number";
     }
-    if ( [value isKindOfClass:[NSArray class]] )        return PFCValueTypeArray;
-    if ( [value isKindOfClass:[NSDictionary class]] )   return PFCValueTypeDict;
-    if ( [value isKindOfClass:[NSDate class]] )         return PFCValueTypeDate;
-    if ( [value isKindOfClass:[NSData class]] )         return PFCValueTypeData;
+    if ([value isKindOfClass:[NSArray class]])
+        return PFCValueTypeArray;
+    if ([value isKindOfClass:[NSDictionary class]])
+        return PFCValueTypeDict;
+    if ([value isKindOfClass:[NSDate class]])
+        return PFCValueTypeDate;
+    if ([value isKindOfClass:[NSData class]])
+        return PFCValueTypeData;
     return PFCValueTypeUnknown;
 } // typeStringFromValue
 
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString {
-    if ( [typeString isEqualToString:PFCValueTypeString] )   return PFCCellTypeTextField;
-    if ( [typeString isEqualToString:PFCValueTypeBoolean] )  return PFCCellTypeCheckbox;
-    if ( [typeString isEqualToString:PFCValueTypeInteger] )  return PFCCellTypeTextFieldNumber;
-    if ( [typeString isEqualToString:PFCValueTypeFloat] )    return PFCCellTypeTextFieldNumber;
-    if ( [typeString isEqualToString:PFCValueTypeArray] )    return PFCCellTypeTableView;
-    if ( [typeString isEqualToString:PFCValueTypeDict] )     return PFCCellTypeSegmentedControl;
-    if ( [typeString isEqualToString:PFCValueTypeDate] )     return PFCCellTypeDatePicker;
-    if ( [typeString isEqualToString:PFCValueTypeData] )     return PFCCellTypeFile;
+    if ([typeString isEqualToString:PFCValueTypeString])
+        return PFCCellTypeTextField;
+    if ([typeString isEqualToString:PFCValueTypeBoolean])
+        return PFCCellTypeCheckbox;
+    if ([typeString isEqualToString:PFCValueTypeInteger])
+        return PFCCellTypeTextFieldNumber;
+    if ([typeString isEqualToString:PFCValueTypeFloat])
+        return PFCCellTypeTextFieldNumber;
+    if ([typeString isEqualToString:PFCValueTypeArray])
+        return PFCCellTypeTableView;
+    if ([typeString isEqualToString:PFCValueTypeDict])
+        return PFCCellTypeSegmentedControl;
+    if ([typeString isEqualToString:PFCValueTypeDate])
+        return PFCCellTypeDatePicker;
+    if ([typeString isEqualToString:PFCValueTypeData])
+        return PFCCellTypeFile;
     return @"Unknown";
 } // cellTypeFromTypeString
 
 - (BOOL)showManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ( ! [displayKeys[PFCManifestKeyDisabled] boolValue] ) {
-        
+    if (![displayKeys[PFCManifestKeyDisabled] boolValue]) {
+
         BOOL enabled = YES;
-        if ( ! required && settings[identifier][PFCSettingsKeyEnabled] != nil ) {
+        if (!required && settings[identifier][PFCSettingsKeyEnabled] != nil) {
             enabled = [settings[identifier][PFCSettingsKeyEnabled] boolValue];
         }
-        
-        if ( ! enabled ) {
+
+        if (!enabled) {
             return NO;
         }
     }
-    
-    if ( ! [displayKeys[PFCManifestKeyHidden] boolValue] ) {
+
+    if (![displayKeys[PFCManifestKeyHidden] boolValue]) {
         BOOL hidden = NO;
-        if ( ! required && [manifestContentDict[PFCManifestKeyHidden] boolValue] ) {
+        if (!required && [manifestContentDict[PFCManifestKeyHidden] boolValue]) {
             hidden = [manifestContentDict[PFCManifestKeyHidden] boolValue];
         }
-        
-        if ( hidden ) {
+
+        if (hidden) {
             return NO;
         }
     }
-    
-    if ( ! [displayKeys[PFCManifestKeySupervisedOnly] boolValue] ) {
+
+    if (![displayKeys[PFCManifestKeySupervisedOnly] boolValue]) {
         BOOL supervised = NO;
-        
+
         // FIXME - Need to handle the availability keys
-        
-        if ( ! required && [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue] ) {
+
+        if (!required && [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue]) {
             supervised = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
         }
-        
-        if ( supervised ) {
+
+        if (supervised) {
             return NO;
         }
     }
-    
+
     return YES;
 } // showManifestContentDict:settings:showDisabled:showHidden
 
 - (NSString *)toolTipForManifestContentDict:(NSDictionary *)manifestContentDict {
-    
+
     // FIXME - This is just a basic implementation to get it in there, probably need to override to create a custom tool tip to get a good look, allso add relevant info here.
-    
+
     NSMutableString *toolTip = [[NSMutableString alloc] init];
-    
+
     // -------------------------------------------------------------------------
     //  PayloadKey
     // -------------------------------------------------------------------------
     [toolTip appendString:[NSString stringWithFormat:@"\t\tKey: %@", manifestContentDict[PFCManifestKeyPayloadKey] ?: @"-"]];
-    
+
     // -------------------------------------------------------------------------
     //  PayloadType
     // -------------------------------------------------------------------------
     [toolTip appendString:[NSString stringWithFormat:@"\n\tType: %@", manifestContentDict[PFCManifestKeyPayloadType] ?: @"-"]];
-    
+
     // -------------------------------------------------------------------------
     //  Required
     // -------------------------------------------------------------------------
     [toolTip appendString:[NSString stringWithFormat:@"\n\tRequired: %@", (manifestContentDict[PFCManifestKeyRequired]) ? @"YES" : @"NO"]];
-    
+
     // -------------------------------------------------------------------------
     //  ToolTip
     // -------------------------------------------------------------------------
     [toolTip appendString:[NSString stringWithFormat:@"\n\tDescription: %@", manifestContentDict[PFCManifestKeyToolTipDescription] ?: @"-"]];
-    
+
     return toolTip;
 }
 

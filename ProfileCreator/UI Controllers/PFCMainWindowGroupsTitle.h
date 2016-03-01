@@ -8,11 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef NS_ENUM(NSInteger, PFCProfileGroups) {
-    kPFCProfileGroupAll = 0,
-    kPFCProfileGroups,
-    kPFCProfileSmartGroups
-};
+typedef NS_ENUM(NSInteger, PFCProfileGroups) { kPFCProfileGroupAll = 0, kPFCProfileGroups, kPFCProfileSmartGroups };
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileGroupDelegate
@@ -20,7 +16,6 @@ typedef NS_ENUM(NSInteger, PFCProfileGroups) {
 @protocol PFCProfileGroupDelegate
 - (void)createNewGroupOfType:(PFCProfileGroups)group;
 @end
-
 
 @interface PFCMainWindowGroupsTitle : NSViewController
 @end

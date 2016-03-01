@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCTableViewCellsSettingsTableView.h"
-#import "PFCTableViewCellsSettings.h"
-#import "PFCConstants.h"
 #import "PFCCellTypeTableView.h"
+#import "PFCConstants.h"
+#import "PFCTableViewCellsSettings.h"
+#import "PFCTableViewCellsSettingsTableView.h"
 
 @implementation PFCTableViewCellsSettingsTableView
 @end
@@ -37,34 +37,34 @@
 } // drawRect
 
 - (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
-    
+
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
     // ---------------------------------------------------------------------
     [cellView setColumnIdentifier:columnIdentifier];
-    
+
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
-    if ( [value length] == 0 ) {
-        if ( [settings[@"DefaultValue"] length] != 0 ) {
+    if ([value length] == 0) {
+        if ([settings[@"DefaultValue"] length] != 0) {
             value = settings[@"DefaultValue"] ?: @"";
         }
     }
     [[cellView textField] setDelegate:sender];
     [[cellView textField] setStringValue:value];
     [[cellView textField] setTag:row];
-    
+
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [settings[@"PlaceholderValue"] length] != 0 ) {
+    if ([settings[@"PlaceholderValue"] length] != 0) {
         [[cellView textField] setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
     } else {
         [[cellView textField] setPlaceholderString:@""];
     }
-    
+
     return cellView;
 } // populateCellViewTextField:settings:row
 
@@ -81,27 +81,31 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
+- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView
+                                            settings:(NSDictionary *)settings
+                                    columnIdentifier:(NSString *)columnIdentifier
+                                                 row:(NSInteger)row
+                                              sender:(id)sender {
 
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
     // ---------------------------------------------------------------------
     [cellView setColumnIdentifier:columnIdentifier];
-    
+
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView popUpButton] removeAllItems];
     [[cellView popUpButton] addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
     [[cellView popUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
-    
+
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
     [[cellView popUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView popUpButton] setTarget:sender];
     [[cellView popUpButton] setTag:row];
-    
+
     return cellView;
 } // populateCellViewPopUp:settings:row
 @end
@@ -118,23 +122,22 @@
 } // drawRect
 
 - (CellViewCheckbox *)populateCellViewCheckbox:(CellViewCheckbox *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
-    
+
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
     // ---------------------------------------------------------------------
     [cellView setColumnIdentifier:columnIdentifier];
-    
+
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if ( settings[PFCSettingsKeyValue] != nil ) {
+    if (settings[PFCSettingsKeyValue] != nil) {
         checkboxState = [settings[PFCSettingsKeyValue] boolValue];
-    } else if ( settings[@"DefaultValue"] ) {
+    } else if (settings[@"DefaultValue"]) {
         checkboxState = [settings[@"DefaultValue"] boolValue];
     }
     [[cellView checkbox] setState:checkboxState];
-    
 
     // ---------------------------------------------------------------------
     //  Target Action
@@ -142,7 +145,7 @@
     [[cellView checkbox] setAction:@selector(checkbox:)];
     [[cellView checkbox] setTarget:sender];
     [[cellView checkbox] setTag:row];
-    
+
     return cellView;
 } // populateCellViewCheckbox:settings:row
 
@@ -159,57 +162,61 @@
     [super drawRect:dirtyRect];
 }
 
-- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
-    
+- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView
+                                                    settings:(NSDictionary *)settings
+                                            columnIdentifier:(NSString *)columnIdentifier
+                                                         row:(NSInteger)row
+                                                      sender:(id)sender {
+
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
     // ---------------------------------------------------------------------
     [cellView setColumnIdentifier:columnIdentifier];
-    
+
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     NSString *value;
-    if ( settings[PFCSettingsKeyValue] != nil ) {
-        if ( [[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[NSString class]] ) {
+    if (settings[PFCSettingsKeyValue] != nil) {
+        if ([[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[NSString class]]) {
             value = settings[PFCSettingsKeyValue] ?: @"";
-        } else if ( [[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[@(0) class]] ) {
+        } else if ([[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[@(0) class]]) {
             value = [settings[PFCSettingsKeyValue] stringValue] ?: @"";
         }
     }
 
-    if ( [value length] == 0 ) {
-        if ( settings[@"DefaultValue"] != nil ) {
-            if ( [[settings[@"DefaultValue"] class] isSubclassOfClass:[NSString class]] ) {
+    if ([value length] == 0) {
+        if (settings[@"DefaultValue"] != nil) {
+            if ([[settings[@"DefaultValue"] class] isSubclassOfClass:[NSString class]]) {
                 value = settings[@"DefaultValue"] ?: @"";
-            } else if ( [[settings[@"DefaultValue"] class] isSubclassOfClass:[@(0) class]] ) {
+            } else if ([[settings[@"DefaultValue"] class] isSubclassOfClass:[@(0) class]]) {
                 value = [settings[@"DefaultValue"] stringValue] ?: @"";
             }
         }
     }
-    
+
     [[cellView textField] setDelegate:sender];
     [[cellView textField] setStringValue:value ?: @""];
     [[cellView textField] setTag:row];
-    
+
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
     //[[cellView settingNumberFormatter] setMinimum:manifest[@"MinValue"] ?: @0];
     //[[cellView settingStepper] setMinValue:[manifest[@"MinValue"] doubleValue] ?: 0.0];
-    
+
     //[[cellView settingNumberFormatter] setMaximum:manifest[@"MaxValue"] ?: @99999];
     //[[cellView settingStepper] setMaxValue:[manifest[@"MinValue"] doubleValue] ?: 99999.0];
-    
+
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ( [settings[@"PlaceholderValue"] length] != 0 ) {
+    if ([settings[@"PlaceholderValue"] length] != 0) {
         [[cellView textField] setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
     } else {
         [[cellView textField] setPlaceholderString:@""];
     }
-    
+
     return cellView;
 } // populateCellViewTextField:settings:row
 

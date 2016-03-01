@@ -6,13 +6,12 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "PFCLog.h"
+#import <Foundation/Foundation.h>
 
 @interface PFCLogFormatter : NSObject <DDLogFormatter> {
     int loggerCount;
     NSDateFormatter *threadUnsafeDateFormatter;
 }
-
 
 @end

@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCTableViewCellsSettings.h"
-#import "PFCProfileEditor.h"
-#import "PFCTableViewCellsSettingsTableView.h"
-#import "PFCFileInfoProcessors.h"
-#import "PFCConstants.h"
-#import "PFCManifestUtility.h"
-#import "PFCLog.h"
 #import "NSColor+PFCColors.h"
+#import "PFCConstants.h"
+#import "PFCFileInfoProcessors.h"
+#import "PFCLog.h"
+#import "PFCManifestUtility.h"
+#import "PFCProfileEditor.h"
+#import "PFCTableViewCellsSettings.h"
+#import "PFCTableViewCellsSettingsTableView.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -37,39 +37,44 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
+- (CellViewSettingsEnabled *)populateCellViewEnabled:(CellViewSettingsEnabled *)cellView
+                                            manifest:(NSDictionary *)manifest
+                                            settings:(NSDictionary *)settings
+                                       settingsLocal:(NSDictionary *)settingsLocal
+                                                 row:(NSInteger)row
+                                              sender:(id)sender {
+
     BOOL required = NO;
-    if ( manifest[PFCManifestKeyRequired] != nil ) {
+    if (manifest[PFCManifestKeyRequired] != nil) {
         required = [manifest[PFCManifestKeyRequired] boolValue];
-    } else if ( manifest[PFCManifestKeyRequiredHost] != nil ) {
+    } else if (manifest[PFCManifestKeyRequiredHost] != nil) {
         required = [manifest[PFCManifestKeyRequiredHost] boolValue];
-    } else if ( manifest[PFCManifestKeyRequiredPort] != nil ) {
+    } else if (manifest[PFCManifestKeyRequiredPort] != nil) {
         required = [manifest[PFCManifestKeyRequiredPort] boolValue];
     }
-    
+
     BOOL enabled = YES;
-    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
-    
+
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
     [[cellView settingEnabled] setAction:@selector(checkbox:)];
     [[cellView settingEnabled] setTarget:sender];
     [[cellView settingEnabled] setTag:row];
-    
+
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
     [[cellView settingEnabled] setHidden:required];
-    
+
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
     [[cellView settingEnabled] setState:enabled];
-    
+
     return cellView;
 } // populateCellViewEnabled:settings:row
 
@@ -99,22 +104,27 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal row:(NSInteger)row sender:(id)sender {
-    
+- (CellViewSettingsTemplates *)populateCellViewTemplates:(CellViewSettingsTemplates *)cellView
+                                                manifest:(NSDictionary *)manifest
+                                                settings:(NSDictionary *)settings
+                                           settingsLocal:(NSDictionary *)settingsLocal
+                                                     row:(NSInteger)row
+                                                  sender:(id)sender {
+
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifest[PFCManifestKeyAvailableValues] ?: @[]];
     [[cellView settingPopUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: manifest[PFCManifestKeyDefaultValue]];
-    
+
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
     [[cellView settingPopUpButton] setAction:@selector(popUpButtonSelection:)];
     [[cellView settingPopUpButton] setTarget:sender];
     [[cellView settingPopUpButton] setTag:row];
-    
+
     return cellView;
 } // CellViewSettingsTemplates
 

@@ -8,12 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef NS_ENUM(NSInteger, PFCFolders) {
-    kPFCFolderUserApplicationSupport = 0,
-    kPFCFolderSavedProfiles,
-    kPFCFolderSavedProfileGroups,
-    kPFCFolderSavedProfileSmartGroups
-};
+typedef NS_ENUM(NSInteger, PFCFolders) { kPFCFolderUserApplicationSupport = 0, kPFCFolderSavedProfiles, kPFCFolderSavedProfileGroups, kPFCFolderSavedProfileSmartGroups };
 
 @interface PFCGeneralUtility : NSObject
 

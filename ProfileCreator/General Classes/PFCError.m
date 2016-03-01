@@ -17,17 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCError.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
 
 @implementation PFCError
 
 + (NSDictionary *)verificationReportWithMessage:(NSString *)message severity:(int)severity manifestContentDict:(NSDictionary *)manifestContentDict {
-    return @{
-             @"Severity" : [@(severity) stringValue],
-             @"Message" : message ?: @"",
-             PFCManifestKeyPayloadKey : manifestContentDict[PFCManifestKeyPayloadKey] ?: @"Unknown"
-             };
+    return @{ @"Severity" : [@(severity) stringValue], @"Message" : message ?: @"", PFCManifestKeyPayloadKey : manifestContentDict[PFCManifestKeyPayloadKey] ?: @"Unknown" };
 } // verificationReportWithMessage:severity:manifestContentDict
 
 @end

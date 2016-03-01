@@ -19,8 +19,7 @@
 
 - (id)init {
     self = [super initWithNibName:@"PFCMainWindowSort" bundle:nil];
-    if ( self != nil ) {
-        
+    if (self != nil) {
     }
     return self;
 }
@@ -32,21 +31,21 @@
 
 - (void)setupPopUpButton {
     NSMenu *menu = [[NSMenu alloc] init];
-    
+
     NSMenuItem *menuItemAlphabetically = [[NSMenuItem alloc] init];
     [menuItemAlphabetically setTitle:@"Alphabetically"];
     [menu addItem:menuItemAlphabetically];
-    
+
     [menu addItem:[NSMenuItem separatorItem]];
-    
+
     NSMenuItem *menuItemAscending = [[NSMenuItem alloc] init];
     [menuItemAscending setTitle:@"Ascending"];
     [menu addItem:menuItemAscending];
-    
+
     NSMenuItem *menuItemDescending = [[NSMenuItem alloc] init];
     [menuItemDescending setTitle:@"Descending"];
     [menu addItem:menuItemDescending];
-    
+
     [_popUpButtonSort setMenu:menu];
 }
 

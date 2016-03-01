@@ -22,8 +22,8 @@
 #import "PFCLog.h"
 
 #import "PFCMainWindow.h"
-#import "PFCPreferences.h"
 #import "PFCManifestLibrary.h"
+#import "PFCPreferences.h"
 
 @interface PFCAppDelegate ()
 
@@ -41,100 +41,100 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
-    
+
     // --------------------------------------------------------------
     //  Register user defaults
     // --------------------------------------------------------------
     NSError *error;
     NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
-    if ( [defaultSettingsPath checkResourceIsReachableAndReturnError:&error] ) {
+    if ([defaultSettingsPath checkResourceIsReachableAndReturnError:&error]) {
         NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
-        if ( [defaultSettingsDict count] != 0 ) {
+        if ([defaultSettingsDict count] != 0) {
             [[NSUserDefaults standardUserDefaults] registerDefaults:defaultSettingsDict];
         }
     } else {
         // Use NSLog as CocoaLumberjack isn't available yet
         NSLog(@"%@", [error localizedDescription]);
     }
-    
+
     // --------------------------------------------------------------
     //  Initialize Logging
     // --------------------------------------------------------------
     [PFCLog configureLoggingForSession:kPFCSessionTypeGUI];
-    
+
     // --------------------------------------------------------------
     //  Initialize Manifest Libraries
     // --------------------------------------------------------------
     [PFCManifestLibrary sharedLibrary];
-    
+
     // --------------------------------------------------------------
     //  Initialize Controllers
     // --------------------------------------------------------------
     [self setMainWindowController:[[PFCMainWindow alloc] init]];
-    
+
     // --------------------------------------------------------------
     //  Setup Menu Items
     // --------------------------------------------------------------
     [self setupMenuItems];
-    
+
     // --------------------------------------------------------------
     //  Show Main Window
     // --------------------------------------------------------------
     [[_mainWindowController window] makeKeyAndOrderFront:self];
-    
+
 } // applicationWillFinishLaunching
 
-- (void) menuItemPreferences {
-    
-    if ( ! _preferencesController ) {
+- (void)menuItemPreferences {
+
+    if (!_preferencesController) {
         _preferencesController = [[PFCPreferences alloc] init];
     }
-    
-    if ( _preferencesController ) {
+
+    if (_preferencesController) {
         [[_preferencesController window] makeKeyAndOrderFront:self];
     }
 }
 
-- (void) setupMenuItems {
-    
+- (void)setupMenuItems {
+
     // --------------------------------------------------------------
     //  Get Main Menu
     // --------------------------------------------------------------
     NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
-    
+
     // --------------------------------------------------------------
     //  Get Main Menu -> ProfileCreator
     // --------------------------------------------------------------
     NSMenu *menuProfileCreator = [[mainMenu itemWithTitle:@"ProfileCreator"] submenu];
-    
+
     // --------------------------------------------------------------
     //  Update Menu Item -> ProfileCreator -> Preferences
     // --------------------------------------------------------------
     NSMenuItem *preferences = [menuProfileCreator itemWithTitle:@"Preferences…"];
-    if ( preferences ) {
+    if (preferences) {
         [preferences setTarget:self];
         [preferences setAction:@selector(menuItemPreferences)];
     }
-    
+
     // --------------------------------------------------------------
     //  Get Main Menu -> File
     // --------------------------------------------------------------
     NSMenu *menuFile = [[mainMenu itemWithTitle:@"File"] submenu];
-    
+
     // --------------------------------------------------------------
     //  Update Menu Item -> File -> "New Profile"
     // --------------------------------------------------------------
     NSMenuItem *newProfile = [menuFile itemWithTitle:@"New Profile"];
-    if ( newProfile ) {
+    if (newProfile) {
         [newProfile setTarget:_mainWindowController];
         [newProfile setAction:@selector(menuItemNewProfile)];
     }
-    
+
     // --------------------------------------------------------------
     //  Update Menu Item -> File -> "New Profile"
     // --------------------------------------------------------------
     NSMenuItem *newGroup = [menuFile itemWithTitle:@"New Group"];
-    if ( newGroup ) {
+    if (newGroup) {
         [newGroup setTarget:_mainWindowController];
         [newGroup setAction:@selector(menuItemNewGroup)];
     }

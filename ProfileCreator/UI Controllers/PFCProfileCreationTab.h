@@ -38,13 +38,13 @@
 @property (weak) IBOutlet NSTextField *textFieldTitle;
 @property (weak) IBOutlet NSTextField *textFieldErrorCount;
 @property (weak) IBOutlet NSButton *buttonClose;
-@property                 BOOL isSelected;
-@property                 NSTrackingArea *trackingArea;
+@property BOOL isSelected;
+@property NSTrackingArea *trackingArea;
 
-@property                 NSColor *colorSelected;
-@property                 NSColor *colorDeSelected;
-@property                 NSColor *colorDeSelectedMouseOver;
-@property                 NSColor *color;
+@property NSColor *colorSelected;
+@property NSColor *colorDeSelected;
+@property NSColor *colorDeSelectedMouseOver;
+@property NSColor *color;
 
 - (NSInteger)tabIndex;
 - (void)updateTitle:(NSString *)title;

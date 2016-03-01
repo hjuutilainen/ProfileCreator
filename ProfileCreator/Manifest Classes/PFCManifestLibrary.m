@@ -6,9 +6,9 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCManifestLibrary.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
+#import "PFCManifestLibrary.h"
 #import "PFCManifestParser.h"
 
 @implementation PFCManifestLibrary
@@ -24,15 +24,15 @@
     static PFCManifestLibrary *sharedLibrary = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-        sharedLibrary = [[self alloc] init];
+      DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+      sharedLibrary = [[self alloc] init];
     });
     return sharedLibrary;
 } // sharedParser
 
 - (id)init {
     self = [super init];
-    if ( self ) {
+    if (self) {
         _cachedLocalSettings = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -45,52 +45,50 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)libraryAll:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
-    
-    if ( acceptCached && _cachedLibraryAll ) {
+
+    if (acceptCached && _cachedLibraryAll) {
         return _cachedLibraryAll;
     }
-    
+
     NSMutableArray *libraryAll = [[NSMutableArray alloc] init];
     [libraryAll addObjectsFromArray:[self libraryApple:nil acceptCached:acceptCached]];
     [libraryAll addObjectsFromArray:[self libraryUserLibraryPreferencesLocal:nil acceptCached:acceptCached]];
     [libraryAll addObjectsFromArray:[self libraryLibraryPreferencesLocal:nil acceptCached:acceptCached]];
-    
+
     _cachedLibraryAll = [libraryAll copy];
     return _cachedLibraryAll;
 }
 
 - (NSArray *)libraryApple:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
-    
-    if ( acceptCached && _cachedLibraryApple ) {
+
+    if (acceptCached && _cachedLibraryApple) {
         return _cachedLibraryApple;
     }
-    
+
     // ---------------------------------------------------------------------
     //  Get path to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
     NSURL *profileManifestFolderURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"Manifests"];
-    if ( ! [profileManifestFolderURL checkResourceIsReachableAndReturnError:error] ) {
+    if (![profileManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
-        
+
         NSMutableArray *libraryApple = [[NSMutableArray alloc] init];
-        
+
         // ---------------------------------------------------------------------
         //  Put all profile manifest plist URLs in an array
         // ---------------------------------------------------------------------
-        NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:profileManifestFolderURL
-                                                             includingPropertiesForKeys:@[]
-                                                                                options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                                  error:nil];
-        
+        NSArray *dirContents =
+            [[NSFileManager defaultManager] contentsOfDirectoryAtURL:profileManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+
         // ---------------------------------------------------------------------
         //  Return all manifests matching predicate
         // ---------------------------------------------------------------------
         NSPredicate *predicateManifestPlists = [NSPredicate predicateWithFormat:@"self.pathExtension == 'plist'"];
         NSArray *manifestURLs = [dirContents filteredArrayUsingPredicate:predicateManifestPlists];
-        for ( NSURL *manifestURL in manifestURLs ?: @[] ) {
+        for (NSURL *manifestURL in manifestURLs ?: @[]) {
             NSDictionary *manifestDict = [NSDictionary dictionaryWithContentsOfURL:manifestURL];
-            if ( [manifestDict count] != 0 ) {
+            if ([manifestDict count] != 0) {
                 [libraryApple addObject:manifestDict];
             }
         }
@@ -101,28 +99,24 @@
 } // libraryApple
 
 - (NSArray *)libraryUserLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
-    
-    if ( acceptCached && _cachedLibraryUserLibraryPreferencesLocal ) {
+
+    if (acceptCached && _cachedLibraryUserLibraryPreferencesLocal) {
         return _cachedLibraryUserLibraryPreferencesLocal;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to user library folder
     // -------------------------------------------------------------------------
-    NSURL *userLibraryURL = [[NSFileManager defaultManager] URLForDirectory:NSLibraryDirectory
-                                                                   inDomain:NSUserDomainMask
-                                                          appropriateForURL:nil
-                                                                     create:NO
-                                                                      error:error];
-    if ( userLibraryURL == nil ) {
+    NSURL *userLibraryURL = [[NSFileManager defaultManager] URLForDirectory:NSLibraryDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:error];
+    if (userLibraryURL == nil) {
         return nil;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to user library preferences folder
     // -------------------------------------------------------------------------
     NSURL *userLibraryPreferencesURL = [userLibraryURL URLByAppendingPathComponent:@"Preferences"];
-    if ( ! [userLibraryPreferencesURL checkResourceIsReachableAndReturnError:error] ) {
+    if (![userLibraryPreferencesURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
         _cachedLibraryUserLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:userLibraryPreferencesURL];
@@ -131,28 +125,24 @@
 } // libraryUserLibraryPreferencesLocal:settingsLocal
 
 - (NSArray *)libraryLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
-    
-    if ( acceptCached && _cachedLibraryLibraryPreferencesLocal ) {
+
+    if (acceptCached && _cachedLibraryLibraryPreferencesLocal) {
         return _cachedLibraryLibraryPreferencesLocal;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to user library folder
     // -------------------------------------------------------------------------
-    NSURL *libraryURL = [[NSFileManager defaultManager] URLForDirectory:NSLibraryDirectory
-                                                               inDomain:NSLocalDomainMask
-                                                      appropriateForURL:nil
-                                                                 create:NO
-                                                                  error:error];
-    if ( libraryURL == nil ) {
+    NSURL *libraryURL = [[NSFileManager defaultManager] URLForDirectory:NSLibraryDirectory inDomain:NSLocalDomainMask appropriateForURL:nil create:NO error:error];
+    if (libraryURL == nil) {
         return nil;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to user library preferences folder
     // -------------------------------------------------------------------------
     NSURL *libraryPreferencesURL = [libraryURL URLByAppendingPathComponent:@"Preferences"];
-    if ( ! [libraryPreferencesURL checkResourceIsReachableAndReturnError:error] ) {
+    if (![libraryPreferencesURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
         _cachedLibraryLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:libraryPreferencesURL];
@@ -161,37 +151,33 @@
 } // libraryLibraryPreferencesLocal:settingsLocal
 
 - (NSArray *)libraryCustom:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached {
-    
-    if ( acceptCached && _cachedLibraryCustom ) {
+
+    if (acceptCached && _cachedLibraryCustom) {
         return _cachedLibraryCustom;
     }
-    
+
     return nil;
 }
 
-- (NSArray *)libraryMCX:(NSError *__autoreleasing *)error acceptCached:(BOOL) __unused acceptCached {
-    
-    if ( _cachedLibraryMCX ) {
+- (NSArray *)libraryMCX:(NSError *__autoreleasing *)error acceptCached:(BOOL)__unused acceptCached {
+
+    if (_cachedLibraryMCX) {
         return _cachedLibraryMCX;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to core services folder
     // -------------------------------------------------------------------------
-    NSURL *coreServicesURL = [[NSFileManager defaultManager] URLForDirectory:NSCoreServiceDirectory
-                                                               inDomain:NSSystemDomainMask
-                                                      appropriateForURL:nil
-                                                                 create:NO
-                                                                  error:error];
-    if ( coreServicesURL == nil ) {
+    NSURL *coreServicesURL = [[NSFileManager defaultManager] URLForDirectory:NSCoreServiceDirectory inDomain:NSSystemDomainMask appropriateForURL:nil create:NO error:error];
+    if (coreServicesURL == nil) {
         return nil;
     }
-    
+
     // -------------------------------------------------------------------------
     //  Get path to managed client's resource folder
     // -------------------------------------------------------------------------
     NSURL *managedClientURL = [coreServicesURL URLByAppendingPathComponent:@"/ManagedClient.app/Contents/Resources"];
-    if ( ! [managedClientURL checkResourceIsReachableAndReturnError:error] ) {
+    if (![managedClientURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
         _cachedLibraryMCX = [self manifestsFromMCXManifestsAtURL:managedClientURL];
@@ -203,11 +189,11 @@
 
     NSError *error = nil;
     NSArray *manifestLibrary = [self libraryAll:&error acceptCached:YES];
-    
+
     NSMutableArray *manifests = [[NSMutableArray alloc] init];
-    
-    for ( NSDictionary *manifest in manifestLibrary ) {
-        if ( [domains containsObject:manifest[PFCManifestKeyDomain]] ) {
+
+    for (NSDictionary *manifest in manifestLibrary) {
+        if ([domains containsObject:manifest[PFCManifestKeyDomain]]) {
             [manifests addObject:manifest];
         }
     }
@@ -216,53 +202,53 @@
 
 - (NSDictionary *)manifestFromLibrary:(PFCPayloadLibrary)library withDomain:(NSString *)domain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
+
     NSError *error = nil;
-    
+
     NSArray *manifestLibrary;
     switch (library) {
-        case kPFCPayloadLibraryAll: {
-            DDLogDebug(@"Payload library: All");
-            manifestLibrary = [self libraryAll:&error acceptCached:YES];
-            break;
-        }
-            
-        case kPFCPayloadLibraryApple: {
-            DDLogDebug(@"Payload library: Apple");
-            manifestLibrary = [self libraryApple:&error acceptCached:YES];
-            break;
-        }
-            
-        case kPFCPayloadLibraryUserPreferences: {
-            DDLogDebug(@"Payload library: Library User Preferences");
-            manifestLibrary = [self libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
-            break;
-        }
-            
-        case kPFCPayloadLibraryLibraryPreferences: {
-            DDLogDebug(@"Payload library: Library Preferences");
-            manifestLibrary = [self libraryLibraryPreferencesLocal:&error acceptCached:YES];
-            break;
-        }
-        
-        case kPFCPayloadLibraryMCX: {
-            DDLogDebug(@"Payload library: Library MCX");
-            manifestLibrary = [self libraryMCX:&error acceptCached:YES];
-        }
-            
-        case kPFCPayloadLibraryCustom: {
-            DDLogDebug(@"Payload library: Library Preferences");
-            manifestLibrary = [self libraryCustom:&error acceptCached:YES];
-            break;
-        }
-            
-        default:
-            break;
+    case kPFCPayloadLibraryAll: {
+        DDLogDebug(@"Payload library: All");
+        manifestLibrary = [self libraryAll:&error acceptCached:YES];
+        break;
     }
 
-    for ( NSDictionary *manifest in manifestLibrary ?: @[] ) {
+    case kPFCPayloadLibraryApple: {
+        DDLogDebug(@"Payload library: Apple");
+        manifestLibrary = [self libraryApple:&error acceptCached:YES];
+        break;
+    }
+
+    case kPFCPayloadLibraryUserPreferences: {
+        DDLogDebug(@"Payload library: Library User Preferences");
+        manifestLibrary = [self libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
+        break;
+    }
+
+    case kPFCPayloadLibraryLibraryPreferences: {
+        DDLogDebug(@"Payload library: Library Preferences");
+        manifestLibrary = [self libraryLibraryPreferencesLocal:&error acceptCached:YES];
+        break;
+    }
+
+    case kPFCPayloadLibraryMCX: {
+        DDLogDebug(@"Payload library: Library MCX");
+        manifestLibrary = [self libraryMCX:&error acceptCached:YES];
+    }
+
+    case kPFCPayloadLibraryCustom: {
+        DDLogDebug(@"Payload library: Library Preferences");
+        manifestLibrary = [self libraryCustom:&error acceptCached:YES];
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    for (NSDictionary *manifest in manifestLibrary ?: @[]) {
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-        if ( [manifestDomain isEqualToString:domain] ) {
+        if ([manifestDomain isEqualToString:domain]) {
             return manifest;
         }
     }
@@ -276,25 +262,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)manifestsFromPlistsAtURL:(NSURL *)folderURL {
-    
+
     // ---------------------------------------------------------------------
     //  Get all contents of user library preferences folder
     // ---------------------------------------------------------------------
-    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:folderURL
-                                                         includingPropertiesForKeys:@[]
-                                                                            options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                              error:nil];
-    
+    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:folderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+
     // ---------------------------------------------------------------------
     //  Create a manifest for all files ending with .plist
     // ---------------------------------------------------------------------
     NSMutableArray *library = [[NSMutableArray alloc] init];
     NSMutableDictionary *settings;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
-    for ( NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate] ) {
+    for (NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate]) {
         settings = [[NSMutableDictionary alloc] init];
         NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromPlistAtURL:plistURL settings:settings];
-        if ( [manifest count] != 0 ) {
+        if ([manifest count] != 0) {
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
             [library addObject:manifest];
             _cachedLocalSettings[manifestDomain] = settings;
@@ -302,7 +285,7 @@
             DDLogDebug(@"Plist at path: %@ did not create a manifest", [plistURL path]);
         }
     }
-    
+
     // ---------------------------------------------------------------------
     //  Return all non-empty created manifests
     // ---------------------------------------------------------------------
@@ -310,21 +293,24 @@
 } // manifestsAtURL:settingsLocal
 
 - (NSArray *)manifestsFromMCXManifestsAtURL:(NSURL *)folderURL {
-    
+
     NSFileManager *localFileManager = [[NSFileManager alloc] init];
-    NSDirectoryEnumerator *dirEnum = [localFileManager enumeratorAtURL:folderURL includingPropertiesForKeys:@[ NSURLIsDirectoryKey ] options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL * _Nonnull url, NSError * _Nonnull error) {
-        DDLogDebug(@"Enumerator Error: %@", [error localizedDescription]);
-        return YES;
-    }];
-    
+    NSDirectoryEnumerator *dirEnum = [localFileManager enumeratorAtURL:folderURL
+                                            includingPropertiesForKeys:@[ NSURLIsDirectoryKey ]
+                                                               options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                          errorHandler:^BOOL(NSURL *_Nonnull url, NSError *_Nonnull error) {
+                                                            DDLogDebug(@"Enumerator Error: %@", [error localizedDescription]);
+                                                            return YES;
+                                                          }];
+
     NSURL *file;
     NSMutableArray *mcxManifestFiles = [[NSMutableArray alloc] init];
-    while ( (file = [dirEnum nextObject]) ) {
+    while ((file = [dirEnum nextObject])) {
         NSNumber *isDirectory;
         BOOL success = [file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-        if ( success && ! [isDirectory boolValue] && [[file pathExtension] isEqualToString: @"manifest"] ) {
+        if (success && ![isDirectory boolValue] && [[file pathExtension] isEqualToString:@"manifest"]) {
             NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromMCXManifestAtURL:file];
-            if ( [manifest count] != 0 ) {
+            if ([manifest count] != 0) {
                 [mcxManifestFiles addObject:manifest];
             }
         }

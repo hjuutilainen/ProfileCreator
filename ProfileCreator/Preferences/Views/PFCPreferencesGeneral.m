@@ -10,16 +10,13 @@
 
 @interface PFCPreferencesGeneral ()
 
-
-
 @end
 
 @implementation PFCPreferencesGeneral
 
 - (id)init {
     self = [super initWithNibName:@"PFCPreferencesGeneral" bundle:nil];
-    if ( self != nil ) {
-        
+    if (self != nil) {
     }
     return self;
 }

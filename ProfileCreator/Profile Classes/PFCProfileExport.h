@@ -6,8 +6,8 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "PFCMainWindow.h"
+#import <Foundation/Foundation.h>
 
 @interface PFCProfileExport : NSObject
 

@@ -12,7 +12,8 @@
 
 + (NSColor *)localSettingsColor {
     static NSColor *localSettingsColor = nil;
-    if ( ! localSettingsColor ) localSettingsColor = [NSColor colorWithCalibratedRed:0.2 green:0.2 blue:0.9 alpha:1.0];
+    if (!localSettingsColor)
+        localSettingsColor = [NSColor colorWithCalibratedRed:0.2 green:0.2 blue:0.9 alpha:1.0];
     return localSettingsColor;
 }
 

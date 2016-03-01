@@ -21,12 +21,12 @@
 } // drawRect
 
 - (CellViewInfoTitle *)populateCellViewInfoTitle:(CellViewInfoTitle *)cellView infoDict:(NSDictionary *)infoDict row:(NSInteger)row {
-        
+
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
     [[cellView textField] setStringValue:infoDict[@"Title"] ?: @""];
-    
+
     return cellView;
 } // populateCellViewMenu:menuDict:row
 

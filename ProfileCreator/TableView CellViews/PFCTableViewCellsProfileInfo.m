@@ -21,12 +21,12 @@
 } // drawRect
 
 - (CellViewPayloadInfoTitle *)populateCellViewPayloadInfoTitle:(CellViewPayloadInfoTitle *)cellView infoDict:(NSDictionary *)infoDict row:(NSInteger)row {
-    
+
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
     [[cellView textField] setStringValue:infoDict[@"Title"] ?: @""];
-    
+
     return cellView;
 } // populateCellViewPayloadInfoTitle:infoDict:row
 
@@ -45,12 +45,12 @@
 } // drawRect
 
 - (CellViewPayloadInfoValue *)populateCellViewPayloadInfoValue:(CellViewPayloadInfoValue *)cellView infoDict:(NSDictionary *)infoDict row:(NSInteger)row {
-    
+
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
     [[cellView textField] setStringValue:infoDict[@"Value"] ?: @""];
-    
+
     return cellView;
 } // populateCellViewPayloadInfoValue:infoDict:row
 

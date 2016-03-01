@@ -21,7 +21,7 @@
     return self;
 } // initWithFrame
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (id)initWithCoder:(NSCoder *)coder {
     if ((self = [super initWithCoder:coder])) {
         [self customInit];
     }
@@ -30,7 +30,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    
+
     // Drawing code here.
 }
 
@@ -52,15 +52,12 @@
 } // mouseExited
 
 - (void)updateTrackingAreas {
-    if (_trackingArea != nil ) {
+    if (_trackingArea != nil) {
         [self removeTrackingArea:_trackingArea];
     }
-    
+
     int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
-    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds]
-                                                       options:opts
-                                                         owner:self
-                                                      userInfo:nil]];
+    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas
 

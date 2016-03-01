@@ -30,7 +30,7 @@
     return [NSColor whiteColor];
 }
 
-- (CGFloat) dividerThickness {
+- (CGFloat)dividerThickness {
     return (CGFloat)1.0f;
 }
 
@@ -47,7 +47,7 @@
     return [NSColor whiteColor];
 }
 
-- (CGFloat) dividerThickness {
+- (CGFloat)dividerThickness {
     return (CGFloat)1.0f;
 }
 

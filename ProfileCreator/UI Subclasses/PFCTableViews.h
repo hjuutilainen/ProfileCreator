@@ -11,7 +11,7 @@
 @protocol PFCTableViewDelegate <NSTableViewDelegate>
 @optional
 - (BOOL)deleteKeyPressedForTableView:(id)sender;
-- (void)validateMenu:(NSMenu*)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
+- (void)validateMenu:(NSMenu *)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row;
 - (void)didClickRow:(NSInteger)row;
 @end
 

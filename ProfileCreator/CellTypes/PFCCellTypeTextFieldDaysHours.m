@@ -31,11 +31,11 @@
     [self removeObserver:self forKeyPath:@"stepperValueRemovalIntervalHours"];
 } // dealloc
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id) __unused object change:(NSDictionary *) __unused change context:(void *) __unused context {
-    if ( ( _sender != nil && [_cellIdentifier length] != 0 ) && ( [keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"] )) {
-        int seconds = ( ( [_stepperValueRemovalIntervalDays intValue] * 86400 ) + ( [_stepperValueRemovalIntervalHours intValue] * 60 ) );
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
+    if ((_sender != nil && [_cellIdentifier length] != 0) && ([keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"])) {
+        int seconds = (([_stepperValueRemovalIntervalDays intValue] * 86400) + ([_stepperValueRemovalIntervalHours intValue] * 60));
         NSMutableDictionary *settingsDict = [[(PFCProfileEditor *)_sender settingsManifest] mutableCopy];
-        if ( seconds == 0 ) {
+        if (seconds == 0) {
             [settingsDict removeObjectForKey:_cellIdentifier];
         } else {
             NSMutableDictionary *cellDict = [settingsDict[_cellIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
@@ -46,48 +46,54 @@
     }
 } // observeValueForKeyPath
 
-- (PFCTextFieldDaysHoursNoTitleCellView *)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings settingsLocal:(NSDictionary *)settingsLocal displayKeys:(NSDictionary *)displayKeys row:(NSInteger)row sender:(id)sender {
-    
+- (PFCTextFieldDaysHoursNoTitleCellView *)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView
+                                                  manifest:(NSDictionary *)manifest
+                                                  settings:(NSDictionary *)settings
+                                             settingsLocal:(NSDictionary *)settingsLocal
+                                               displayKeys:(NSDictionary *)displayKeys
+                                                       row:(NSInteger)row
+                                                    sender:(id)sender {
+
     // -------------------------------------------------------------------------
     //  Set sender and sender properties to be used later
     // -------------------------------------------------------------------------
     [self setSender:sender];
     [self setCellIdentifier:manifest[PFCManifestKeyIdentifier] ?: @""];
-    
+
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
     BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
-    
+
     BOOL enabled = YES;
-    if ( ! required && settings[PFCSettingsKeyEnabled] != nil ) {
+    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
-    
+
     // -------------------------------------------------------------------------
     //  Initialize text fields from settings
     // -------------------------------------------------------------------------
-    if ( _stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil ) {
+    if (_stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil) {
         NSNumber *seconds;
-        if ( settings[PFCSettingsKeyValue] != nil ) {
+        if (settings[PFCSettingsKeyValue] != nil) {
             seconds = settings[PFCSettingsKeyValue] ?: @0;
         } else {
             seconds = settingsLocal[PFCSettingsKeyValue] ?: @0;
         }
-        
-        NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier: NSCalendarIdentifierGregorian];
-        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier: @"en_US"]];
+
+        NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
         NSUInteger unitFlags = NSCalendarUnitDay | NSCalendarUnitHour;
-        
+
         NSDate *startDate = [NSDate date];
         NSDate *endDate = [startDate dateByAddingTimeInterval:[seconds doubleValue]];
-        
+
         NSDateComponents *components = [calendarUS components:unitFlags fromDate:startDate toDate:endDate options:0];
         [self setStepperValueRemovalIntervalDays:@([components day]) ?: @0];
         [self setStepperValueRemovalIntervalHours:@([components hour]) ?: @0];
     }
-    
+
     // ---------------------------------------------------------------------
     //  Days
     // ---------------------------------------------------------------------
@@ -95,7 +101,7 @@
     [[cellView settingDays] setTag:row];
     [[cellView settingDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepperDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    
+
     // ---------------------------------------------------------------------
     //  Hours
     // ---------------------------------------------------------------------
@@ -103,12 +109,12 @@
     [[cellView settingHours] setTag:row];
     [[cellView settingHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [[cellView settingStepperHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    
+
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
-    
+
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
 

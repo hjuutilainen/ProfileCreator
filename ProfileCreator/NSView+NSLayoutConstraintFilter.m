@@ -36,17 +36,17 @@
 - (NSArray *)constaintsForAttribute:(NSLayoutAttribute)attribute {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"firstAttribute = %d", attribute];
     NSArray *filteredArray = [[self constraints] filteredArrayUsingPredicate:predicate];
-    
+
     return filteredArray;
 }
 
 - (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute {
     NSArray *constraints = [self constaintsForAttribute:attribute];
-    
+
     if (constraints.count) {
         return constraints[0];
     }
-    
+
     return nil;
 }
 

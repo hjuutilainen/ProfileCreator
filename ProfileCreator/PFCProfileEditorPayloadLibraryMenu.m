@@ -6,8 +6,8 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCProfileEditorPayloadLibraryMenu.h"
 #import "PFCGeneralUtility.h"
+#import "PFCProfileEditorPayloadLibraryMenu.h"
 
 @interface PFCProfileEditorPayloadLibraryMenu ()
 
@@ -31,7 +31,7 @@
 
 - (id)initWithProfileEditor:(PFCProfileEditor *)profileEditor {
     self = [super initWithNibName:@"PFCProfileEditorPayloadLibraryMenu" bundle:nil];
-    if ( self != nil ) {
+    if (self != nil) {
         _profileEditor = profileEditor;
     }
     return self;

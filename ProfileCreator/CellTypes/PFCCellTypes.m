@@ -7,14 +7,13 @@
 //
 
 #import "PFCCellTypes.h"
-#import "PFCLog.h"
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
+#import "PFCLog.h"
 
 // CellTypes
 #import "PFCCellTypeCheckbox.h"
 #import "PFCCellTypeTextView.h"
-
 
 @implementation PFCCellTypes
 
@@ -28,47 +27,36 @@
     static PFCCellTypes *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
+      sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
 } // sharedUtility
 
 - (CGFloat)rowHeightForCellType:(NSString *)cellType {
-    if ( [cellType isEqualToString:PFCCellTypePadding] ) {
+    if ([cellType isEqualToString:PFCCellTypePadding]) {
         return 20.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeCheckboxNoDescription] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
         return 33.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeSegmentedControl] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
         return 38.0f;
-    } else if (
-               [cellType isEqualToString:PFCCellTypeDatePickerNoTitle] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
         return 39.0f;
-    } else if (
-               [cellType isEqualToString:PFCCellTypeCheckbox] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         return 52.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypePopUpButtonLeft] ) {
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
         return 53.0f;
-    } else if (
-               [cellType isEqualToString:PFCCellTypeTextFieldNoTitle] ||
-               [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle] || [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
         return 54.0f;
-    } else if (
-               [cellType isEqualToString:PFCCellTypeTextField] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldHostPort] ||
-               [cellType isEqualToString:PFCCellTypePopUpButton] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldNumber] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeTextField] || [cellType isEqualToString:PFCCellTypeTextFieldHostPort] || [cellType isEqualToString:PFCCellTypePopUpButton] ||
+               [cellType isEqualToString:PFCCellTypeTextFieldNumber] || [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] || [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         return 80.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeDatePicker] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
         return 83.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeTextView] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
         return 114.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeFile] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeFile]) {
         return 192.0f;
-    } else if ( [cellType isEqualToString:PFCCellTypeTableView] ) {
+    } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
         return 212.0f;
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
@@ -84,11 +72,12 @@
                     displayKeys:(NSDictionary *)displayKeys
                             row:(NSInteger)row
                          sender:(id)sender {
-    
+
     id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
-    if ( cellView ) {
+    if (cellView) {
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict displayKeys:(NSDictionary *)displayKeys row:row sender:sender];
+        return
+            [cellView populateCellView:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict displayKeys:(NSDictionary *)displayKeys row:row sender:sender];
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }
@@ -98,25 +87,25 @@
 // ----
 
 - (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
-    
-    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
-        if ( [self returnAvailabilityValueForKey:PFCManifestKeyRequired availabilityDict:availabilityDict displayKeys:displayKeys] ) {
+
+    for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
+        if ([self returnAvailabilityValueForKey:PFCManifestKeyRequired availabilityDict:availabilityDict displayKeys:displayKeys]) {
             return [availabilityDict[@"AvailabilityValue"] boolValue];
         }
     }
-    
+
     return [manifestContentDict[PFCManifestKeyRequired] boolValue];
 }
 
 - (BOOL)requiredHostForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
-    
-    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
-        if ( [self returnAvailabilityValueForKey:PFCManifestKeyRequiredHost availabilityDict:availabilityDict displayKeys:displayKeys] ) {
+
+    for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
+        if ([self returnAvailabilityValueForKey:PFCManifestKeyRequiredHost availabilityDict:availabilityDict displayKeys:displayKeys]) {
             return [availabilityDict[@"AvailabilityValue"] boolValue];
         }
     }
-    
-    if ( manifestContentDict[PFCManifestKeyRequiredHost] != nil ) {
+
+    if (manifestContentDict[PFCManifestKeyRequiredHost] != nil) {
         return [manifestContentDict[PFCManifestKeyRequiredHost] boolValue];
     } else {
         return [self requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
@@ -124,14 +113,14 @@
 }
 
 - (BOOL)requiredPortForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
-    
-    for ( NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[] ) {
-        if ( [self returnAvailabilityValueForKey:PFCManifestKeyRequiredPort availabilityDict:availabilityDict displayKeys:displayKeys] ) {
+
+    for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
+        if ([self returnAvailabilityValueForKey:PFCManifestKeyRequiredPort availabilityDict:availabilityDict displayKeys:displayKeys]) {
             return [availabilityDict[@"AvailabilityValue"] boolValue];
         }
     }
-    
-    if ( manifestContentDict[PFCManifestKeyRequiredPort] != nil ) {
+
+    if (manifestContentDict[PFCManifestKeyRequiredPort] != nil) {
         return [manifestContentDict[PFCManifestKeyRequiredPort] boolValue];
     } else {
         return [self requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
@@ -139,32 +128,28 @@
 }
 
 - (BOOL)returnAvailabilityValueForKey:(NSString *)key availabilityDict:(NSDictionary *)availabilityDict displayKeys:(NSDictionary *)displayKeys {
-    if ( [availabilityDict[@"AvailabilityKey"] isEqualToString:key] ) {
+    if ([availabilityDict[@"AvailabilityKey"] isEqualToString:key]) {
         NSString *os = availabilityDict[@"AvailabilityOS"];
-        
+
         // Any
-        if ( [os isEqualToString:@"Any"] ) {
+        if ([os isEqualToString:@"Any"]) {
             return YES;
-            
+
             // OS X
-        } else if ( [os isEqualToString:@"OSX"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue] ) {
-            if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
-                if (
-                    [PFCGeneralUtility version:availabilityDict[@"AvailableFrom"] ?: @"0" isLowerThanVersion:displayKeys[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion]] &&
-                    [PFCGeneralUtility version:displayKeys[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] isLowerThanVersion:availabilityDict[@"AvailableTo"] ?: @"999"]
-                    ) {
+        } else if ([os isEqualToString:@"OSX"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]) {
+            if (availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil) {
+                if ([PFCGeneralUtility version:availabilityDict[@"AvailableFrom"] ?: @"0" isLowerThanVersion:displayKeys[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion]] &&
+                    [PFCGeneralUtility version:displayKeys[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] isLowerThanVersion:availabilityDict[@"AvailableTo"] ?: @"999"]) {
                     return YES;
                 }
             } else {
                 return YES;
             }
             // iOS
-        } else if ( [os isEqualToString:@"iOS"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue] ) {
-            if ( availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil ) {
-                if (
-                    [PFCGeneralUtility version:availabilityDict[@"AvailableFrom"] ?: @"0" isLowerThanVersion:displayKeys[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion]] &&
-                    [PFCGeneralUtility version:displayKeys[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] isLowerThanVersion:availabilityDict[@"AvailableTo"] ?: @"999"]
-                    ) {
+        } else if ([os isEqualToString:@"iOS"] && [displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]) {
+            if (availabilityDict[@"AvailableFrom"] != nil || availabilityDict[@"AvailableTo"] != nil) {
+                if ([PFCGeneralUtility version:availabilityDict[@"AvailableFrom"] ?: @"0" isLowerThanVersion:displayKeys[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion]] &&
+                    [PFCGeneralUtility version:displayKeys[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] isLowerThanVersion:availabilityDict[@"AvailableTo"] ?: @"999"]) {
                     return YES;
                 }
             } else {
@@ -175,6 +160,4 @@
     return NO;
 }
 
-
 @end
-

@@ -6,8 +6,8 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "PFCMainWindow.h"
+#import <Cocoa/Cocoa.h>
 
 @interface PFCMainWindowPreview : NSViewController
 

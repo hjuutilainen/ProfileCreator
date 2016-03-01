@@ -17,7 +17,6 @@
 - (id)init {
     self = [super initWithNibName:@"PFCMainWindowGroupsTitle" bundle:nil];
     if (self != nil) {
-        
     }
     return self;
 } // init
@@ -31,7 +30,7 @@
 @implementation PFCMainWindowGroupsTitleView
 
 - (IBAction)buttonAddGroup:(id)sender {
-    if ( _delegate ) {
+    if (_delegate) {
         [_delegate createNewGroupOfType:_profileGroup];
     }
 } // buttonAddGroup
@@ -55,15 +54,12 @@
 } // mouseExited
 
 - (void)updateTrackingAreas {
-    if (_trackingArea != nil ) {
+    if (_trackingArea != nil) {
         [self removeTrackingArea:_trackingArea];
     }
-    
+
     int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
-    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds]
-                                                       options:opts
-                                                         owner:self
-                                                      userInfo:nil]];
+    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas
 

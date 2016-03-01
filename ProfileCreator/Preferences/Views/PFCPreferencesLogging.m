@@ -16,8 +16,7 @@
 
 - (id)init {
     self = [super initWithNibName:@"PFCPreferencesLogging" bundle:nil];
-    if ( self != nil ) {
-        
+    if (self != nil) {
     }
     return self;
 }
