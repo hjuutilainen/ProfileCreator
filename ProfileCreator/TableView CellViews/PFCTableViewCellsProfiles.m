@@ -91,9 +91,9 @@
     //  Icon
     // ---------------------------------------------------------------------
     NSImage *icon = [PFCMainWindowGroupTitle iconForGroup:group];
-    if ( icon ) {
+    //if ( icon ) {
         [[cellView imageView] setImage:icon];
-    }
+    //}
     
     return cellView;
 } // populateCellViewMenu:menuDict:row

@@ -49,6 +49,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
 // Groups
 @property NSMutableArray *arrayGroups;
+@property PFCMainWindowGroup *groupAll;
 @property PFCMainWindowGroup *groupGroups;
 @property PFCMainWindowGroup *groupSmartGroups;
 
@@ -97,22 +98,10 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         // ---------------------------------------------------------------------
         //  Initialize Classes
         // ---------------------------------------------------------------------
+        _groupAll = [[PFCMainWindowGroup alloc] initWithGroup:kPFCProfileGroupAll mainWindow:self];
         _groupGroups = [[PFCMainWindowGroup alloc] initWithGroup:kPFCProfileGroups mainWindow:self];
         _groupSmartGroups = [[PFCMainWindowGroup alloc] initWithGroup:kPFCProfileSmartGroups mainWindow:self];
         
-        /*
-         PFCMainWindowGroupTitle *profileGroupTitleViewController = [[PFCMainWindowGroupTitle alloc] init];
-         [(PFCMainWindowGroupTitleView *)[profileGroupTitleViewController view] setDelegate:self];
-         [(PFCMainWindowGroupTitleView *)[profileGroupTitleViewController view] setProfileGroup:kPFCProfileGroups];
-         [[(PFCMainWindowGroupTitleView *)[profileGroupTitleViewController view] textFieldTitle] setStringValue:@"Groups"];
-         _viewAddGroupsTitle = (PFCMainWindowGroupTitleView *)[profileGroupTitleViewController view];
-         
-         PFCMainWindowGroupTitle *profileSmartGroupTitleViewController = [[PFCMainWindowGroupTitle alloc] init];
-         [(PFCMainWindowGroupTitleView *)[profileSmartGroupTitleViewController view] setDelegate:self];
-         [(PFCMainWindowGroupTitleView *)[profileSmartGroupTitleViewController view] setProfileGroup:kPFCProfileSmartGroups];
-         [[(PFCMainWindowGroupTitleView *)[profileSmartGroupTitleViewController view] textFieldTitle] setStringValue:@"Smart Groups"];
-         _viewAddSmartGroupsTitle = (PFCMainWindowGroupTitleView *)[profileSmartGroupTitleViewController view];
-         */
         _preview = [[PFCMainWindowPreview alloc] initWithMainWindow:self];
         _sort = [[PFCMainWindowSort alloc] init];
     }
@@ -135,7 +124,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [super windowDidLoad];
     
     // -------------------------------------------------------------------------
-    //  Set window background color to white
+    //  Set window background color to white and hide window title
     // -------------------------------------------------------------------------
     [[self window] setBackgroundColor:[NSColor whiteColor]];
     [[self window] setTitleVisibility:NSWindowTitleHidden];
@@ -143,9 +132,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Add content views to window
     // -------------------------------------------------------------------------
-    //[PFCGeneralUtility insertSubview:_viewProfileGroupsSuperview inSuperview:_viewProfileGroupsSplitView hidden:NO];
-    //[PFCGeneralUtility insertSubview:_viewAddGroupsTitle inSuperview:_viewAddGroupsSuperview hidden:NO];
-    //[PFCGeneralUtility insertSubview:_viewAddSmartGroupsTitle inSuperview:_viewAddSmartGroupsSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewProfileLibraryTableViewSuperview inSuperview:_viewProfileLibrarySplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_preview viewPreviewSuperview] inSuperview:_viewPreviewSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:[_sort view] inSuperview:_viewLibrarySortSplitView hidden:NO];
@@ -179,11 +165,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [self setupGroups];
     
     // -------------------------------------------------------------------------
-    //  Setup TableView "All Profiles"
-    // -------------------------------------------------------------------------
-    [self setupProfileGroupAll];
-    
-    // -------------------------------------------------------------------------
     //  Setup TableView "Profile Groups"
     // -------------------------------------------------------------------------
     [self setupProfileGroups];
@@ -196,8 +177,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Select "All Profiles"
     // -------------------------------------------------------------------------
-    [self selectTableViewProfileGroupAllRow:0];
-    [_tableViewProfileGroupAll selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    //[self selectTableViewProfileGroupAllRow:0];
+    [[_groupAll tableViewGroup] selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     
     // -------------------------------------------------------------------------
     //  Set first responder
@@ -207,16 +188,16 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
 - (void)setupGroups {
 
+    NSView *groupView = [_groupAll viewGroup];
+    NSView *previousGroupView = groupView;
+    
     // -------------------------------------------------------------------------
     //  Add "All Profiles" at the top
     // -------------------------------------------------------------------------
-    [_viewProfileGroupsSplitView addSubview:_viewGroupAllProfiles positioned:NSWindowAbove relativeTo:nil];
-    [_viewGroupAllProfiles setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_viewProfileGroupsSplitView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_viewGroupAllProfiles]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_viewGroupAllProfiles)]];
-    [_viewProfileGroupsSplitView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_viewGroupAllProfiles]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_viewGroupAllProfiles)]];
-    
-    NSView *groupView = _viewGroupAllProfiles;
-    NSView *previousGroupView = _viewGroupAllProfiles;
+    [_viewProfileGroupsSplitView addSubview:groupView positioned:NSWindowAbove relativeTo:nil];
+    [groupView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_viewProfileGroupsSplitView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[groupView]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(groupView)]];
+    [_viewProfileGroupsSplitView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-7-[groupView]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(groupView)]];
     
     // -------------------------------------------------------------------------
     //  Loop through selected groups and add to window
@@ -241,24 +222,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 - (void)setFirstResponder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    [[self window] setInitialFirstResponder:_tableViewProfileGroupAll];
+    [[self window] setInitialFirstResponder:[_groupAll tableViewGroup]];
 } // setFirstResponder
-
-- (void)setupProfileGroupAll {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    // -------------------------------------------------------------------------
-    //  Reset table view row selection
-    // -------------------------------------------------------------------------
-    [self setTableViewProfileGroupAllSelectedRow:-1];
-    
-    // -------------------------------------------------------------------------
-    //  Add the only item "All Profiles" to table view.
-    // -------------------------------------------------------------------------
-    [_arrayProfileGroupAll addObject:@{ @"Config" : @{PFCProfileGroupKeyName : @"All Profiles", PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString]} }];
-    
-    [_tableViewProfileGroupAll reloadData];
-} // setupProfileGroupAll
 
 - (void)setupProfileGroups {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -544,13 +509,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
 - (void)alertReturnCode:(NSInteger)returnCode alertInfo:(NSDictionary *)alertInfo {
     NSString *alertTag = alertInfo[PFCAlertTagKey];
-    if ([alertTag isEqualToString:PFCAlertTagDeleteGroups]) {
-        if (returnCode == NSAlertSecondButtonReturn) { // Delete
-            if ([alertInfo[@"TableViewIdentifier"] ?: @"" isEqualToString:PFCTableViewIdentifierProfileGroups]) {
-                [self deleteGroupWithUUID:alertInfo[@"GroupUUID"] ?: @"" inGroup:kPFCProfileGroups];
-            }
-        }
-    } else if ([alertTag isEqualToString:PFCAlertTagDeleteProfiles]) {
+    if ([alertTag isEqualToString:PFCAlertTagDeleteProfiles]) {
         if (returnCode == NSAlertSecondButtonReturn) { // Delete
             [self deleteProfilesWithUUIDs:alertInfo[PFCProfileTemplateKeyUUID] ?: @[]];
         }
@@ -564,31 +523,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         }
     }
 } // alertReturnCode:alertInfo
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Saving
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (BOOL)saveGroup:(NSDictionary *)groupDict error:(NSError **)error {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    
-    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups];
-    DDLogDebug(@"Group save folder: %@", [groupSaveFolder path]);
-    if (![groupSaveFolder checkResourceIsReachableAndReturnError:nil]) {
-        if (![[NSFileManager defaultManager] createDirectoryAtURL:groupSaveFolder withIntermediateDirectories:YES attributes:nil error:error]) {
-            return NO;
-        }
-    }
-    
-    NSString *groupPath = groupDict[PFCRuntimeKeyPath] ?: [PFCGeneralUtility newProfileGroupPath];
-    DDLogDebug(@"Group save path: %@", groupPath);
-    
-    NSURL *groupURL = [NSURL fileURLWithPath:groupPath];
-    NSDictionary *groupConfig = groupDict[@"Config"];
-    return [groupConfig writeToURL:groupURL atomically:YES];
-} // saveGroup:error
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -664,9 +598,9 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
             group[@"Config"] = [groupConfig copy];
             [_arrayProfileGroups replaceObjectAtIndex:idx withObject:[group copy]];
             
-            if (![self saveGroup:group error:&error]) {
+            //if (![self saveGroup:group error:&error]) {
                 // FIXME - notify user that save failed
-            }
+            //}
         }
     }];
     
@@ -695,30 +629,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     
     switch (group) {
         case kPFCProfileGroups: {
-            NSInteger index = [_arrayProfileGroups indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
-                return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:groupUUID];
-            }];
-            DDLogDebug(@"Group index: %ld", (long)index);
-            
-            if (index != NSNotFound) {
-                NSMutableDictionary *group = [_arrayProfileGroups[index] mutableCopy];
-                NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy];
-                if ([groupConfig count] != 0) {
-                    NSMutableArray *profiles = [groupConfig[PFCProfileGroupKeyProfiles] mutableCopy];
-                    [profiles removeObjectsInArray:profileUUIDs];
-                    groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
-                    group[@"Config"] = [groupConfig copy];
-                    
-                    [_arrayProfileGroups replaceObjectAtIndex:index withObject:[group copy]];
-                    
-                    [self selectTableViewProfileGroupsRow:index];
-                    
-                    NSError *error = nil;
-                    if (![self saveGroup:group error:&error]) {
-                        // FIXME - notify user that save failed
-                    }
-                }
-            }
+            [_groupGroups removeProfilesWithUUIDs:profileUUIDs fromGroupWithUUID:groupUUID];
         } break;
         case kPFCProfileSmartGroups: {
             // Smart Groups are searches, they can't remove profiles like this so this should probably be removed.
@@ -737,68 +648,16 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     }
     DDLogDebug(@"Group UUID: %@", uuid);
     
-    NSURL *groupURL;
     switch (group) {
         case kPFCProfileGroups: {
-            NSInteger index = [_arrayProfileGroups indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
-                return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
-            }];
-            DDLogDebug(@"Group index: %ld", (long)index);
-            
-            if (index != NSNotFound) {
-                
-                NSDictionary *group = _arrayProfileGroups[index];
-                NSString *groupPath = group[PFCRuntimeKeyPath];
-                groupURL = [NSURL fileURLWithPath:groupPath];
-                
-                [_tableViewProfileGroups beginUpdates];
-                [_arrayProfileGroups removeObjectAtIndex:index];
-                [_tableViewProfileGroups reloadData];
-                [_tableViewProfileGroups endUpdates];
-                
-                // -------------------------------------------------------------
-                //  Adjust table view height to content
-                // -------------------------------------------------------------
-                [PFCGeneralUtility setTableViewHeight:PFCTableViewGroupRowHeight * (int)[_arrayProfileGroups count] tableView:_scrollViewProfileGroups];
-            }
+            [_groupGroups deleteGroupWithUUID:uuid];
         } break;
             
         case kPFCProfileSmartGroups: {
-            NSInteger index = [_arrayProfileSmartGroups indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
-                return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
-            }];
-            DDLogDebug(@"Group index: %ld", (long)index);
-            
-            if (index != NSNotFound) {
-                
-                NSDictionary *group = _arrayProfileSmartGroups[index];
-                NSString *groupPath = group[PFCRuntimeKeyPath];
-                groupURL = [NSURL fileURLWithPath:groupPath];
-                
-                [_tableViewProfileGroupAll beginUpdates];
-                [_arrayProfileSmartGroups removeObjectAtIndex:index];
-                [_tableViewProfileGroupAll reloadData];
-                [_tableViewProfileGroupAll endUpdates];
-                
-                // -------------------------------------------------------------
-                //  Adjust table view height to content
-                // -------------------------------------------------------------
-                [PFCGeneralUtility setTableViewHeight:PFCTableViewGroupRowHeight * (int)[_arrayProfileSmartGroups count] tableView:_scrollViewProfileGroups];
-            }
+            [_groupSmartGroups deleteGroupWithUUID:uuid];
         }
         default:
             break;
-    }
-    
-    NSError *error = nil;
-    if ([groupURL checkResourceIsReachableAndReturnError:&error]) {
-        
-        DDLogDebug(@"Removing group plist at path: %@", [groupURL path]);
-        if (![[NSFileManager defaultManager] removeItemAtURL:groupURL error:&error]) {
-            DDLogError(@"%@", [error localizedDescription]);
-        }
-    } else {
-        DDLogError(@"%@", [error localizedDescription]);
     }
 } // deleteGroupWithUUID:inGroup
 
@@ -946,24 +805,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     }
     
     DDLogDebug(@"Table view identifier: %@", [sender identifier]);
-    if ([[sender identifier] isEqualToString:PFCTableViewIdentifierProfileGroups]) {
-        
-        // -------------------------------------------------------------------------
-        //  Multiple selections is not enabled for groups, therefor just extract the selected row from the row indexes
-        // -------------------------------------------------------------------------
-        NSInteger selectedRow = [selectedRows firstIndex];
-        DDLogDebug(@"Selected row: %ld", (long)selectedRow);
-        
-        if (selectedRow != NSNotFound) {
-            NSDictionary *groupDict = _arrayProfileGroups[selectedRow] ?: @{};
-            
-            NSString *groupName = groupDict[@"Config"][PFCProfileGroupKeyName] ?: @"";
-            NSString *groupUUID = groupDict[@"Config"][PFCProfileGroupKeyUUID] ?: @"";
-            
-            PFCAlert *alert = [[PFCAlert alloc] initWithDelegate:self];
-            [alert showAlertDeleteGroups:@[ groupName ] alertInfo:@{ PFCAlertTagKey : PFCAlertTagDeleteGroups, @"GroupUUID" : groupUUID, @"TableViewIdentifier" : [sender identifier] }];
-        }
-    } else if ([[sender identifier] isEqualToString:PFCTableViewIdentifierProfileLibrary]) {
+    if ([[sender identifier] isEqualToString:PFCTableViewIdentifierProfileLibrary]) {
         [self removeProfilesAtIndexes:selectedRows];
     } else {
         return NO;
@@ -1018,16 +860,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 #pragma mark IBActions
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-- (IBAction)segmentedControlProfileLibraryFooterAddRemove:(id)sender {
-    if ([sender selectedSegment] == 0) {
-        [self createNewProfile];
-    } else {
-        if ([_tableViewProfileLibrarySelectedRows count] != 0) {
-            [self removeProfilesAtIndexes:_tableViewProfileLibrarySelectedRows];
-        }
-    }
-} // segmentedControlProfileLibraryFooterAddRemove
 
 - (IBAction)selectTableViewProfileGroupAll:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);

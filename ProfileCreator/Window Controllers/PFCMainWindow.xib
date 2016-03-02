@@ -26,7 +26,7 @@
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="ZQo-mr-iCl">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
             <rect key="contentRect" x="335" y="390" width="800" height="625"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" focusRingType="none" id="hM9-4C-HuU">
                 <rect key="frame" x="0.0" y="0.0" width="800" height="625"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -129,12 +129,12 @@
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="WAP-Jm-zme"/>
                     <toolbarItem implicitItemIdentifier="3EBCFFAB-4AE5-4D51-8F41-60092337B1D4" label="Add" paletteLabel="Add" image="NSAddTemplate" id="ya8-r0-P8s">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="30" height="32"/>
-                        <size key="maxSize" width="43" height="32"/>
+                        <size key="minSize" width="40" height="32"/>
+                        <size key="maxSize" width="40" height="32"/>
                         <button key="view" verticalHuggingPriority="750" id="bKa-Ds-SWJ">
-                            <rect key="frame" x="0.0" y="14" width="42" height="32"/>
+                            <rect key="frame" x="0.0" y="14" width="40" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JLO-gd-4hd">
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JLO-gd-4hd">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>

@@ -89,6 +89,7 @@
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
+		5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5385ADC11C872EF2007C9BD0 /* SidebarSmartFolder.icns */; };
 		538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 538750B61C4C0F4F0003F0EF /* PFCConstants.m */; };
 		53897E2C1C59566500B1D868 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; };
 		53897E301C59568700B1D868 /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -403,6 +404,7 @@
 		537B02251C61449F0072093C /* PFCMainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindow.xib; path = "Window Controllers/PFCMainWindow.xib"; sourceTree = "<group>"; };
 		537B02371C614D7A0072093C /* PFCGeneralUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCGeneralUtility.h; path = "../General Classes/PFCGeneralUtility.h"; sourceTree = "<group>"; };
 		537B02381C614D7A0072093C /* PFCGeneralUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCGeneralUtility.m; path = "../General Classes/PFCGeneralUtility.m"; sourceTree = "<group>"; };
+		5385ADC11C872EF2007C9BD0 /* SidebarSmartFolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SidebarSmartFolder.icns; sourceTree = "<group>"; };
 		538750B51C4C0F4F0003F0EF /* PFCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCConstants.h; path = "../General Classes/PFCConstants.h"; sourceTree = "<group>"; };
 		538750B61C4C0F4F0003F0EF /* PFCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCConstants.m; path = "../General Classes/PFCConstants.m"; sourceTree = "<group>"; };
 		53897DF91C59563C00B1D868 /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = ../CocoaLumberjack/Lumberjack.xcodeproj; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 		53232EB81C5EA6FA004630F8 /* UI Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				5385ADC11C872EF2007C9BD0 /* SidebarSmartFolder.icns */,
 				531453291C861D3600A19AFE /* SidebarFolder.icns */,
 				534324DA1C80E75D00893351 /* Menu-17.png */,
 				534324BF1C80E5EA00893351 /* Settings Filled-16.png */,
@@ -1171,6 +1174,7 @@
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
 				537520031C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png in Resources */,
 				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
+				5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */,
 				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
 				537290771C557666003160EA /* Profiles.icns in Resources */,
 				53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */,

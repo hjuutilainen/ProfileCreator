@@ -31,14 +31,14 @@
 + (NSImage *)iconForGroup:(PFCProfileGroups)group {
     switch (group) {
         case kPFCProfileGroupAll:
-            return [NSImage imageNamed:@"SidebarFolder"];
+            return nil;
             break;
         case kPFCProfileGroups:
             return [NSImage imageNamed:@"SidebarFolder"];
             break;
             
         case kPFCProfileSmartGroups:
-            return [NSImage imageNamed:@"SidebarFolder"];
+            return [NSImage imageNamed:@"SidebarSmartFolder"];
             break;
             
         default:
@@ -58,6 +58,7 @@
         case kPFCProfileSmartGroups:
             return @"Smart Groups";
             break;
+            
         default:
             return @"";
             break;

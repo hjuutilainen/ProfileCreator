@@ -36,7 +36,7 @@
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to remove %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
     [alert setInformativeText:@"No profile will be deleted"];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:[_delegate window]
+    [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
                     [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
@@ -64,7 +64,7 @@
         [alert setInformativeText:[NSString stringWithFormat:@"%@\nThis cannot be undone.", profileList]];
     }
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:[_delegate window]
+    [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
                     [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
@@ -88,7 +88,7 @@
                                                      (profileCount == 1) ? [NSString stringWithFormat:@"%@ %@", @"the profile", profileList] : @"the following profiles", groupName]];
     [alert setInformativeText:[NSString stringWithFormat:@"%@%@", (profileCount == 1) ? @"" : [NSString stringWithFormat:@"%@\n", profileList], @"No profile will be deleted"]];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:[_delegate window]
+    [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
                     [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];

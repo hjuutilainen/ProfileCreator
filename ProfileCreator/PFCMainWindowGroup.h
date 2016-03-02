@@ -10,11 +10,14 @@
 #import "PFCMainWindowGroupTitle.h"
 @class PFCMainWindow;
 
-@interface PFCMainWindowGroup : NSViewController
+@interface PFCMainWindowGroup : NSViewController <NSTableViewDelegate, NSTableViewDataSource, PFCAlertDelegate, PFCTableViewDelegate>
 
 @property (weak) IBOutlet NSView *viewGroup;
+@property (weak) IBOutlet PFCTableView *tableViewGroup;
 
 - (id)initWithGroup:(PFCProfileGroups)group mainWindow:(PFCMainWindow *)mainWindow;
 - (void)createNewGroupOfType:(PFCProfileGroups)group;
+- (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID;
+- (void)deleteGroupWithUUID:(NSString *)uuid;
 
 @end
