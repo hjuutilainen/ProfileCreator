@@ -6,14 +6,14 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="PFCMainWindowGroupsTitle">
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCMainWindowGroupTitle">
             <connections>
                 <outlet property="view" destination="btw-et-avc" id="dWN-cT-t8f"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="btw-et-avc" customClass="PFCMainWindowGroupsTitleView">
+        <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="btw-et-avc" customClass="PFCMainWindowGroupTitleView">
             <rect key="frame" x="0.0" y="0.0" width="149" height="18"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ag3-ht-co7">
@@ -35,7 +35,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="buttonAddGroup:" target="btw-et-avc" id="R81-yQ-uLG"/>
+                        <action selector="buttonAddGroup:" target="btw-et-avc" id="NIi-Tc-21C"/>
                     </connections>
                 </button>
             </subviews>

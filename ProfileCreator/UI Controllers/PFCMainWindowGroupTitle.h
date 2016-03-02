@@ -13,25 +13,26 @@ typedef NS_ENUM(NSInteger, PFCProfileGroups) { kPFCProfileGroupAll = 0, kPFCProf
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCProfileGroupDelegate
 ////////////////////////////////////////////////////////////////////////////////
-@protocol PFCProfileGroupDelegate
+@protocol PFCGroupDelegate
 - (void)createNewGroupOfType:(PFCProfileGroups)group;
 @end
 
-@interface PFCMainWindowGroupsTitle : NSViewController
+@interface PFCMainWindowGroupTitle : NSViewController
+- (id)initWithGroup:(PFCProfileGroups)group sender:(id)sender;
++ (NSImage *)iconForGroup:(PFCProfileGroups)group;
 @end
 
-@interface PFCMainWindowGroupsTitleView : NSView
+@interface PFCMainWindowGroupTitleView : NSView
 
 // ------------------------------------------------------
 //  Delegate
 // ------------------------------------------------------
 @property (nonatomic, weak) id delegate;
 
-@property PFCProfileGroups profileGroup;
-
+@property PFCProfileGroups group;
+@property NSTrackingArea *trackingArea;
 @property (weak) IBOutlet NSTextField *textFieldTitle;
 @property (weak) IBOutlet NSButton *buttonAddGroup;
 - (IBAction)buttonAddGroup:(id)sender;
-@property NSTrackingArea *trackingArea;
 
 @end

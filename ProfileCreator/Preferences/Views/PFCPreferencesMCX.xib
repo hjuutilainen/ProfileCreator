@@ -46,13 +46,13 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="kD9-e1-nKA"/>
                         <binding destination="Cdo-gV-M9Z" name="value" keyPath="values.ODAddress" id="rCj-b6-0hA">
                             <dictionary key="options">
                                 <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                 <string key="NSNullPlaceholder">od.mydomain.com</string>
                             </dictionary>
                         </binding>
+                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="kD9-e1-nKA"/>
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RuL-G2-x6b">
@@ -71,13 +71,13 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="dwk-7q-bwS"/>
                         <binding destination="Cdo-gV-M9Z" name="value" keyPath="values.ODUsername" id="Ta6-g3-vs5">
                             <dictionary key="options">
                                 <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                 <string key="NSNullPlaceholder">diradmin</string>
                             </dictionary>
                         </binding>
+                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="dwk-7q-bwS"/>
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gu6-LT-C1b">
@@ -99,12 +99,12 @@
                         </allowedInputSourceLocales>
                     </secureTextFieldCell>
                     <connections>
-                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="thB-UA-q04"/>
                         <binding destination="Cdo-gV-M9Z" name="value" keyPath="values.ODPassword" id="PTB-Yh-ODh">
                             <dictionary key="options">
                                 <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                             </dictionary>
                         </binding>
+                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="thB-UA-q04"/>
                     </connections>
                 </secureTextField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-5F-nRK">
@@ -130,13 +130,13 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="IhP-Xb-rea"/>
                         <binding destination="Cdo-gV-M9Z" name="value" keyPath="values.ODPort" id="8TD-qg-nVG">
                             <dictionary key="options">
                                 <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                 <integer key="NSNullPlaceholder" value="0"/>
                             </dictionary>
                         </binding>
+                        <binding destination="Cdo-gV-M9Z" name="enabled" keyPath="values.ShowSettingsMCX" id="IhP-Xb-rea"/>
                     </connections>
                 </textField>
                 <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="P31-XR-Mgb">
@@ -159,13 +159,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="JlH-BH-2cm">
-                                <rect key="frame" x="0.0" y="0.0" width="238" height="57"/>
+                                <rect key="frame" x="0.0" y="0.0" width="238.5" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="235.43359375" minWidth="40" maxWidth="1000" id="xuq-Ta-9C1">
+                                    <tableColumn width="234.93359375" minWidth="40" maxWidth="1000" id="xuq-Ta-9C1">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>

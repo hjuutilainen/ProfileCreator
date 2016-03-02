@@ -9,6 +9,7 @@
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
 #import "PFCLog.h"
+#import "NSView+NSLayoutConstraintFilter.h"
 
 @implementation PFCGeneralUtility
 
@@ -51,16 +52,18 @@
 
 + (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
-
     [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
-
     [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
     [superview setHidden:NO];
     [subview setHidden:hidden];
 } // insertSubview:inSuperview:hidden
+
++ (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
+    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
+    [constraint setConstant:tableHeight];
+} // setTableViewHeight
 
 + (void)removeSubviewsFromView:(NSView *)superview {
     for (NSView *view in [superview subviews]) {

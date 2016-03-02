@@ -6,10 +6,10 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCLog.h"
 #import "PFCMainWindowPreviewPayload.h"
 #import "PFCTableViewCellsPayloadPreview.h"
+#import "NSView+NSLayoutConstraintFilter.h"
 @import QuartzCore;
 
 @interface PFCMainWindowPreviewPayload ()
@@ -59,11 +59,6 @@
     [_arrayPayloadInfo addObject:@{ @"Title" : @"Preview Not Implemented Yet" }];
     [_tableViewPayloadInfo reloadData];
 } // viewDidLoad
-
-- (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
-    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
-    [constraint setConstant:tableHeight];
-} // setTableViewHeight
 
 - (IBAction)buttonDisclosureTriangle:(id)sender {
     if (_isCollapsed) {

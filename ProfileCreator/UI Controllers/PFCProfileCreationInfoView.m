@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCConstants.h"
 #import "PFCProfileCreationInfoView.h"
 #import "PFCTableViewCellsProfileInfo.h"
 #import "PFCViews.h"
+#import "PFCGeneralUtility.h"
 
 int const PFCTableViewPayloadInfoRowHeight = 17;
 
@@ -129,7 +129,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
     // -------------------------------------------------------------------------
     //  Adjust table view height to content
     // -------------------------------------------------------------------------
-    [self setTableViewHeight:PFCTableViewPayloadInfoRowHeight * (int)[_arrayPayloadInfo count] tableView:_scrollViewPayloadInfo];
+    [PFCGeneralUtility setTableViewHeight:PFCTableViewPayloadInfoRowHeight * (int)[_arrayPayloadInfo count] tableView:_scrollViewPayloadInfo];
 }
 
 - (void)updateInfoForCellType:(NSString *)cellType manifestContentDict:(NSDictionary *)manifestContentDict {
@@ -139,11 +139,6 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
 
 - (void)updateinfoForCellTypeTextField:(NSDictionary *)manifestContentDict {
 }
-
-- (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
-    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
-    [constraint setConstant:tableHeight];
-} // setTableViewHeight
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return [_arrayPayloadInfo count];

@@ -51,25 +51,50 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewProfileGroup
+#pragma mark CellViewGroupName
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-@implementation CellViewProfileGroup
+@implementation CellViewGroupName
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewProfileGroup *)populateCellViewProfileGroup:(CellViewProfileGroup *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
-
-    NSDictionary *profileGroupDict = profileDict[@"Config"];
+- (CellViewGroupName *)populateCellView:(CellViewGroupName *)cellView group:(PFCProfileGroups)group profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
 
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:profileGroupDict[PFCProfileGroupKeyName] ?: @""];
+    [[cellView textField] setStringValue:profileDict[@"Config"][PFCProfileGroupKeyName] ?: @""];
 
+    return cellView;
+} // populateCellViewMenu:menuDict:row
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewGroupIcon
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@implementation CellViewGroupIcon
+
+- (void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+} // drawRect
+
+- (CellViewGroupIcon *)populateCellView:(CellViewGroupIcon *)cellView group:(PFCProfileGroups)group profileDict:(NSDictionary *)profileDict row:(NSInteger)row {
+    
+    // ---------------------------------------------------------------------
+    //  Icon
+    // ---------------------------------------------------------------------
+    NSImage *icon = [PFCMainWindowGroupTitle iconForGroup:group];
+    if ( icon ) {
+        [[cellView imageView] setImage:icon];
+    }
+    
     return cellView;
 } // populateCellViewMenu:menuDict:row
 

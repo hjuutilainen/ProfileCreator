@@ -13,6 +13,7 @@
 		5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E41C7EFED60010191F /* PFCCellTypeCheckbox.m */; };
 		5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E71C7F05CD0010191F /* PFCCellTypeDatePicker.m */; };
 		5306D9EB1C7F08750010191F /* PFCCellTypeFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9EA1C7F08750010191F /* PFCCellTypeFile.m */; };
+		5314532A1C861D3600A19AFE /* SidebarFolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 531453291C861D3600A19AFE /* SidebarFolder.icns */; };
 		53232F321C5EB130004630F8 /* PFCButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 53232F311C5EB130004630F8 /* PFCButtons.m */; };
 		5327B74D1C4EDB3B0083815C /* PFCProfileCreationInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5327B74B1C4EDB3B0083815C /* PFCProfileCreationInfoView.m */; };
 		5327B74E1C4EDB3B0083815C /* PFCProfileCreationInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5327B74C1C4EDB3B0083815C /* PFCProfileCreationInfoView.xib */; };
@@ -50,8 +51,8 @@
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53597D8A1C5268C50062AADC /* PFCManifestParser.m */; };
-		53598C311C81E2C300C6BD2E /* PFCMainWindowGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroups.m */; };
-		53598C321C81E2C300C6BD2E /* PFCMainWindowGroups.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53598C301C81E2C300C6BD2E /* PFCMainWindowGroups.xib */; };
+		53598C311C81E2C300C6BD2E /* PFCMainWindowGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroup.m */; };
+		53598C321C81E2C300C6BD2E /* PFCMainWindowGroup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53598C301C81E2C300C6BD2E /* PFCMainWindowGroup.xib */; };
 		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
 		536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 536213031C43D1C500C6C8BF /* PFCSplitViews.m */; };
@@ -83,8 +84,8 @@
 		537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520041C1B86B100FF3CB0 /* MenuIconXsan.png */; };
 		537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */; };
 		537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */ = {isa = PBXBuildFile; fileRef = 537520081C1B86CC00FF3CB0 /* MenuIconDock.png */; };
-		537612F81C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */; };
-		537612F91C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */; };
+		537612F81C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 537612F61C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m */; };
+		537612F91C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537612F71C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib */; };
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
@@ -313,6 +314,7 @@
 		5306D9E71C7F05CD0010191F /* PFCCellTypeDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeDatePicker.m; path = CellTypes/PFCCellTypeDatePicker.m; sourceTree = "<group>"; };
 		5306D9E91C7F08750010191F /* PFCCellTypeFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeFile.h; path = CellTypes/PFCCellTypeFile.h; sourceTree = "<group>"; };
 		5306D9EA1C7F08750010191F /* PFCCellTypeFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeFile.m; path = CellTypes/PFCCellTypeFile.m; sourceTree = "<group>"; };
+		531453291C861D3600A19AFE /* SidebarFolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SidebarFolder.icns; sourceTree = "<group>"; };
 		53232F301C5EB130004630F8 /* PFCButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCButtons.h; path = "UI Subclasses/PFCButtons.h"; sourceTree = "<group>"; };
 		53232F311C5EB130004630F8 /* PFCButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCButtons.m; path = "UI Subclasses/PFCButtons.m"; sourceTree = "<group>"; };
 		5327B74A1C4EDB3B0083815C /* PFCProfileCreationInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileCreationInfoView.h; path = "UI Controllers/PFCProfileCreationInfoView.h"; sourceTree = "<group>"; };
@@ -353,9 +355,9 @@
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.plist"; sourceTree = "<group>"; };
 		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestParser.h; path = "Manifest Classes/PFCManifestParser.h"; sourceTree = "<group>"; };
 		53597D8A1C5268C50062AADC /* PFCManifestParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestParser.m; path = "Manifest Classes/PFCManifestParser.m"; sourceTree = "<group>"; };
-		53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCMainWindowGroups.h; sourceTree = "<group>"; };
-		53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCMainWindowGroups.m; sourceTree = "<group>"; };
-		53598C301C81E2C300C6BD2E /* PFCMainWindowGroups.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PFCMainWindowGroups.xib; sourceTree = "<group>"; };
+		53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCMainWindowGroup.h; sourceTree = "<group>"; };
+		53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCMainWindowGroup.m; sourceTree = "<group>"; };
+		53598C301C81E2C300C6BD2E /* PFCMainWindowGroup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PFCMainWindowGroup.xib; sourceTree = "<group>"; };
 		5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.privacy.plist"; sourceTree = "<group>"; };
 		5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconSecurityPrivacy.png; path = "../Supporting Files/Graphics/MenuIconSecurityPrivacy.png"; sourceTree = "<group>"; };
 		536213021C43D1C500C6C8BF /* PFCSplitViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCSplitViews.h; path = "UI Subclasses/PFCSplitViews.h"; sourceTree = "<group>"; };
@@ -393,9 +395,9 @@
 		537520041C1B86B100FF3CB0 /* MenuIconXsan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconXsan.png; path = "../Supporting Files/Graphics/MenuIconXsan.png"; sourceTree = "<group>"; };
 		537520061C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconCalendarSubscription.png; path = "../Supporting Files/Graphics/MenuIconCalendarSubscription.png"; sourceTree = "<group>"; };
 		537520081C1B86CC00FF3CB0 /* MenuIconDock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconDock.png; path = "../Supporting Files/Graphics/MenuIconDock.png"; sourceTree = "<group>"; };
-		537612F51C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowGroupsTitle.h; path = "UI Controllers/PFCMainWindowGroupsTitle.h"; sourceTree = "<group>"; };
-		537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowGroupsTitle.m; path = "UI Controllers/PFCMainWindowGroupsTitle.m"; sourceTree = "<group>"; };
-		537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowGroupsTitle.xib; path = "UI Controllers/PFCMainWindowGroupsTitle.xib"; sourceTree = "<group>"; };
+		537612F51C662D8E00CFCE1D /* PFCMainWindowGroupTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowGroupTitle.h; path = "UI Controllers/PFCMainWindowGroupTitle.h"; sourceTree = "<group>"; };
+		537612F61C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowGroupTitle.m; path = "UI Controllers/PFCMainWindowGroupTitle.m"; sourceTree = "<group>"; };
+		537612F71C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowGroupTitle.xib; path = "UI Controllers/PFCMainWindowGroupTitle.xib"; sourceTree = "<group>"; };
 		537B02231C61449F0072093C /* PFCMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindow.h; path = "Window Controllers/PFCMainWindow.h"; sourceTree = "<group>"; };
 		537B02241C61449F0072093C /* PFCMainWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindow.m; path = "Window Controllers/PFCMainWindow.m"; sourceTree = "<group>"; };
 		537B02251C61449F0072093C /* PFCMainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindow.xib; path = "Window Controllers/PFCMainWindow.xib"; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 		53232EB81C5EA6FA004630F8 /* UI Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				531453291C861D3600A19AFE /* SidebarFolder.icns */,
 				534324DA1C80E75D00893351 /* Menu-17.png */,
 				534324BF1C80E5EA00893351 /* Settings Filled-16.png */,
 				534324C01C80E5EA00893351 /* Settings-16.png */,
@@ -601,8 +604,8 @@
 				539FC5CD1C53A2720074CEC9 /* General Classes */,
 				538B393C1C67F6150076E09E /* Profile Classes */,
 				53C782311C85C16C00E731B1 /* Preferences */,
-				53A5E4631C7F9CA700A79E44 /* Profile Editor */,
 				53C8B26D1C6A62D8003B15FF /* Main Window */,
+				53A5E4631C7F9CA700A79E44 /* Profile Editor */,
 				536888FB1C7E47A600759E68 /* CellTypes */,
 				539FC5CC1C53A2290074CEC9 /* UI Controllers */,
 				539FC5CF1C53A3290074CEC9 /* UI Subclasses */,
@@ -858,12 +861,12 @@
 				538BC0771C6D06990099F779 /* PFCMainWindowPreviewPayload.h */,
 				538BC0781C6D06990099F779 /* PFCMainWindowPreviewPayload.m */,
 				538BC0791C6D06990099F779 /* PFCMainWindowPreviewPayload.xib */,
-				53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroups.h */,
-				53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroups.m */,
-				53598C301C81E2C300C6BD2E /* PFCMainWindowGroups.xib */,
-				537612F51C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.h */,
-				537612F61C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m */,
-				537612F71C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib */,
+				53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroup.h */,
+				53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroup.m */,
+				53598C301C81E2C300C6BD2E /* PFCMainWindowGroup.xib */,
+				537612F51C662D8E00CFCE1D /* PFCMainWindowGroupTitle.h */,
+				537612F61C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m */,
+				537612F71C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib */,
 				536E905A1C84EC2300E1D781 /* PFCMainWindowSort.h */,
 				536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */,
 				536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */,
@@ -1104,6 +1107,7 @@
 				53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */,
 				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
 				5327B74E1C4EDB3B0083815C /* PFCProfileCreationInfoView.xib in Resources */,
+				5314532A1C861D3600A19AFE /* SidebarFolder.icns in Resources */,
 				538BC07B1C6D06990099F779 /* PFCMainWindowPreviewPayload.xib in Resources */,
 				53C782451C85C18900E731B1 /* PFCPreferences.xib in Resources */,
 				5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */,
@@ -1122,7 +1126,7 @@
 				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */,
 				534324B51C80E2FB00893351 /* Horizontal Settings Mixer Filled-50.png in Resources */,
 				53F4E0751C85E4B200DE3B1F /* PFCPreferencesLogging.xib in Resources */,
-				537612F91C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.xib in Resources */,
+				537612F91C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib in Resources */,
 				53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */,
 				53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */,
 				537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */,
@@ -1133,7 +1137,7 @@
 				534324C91C80E5EA00893351 /* Home Filled-15.png in Resources */,
 				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */,
 				53A5E4791C7F9DE800A79E44 /* PFCProfileEditorPayloadLibraryMenu.xib in Resources */,
-				53598C321C81E2C300C6BD2E /* PFCMainWindowGroups.xib in Resources */,
+				53598C321C81E2C300C6BD2E /* PFCMainWindowGroup.xib in Resources */,
 				53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */,
 				534324C81C80E5EA00893351 /* Approval-18.png in Resources */,
 				53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */,
@@ -1183,7 +1187,7 @@
 				5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */,
 				53908EAD1C540FA4009468F0 /* PFCError.m in Sources */,
 				5341D3261C15F3500014F5A7 /* PFCProfileEditor.m in Sources */,
-				537612F81C662D8E00CFCE1D /* PFCMainWindowGroupsTitle.m in Sources */,
+				537612F81C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m in Sources */,
 				5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
 				53C782441C85C18900E731B1 /* PFCPreferences.m in Sources */,
@@ -1224,7 +1228,7 @@
 				53897E341C59571B00B1D868 /* PFCLog.m in Sources */,
 				53FEC8021C4E114000C96596 /* PFCViews.m in Sources */,
 				5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */,
-				53598C311C81E2C300C6BD2E /* PFCMainWindowGroups.m in Sources */,
+				53598C311C81E2C300C6BD2E /* PFCMainWindowGroup.m in Sources */,
 				538BC07A1C6D06990099F779 /* PFCMainWindowPreviewPayload.m in Sources */,
 				53897E3A1C595DFF00B1D868 /* PFCLogFormatter.m in Sources */,
 				53ADF61A1C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.m in Sources */,

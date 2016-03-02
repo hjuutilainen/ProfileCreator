@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "PFCAlert.h"
-#import "PFCMainWindowGroupsTitle.h"
+#import "PFCMainWindowGroupTitle.h"
 #import "PFCTableViews.h"
 #import "PFCViews.h"
 #import <Cocoa/Cocoa.h>
@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark PFCMainWindow
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCMainWindow : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCProfileGroupDelegate, PFCAlertDelegate, PFCTableViewDelegate>
+@interface PFCMainWindow : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSSplitViewDelegate, PFCAlertDelegate, PFCTableViewDelegate>
 
 // -----------------------------------------------------------------------------
 //  Unsorted
@@ -64,7 +64,7 @@
 // -----------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewAddGroupsSuperview;
 @property (weak) IBOutlet NSTableView *tableViewProfileGroups;
-@property PFCMainWindowGroupsTitleView *viewAddGroupsTitle;
+@property PFCMainWindowGroupTitleView *viewAddGroupsTitle;
 @property NSInteger tableViewProfileGroupsSelectedRow;
 @property NSMutableArray *arrayProfileGroups;
 
@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewAddSmartGroupsSuperview;
 @property (weak) IBOutlet NSTableView *tableViewProfileSmartGroups;
-@property PFCMainWindowGroupsTitleView *viewAddSmartGroupsTitle;
+@property PFCMainWindowGroupTitleView *viewAddSmartGroupsTitle;
 @property NSInteger tableViewProfileSmartGroupsSelectedRow;
 @property NSMutableArray *arrayProfileSmartGroups;
 
@@ -114,5 +114,7 @@
 - (void)openProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)updateProfileWithUUID:(NSString *)uuid;
+
+- (void)selectedGroupOfType:(PFCProfileGroups)group profileArray:(NSArray *)profileArray;
 
 @end

@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <Cocoa/Cocoa.h>
+#import "PFCMainWindowGroupTitle.h"
 
 @interface PFCTableViewCellsProfiles : NSObject
 @end
@@ -37,11 +38,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewProfileGroup
+#pragma mark CellViewGroupName
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-@interface CellViewProfileGroup : NSTableCellView
-@property (weak) IBOutlet NSTextField *menuTitle;
-- (CellViewProfileGroup *)populateCellViewProfileGroup:(CellViewProfileGroup *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
+@interface CellViewGroupName : NSTableCellView
+- (CellViewGroupName *)populateCellView:(CellViewGroupName *)cellView group:(PFCProfileGroups)group profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellViewGroupIcon
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+@interface CellViewGroupIcon : NSTableCellView
+@property (weak) IBOutlet NSImageView *icon;
+- (CellViewGroupIcon *)populateCellView:(CellViewGroupIcon *)cellView group:(PFCProfileGroups)group profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
 @end
