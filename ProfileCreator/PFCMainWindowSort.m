@@ -38,6 +38,12 @@
 
     [menu addItem:[NSMenuItem separatorItem]];
 
+    // FIXME - No implementation for table view sorting yet
+    NSMenuItem *menuItemAscending = [[NSMenuItem alloc] init];
+    [menuItemAscending setTitle:@"Sorting not implemeted yet"];
+    [menu addItem:menuItemAscending];
+    
+    /*
     NSMenuItem *menuItemAscending = [[NSMenuItem alloc] init];
     [menuItemAscending setTitle:@"Ascending"];
     [menu addItem:menuItemAscending];
@@ -45,7 +51,8 @@
     NSMenuItem *menuItemDescending = [[NSMenuItem alloc] init];
     [menuItemDescending setTitle:@"Descending"];
     [menu addItem:menuItemDescending];
-
+     */
+    
     [_popUpButtonSort setMenu:menu];
 }
 

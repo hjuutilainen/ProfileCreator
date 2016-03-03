@@ -31,7 +31,7 @@
 // -----------------------------------------------------------------------------
 //  Unsorted
 // -----------------------------------------------------------------------------
-@property NSMutableDictionary *selectedGroup;
+@property NSDictionary *selectedGroup;
 @property NSMutableDictionary *profileRuntimeKeys;
 @property NSString *selectedProfileUUID;
 @property NSString *selectedTableViewIdentifier;
@@ -45,10 +45,6 @@
 //  SplitView Menu - Profile Groups
 // -----------------------------------------------------------------------------
 @property (weak) IBOutlet NSVisualEffectView *viewProfileGroupsSplitView;
-@property (weak) IBOutlet NSScrollView *scrollViewProfileGroups;
-@property (weak) IBOutlet NSScrollView *scrollViewProfileSmartGroups;
-
-@property (weak) IBOutlet NSView *viewProfileGroupsSuperview;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "All Profiles"
@@ -66,9 +62,6 @@
 @property (weak) IBOutlet NSTableView *tableViewProfileGroups;
 @property PFCMainWindowGroupTitleView *viewAddGroupsTitle;
 @property NSInteger tableViewProfileGroupsSelectedRow;
-@property NSMutableArray *arrayProfileGroups;
-
-- (IBAction)selectTableViewProfileGroups:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  SplitView Menu - "Smart Groups"
@@ -78,8 +71,6 @@
 @property PFCMainWindowGroupTitleView *viewAddSmartGroupsTitle;
 @property NSInteger tableViewProfileSmartGroupsSelectedRow;
 @property NSMutableArray *arrayProfileSmartGroups;
-
-- (IBAction)selectTableViewProfileSmartGroups:(id)sender;
 
 // -----------------------------------------------------------------------------
 //  SplitView Library
@@ -115,6 +106,7 @@
 - (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid;
 - (void)updateProfileWithUUID:(NSString *)uuid;
 
-- (void)selectedGroupOfType:(PFCProfileGroups)group profileArray:(NSArray *)profileArray;
+- (void)selectGroup:(NSDictionary *)groupDict groupType:(PFCProfileGroups)group profileArray:(NSArray *)profileArray;
+- (void)updateGroupSelection:(PFCProfileGroups)group;
 
 @end

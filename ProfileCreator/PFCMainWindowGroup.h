@@ -12,12 +12,19 @@
 
 @interface PFCMainWindowGroup : NSViewController <NSTableViewDelegate, NSTableViewDataSource, PFCAlertDelegate, PFCTableViewDelegate>
 
+@property PFCProfileGroups group;
 @property (weak) IBOutlet NSView *viewGroup;
 @property (weak) IBOutlet PFCTableView *tableViewGroup;
 
 - (id)initWithGroup:(PFCProfileGroups)group mainWindow:(PFCMainWindow *)mainWindow;
+
 - (void)createNewGroupOfType:(PFCProfileGroups)group;
-- (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID;
 - (void)deleteGroupWithUUID:(NSString *)uuid;
+
+- (NSUInteger)indexOfProfileWithUUID:(NSString *)uuid;
+- (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID;
+- (void)deleteProfilesWithUUIDs:(NSArray *)profileUUIDs;
+
+- (IBAction)selectGroup:(id)sender;
 
 @end

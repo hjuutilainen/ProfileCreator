@@ -68,6 +68,10 @@
     // ---------------------------------------------------------------------
     [[cellView textField] setStringValue:profileDict[@"Config"][PFCProfileGroupKeyName] ?: @""];
 
+    if ( group == kPFCProfileGroupAll ) {
+        [[cellView textField] setEditable:NO];
+    }
+    
     return cellView;
 } // populateCellViewMenu:menuDict:row
 
@@ -90,10 +94,7 @@
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [PFCMainWindowGroupTitle iconForGroup:group];
-    //if ( icon ) {
-        [[cellView imageView] setImage:icon];
-    //}
+    [[cellView imageView] setImage:[PFCMainWindowGroupTitle iconForGroup:group]];
     
     return cellView;
 } // populateCellViewMenu:menuDict:row

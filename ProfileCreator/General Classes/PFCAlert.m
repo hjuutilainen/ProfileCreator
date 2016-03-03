@@ -33,7 +33,7 @@
             [groupList appendString:[NSString stringWithFormat:@"   • %@\n", groupName]];
         }
     }
-    [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to remove %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
+    [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
     [alert setInformativeText:@"No profile will be deleted"];
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
@@ -73,7 +73,7 @@
 - (void)showAlertDeleteProfiles:(NSArray *)profileNames fromGroup:(NSString *)groupName alertInfo:(NSDictionary *)alertInfo {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
-    [alert addButtonWithTitle:PFCButtonTitleDelete]; // NSAlertSecondButton
+    [alert addButtonWithTitle:PFCButtonTitleRemove]; // NSAlertSecondButton
     NSInteger profileCount = [profileNames count];
     id profileList;
     if (profileCount == 1) {

@@ -150,6 +150,7 @@ NSString *const PFCUserDefaultsLogLevel = @"LogLevel";
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCButtonTitleCancel = @"Cancel";
 NSString *const PFCButtonTitleDelete = @"Delete";
+NSString *const PFCButtonTitleRemove = @"Remove";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark AlertKeys
