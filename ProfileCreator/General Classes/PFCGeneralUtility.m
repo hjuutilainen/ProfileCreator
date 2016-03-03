@@ -14,6 +14,13 @@
 @implementation PFCGeneralUtility
 
 + (NSURL *)profileCreatorFolder:(NSInteger)folder {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Folder: %ld", (long)folder);
+    
+    if ( folder == NSNotFound ) {
+        return nil;
+    }
+    
     switch (folder) {
     case kPFCFolderUserApplicationSupport: {
         NSURL *userApplicationSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
@@ -44,9 +51,9 @@
     return [profileURL path];
 }
 
-+ (NSString *)newProfileGroupPath {
++ (NSString *)newPathInGroupFolder:(PFCFolders)groupFolder {
     NSString *profileGroupFileName = [NSString stringWithFormat:@"%@.pfcgrp", [[NSUUID UUID] UUIDString]];
-    NSURL *profileGroupURL = [[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups] URLByAppendingPathComponent:profileGroupFileName];
+    NSURL *profileGroupURL = [[PFCGeneralUtility profileCreatorFolder:groupFolder] URLByAppendingPathComponent:profileGroupFileName];
     return [profileGroupURL path];
 }
 

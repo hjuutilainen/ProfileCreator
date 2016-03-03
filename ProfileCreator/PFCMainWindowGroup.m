@@ -97,6 +97,11 @@
 
 - (void)setupGroupSmartGroup {
     [self setMaxRows:10];
+    
+    // -------------------------------------------------------------------------
+    //  Add all saved groups
+    // -------------------------------------------------------------------------
+    [self readSavedGroups];
 }
 
 - (void)setupGroupGroup {
@@ -107,7 +112,14 @@
     // -------------------------------------------------------------------------
     [_tableViewGroup registerForDraggedTypes:@[ PFCProfileDraggingType ]];
     
-    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups];
+    // -------------------------------------------------------------------------
+    //  Add all saved groups
+    // -------------------------------------------------------------------------
+    [self readSavedGroups];
+}
+
+- (void)readSavedGroups {
+    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:[self saveFolder]];
     if (![groupSaveFolder checkResourceIsReachableAndReturnError:nil]) {
         DDLogDebug(@"Found no group folder!");
         return;
@@ -408,7 +420,7 @@
 
 - (void)createNewGroupOfType:(PFCProfileGroups)group {
     NSNumber *index = @([self insertProfileGroupInTableView:@{
-                                                              PFCRuntimeKeyPath : [PFCGeneralUtility newProfileGroupPath],
+                                                              PFCRuntimeKeyPath : [PFCGeneralUtility newPathInGroupFolder:[self saveFolder]],
                                                               @"Config" : @{PFCProfileGroupKeyName : PFCDefaultProfileGroupName, PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString]}
                                                               }]);
     
@@ -470,10 +482,26 @@
     }
 }
 
+- (PFCFolders)saveFolder {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"Group: %ld", (long)_group);
+    
+    switch (_group) {
+        case kPFCProfileGroups:
+            return kPFCFolderSavedProfileGroups;
+            break;
+        case kPFCProfileSmartGroups:
+            return kPFCFolderSavedProfileSmartGroups;
+        default:
+            return NSNotFound;
+            break;
+    }
+}
+
 - (BOOL)saveGroup:(NSDictionary *)groupDict error:(NSError **)error {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     
-    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfileGroups];
+    NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:[self saveFolder]];
     DDLogDebug(@"Group save folder: %@", [groupSaveFolder path]);
     if (![groupSaveFolder checkResourceIsReachableAndReturnError:nil]) {
         if (![[NSFileManager defaultManager] createDirectoryAtURL:groupSaveFolder withIntermediateDirectories:YES attributes:nil error:error]) {
@@ -481,7 +509,7 @@
         }
     }
     
-    NSString *groupPath = groupDict[PFCRuntimeKeyPath] ?: [PFCGeneralUtility newProfileGroupPath];
+    NSString *groupPath = groupDict[PFCRuntimeKeyPath] ?: [PFCGeneralUtility newPathInGroupFolder:[self saveFolder]];
     DDLogDebug(@"Group save path: %@", groupPath);
     
     NSURL *groupURL = [NSURL fileURLWithPath:groupPath];
