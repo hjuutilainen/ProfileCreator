@@ -28,6 +28,8 @@
 			<string>CD1A01D6-908D-49CD-BAD6-181B45CC6738</string>
 			<key>Title</key>
 			<string>Name</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>

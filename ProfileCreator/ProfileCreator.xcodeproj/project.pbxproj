@@ -48,6 +48,7 @@
 		534324C91C80E5EA00893351 /* Home Filled-15.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C31C80E5EA00893351 /* Home Filled-15.png */; };
 		534324CA1C80E5EA00893351 /* Home-15.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C41C80E5EA00893351 /* Home-15.png */; };
 		534324DC1C80E75D00893351 /* Menu-17.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324DA1C80E75D00893351 /* Menu-17.png */; };
+		53473FC41C88C60000D4C7CF /* PFCAvailability.m in Sources */ = {isa = PBXBuildFile; fileRef = 53473FC31C88C60000D4C7CF /* PFCAvailability.m */; };
 		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		5357C07B1C18182E0056B050 /* com.apple.carddav.account.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
 		53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53597D8A1C5268C50062AADC /* PFCManifestParser.m */; };
@@ -353,6 +354,8 @@
 		534324C31C80E5EA00893351 /* Home Filled-15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home Filled-15.png"; sourceTree = "<group>"; };
 		534324C41C80E5EA00893351 /* Home-15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home-15.png"; sourceTree = "<group>"; };
 		534324DA1C80E75D00893351 /* Menu-17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Menu-17.png"; sourceTree = "<group>"; };
+		53473FC21C88C60000D4C7CF /* PFCAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCAvailability.h; sourceTree = "<group>"; };
+		53473FC31C88C60000D4C7CF /* PFCAvailability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCAvailability.m; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.plist"; sourceTree = "<group>"; };
 		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestParser.h; path = "Manifest Classes/PFCManifestParser.h"; sourceTree = "<group>"; };
 		53597D8A1C5268C50062AADC /* PFCManifestParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestParser.m; path = "Manifest Classes/PFCManifestParser.m"; sourceTree = "<group>"; };
@@ -522,6 +525,7 @@
 		532B6C4E1C17277100297025 /* ProfileManifests */ = {
 			isa = PBXGroup;
 			children = (
+				534893B61C886F050004E65F /* MCX */,
 				539FC5CB1C53A1D00074CEC9 /* Apple */,
 			);
 			name = ProfileManifests;
@@ -567,6 +571,13 @@
 				538C31801C5E94E100D0125C /* PFCManifestLibrary.m */,
 			);
 			name = "Manifest Classes";
+			sourceTree = "<group>";
+		};
+		534893B61C886F050004E65F /* MCX */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = MCX;
 			sourceTree = "<group>";
 		};
 		536888FB1C7E47A600759E68 /* CellTypes */ = {
@@ -746,6 +757,8 @@
 				538B392B1C67F60F0076E09E /* PFCProfileUtility.m */,
 				53FC42D91C79D40B00F3A7AD /* PFCProfileExport.h */,
 				53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */,
+				53473FC21C88C60000D4C7CF /* PFCAvailability.h */,
+				53473FC31C88C60000D4C7CF /* PFCAvailability.m */,
 			);
 			name = "Profile Classes";
 			sourceTree = "<group>";
@@ -1204,6 +1217,7 @@
 				53ADF6081C7F8C77005BA0FC /* PFCCellTypePopUpButton.m in Sources */,
 				53F4E0741C85E4B200DE3B1F /* PFCPreferencesLogging.m in Sources */,
 				536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */,
+				53473FC41C88C60000D4C7CF /* PFCAvailability.m in Sources */,
 				536E905D1C84EC2300E1D781 /* PFCMainWindowSort.m in Sources */,
 				536FC5211C15EEDE00B1D7CF /* main.m in Sources */,
 				538A665B1C2007DC008350F4 /* PFCFileInfoProcessors.m in Sources */,

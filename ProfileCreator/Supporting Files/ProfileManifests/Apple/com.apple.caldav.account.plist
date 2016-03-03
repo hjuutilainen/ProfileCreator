@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>OSX</string>
+			<key>AvailableFrom</key>
+			<string>10.8</string>
+		</dict>
+	</array>
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
@@ -29,6 +40,8 @@
 			<string>D91E7B0F-2EA0-46C6-B04C-30E443B967A4</string>
 			<key>Title</key>
 			<string>Account Description</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
@@ -76,6 +89,8 @@
 			<string>6901F6A5-955D-4339-B225-CD1F05634FDD</string>
 			<key>Title</key>
 			<string>Principal URL</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
@@ -88,6 +103,17 @@
 			<string>The base URL to the user’s calendar. In OS X this URL is required if the user doesn’t provide a password, because auto-discovery of the service will fail and the account won’t be created</string>
 		</dict>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Required</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailabilityValue</key>
+					<true/>
+				</dict>
+			</array>
 			<key>Identifier</key>
 			<string>CC84A191-01D5-4E45-8419-84FCCD456C6D</string>
 			<key>Title</key>
@@ -112,6 +138,8 @@
 			<string>2D557087-9D64-4BAE-B010-F53A20CC939D</string>
 			<key>Title</key>
 			<string>Account Password</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.caldav.account</string>
 			<key>PayloadKey</key>
@@ -124,6 +152,17 @@
 			<string>The user&apos;s password</string>
 		</dict>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Optional</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailabilityValue</key>
+					<true/>
+				</dict>
+			</array>
 			<key>Identifier</key>
 			<string>BBC4CA69-6A61-42FD-88EF-18867C97C18B</string>
 			<key>Title</key>

@@ -36,6 +36,7 @@
 
 #import "PFCProfileEditorPayloadLibraryMenu.h"
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypeFile.h"
 #import "PFCCellTypePopUpButton.h"
@@ -140,11 +141,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
 - (NSDictionary *)displayKeys {
     return @{
         PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
-        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
-        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
         PFCManifestKeyDisabled : @(_showKeysDisabled),
         PFCManifestKeyHidden : @(_showKeysHidden),
         PFCManifestKeySupervisedOnly : @(_showKeysSupervised)
@@ -398,9 +399,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 
     // -------------------------------------------------------------------------
-    //  Setup profile settings
+    //  Setup Profile settings
     // -------------------------------------------------------------------------
     [self setupProfileSettings];
+
+    // -------------------------------------------------------------------------
+    //  Setup Display Settings
+    // -------------------------------------------------------------------------
+    [self setupDisplaySettings];
 
     // -------------------------------------------------------------------------
     //  Setup settings tab bar
@@ -411,7 +417,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //  Setup Payload Arrays
     // -------------------------------------------------------------------------
     [_arrayPayloadProfile removeAllObjects];
-    [self setupManifestLibraryApple:[enabledPayloadDomains copy]];
+    [self updateManifestLibraryApple:[enabledPayloadDomains copy]];
     [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
     [self setupManifestLibraryMCX:[enabledPayloadDomains copy]];
     [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
@@ -451,16 +457,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self collapseSplitViewInfo];
 
     // -------------------------------------------------------------------------
-    //  Setup Profile Settings
-    // -------------------------------------------------------------------------
-    [self setupPopUpButtonOsVersion];
-
-    // -------------------------------------------------------------------------
-    //  Setup Display Settings
-    // -------------------------------------------------------------------------
-    [self setupDisplaySettings];
-
-    // -------------------------------------------------------------------------
     //  Set first responder depending on profile state
     // -------------------------------------------------------------------------
     [self setFirstResponder];
@@ -494,7 +490,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
     [self setProfileIdentifierFormat:_profileDict[@"Config"][PFCProfileTemplateKeyIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat];
     [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:nil]];
-
+    [self setupPopUpButtonOsVersion];
 } // setupProfileSettings
 
 - (void)setupDisplaySettings {
@@ -515,17 +511,17 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSString *osxMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"";
     DDLogDebug(@"OS X Max Version: %@", osxMaxVersion);
     if ([osxMaxVersion length] != 0 && [[_popUpButtonPlatformOSXMaxVersion itemTitles] containsObject:osxMaxVersion]) {
-        [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:osxMaxVersion];
+        [self setOsxMaxVersion:osxMaxVersion];
     } else {
-        [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:@"Latest"];
+        [self setOsxMaxVersion:@"Latest"];
     }
 
     NSString *osxMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"";
     DDLogDebug(@"OS X Min Version: %@", osxMinVersion);
     if ([osxMinVersion length] != 0 && [[_popUpButtonPlatformOSXMinVersion itemTitles] containsObject:osxMinVersion]) {
-        [_popUpButtonPlatformOSXMinVersion selectItemWithTitle:osxMinVersion];
+        [self setOsxMinVersion:osxMinVersion];
     } else {
-        [_popUpButtonPlatformOSXMinVersion selectItemWithTitle:@"10.7"];
+        [self setOsxMinVersion:@"10.7"];
     }
 
     // -------------------------------------------------------------------------
@@ -535,17 +531,17 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSString *iosMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"";
     DDLogDebug(@"iOS Max Version: %@", iosMaxVersion);
     if ([iosMaxVersion length] != 0 && [[_popUpButtonPlatformiOSMaxVersion itemTitles] containsObject:iosMaxVersion]) {
-        [_popUpButtonPlatformiOSMaxVersion selectItemWithTitle:iosMaxVersion];
+        [self setIosMaxVersion:iosMaxVersion];
     } else {
-        [_popUpButtonPlatformiOSMaxVersion selectItemWithTitle:@"Latest"];
+        [self setIosMaxVersion:@"Latest"];
     }
 
     NSString *iosMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"";
     DDLogDebug(@"iOS Min Version: %@", iosMinVersion);
     if ([iosMinVersion length] != 0 && [[_popUpButtonPlatformiOSMinVersion itemTitles] containsObject:iosMinVersion]) {
-        [_popUpButtonPlatformiOSMinVersion selectItemWithTitle:iosMinVersion];
+        [self setIosMinVersion:iosMinVersion];
     } else {
-        [_popUpButtonPlatformiOSMinVersion selectItemWithTitle:@"7.0"];
+        [self setIosMinVersion:@"7.0"];
     }
 } // setupDisplaySettings
 
@@ -563,33 +559,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
     [self hideSettingsTabBar];
 } // setupSettingsTabBar
-
-- (void)setupManifestLibraryApple:(NSArray *)enabledPayloadDomains {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    NSError *error = nil;
-
-    [_arrayPayloadLibrary removeAllObjects];
-    NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
-    if ([libraryAppleManifests count] != 0) {
-        for (NSDictionary *manifest in libraryAppleManifests) {
-            NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-            if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
-                [_arrayPayloadProfile addObject:[manifest copy]];
-            } else {
-                [_arrayPayloadLibraryApple addObject:[manifest copy]];
-            }
-        }
-
-        // ---------------------------------------------------------------------
-        //  Sort array
-        // ---------------------------------------------------------------------
-        [_arrayPayloadLibraryApple sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
-    } else {
-        DDLogError(@"No manifests returned for library Apple");
-        DDLogError(@"%@", [error localizedDescription]);
-    }
-} // setupManifestLibraryApple
 
 - (void)setupManifestLibraryUserLibrary:(NSArray *)enabledPayloadDomains {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -2188,16 +2157,51 @@ NSInteger const PFCMaximumPayloadCount = 8;
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     NSMenu *menu = [menuItem menu];
     if (menu == [_popUpButtonPlatformOSXMinVersion menu]) {
-        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem]];
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:_osxMaxVersion];
     } else if (menu == [_popUpButtonPlatformOSXMaxVersion menu]) {
-        return [PFCGeneralUtility version:[_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] isLowerThanVersion:[menuItem title]];
+        return [PFCGeneralUtility version:_osxMinVersion isLowerThanVersion:[menuItem title]];
     } else if (menu == [_popUpButtonPlatformiOSMinVersion menu]) {
-        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem]];
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:_iosMaxVersion];
     } else if (menu == [_popUpButtonPlatformiOSMaxVersion menu]) {
-        return [PFCGeneralUtility version:[_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] isLowerThanVersion:[menuItem title]];
+        return [PFCGeneralUtility version:_iosMinVersion isLowerThanVersion:[menuItem title]];
     }
     return YES;
 } // validateMenuItem
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Manifest Updates
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)updateManifestLibraryApple:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    NSError *error = nil;
+
+    [_arrayPayloadLibrary removeAllObjects];
+    NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
+    if ([libraryAppleManifests count] != 0) {
+        for (NSDictionary *manifest in libraryAppleManifests) {
+            if ([[PFCAvailability sharedInstance] showManifest:manifest displayKeys:[self displayKeys]]) {
+                NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+                if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
+                    [_arrayPayloadProfile addObject:[manifest copy]];
+                } else {
+                    [_arrayPayloadLibraryApple addObject:[manifest copy]];
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------
+        //  Sort array
+        // ---------------------------------------------------------------------
+        [_arrayPayloadLibraryApple sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+    } else {
+        DDLogError(@"No manifests returned for library Apple");
+        DDLogError(@"%@", [error localizedDescription]);
+    }
+} // setupManifestLibraryApple
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2364,11 +2368,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
     displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_showKeysSupervised);
     displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
         PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
-        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_popUpButtonPlatformOSXMaxVersion titleOfSelectedItem] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_popUpButtonPlatformOSXMinVersion titleOfSelectedItem] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
-        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_popUpButtonPlatformiOSMaxVersion titleOfSelectedItem] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_popUpButtonPlatformiOSMinVersion titleOfSelectedItem] ?: @""
+        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @""
     };
     return [displaySettings copy];
 }

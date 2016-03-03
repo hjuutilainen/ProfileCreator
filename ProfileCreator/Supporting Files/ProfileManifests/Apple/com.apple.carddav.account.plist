@@ -16,6 +16,21 @@
 	<string>/Applications/Contacts.app/Contents/Resources/vCard.icns</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>OSX</string>
+			<key>AvailableFrom</key>
+			<string>10.8</string>
+		</dict>
+	</array>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.carddav.account</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

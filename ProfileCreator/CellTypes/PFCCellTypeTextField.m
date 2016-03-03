@@ -12,6 +12,7 @@
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
+#import "PFCAvailability.h"
 
 @interface PFCTextFieldCellView ()
 
@@ -41,7 +42,7 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
@@ -159,7 +160,7 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
@@ -299,7 +300,7 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCCellTypes sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {

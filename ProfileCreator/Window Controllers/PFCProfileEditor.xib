@@ -2498,6 +2498,7 @@ Gw
                         <menu key="menu" id="q41-qb-jrF"/>
                     </popUpButtonCell>
                     <connections>
+                        <binding destination="-2" name="selectedValue" keyPath="self.osxMinVersion" id="1ik-8d-BxS"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformOSX" id="rfZ-YG-BIg"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="rfZ-YG-BIg" id="E24-l6-Eg3">
                             <dictionary key="options">
@@ -2534,6 +2535,7 @@ Gw
                         <menu key="menu" id="K7c-RR-Nl1"/>
                     </popUpButtonCell>
                     <connections>
+                        <binding destination="-2" name="selectedValue" keyPath="self.osxMaxVersion" id="1x3-SX-gmz"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformOSX" id="OWK-kv-eHT"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="OWK-kv-eHT" id="arq-Ve-Dch">
                             <dictionary key="options">
@@ -2550,6 +2552,7 @@ Gw
                         <menu key="menu" id="ChU-dE-rc9"/>
                     </popUpButtonCell>
                     <connections>
+                        <binding destination="-2" name="selectedValue" keyPath="self.iosMaxVersion" id="CZC-mB-jWM"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="ZMw-et-fbg"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="ZMw-et-fbg" id="fes-zS-82s">
                             <dictionary key="options">
@@ -2717,6 +2720,7 @@ Gw
                         <menu key="menu" id="Dhg-pw-sjl"/>
                     </popUpButtonCell>
                     <connections>
+                        <binding destination="-2" name="selectedValue" keyPath="self.iosMinVersion" id="VeA-rO-b5I"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="zCu-It-7fn"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="zCu-It-7fn" id="5NZ-Hn-BGR">
                             <dictionary key="options">

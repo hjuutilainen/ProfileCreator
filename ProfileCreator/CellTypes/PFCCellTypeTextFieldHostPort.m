@@ -12,6 +12,7 @@
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
+#import "PFCAvailability.h"
 
 @interface PFCTextFieldHostPortCellView ()
 
@@ -40,8 +41,8 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL requiredHost = [[PFCCellTypes sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
-    BOOL requiredPort = [[PFCCellTypes sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if ((!requiredHost || !requiredPort) && settings[PFCSettingsKeyEnabled] != nil) {
