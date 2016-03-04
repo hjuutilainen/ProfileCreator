@@ -247,9 +247,15 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self removeObserver:self forKeyPath:@"osxMinVersion" context:nil];
     [self removeObserver:self forKeyPath:@"iosMaxVersion" context:nil];
     [self removeObserver:self forKeyPath:@"iosMinVersion" context:nil];
-    [_tableViewPayloadProfile setDelegate:nil];
-    [_tableViewPayloadLibrary setDelegate:nil];
-    [_tableViewSettings setDelegate:nil];
+    if (_tableViewPayloadProfile) {
+        [_tableViewPayloadProfile setDelegate:nil];
+    }
+    if (_tableViewPayloadLibrary) {
+        [_tableViewPayloadLibrary setDelegate:nil];
+    }
+    if (_tableViewSettings) {
+        [_tableViewSettings setDelegate:nil];
+    }
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -362,9 +368,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
                         // Save & Close
                         if (returnCode == NSAlertFirstButtonReturn) {
-                            // FIXME - Actually should save the profile here
                             [self setWindowShouldClose:YES];
-                            [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+                            [self buttonSave:self];
 
                             // Close
                         } else if (returnCode == NSAlertSecondButtonReturn) {
@@ -1615,13 +1620,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // -------------------------------------------------------------
-                NSUInteger row = [_arrayPayloadLibrary indexOfObject:tableViewPayloadLibrarySelectedManifest];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)row);
+                NSUInteger newRow = [_arrayPayloadLibrary indexOfObject:tableViewPayloadLibrarySelectedManifest];
+                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
 
-                if (row != NSNotFound) {
-                    [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                if (newRow != NSNotFound) {
+                    [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadLibrary];
-                    [self setTableViewPayloadLibrarySelectedRow:row];
+                    [self setTableViewPayloadLibrarySelectedRow:newRow];
                     [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
                 } else {
@@ -1644,13 +1649,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // -------------------------------------------------------------
-                NSUInteger row = [_arrayPayloadLibrary indexOfObject:manifestDict];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)row);
+                NSUInteger newRow = [_arrayPayloadLibrary indexOfObject:manifestDict];
+                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
 
-                if (row != NSNotFound) {
+                if (newRow != NSNotFound) {
                     [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadLibrary];
-                    [self setTableViewPayloadLibrarySelectedRow:row];
+                    [self setTableViewPayloadLibrarySelectedRow:newRow];
                     [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
                 } else {
@@ -1660,12 +1665,12 @@ NSInteger const PFCMaximumPayloadCount = 8;
             } else if (tableViewPayloadProfileSelectedRow == row && payloadLibrary != _segmentedControlPayloadLibrarySelectedSegment) {
                 DDLogDebug(@"Current selection was clicked but manifest's payload library is not selected. Moving selection to table view payload library.");
 
-                NSUInteger row = [arrayPayloadLibrarySource indexOfObject:manifestDict];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)row);
+                NSUInteger newRow = [arrayPayloadLibrarySource indexOfObject:manifestDict];
+                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
 
-                if (row != NSNotFound) {
+                if (newRow != NSNotFound) {
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
-                    [self setTableViewPayloadLibrarySelectedRow:row];
+                    [self setTableViewPayloadLibrarySelectedRow:newRow];
                     [self setTableViewPayloadLibrarySelectedRowSegment:payloadLibrary];
                 } else {
                     DDLogError(@"Could not find row for moved manifest in table view payload library");
@@ -1744,13 +1749,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 // -------------------------------------------------------------
                 //  Find index of current selection select it
                 // -------------------------------------------------------------
-                NSUInteger row = [_arrayPayloadProfile indexOfObject:tableViewPayloadProfileSelectedManifest];
-                DDLogDebug(@"Table view profile new selected row: %ld", (long)row);
+                NSUInteger newRow = [_arrayPayloadProfile indexOfObject:tableViewPayloadProfileSelectedManifest];
+                DDLogDebug(@"Table view profile new selected row: %ld", (long)newRow);
 
-                if (row != NSNotFound) {
-                    [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                if (newRow != NSNotFound) {
+                    [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadProfile];
-                    [self setTableViewPayloadProfileSelectedRow:row];
+                    [self setTableViewPayloadProfileSelectedRow:newRow];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadProfile identifier]];
                 } else {
                     DDLogError(@"Could not find row for moved manifest in table view profile");
@@ -1772,13 +1777,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 // -------------------------------------------------------------
                 //  Find index of moved cell dict and select it
                 // -------------------------------------------------------------
-                NSUInteger row = [_arrayPayloadProfile indexOfObject:manifest];
-                DDLogDebug(@"Table view profile new selected row: %ld", (long)row);
+                NSUInteger newRow = [_arrayPayloadProfile indexOfObject:manifest];
+                DDLogDebug(@"Table view profile new selected row: %ld", (long)newRow);
 
-                if (row != NSNotFound) {
-                    [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+                if (newRow != NSNotFound) {
+                    [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadProfile];
-                    [self setTableViewPayloadProfileSelectedRow:row];
+                    [self setTableViewPayloadProfileSelectedRow:newRow];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadProfile identifier]];
                 } else {
                     DDLogError(@"Could not find row for moved manifest in table view profile");
@@ -2287,10 +2292,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
     return YES;
 } // settingsSaved
 
-- (void)saveProfile {
+- (BOOL)saveProfile:(NSError **)error {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    NSError *error = nil;
 
     // -------------------------------------------------------------------------
     //  Save the selected manifest settings before saving the profile template
@@ -2303,10 +2306,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSURL *savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
     DDLogDebug(@"Profiles save folder: %@", [savedProfilesFolderURL path]);
     if (![savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil]) {
-        if (![[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:&error]) {
-            // FIXME - Should notify the user here that the save folder could not be created
-            DDLogError(@"[ERROR] %@", [error localizedDescription]);
-            return;
+        if (![[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:error]) {
+            return NO;
         }
     }
 
@@ -2369,9 +2370,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  Update main window with new settings for the saved profile
         // ---------------------------------------------------------------------
         [_parentObject updateProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""];
+        return YES;
     } else {
         // FIXME - Should notify the user that the save failed!
         NSLog(@"[ERROR] Saving profile template failed!");
+        return NO;
     }
 } // saveProfile
 
@@ -2786,17 +2789,20 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (IBAction)buttonSave:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if ([_profileName hasPrefix:@"Untitled Profile"]) {
 
         [_buttonSaveSheetProfileName setEnabled:NO];
         [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
-        [_textFieldSheetProfileNameMessage setStringValue:@""];
+        [_textFieldSheetProfileNameMessage setStringValue:@"You have to choose a name for your profile."];
         [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
-                     completionHandler:^(NSModalResponse __unused returnCode){
-                         // All actions are handled in the IBActions: -buttonCancelSheetProfileName, -buttonSaveSheetProfileName
+                     completionHandler:^(NSModalResponse __unused returnCode) {
+                       if (returnCode == NSModalResponseOK && _windowShouldClose) {
+                           [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+                       } else if (_windowShouldClose) {
+                           [self setWindowShouldClose:NO];
+                       }
                      }];
     } else if ([[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:_profileUUID] containsObject:_profileName]) {
 
@@ -2806,11 +2812,25 @@ NSInteger const PFCMaximumPayloadCount = 8;
         [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
-                     completionHandler:^(NSModalResponse __unused returnCode){
-                         // All actions are handled in the IBActions: -buttonCancelSheetProfileName, -buttonSaveSheetProfileName
+                     completionHandler:^(NSModalResponse __unused returnCode) {
+                       if (returnCode == NSModalResponseOK && _windowShouldClose) {
+                           [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+                       } else if (_windowShouldClose) {
+                           [self setWindowShouldClose:NO];
+                       }
                      }];
     } else {
-        [self saveProfile];
+        NSError *error = nil;
+        if ([self saveProfile:&error]) {
+            if (_windowShouldClose) {
+                [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
+            }
+        } else {
+            DDLogError(@"Save Error: %@", [error localizedDescription]);
+            if (_windowShouldClose) {
+                [self setWindowShouldClose:NO];
+            }
+        }
     }
 } // buttonSave
 
@@ -2837,15 +2857,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self setProfileName:newName];
 
     // -------------------------------------------------------------------------
-    //  Remove the modal sheet
-    // -------------------------------------------------------------------------
-    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
-    [_sheetProfileName orderOut:self];
-
-    // -------------------------------------------------------------------------
     //  Save profile settings to disk
     // -------------------------------------------------------------------------
-    [self saveProfile];
+    NSError *error = nil;
+    if ([self saveProfile:&error]) {
+        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseOK];
+    } else {
+        DDLogError(@"Save Error: %@", [error localizedDescription]);
+        [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    }
+    [_sheetProfileName orderOut:self];
 } // buttonSaveSheetProfileName
 
 - (IBAction)buttonToggleInfo:(id)sender {
@@ -3911,14 +3932,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSString *manifestDomain = manifest[PFCManifestKeyDomain];
     DDLogDebug(@"Manifest domain: %@", manifestDomain);
 
-    NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger Index = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:manifestDomain];
     }];
-    DDLogDebug(@"Index of manifest in table view profile: %lu", (unsigned long)idx);
+    DDLogDebug(@"Index of manifest in table view profile: %lu", (unsigned long)Index);
 
-    if (idx != NSNotFound) {
+    if (Index != NSNotFound) {
         NSRange allColumns = NSMakeRange(0, [[_tableViewPayloadProfile tableColumns] count]);
-        [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+        [_tableViewPayloadProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:Index] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
     } else {
         DDLogDebug(@"No menu item with domain: %@ was found", manifestDomain);
     }

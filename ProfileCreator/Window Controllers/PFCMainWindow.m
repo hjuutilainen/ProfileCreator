@@ -535,6 +535,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [_tableViewProfileLibrary beginUpdates];
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
+
+    [self setTableViewProfileLibrarySelectedRows:[_tableViewProfileLibrary selectedRowIndexes]];
 } // deleteProfilesWithUUIDs
 
 - (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID inGroup:(PFCProfileGroups)group {
@@ -687,17 +689,17 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Profile UUID: %@", uuid);
 
-    DDLogDebug(@"Selected table view identifier: %@", _selectedTableViewIdentifier);
+    DDLogDebug(@"Selected group: %ld", (long)_selectedGroupType);
     NSUInteger selectedIndex = NSNotFound;
-    if ([_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroupAll]) {
+    if (_selectedGroupType == kPFCProfileGroupAll) {
         if ([_arrayProfileLibrary containsObject:uuid]) {
             selectedIndex = [_arrayProfileLibrary indexOfObjectPassingTest:^BOOL(NSString *_Nonnull string, NSUInteger idx, BOOL *_Nonnull stop) {
               return [string isEqualToString:uuid];
             }];
         }
-    } else if ([_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileGroups]) {
+    } else if (_selectedGroupType == kPFCProfileGroups) {
         selectedIndex = [_groupGroups indexOfProfileWithUUID:uuid];
-    } else if ([_selectedTableViewIdentifier isEqualToString:PFCTableViewIdentifierProfileSmartGroups]) {
+    } else if (_selectedGroupType == kPFCProfileSmartGroups) {
         // FIXME - This isn't implemented yet
     } else {
         DDLogError(@"Unknown table view identifier: %@", _selectedTableViewIdentifier);
@@ -875,6 +877,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
             DDLogDebug(@"Removing selected profile uuid");
             [self setSelectedProfileUUID:nil];
         }
+    } else {
+        DDLogDebug(@"Current profile is already selected");
     }
 } // selectTableViewProfileLibrary
 
