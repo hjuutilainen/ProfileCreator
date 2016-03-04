@@ -25,7 +25,6 @@
 
 + (id)fileInfoProcessorWithName:(NSString *)fileInfoProcessorName fileURL:(NSURL *)fileURL {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"fileInfoProcessorName=%@", fileInfoProcessorName);
     if ([fileInfoProcessorName isEqualToString:@"FileInfoProcessorFont"]) {
         return [[PFCFileInfoProcessorFont alloc] initWithFileURL:fileURL];
     }
@@ -129,7 +128,7 @@
             fileInfoDict[PFCFileInfoTitle] = fontFullName ?: [_fileURL path];
         }
     } else {
-        NSLog(@"NoProvider!");
+        DDLogError(@"NoProvider!");
     }
 
     MDItemRef fontMDItem = MDItemCreateWithURL(kCFAllocatorDefault, (CFURLRef)_fileURL);

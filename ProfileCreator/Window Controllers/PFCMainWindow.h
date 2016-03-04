@@ -32,6 +32,7 @@
 //  Unsorted
 // -----------------------------------------------------------------------------
 @property NSDictionary *selectedGroup;
+@property PFCProfileGroups selectedGroupType;
 @property NSMutableDictionary *profileRuntimeKeys;
 @property NSString *selectedProfileUUID;
 @property NSString *selectedTableViewIdentifier;
@@ -45,32 +46,6 @@
 //  SplitView Menu - Profile Groups
 // -----------------------------------------------------------------------------
 @property (weak) IBOutlet NSVisualEffectView *viewProfileGroupsSplitView;
-
-// -----------------------------------------------------------------------------
-//  SplitView Menu - "All Profiles"
-// -----------------------------------------------------------------------------
-@property (weak) IBOutlet NSTableView *tableViewProfileGroupAll;
-@property NSInteger tableViewProfileGroupAllSelectedRow;
-@property NSMutableArray *arrayProfileGroupAll;
-
-- (IBAction)selectTableViewProfileGroupAll:(id)sender;
-
-// -----------------------------------------------------------------------------
-//  SplitView Menu - "Groups"
-// -----------------------------------------------------------------------------
-@property (weak) IBOutlet NSView *viewAddGroupsSuperview;
-@property (weak) IBOutlet NSTableView *tableViewProfileGroups;
-@property PFCMainWindowGroupTitleView *viewAddGroupsTitle;
-@property NSInteger tableViewProfileGroupsSelectedRow;
-
-// -----------------------------------------------------------------------------
-//  SplitView Menu - "Smart Groups"
-// -----------------------------------------------------------------------------
-@property (weak) IBOutlet NSView *viewAddSmartGroupsSuperview;
-@property (weak) IBOutlet NSTableView *tableViewProfileSmartGroups;
-@property PFCMainWindowGroupTitleView *viewAddSmartGroupsTitle;
-@property NSInteger tableViewProfileSmartGroupsSelectedRow;
-@property NSMutableArray *arrayProfileSmartGroups;
 
 // -----------------------------------------------------------------------------
 //  SplitView Library

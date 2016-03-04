@@ -6,10 +6,10 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
+#import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCLog.h"
 #import "PFCMainWindowPreviewPayload.h"
 #import "PFCTableViewCellsPayloadPreview.h"
-#import "NSView+NSLayoutConstraintFilter.h"
 @import QuartzCore;
 
 @interface PFCMainWindowPreviewPayload ()
@@ -25,7 +25,7 @@
     if (self != nil) {
         [[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addObserver:self forKeyPath:@"payloadErrorCount" options:0 context:nil];
-        [self setIsCollapsed:YES];
+        _isCollapsed = YES;
     }
     return self;
 } // init

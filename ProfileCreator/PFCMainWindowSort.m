@@ -42,7 +42,7 @@
     NSMenuItem *menuItemAscending = [[NSMenuItem alloc] init];
     [menuItemAscending setTitle:@"Sorting not implemeted yet"];
     [menu addItem:menuItemAscending];
-    
+
     /*
     NSMenuItem *menuItemAscending = [[NSMenuItem alloc] init];
     [menuItemAscending setTitle:@"Ascending"];
@@ -52,13 +52,11 @@
     [menuItemDescending setTitle:@"Descending"];
     [menu addItem:menuItemDescending];
      */
-    
+
     [_popUpButtonSort setMenu:menu];
 }
 
 - (IBAction)popUpButtonSort:(id)sender {
-    NSLog(@"popUpButtonSort=%@", sender);
-    NSLog(@"%@", [sender selectedItem]);
 }
 
 @end

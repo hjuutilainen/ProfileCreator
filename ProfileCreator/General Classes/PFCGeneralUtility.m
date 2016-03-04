@@ -6,21 +6,21 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
+#import "NSView+NSLayoutConstraintFilter.h"
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
 #import "PFCLog.h"
-#import "NSView+NSLayoutConstraintFilter.h"
 
 @implementation PFCGeneralUtility
 
 + (NSURL *)profileCreatorFolder:(NSInteger)folder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Folder: %ld", (long)folder);
-    
-    if ( folder == NSNotFound ) {
+
+    if (folder == NSNotFound) {
         return nil;
     }
-    
+
     switch (folder) {
     case kPFCFolderUserApplicationSupport: {
         NSURL *userApplicationSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
@@ -47,13 +47,13 @@
 
 + (NSString *)newProfilePath {
     NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
-    NSURL *profileURL = [[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
+    NSURL *profileURL = [[self.class profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
     return [profileURL path];
 }
 
 + (NSString *)newPathInGroupFolder:(PFCFolders)groupFolder {
     NSString *profileGroupFileName = [NSString stringWithFormat:@"%@.pfcgrp", [[NSUUID UUID] UUIDString]];
-    NSURL *profileGroupURL = [[PFCGeneralUtility profileCreatorFolder:groupFolder] URLByAppendingPathComponent:profileGroupFileName];
+    NSURL *profileGroupURL = [[self.class profileCreatorFolder:groupFolder] URLByAppendingPathComponent:profileGroupFileName];
     return [profileGroupURL path];
 }
 

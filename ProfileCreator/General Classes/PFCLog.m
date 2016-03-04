@@ -94,7 +94,7 @@ DDLogLevel ddLogLevel;
       return [logger isKindOfClass:[DDFileLogger class]];
     }];
 
-    return indexOfFileLogger == NSNotFound ? nil : [allLoggers objectAtIndex:indexOfFileLogger];
+    return indexOfFileLogger == NSNotFound ? nil : allLoggers[indexOfFileLogger];
 } // fileLogger
 
 @end

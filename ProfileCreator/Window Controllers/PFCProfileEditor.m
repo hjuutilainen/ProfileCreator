@@ -243,6 +243,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysSupervised" context:nil];
+    [self removeObserver:self forKeyPath:@"osxMaxVersion" context:nil];
+    [self removeObserver:self forKeyPath:@"osxMinVersion" context:nil];
+    [self removeObserver:self forKeyPath:@"iosMaxVersion" context:nil];
+    [self removeObserver:self forKeyPath:@"iosMinVersion" context:nil];
+    [_tableViewPayloadProfile setDelegate:nil];
+    [_tableViewPayloadLibrary setDelegate:nil];
+    [_tableViewSettings setDelegate:nil];
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,6 +307,10 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysSupervised" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"osxMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"osxMinVersion" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"iosMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"iosMinVersion" options:NSKeyValueObservingOptionNew context:nil];
 
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -387,17 +398,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // FIXME - Comment this
     [self updateTableColumnsSettings];
 
-    // ------------------------------------------------------------------------------------------
-    //  Populate (NSMutableArray)enabledPayloadDomains with all manifest domains that's selected
-    // ------------------------------------------------------------------------------------------
-    NSMutableArray *enabledPayloadDomains = [NSMutableArray array];
-    for (NSString *payloadDomain in [_settingsProfile allKeys]) {
-        NSDictionary *settingsManifest = _settingsProfile[payloadDomain];
-        if ([settingsManifest[PFCSettingsKeySelected] boolValue]) {
-            [enabledPayloadDomains addObject:payloadDomain];
-        }
-    }
-
     // -------------------------------------------------------------------------
     //  Setup Profile settings
     // -------------------------------------------------------------------------
@@ -417,9 +417,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //  Setup Payload Arrays
     // -------------------------------------------------------------------------
     [_arrayPayloadProfile removeAllObjects];
-    [self updateManifestLibraryApple:[enabledPayloadDomains copy]];
-    [self setupManifestLibraryUserLibrary:[enabledPayloadDomains copy]];
-    [self setupManifestLibraryMCX:[enabledPayloadDomains copy]];
+    [self updateManifests];
     [self setArrayPayloadLibrary:_arrayPayloadLibraryApple];
     [self sortArrayPayloadProfile];
     [self updateProfileHeader];
@@ -560,48 +558,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self hideSettingsTabBar];
 } // setupSettingsTabBar
 
-- (void)setupManifestLibraryUserLibrary:(NSArray *)enabledPayloadDomains {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    NSError *error = nil;
-
-    [_arrayPayloadLibraryUserPreferences removeAllObjects];
-    NSArray *libraryLibraryUserPreferences = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
-    if ([libraryLibraryUserPreferences count] != 0) {
-        for (NSDictionary *manifest in libraryLibraryUserPreferences) {
-            NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-            if ([enabledPayloadDomains containsObject:manifestDomain]) {
-                [_arrayPayloadProfile addObject:manifest];
-            } else {
-                [_arrayPayloadLibraryUserPreferences addObject:manifest];
-            }
-        }
-
-        // ---------------------------------------------------------------------
-        //  Sort array
-        // ---------------------------------------------------------------------
-        [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
-    } else {
-        DDLogError(@"No manifests returned for library user library preferences");
-        DDLogError(@"%@", [error localizedDescription]);
-    }
-} // setupManifestLibraryUserLibrary
-
-- (void)setupManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    NSError *error = nil;
-
-    [_arrayPayloadLibraryMCX removeAllObjects];
-    NSArray *libraryMCX = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
-    if ([libraryMCX count] != 0) {
-        DDLogInfo(@"MCX Library: %@", libraryMCX);
-    } else {
-        DDLogError(@"No manifests returned for library mcx");
-        DDLogError(@"%@", [error localizedDescription]);
-    }
-}
-
 - (void)selectOSVersion:(id)sender {
     // Dummy Action to be able to disable menu items
 } // selectOSVersion
@@ -636,13 +592,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSError *error = nil;
     NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
     if (![osVersionsPlistURL checkResourceIsReachableAndReturnError:&error]) {
-        NSLog(@"[ERROR] %@", [error localizedDescription]);
+        DDLogError(@"%@", [error localizedDescription]);
         return;
     }
 
     NSDictionary *osVersions = [NSDictionary dictionaryWithContentsOfURL:osVersionsPlistURL];
     if ([osVersions count] == 0) {
-        NSLog(@"[ERROR] OS Versions dict was empty!");
+        DDLogError(@"OS Versions dict was empty!");
         return;
     }
 
@@ -651,7 +607,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     NSArray *osVersionsOSX = osVersions[@"OS X"] ?: @[];
     if ([osVersionsOSX count] == 0) {
-        NSLog(@"[ERROR] OS Versions array for OS X is empty!");
+        DDLogError(@"OS Versions array for OS X is empty!");
     } else {
 
         NSMenu *menuOSX = [menu copy];
@@ -686,7 +642,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     NSArray *osVersionsiOS = osVersions[@"iOS"] ?: @[];
     if ([osVersionsiOS count] == 0) {
-        NSLog(@"[ERROR] OS Versions array for iOS is empty!");
+        DDLogError(@"OS Versions array for iOS is empty!");
     } else {
 
         NSMenu *menuiOS = [menu copy];
@@ -912,6 +868,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
         if ([[_tableViewProfileHeader selectedRowIndexes] count] == 0) {
             [self updateTableViewSettingsFromManifest:_selectedManifest];
         }
+    } else if ([@[ @"osxMaxVersion", @"osxMinVersion", @"iosMaxVersion", @"iosMinVersion" ] containsObject:keyPath]) {
+        [self updateManifests];
     }
 } // observeValueForKeyPath:ofObject:change:context
 
@@ -1137,7 +1095,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
         if (![cellType isEqualToString:PFCCellTypePadding]) {
             NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
             if ([identifier length] == 0) {
-                // NSLog(@"No Identifier for cell dict: %@", cellDict);
                 return;
             }
 
@@ -1262,11 +1219,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //  Move menu item com.apple.general to the top of array payload profile
     // -------------------------------------------------------------------------
     if (idx != NSNotFound) {
-        NSDictionary *generalSettingsDict = [_arrayPayloadProfile objectAtIndex:idx];
+        NSDictionary *generalSettingsDict = _arrayPayloadProfile[idx];
         [_arrayPayloadProfile removeObjectAtIndex:idx];
         [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
     } else {
-        NSLog(@"[ERROR] No menu item with domain com.apple.general was found!");
+        DDLogError(@"No menu item with domain com.apple.general was found!");
     }
 } // sortArrayPayloadProfile
 
@@ -1341,7 +1298,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //                          The array isn't empty
     // -------------------------------------------------------------------------
     if (row < 0 || [_arraySettings count] == 0 || [_arraySettings count] < row) {
-        NSLog(@"[ERROR] row error for selected manifest");
+        DDLogError(@"row error for selected manifest");
         return;
     }
 
@@ -1350,7 +1307,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[@"Identifier"];
     if ([identifier length] == 0) {
-        NSLog(@"[ERROR] No Identifier!");
+        DDLogError(@"No Identifier!");
         return;
     }
 
@@ -1361,7 +1318,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSArray *manifestContentSubset = [[PFCManifestParser sharedParser] arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil];
 
     if ([manifestContentSubset count] == 0) {
-        NSLog(@"[ERROR] Nothing returned from arrayForManifestContentDict!");
+        DDLogError(@"Nothing returned from arrayForManifestContentDict!");
         return;
     }
 
@@ -1461,7 +1418,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSTextField *textField = [sender object];
     NSNumber *textFieldTag = @([textField tag]);
     if (textFieldTag == nil) {
-        NSLog(@"[ERROR] TextField: %@ tag is nil", textFieldTag);
         return;
     }
     NSInteger row = [textFieldTag integerValue];
@@ -1469,14 +1425,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
     // -------------------------------------------------------------------------
-    NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:row] mutableCopy];
+    NSMutableDictionary *manifestContentDict = [_arraySettings[row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     NSMutableDictionary *settingsDict;
     if ([identifier length] != 0) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
-        NSLog(@"[ERROR] No key returned from manifest dict!");
+        DDLogError(@"No key returned from manifest dict!");
         return;
     }
 
@@ -1489,7 +1445,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
         } else if (textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldPort]) {
             settingsDict[@"ValuePort"] = [inputText copy];
         } else {
-            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
 
@@ -1519,7 +1474,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
         if (textField == [[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
             settingsDict[PFCSettingsKeyValueTextField] = [inputText copy];
         } else {
-            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
     } else {
@@ -1533,7 +1487,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 }
             }
         } else {
-            NSLog(@"[ERROR] Unknown text field!");
             return;
         }
     }
@@ -1548,7 +1501,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 } // controlTextDidChange
 
 - (void)updatePayloadTabTitle:(NSString *)title tabIndex:(NSInteger)tabIndex {
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:tabIndex];
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
     if ([title length] == 0) {
         title = [@(tabIndex) stringValue];
     }
@@ -1557,7 +1510,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSInteger)tabIndex {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)[_arrayPayloadTabs objectAtIndex:tabIndex];
+    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
     [tab updateErrorCount:errorCount ?: @0];
 } // updatePayloadTabErrorCount
 
@@ -1584,7 +1537,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             // -----------------------------------------------------------------
             //  Store the cell dict for move
             // -----------------------------------------------------------------
-            NSDictionary *manifestDict = [_arrayPayloadProfile objectAtIndex:row];
+            NSDictionary *manifestDict = _arrayPayloadProfile[row];
             NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
             DDLogInfo(@"Removing manifest with domain: %@ from table view profile", manifestDomain);
 
@@ -1734,7 +1687,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             // -----------------------------------------------------------------
             //  Store the cell dict for move
             // -----------------------------------------------------------------
-            NSDictionary *manifest = [_arrayPayloadLibrary objectAtIndex:row];
+            NSDictionary *manifest = _arrayPayloadLibrary[row];
             DDLogVerbose(@"Clicked manifest: %@", manifest);
 
             NSString *manifestDomain = manifest[PFCManifestKeyDomain];
@@ -1845,7 +1798,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             [self updateErrorsForManifest:manifest];
         }
     } else {
-        NSLog(@"[ERROR] Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
+        DDLogError(@"Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
     }
 
     if ([_arrayPayloadLibrary count] == 0) {
@@ -1862,7 +1815,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     NSNumber *buttonTag = @([checkbox tag]);
     if (buttonTag == nil) {
-        NSLog(@"[ERROR] Checkbox: %@ tag is nil", checkbox);
+        DDLogError(@"Checkbox: %@ tag is nil", checkbox);
         return;
     }
     NSInteger row = [buttonTag integerValue];
@@ -1875,7 +1828,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Get current cell's key in the settings dict
     // -------------------------------------------------------------------------
-    NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:row] mutableCopy];
+    NSMutableDictionary *manifestContentDict = [_arraySettings[row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
     NSMutableDictionary *settingsDict;
     if ([identifier length] != 0) {
@@ -1934,7 +1887,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
     NSInteger row = [datePickerTag integerValue];
 
-    NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *manifestContentDict = [_arraySettings[(NSUInteger)row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     NSMutableDictionary *settingsDict;
@@ -1994,7 +1947,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
     NSInteger row = [popUpButtonTag integerValue];
 
-    NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *manifestContentDict = [_arraySettings[(NSUInteger)row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     NSMutableDictionary *settingsDict;
@@ -2037,7 +1990,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
     NSInteger row = [buttonTag integerValue];
 
-    NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
+    NSMutableDictionary *manifestContentDict = [_arraySettings[(NSUInteger)row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     NSMutableDictionary *settingsDict;
@@ -2136,7 +2089,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             return;
         }
 
-        NSMutableDictionary *manifestContentDict = [[_arraySettings objectAtIndex:(NSUInteger)row] mutableCopy];
+        NSMutableDictionary *manifestContentDict = [_arraySettings[(NSUInteger)row] mutableCopy];
         manifestContentDict[PFCSettingsKeyValue] = @([segmentedControl selectedSegment]);
         [_arraySettings replaceObjectAtIndex:(NSUInteger)row withObject:[manifestContentDict copy]];
 
@@ -2174,12 +2127,31 @@ NSInteger const PFCMaximumPayloadCount = 8;
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (NSArray *)enabledDomains {
+    NSMutableArray *enabledDomains = [[NSMutableArray alloc] init];
+    for (NSString *domain in [_settingsProfile allKeys]) {
+        NSDictionary *settingsManifest = _settingsProfile[domain];
+        if ([settingsManifest[PFCSettingsKeySelected] boolValue]) {
+            [enabledDomains addObject:domain];
+        }
+    }
+    return [enabledDomains copy];
+}
+
+- (void)updateManifests {
+    NSArray *enabledDomains = [self enabledDomains];
+    [_arrayPayloadProfile removeAllObjects];
+    [self updateManifestLibraryApple:enabledDomains];
+    [self updateManifestLibraryUserLibrary:enabledDomains];
+    [self updateManifestLibraryMCX:enabledDomains];
+}
+
 - (void)updateManifestLibraryApple:(NSArray *)enabledPayloadDomains {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     NSError *error = nil;
 
-    [_arrayPayloadLibrary removeAllObjects];
+    [_arrayPayloadLibraryApple removeAllObjects];
     NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
     if ([libraryAppleManifests count] != 0) {
         for (NSDictionary *manifest in libraryAppleManifests) {
@@ -2202,6 +2174,48 @@ NSInteger const PFCMaximumPayloadCount = 8;
         DDLogError(@"%@", [error localizedDescription]);
     }
 } // setupManifestLibraryApple
+
+- (void)updateManifestLibraryUserLibrary:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    NSError *error = nil;
+
+    [_arrayPayloadLibraryUserPreferences removeAllObjects];
+    NSArray *libraryLibraryUserPreferences = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
+    if ([libraryLibraryUserPreferences count] != 0) {
+        for (NSDictionary *manifest in libraryLibraryUserPreferences) {
+            NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
+            if ([enabledPayloadDomains containsObject:manifestDomain]) {
+                [_arrayPayloadProfile addObject:manifest];
+            } else {
+                [_arrayPayloadLibraryUserPreferences addObject:manifest];
+            }
+        }
+
+        // ---------------------------------------------------------------------
+        //  Sort array
+        // ---------------------------------------------------------------------
+        [_arrayPayloadLibraryUserPreferences sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+    } else {
+        DDLogError(@"No manifests returned for library user library preferences");
+        DDLogError(@"%@", [error localizedDescription]);
+    }
+} // setupManifestLibraryUserLibrary
+
+- (void)updateManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    NSError *error = nil;
+
+    [_arrayPayloadLibraryMCX removeAllObjects];
+    NSArray *libraryMCX = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
+    if ([libraryMCX count] != 0) {
+        DDLogInfo(@"MCX Library: %@", libraryMCX);
+    } else {
+        DDLogError(@"No manifests returned for library mcx");
+        DDLogError(@"%@", [error localizedDescription]);
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -2291,7 +2305,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     if (![savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil]) {
         if (![[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:&error]) {
             // FIXME - Should notify the user here that the save folder could not be created
-            NSLog(@"[ERROR] %@", [error localizedDescription]);
+            DDLogError(@"[ERROR] %@", [error localizedDescription]);
             return;
         }
     }
@@ -2374,6 +2388,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @""
     };
+    DDLogDebug(@"displaySettings=%@", displaySettings);
     return [displaySettings copy];
 }
 
@@ -2385,7 +2400,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  Save current settings in manifest dict
         // ---------------------------------------------------------------------
         if (0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count]) {
-            NSMutableDictionary *manifestDict = [[_arrayPayloadProfile objectAtIndex:_tableViewPayloadProfileSelectedRow] mutableCopy];
+            NSMutableDictionary *manifestDict = [_arrayPayloadProfile[_tableViewPayloadProfileSelectedRow] mutableCopy];
             if ([_settingsManifest count] != 0) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                 if ([manifestDomain length] != 0) {
@@ -2414,7 +2429,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             }
 
             if (_tableViewPayloadLibrarySelectedRowSegment <= [selectedSegmentArray count]) {
-                NSMutableDictionary *manifestDict = [[selectedSegmentArray objectAtIndex:_tableViewPayloadLibrarySelectedRow] mutableCopy];
+                NSMutableDictionary *manifestDict = [selectedSegmentArray[_tableViewPayloadLibrarySelectedRow] mutableCopy];
                 if ([_settingsManifest count] != 0) {
                     NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                     if ([manifestDomain length] != 0) {
@@ -2607,10 +2622,10 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Get the instances, frames and sizes of the subviews
     // -------------------------------------------------------------------------
-    NSView *profilePayloads = [[_splitViewPayload subviews] objectAtIndex:0];
+    NSView *profilePayloads = [_splitViewPayload subviews][0];
     NSRect profilePayloadsFrame = [profilePayloads frame];
 
-    NSView *payloadLibrary = [[_splitViewPayload subviews] objectAtIndex:1];
+    NSView *payloadLibrary = [_splitViewPayload subviews][1];
     NSRect payloadLibraryFrame = [payloadLibrary frame];
 
     CGFloat dividerThickness = [_splitViewPayload dividerThickness];
@@ -2900,12 +2915,10 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (IBAction)menuItemAddMobileconfig:(id)sender {
     // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"mobileconfig!");
 }
 
 - (IBAction)menuItemAddPlist:(id)sender {
     // FIXME - Just different buttons for test, here there could be different options for importing custom files/preferences
-    NSLog(@"plist!");
 }
 
 - (IBAction)selectTableViewPayloadProfile:(id)sender {

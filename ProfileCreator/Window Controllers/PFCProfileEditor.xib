@@ -351,7 +351,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-1904" y="-1222"/>
+            <point key="canvasLocation" x="-1997" y="-1231"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -2498,8 +2498,8 @@ Gw
                         <menu key="menu" id="q41-qb-jrF"/>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="-2" name="selectedValue" keyPath="self.osxMinVersion" id="1ik-8d-BxS"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformOSX" id="rfZ-YG-BIg"/>
+                        <binding destination="-2" name="selectedValue" keyPath="self.osxMinVersion" id="CcB-7b-VdC"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="rfZ-YG-BIg" id="E24-l6-Eg3">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -2535,8 +2535,8 @@ Gw
                         <menu key="menu" id="K7c-RR-Nl1"/>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="-2" name="selectedValue" keyPath="self.osxMaxVersion" id="1x3-SX-gmz"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformOSX" id="OWK-kv-eHT"/>
+                        <binding destination="-2" name="selectedValue" keyPath="self.osxMaxVersion" id="FKF-2Q-x3C"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="OWK-kv-eHT" id="arq-Ve-Dch">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -2552,8 +2552,8 @@ Gw
                         <menu key="menu" id="ChU-dE-rc9"/>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="-2" name="selectedValue" keyPath="self.iosMaxVersion" id="CZC-mB-jWM"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="ZMw-et-fbg"/>
+                        <binding destination="-2" name="selectedValue" keyPath="self.iosMaxVersion" id="Lyf-Ez-Ifi"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="ZMw-et-fbg" id="fes-zS-82s">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -2720,8 +2720,8 @@ Gw
                         <menu key="menu" id="Dhg-pw-sjl"/>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="-2" name="selectedValue" keyPath="self.iosMinVersion" id="VeA-rO-b5I"/>
                         <binding destination="-2" name="enabled" keyPath="self.includePlatformiOS" id="zCu-It-7fn"/>
+                        <binding destination="-2" name="selectedValue" keyPath="self.iosMinVersion" id="eru-ln-Hzl"/>
                         <binding destination="-2" name="hidden" keyPath="self.showAdvancedSettings" previousBinding="zCu-It-7fn" id="5NZ-Hn-BGR">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -2986,7 +2986,7 @@ Gw
                 <constraint firstItem="Sm1-vL-zYg" firstAttribute="top" secondItem="SY5-pF-HbU" secondAttribute="bottom" constant="10" id="xna-Ik-wRI"/>
                 <constraint firstItem="b2v-d7-xqr" firstAttribute="leading" secondItem="AYd-oG-HlP" secondAttribute="leading" constant="20" symbolic="YES" id="yLC-q9-0vm"/>
             </constraints>
-            <point key="canvasLocation" x="-2031.5" y="-1121.5"/>
+            <point key="canvasLocation" x="-2298.5" y="-1228.5"/>
         </customView>
         <customView focusRingType="none" id="A03-7W-IGN">
             <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>

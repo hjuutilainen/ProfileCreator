@@ -6,6 +6,7 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeTableView.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
@@ -13,7 +14,6 @@
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 #import "PFCTableViewCellsSettingsTableView.h"
-#import "PFCAvailability.h"
 
 @interface PFCTableViewCellView ()
 
@@ -61,7 +61,7 @@
     // ---------------------------------------------------------------------
     NSDictionary *userInfo = [sender userInfo];
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
-    NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:row] mutableCopy];
+    NSMutableDictionary *cellDict = [_tableViewContent[row] mutableCopy];
 
     // ---------------------------------------------------------------------
     //  Another verification of text field type
@@ -75,7 +75,7 @@
             return;
         }
 
-        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        _tableViewContent[(NSUInteger)row] = [cellDict copy];
         [self updateTableViewSavedContent];
     }
 } // controlTextDidChange
@@ -216,11 +216,11 @@
         //  Save selection
         // ---------------------------------------------------------------------
         NSString *selectedTitle = [popUpButton titleOfSelectedItem];
-        NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
+        NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
         columnDict[PFCSettingsKeyValue] = selectedTitle;
         cellDict[columnIdentifier] = columnDict;
-        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        _tableViewContent[(NSUInteger)row] = [cellDict copy];
         [self updateTableViewSavedContent];
 
         // ---------------------------------------------------------------------
@@ -254,11 +254,11 @@
         //  Save selection
         // ---------------------------------------------------------------------
         BOOL state = [checkbox state];
-        NSMutableDictionary *cellDict = [[_tableViewContent objectAtIndex:(NSUInteger)row] mutableCopy];
+        NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
         columnDict[PFCSettingsKeyValue] = @(state);
         cellDict[columnIdentifier] = columnDict;
-        [_tableViewContent replaceObjectAtIndex:(NSUInteger)row withObject:[cellDict copy]];
+        _tableViewContent[(NSUInteger)row] = [cellDict copy];
         [self updateTableViewSavedContent];
 
         // ---------------------------------------------------------------------

@@ -148,7 +148,7 @@
     // -------------------------------------------------------------------------
     //  Adjust table view height to content
     // -------------------------------------------------------------------------
-    if ((int)[_arrayGroup count] > _maxRows) {
+    if (_maxRows < (int)[_arrayGroup count]) {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
     } else {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
@@ -302,7 +302,7 @@
 
         groupConfig[PFCProfileGroupKeyName] = inputText ?: @"";
         group[@"Config"] = [groupConfig copy];
-        [_arrayGroup replaceObjectAtIndex:row withObject:[group copy]];
+        _arrayGroup[row] = [group copy];
 
         if (reloadTableView) {
             [_tableViewGroup reloadData];
@@ -337,7 +337,7 @@
     }
     groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
     group[@"Config"] = [groupConfig copy];
-    [_arrayGroup replaceObjectAtIndex:row withObject:[group copy]];
+    _arrayGroup[row] = [group copy];
     NSError *error = nil;
     if (![self saveGroup:[group copy] error:&error]) {
         [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
@@ -364,7 +364,7 @@
             groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
             group[@"Config"] = [groupConfig copy];
 
-            [_arrayGroup replaceObjectAtIndex:index withObject:[group copy]];
+            _arrayGroup[index] = [group copy];
 
             [self selectGroup:self];
 
@@ -390,7 +390,7 @@
           [profiles removeObjectsInArray:profileUUIDs];
           groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
           group[@"Config"] = [groupConfig copy];
-          [_arrayGroup replaceObjectAtIndex:idx withObject:[group copy]];
+          _arrayGroup[idx] = [group copy];
           NSError *error = nil;
           if (![self saveGroup:group error:&error]) {
               [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
@@ -435,7 +435,7 @@
     // ---------------------------------------------------------------------
     //  Adjust table view height to content
     // ---------------------------------------------------------------------
-    if ((int)[_arrayGroup count] > _maxRows) {
+    if (_maxRows < (int)[_arrayGroup count]) {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
     } else {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
@@ -463,7 +463,7 @@
         // ---------------------------------------------------------------------
         //  Adjust table view height to content
         // ---------------------------------------------------------------------
-        if ((int)[_arrayGroup count] > _maxRows) {
+        if (_maxRows < (int)[_arrayGroup count]) {
             [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
         } else {
             [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
@@ -530,7 +530,7 @@
     case kPFCProfileSmartGroups:
         return [self profileArrayForSmartGroup:group];
         break;
-            
+
     default:
         return @[];
         break;

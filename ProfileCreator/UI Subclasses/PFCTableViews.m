@@ -21,7 +21,7 @@
 }
 
 + (BOOL)eventIsDeleteKeyPressed:(NSEvent *)theEvent {
-    switch ([PFCTableView firstCharPressedForEvent:theEvent]) {
+    switch ([self.class firstCharPressedForEvent:theEvent]) {
     case NSDeleteFunctionKey:
     case NSDeleteCharFunctionKey:
     case NSDeleteCharacter:
@@ -32,7 +32,7 @@
 }
 
 - (void)keyDown:(NSEvent *)theEvent {
-    if ([PFCTableView eventIsDeleteKeyPressed:theEvent]) {
+    if ([self.class eventIsDeleteKeyPressed:theEvent]) {
         if ([[self delegate] respondsToSelector:@selector(deleteKeyPressedForTableView:)]) {
             if ([(id<PFCTableViewDelegate>)[self delegate] deleteKeyPressedForTableView:self]) {
                 return;
