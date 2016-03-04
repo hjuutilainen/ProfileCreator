@@ -679,7 +679,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender {
+- (void)tabIndexSelected:(NSUInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Selected tab index: %ld", (long)tabIndex);
     DDLogDebug(@"Should save settings: %@", (saveSettings) ? @"YES" : @"NO");
@@ -738,14 +738,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_tableViewSettings endUpdates];
 } // tabIndexSelected:sender
 
-- (BOOL)tabIndexShouldClose:(NSInteger)tabIndex sender:(id)sender {
+- (BOOL)tabIndexShouldClose:(NSUInteger)tabIndex sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // FIXME - This is added to allow for notification/confirmation of closing tabs
     return YES;
 } // tabIndexShouldClose:sender
 
-- (void)tabIndexClose:(NSInteger)tabIndex sender:(id)sender {
+- (void)tabIndexClose:(NSUInteger)tabIndex sender:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------
@@ -1211,16 +1211,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Find index of menu item com.apple.general
     // -------------------------------------------------------------------------
-    NSUInteger idx = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [_arrayPayloadProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
     }];
 
     // -------------------------------------------------------------------------
     //  Move menu item com.apple.general to the top of array payload profile
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        NSDictionary *generalSettingsDict = _arrayPayloadProfile[idx];
-        [_arrayPayloadProfile removeObjectAtIndex:idx];
+    if (index != NSNotFound) {
+        NSDictionary *generalSettingsDict = _arrayPayloadProfile[index];
+        [_arrayPayloadProfile removeObjectAtIndex:index];
         [_arrayPayloadProfile insertObject:generalSettingsDict atIndex:0];
     } else {
         DDLogError(@"No menu item with domain com.apple.general was found!");
@@ -1500,7 +1500,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self updateErrorsForManifest:_selectedManifest];
 } // controlTextDidChange
 
-- (void)updatePayloadTabTitle:(NSString *)title tabIndex:(NSInteger)tabIndex {
+- (void)updatePayloadTabTitle:(NSString *)title tabIndex:(NSUInteger)tabIndex {
     PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
     if ([title length] == 0) {
         title = [@(tabIndex) stringValue];
@@ -1508,7 +1508,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [tab updateTitle:title ?: @""];
 } // updatePayloadTabTitle
 
-- (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSInteger)tabIndex {
+- (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSUInteger)tabIndex {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
     [tab updateErrorCount:errorCount ?: @0];
@@ -1524,7 +1524,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         DDLogError(@"Checkbox: %@ has no tag", checkbox);
         return;
     }
-    NSInteger row = [buttonTag integerValue];
+    NSUInteger row = [buttonTag integerValue];
 
     if ([[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]]) {
 
@@ -1576,7 +1576,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 NSInteger selectedRow = (row < tableViewPayloadProfileSelectedRow) ? (tableViewPayloadProfileSelectedRow - 1) : tableViewPayloadProfileSelectedRow;
                 DDLogDebug(@"Table view profile new selected row: %ld", (long)selectedRow);
 
-                [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+                [_tableViewPayloadProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)selectedRow] byExtendingSelection:NO];
                 [self setTableViewPayloadProfileSelectedRow:selectedRow];
             }
 
@@ -1588,7 +1588,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
             NSDictionary *tableViewPayloadLibrarySelectedManifest;
             if (0 <= tableViewPayloadLibrarySelectedRow) {
-                tableViewPayloadLibrarySelectedManifest = _arrayPayloadLibrary[tableViewPayloadLibrarySelectedRow];
+                tableViewPayloadLibrarySelectedManifest = _arrayPayloadLibrary[(NSUInteger)tableViewPayloadLibrarySelectedRow];
                 DDLogDebug(@"Table view payload library selected domain: %@", tableViewPayloadLibrarySelectedManifest[PFCManifestKeyDomain]);
             }
 
@@ -2400,7 +2400,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  Save current settings in manifest dict
         // ---------------------------------------------------------------------
         if (0 <= _tableViewPayloadProfileSelectedRow && _tableViewPayloadProfileSelectedRow <= [_arrayPayloadProfile count]) {
-            NSMutableDictionary *manifestDict = [_arrayPayloadProfile[_tableViewPayloadProfileSelectedRow] mutableCopy];
+            NSMutableDictionary *manifestDict = [_arrayPayloadProfile[(NSUInteger)_tableViewPayloadProfileSelectedRow] mutableCopy];
             if ([_settingsManifest count] != 0) {
                 NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                 if ([manifestDomain length] != 0) {
@@ -2429,7 +2429,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             }
 
             if (_tableViewPayloadLibrarySelectedRowSegment <= [selectedSegmentArray count]) {
-                NSMutableDictionary *manifestDict = [selectedSegmentArray[_tableViewPayloadLibrarySelectedRow] mutableCopy];
+                NSMutableDictionary *manifestDict = [selectedSegmentArray[(NSUInteger)_tableViewPayloadLibrarySelectedRow] mutableCopy];
                 if ([_settingsManifest count] != 0) {
                     NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                     if ([manifestDomain length] != 0) {
@@ -3924,16 +3924,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 }
 
-- (NSInteger)updateTabCountForManifestDomain:(NSString *)manifestDomain {
+- (NSUInteger)updateTabCountForManifestDomain:(NSString *)manifestDomain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    NSInteger settingsCount = [_settingsProfile[manifestDomain][@"Settings"] count];
+    NSUInteger settingsCount = [_settingsProfile[manifestDomain][@"Settings"] count];
     DDLogDebug(@"Found: %ld settings for payload domain: %@", (long)settingsCount, manifestDomain);
     if (settingsCount == 0) {
         settingsCount = 1;
     }
 
-    NSInteger stackViewCount = [[_stackViewTabBar views] count];
+    NSUInteger stackViewCount = [[_stackViewTabBar views] count];
     if (settingsCount != stackViewCount) {
 
         DDLogDebug(@"Correcting tab count for manifest with domain: %@", manifestDomain);
@@ -3963,7 +3963,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     return settingsCount;
 } // updateTabCountForManifestDomain
 
-- (void)saveTabIndexSelected:(NSInteger)tabIndexSelected forManifestDomain:(NSString *)manifestDomain {
+- (void)saveTabIndexSelected:(NSUInteger)tabIndexSelected forManifestDomain:(NSString *)manifestDomain {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     NSMutableDictionary *settingsManifestRoot = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];

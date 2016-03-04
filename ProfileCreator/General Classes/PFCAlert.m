@@ -23,7 +23,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleDelete]; // NSAlertSecondButton
-    NSInteger groupCount = [groupNames count];
+    NSUInteger groupCount = [groupNames count];
     id groupList;
     if (groupCount == 1) {
         groupList = [NSString stringWithFormat:@"\"%@\"", [groupNames firstObject]];
@@ -38,7 +38,7 @@
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
-                    [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
+                    [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
 } // showAlertDeleteGroup:alertInfo
 
@@ -46,7 +46,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleDelete]; // NSAlertSecondButton
-    NSInteger profileCount = [profileNames count];
+    NSUInteger profileCount = [profileNames count];
     id profileList;
     if (profileCount == 1) {
         profileList = [NSString stringWithFormat:@"\"%@\"", [profileNames firstObject]];
@@ -66,7 +66,7 @@
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
-                    [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
+                    [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
 } // showAlertDeleteProfiles:alertInfo
 
@@ -74,7 +74,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleRemove]; // NSAlertSecondButton
-    NSInteger profileCount = [profileNames count];
+    NSUInteger profileCount = [profileNames count];
     id profileList;
     if (profileCount == 1) {
         profileList = [NSString stringWithFormat:@"\"%@\"", [profileNames firstObject]];
@@ -90,7 +90,7 @@
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                   completionHandler:^(NSInteger returnCode) {
-                    [_delegate alertReturnCode:returnCode alertInfo:alertInfo];
+                    [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
 } // showAlertDeleteProfilesFromGroup:alertInfo
 

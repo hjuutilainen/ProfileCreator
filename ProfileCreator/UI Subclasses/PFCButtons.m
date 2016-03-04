@@ -56,7 +56,7 @@
         [self removeTrackingArea:_trackingArea];
     }
 
-    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
+    NSUInteger opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
     [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas

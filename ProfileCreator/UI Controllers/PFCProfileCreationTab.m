@@ -89,12 +89,12 @@
     }
 } // tabIndexSelected
 
-- (NSInteger)tabIndex {
+- (NSUInteger)tabIndex {
     id superview = [self superview];
     if ([superview isKindOfClass:[NSStackView class]]) {
         return [[(NSStackView *)superview views] indexOfObject:self];
     }
-    return -1;
+    return (NSUInteger)-1;
 } // tabIndex
 
 - (void)selectTab {
@@ -149,7 +149,7 @@
         [self removeTrackingArea:_trackingArea];
     }
 
-    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
+    NSUInteger opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
     [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas

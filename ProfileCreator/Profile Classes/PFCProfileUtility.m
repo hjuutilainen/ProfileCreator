@@ -143,7 +143,7 @@
 } // addUnsavedProfile
 
 - (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
-    NSInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
+    NSUInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
       return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
     }];
 

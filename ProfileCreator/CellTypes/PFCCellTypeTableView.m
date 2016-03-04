@@ -61,7 +61,7 @@
     // ---------------------------------------------------------------------
     NSDictionary *userInfo = [sender userInfo];
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
-    NSMutableDictionary *cellDict = [_tableViewContent[row] mutableCopy];
+    NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
 
     // ---------------------------------------------------------------------
     //  Another verification of text field type
@@ -81,7 +81,7 @@
 } // controlTextDidChange
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_tableViewContent count];
+    return (NSInteger)[_tableViewContent count];
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -253,7 +253,7 @@
         // ---------------------------------------------------------------------
         //  Save selection
         // ---------------------------------------------------------------------
-        BOOL state = [checkbox state];
+        BOOL state = (BOOL)[checkbox state];
         NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
         columnDict[PFCSettingsKeyValue] = @(state);

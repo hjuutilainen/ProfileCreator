@@ -37,9 +37,9 @@
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
     NSArray *availableSelections = manifest[PFCManifestKeyAvailableValues] ?: @[];
-    [[cellView settingSegmentedControl] setSegmentCount:[availableSelections count]];
+    [[cellView settingSegmentedControl] setSegmentCount:(NSInteger)[availableSelections count]];
     [availableSelections enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-      [[cellView settingSegmentedControl] setLabel:obj forSegment:idx];
+      [[cellView settingSegmentedControl] setLabel:obj forSegment:(NSInteger)idx];
     }];
 
     // ---------------------------------------------------------------------

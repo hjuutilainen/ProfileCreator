@@ -184,7 +184,7 @@
 @property (weak) IBOutlet NSStackView *stackViewTabBar;
 @property BOOL tabBarHidden;
 @property BOOL tabBarButtonHidden;
-@property NSInteger tabIndexSelected;
+@property NSUInteger tabIndexSelected;
 @property NSMutableArray *arrayPayloadTabs;
 
 - (IBAction)buttonAddPayload:(id)sender;

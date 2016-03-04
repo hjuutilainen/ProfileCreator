@@ -85,19 +85,19 @@
     //  Add to profile root from "General" settings
     //  Get index of general settings and remove it from manifest array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadType] isEqualToString:@"com.apple.profile"];
     }];
 
-    DDLogDebug(@"Profile settings index in payload array: %lu", (unsigned long)idx);
-    if (idx == NSNotFound) {
+    DDLogDebug(@"Profile settings index in payload array: %lu", (unsigned long)index);
+    if (index == NSNotFound) {
         DDLogError(@"No general settings found in manifest array");
         // FIXME - Add user error message
         return;
     }
 
-    NSMutableDictionary *profileRootKeys = [[payloadArray objectAtIndex:idx] mutableCopy];
-    [payloadArray removeObjectAtIndex:idx];
+    NSMutableDictionary *profileRootKeys = [[payloadArray objectAtIndex:index] mutableCopy];
+    [payloadArray removeObjectAtIndex:index];
     [profile addEntriesFromDictionary:[self profileRootKeysFromGeneralPayload:profileRootKeys]];
 
     profile[@"PayloadContent"] = [payloadArray copy] ?: @[];
@@ -342,7 +342,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
         //  Get index of current payload in payload array
         // ---------------------------------------------------------------------
-        NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
           return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUID];
         }];
 
@@ -350,8 +350,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  Create mutable version of current payload, or create new payload if none existed
         // ----------------------------------------------------------------------------------
         NSMutableDictionary *payloadDictDict;
-        if (idx != NSNotFound) {
-            payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+        if (index != NSNotFound) {
+            payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
         } else {
             payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadType payloadUUID:payloadUUID];
         }
@@ -364,8 +364,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
         //  Save payload to payload array
         // ---------------------------------------------------------------------
-        if (idx != NSNotFound) {
-            [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+        if (index != NSNotFound) {
+            [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
         } else {
             [*payloads addObject:[payloadDictDict copy]];
         }
@@ -591,7 +591,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
@@ -599,8 +599,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
     }
@@ -613,8 +613,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
@@ -756,7 +756,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
@@ -764,8 +764,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
     }
@@ -778,8 +778,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
@@ -875,7 +875,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
         //  Get index of current payload in payload array
         // ---------------------------------------------------------------------
-        NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+        NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
           return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDTextField ?: @""];
         }];
 
@@ -883,8 +883,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  Create mutable version of current payload, or create new payload if none existed
         // ----------------------------------------------------------------------------------
         NSMutableDictionary *payloadDictDict;
-        if (idx != NSNotFound) {
-            payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+        if (index != NSNotFound) {
+            payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
         } else {
             payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeTextField payloadUUID:payloadUUIDTextField];
         }
@@ -897,8 +897,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
         //  Save payload to payload array
         // ---------------------------------------------------------------------
-        if (idx != NSNotFound) {
-            [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+        if (index != NSNotFound) {
+            [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
         } else {
             [*payloads addObject:[payloadDictDict copy]];
         }
@@ -929,7 +929,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
     }];
 
@@ -937,8 +937,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeCheckbox payloadUUID:payloadUUIDCheckbox];
     }
@@ -951,8 +951,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
@@ -1054,7 +1054,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
@@ -1062,8 +1062,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
     }
@@ -1081,8 +1081,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
@@ -1163,7 +1163,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
     }];
 
@@ -1171,8 +1171,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeCheckbox payloadUUID:payloadUUIDCheckbox];
     }
@@ -1185,8 +1185,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
@@ -1252,7 +1252,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
-    NSUInteger idx = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
@@ -1260,8 +1260,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Create mutable version of current payload, or create new payload if none existed
     // ----------------------------------------------------------------------------------
     NSMutableDictionary *payloadDictDict;
-    if (idx != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:idx] mutableCopy];
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
     }
@@ -1278,8 +1278,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     // -------------------------------------------------------------------------
     //  Save payload to payload array
     // -------------------------------------------------------------------------
-    if (idx != NSNotFound) {
-        [*payloads replaceObjectAtIndex:idx withObject:[payloadDictDict copy]];
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }

@@ -162,7 +162,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_arrayGroup count];
+    return (NSInteger)[_arrayGroup count];
 } // numberOfRowsInTableView
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {
@@ -244,7 +244,7 @@
     // -------------------------------------------------------------------------
     //  Multiple selections is not enabled for groups, therefor just extract the selected row from the row indexes
     // -------------------------------------------------------------------------
-    NSInteger selectedRow = [selectedRows firstIndex];
+    NSUInteger selectedRow = [selectedRows firstIndex];
     DDLogDebug(@"Selected row: %ld", (long)selectedRow);
 
     if (selectedRow != NSNotFound) {
@@ -288,7 +288,7 @@
     NSInteger row = [_tableViewGroup rowForView:[[notification object] superview]];
 
     if (row < [_arrayGroup count]) {
-        NSMutableDictionary *group = [_arrayGroup[row] mutableCopy];
+        NSMutableDictionary *group = [_arrayGroup[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
 
         NSDictionary *userInfo = [notification userInfo];
@@ -327,7 +327,7 @@
 - (void)insertProfileUUIDs:(NSArray *)profileUUIDs inTableViewWithIdentifier:(NSString *)identifier row:(NSInteger)row {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    NSMutableDictionary *group = [_arrayGroup[row] mutableCopy];
+    NSMutableDictionary *group = [_arrayGroup[(NSUInteger)row] mutableCopy];
     NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy];
     NSMutableArray *profiles = [groupConfig[PFCProfileGroupKeyProfiles] mutableCopy] ?: [[NSMutableArray alloc] init];
     for (NSString *uuid in profileUUIDs) {
@@ -350,7 +350,7 @@
 - (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    NSInteger index = [_arrayGroup indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
+    NSUInteger index = [_arrayGroup indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
       return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:groupUUID];
     }];
     DDLogDebug(@"Group index: %ld", (long)index);
@@ -428,9 +428,9 @@
         [_mainWindow updateGroupSelection:group];
     }
 
-    [_tableViewGroup selectRowIndexes:[NSIndexSet indexSetWithIndex:[index integerValue]] byExtendingSelection:NO];
-    [[[_tableViewGroup viewAtColumn:[[_tableViewGroup tableColumns] indexOfObject:[_tableViewGroup tableColumnWithIdentifier:@"GroupName"]] row:[index integerValue] makeIfNecessary:NO] textField]
-        selectText:self];
+    [_tableViewGroup selectRowIndexes:[NSIndexSet indexSetWithIndex:[index unsignedIntegerValue]] byExtendingSelection:NO];
+    [[[_tableViewGroup viewAtColumn:(NSInteger)[[_tableViewGroup tableColumns] indexOfObject:[_tableViewGroup tableColumnWithIdentifier:@"GroupName"]] row:[index integerValue] makeIfNecessary:NO]
+        textField] selectText:self];
 
     // ---------------------------------------------------------------------
     //  Adjust table view height to content
@@ -443,7 +443,7 @@
 } // createNewGroupOfType
 
 - (void)deleteGroupWithUUID:(NSString *)uuid {
-    NSInteger index = [_arrayGroup indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
+    NSUInteger index = [_arrayGroup indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
       return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
     }];
     DDLogDebug(@"Group index: %ld", (long)index);
@@ -560,7 +560,7 @@
     // ---------------------------------------------------------------------
     //  Load the current group dict from the array
     // ---------------------------------------------------------------------
-    NSMutableDictionary *group = [_arrayGroup[selectedRow] mutableCopy];
+    NSMutableDictionary *group = [_arrayGroup[(NSUInteger)selectedRow] mutableCopy];
 
     if (_mainWindow) {
         [_mainWindow selectGroup:group groupType:_group profileArray:[self profileArrayForGroup:group]];

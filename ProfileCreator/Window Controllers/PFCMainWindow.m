@@ -53,8 +53,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 @property PFCMainWindowGroup *groupGroups;
 @property PFCMainWindowGroup *groupSmartGroups;
 
-@property (weak) IBOutlet NSView *viewGroupAllProfiles;
-
 @property (weak) IBOutlet NSView *viewLibrarySortSplitView;
 
 - (IBAction)toolbarItemAdd:(id)sender;
@@ -309,7 +307,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     //  Empty selection is still needed as there are multiple table views and they need to feel as one
     // ------------------------------------------------------------------------------------------------
     if ([[tableView identifier] isEqualToString:_selectedTableViewIdentifier] && [proposedSelectionIndexes count] == 0) {
-        return [NSIndexSet indexSetWithIndex:[tableView selectedRow]];
+        return [NSIndexSet indexSetWithIndex:(NSUInteger)[tableView selectedRow]];
     }
     return proposedSelectionIndexes;
 } // tableView:selectionIndexesForProposedSelection
@@ -327,7 +325,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
         CellViewProfile *cellView = [tableView makeViewWithIdentifier:@"CellViewProfile" owner:self];
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellViewProfile:cellView profileDict:[[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[row]] row:row];
+        return [cellView populateCellViewProfile:cellView profileDict:[[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[(NSUInteger)row]] row:row];
     }
     return nil;
 } // tableView:viewForTableColumn:row
@@ -335,8 +333,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 - (void)tableView:(NSTableView *)tableView updateDraggingItemsForDrag:(id<NSDraggingInfo>)draggingInfo {
     NSData *draggingData = [[draggingInfo draggingPasteboard] dataForType:PFCProfileDraggingType];
     NSArray *profileUUIDs = [NSKeyedUnarchiver unarchiveObjectWithData:draggingData];
-    NSInteger count = [profileUUIDs count];
-    draggingInfo.numberOfValidItemsForDrop = count;
+    draggingInfo.numberOfValidItemsForDrop = (NSInteger)[profileUUIDs count];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(nonnull NSIndexSet *)rowIndexes toPasteboard:(nonnull NSPasteboard *)pboard {
@@ -385,7 +382,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         return;
     }
 
-    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[_arrayProfileLibrary objectAtIndex:row] ?: @""];
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[_arrayProfileLibrary objectAtIndex:(NSUInteger)row] ?: @""];
 
     // -------------------------------------------------------------------------------
     //  MenuItem - "Show In Finder"
@@ -766,7 +763,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     //  Loop through selected groups and add to window
     // -------------------------------------------------------------------------
     for (PFCMainWindowGroup *group in _arrayGroups) {
-        NSView *groupView = [group viewGroup];
+        groupView = [group viewGroup];
         if (groupView != nil) {
             [_viewProfileGroupsSplitView addSubview:groupView positioned:NSWindowAbove relativeTo:nil];
             [groupView setTranslatesAutoresizingMaskIntoConstraints:NO];

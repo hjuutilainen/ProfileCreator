@@ -69,7 +69,7 @@
 
     NSURL *iconURL = [NSURL fileURLWithPath:manifest[PFCManifestKeyIconPath] ?: @""];
     if ([iconURL checkResourceIsReachableAndReturnError:nil]) {
-        NSImage *icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
+        icon = [[NSImage alloc] initWithContentsOfURL:iconURL];
         if (icon) {
             return icon;
         }
@@ -77,7 +77,7 @@
 
     iconURL = [NSURL fileURLWithPath:manifest[PFCManifestKeyIconPathBundle] ?: @""];
     if ([iconURL checkResourceIsReachableAndReturnError:nil]) {
-        NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
+        icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
         if (icon) {
             return icon;
         }

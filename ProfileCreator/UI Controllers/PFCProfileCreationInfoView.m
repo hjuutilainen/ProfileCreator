@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
+#import "PFCGeneralUtility.h"
 #import "PFCProfileCreationInfoView.h"
 #import "PFCTableViewCellsProfileInfo.h"
 #import "PFCViews.h"
-#import "PFCGeneralUtility.h"
 
 int const PFCTableViewPayloadInfoRowHeight = 17;
 
@@ -141,7 +141,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_arrayPayloadInfo count];
+    return (NSInteger)[_arrayPayloadInfo count];
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -153,7 +153,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
         return nil;
     }
 
-    NSDictionary *infoDict = _arrayPayloadInfo[row];
+    NSDictionary *infoDict = _arrayPayloadInfo[(NSUInteger)row];
     if ([[tableColumn identifier] isEqualToString:@"TableColumnInfoTitle"]) {
         CellViewPayloadInfoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewPayloadInfoTitle" owner:self];
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).

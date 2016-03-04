@@ -6,8 +6,8 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCMainWindowGroupTitle.h"
 #import "PFCMainWindow.h"
+#import "PFCMainWindowGroupTitle.h"
 
 @interface PFCMainWindowGroupTitle ()
 
@@ -30,38 +30,38 @@
 
 + (NSImage *)iconForGroup:(PFCProfileGroups)group {
     switch (group) {
-        case kPFCProfileGroupAll:
-            return nil;
-            break;
-        case kPFCProfileGroups:
-            return [NSImage imageNamed:@"SidebarFolder"];
-            break;
-            
-        case kPFCProfileSmartGroups:
-            return [NSImage imageNamed:@"SidebarSmartFolder"];
-            break;
-            
-        default:
-            break;
+    case kPFCProfileGroupAll:
+        return nil;
+        break;
+    case kPFCProfileGroups:
+        return [NSImage imageNamed:@"SidebarFolder"];
+        break;
+
+    case kPFCProfileSmartGroups:
+        return [NSImage imageNamed:@"SidebarSmartFolder"];
+        break;
+
+    default:
+        break;
     }
 }
 
 - (NSString *)nameForGroup:(PFCProfileGroups)group {
     switch (group) {
-        case kPFCProfileGroupAll:
-            return @"";
-            break;
-        case kPFCProfileGroups:
-            return @"Groups";
-            break;
-            
-        case kPFCProfileSmartGroups:
-            return @"Smart Groups";
-            break;
-            
-        default:
-            return @"";
-            break;
+    case kPFCProfileGroupAll:
+        return @"";
+        break;
+    case kPFCProfileGroups:
+        return @"Groups";
+        break;
+
+    case kPFCProfileSmartGroups:
+        return @"Smart Groups";
+        break;
+
+    default:
+        return @"";
+        break;
     }
 } // nameForGroup
 
@@ -106,7 +106,7 @@
         [self removeTrackingArea:_trackingArea];
     }
 
-    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
+    NSUInteger opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
     [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas

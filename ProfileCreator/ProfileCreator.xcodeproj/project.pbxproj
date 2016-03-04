@@ -1368,6 +1368,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ProfileCreator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_CFLAGS = (
+					"-Wall",
+					"-Wdeprecated-implementations",
+					"-Wnewline-eof",
+					"-Wfloat-equal",
+					"-Wshadow",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ProfileCreator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1380,6 +1387,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ProfileCreator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_CFLAGS = (
+					"-Wall",
+					"-Wdeprecated-implementations",
+					"-Wnewline-eof",
+					"-Wfloat-equal",
+					"-Wshadow",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ProfileCreator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -13,9 +13,9 @@
 #pragma mark PFCProfileCreationTabDelegate
 ////////////////////////////////////////////////////////////////////////////////
 @protocol PFCProfileCreationTabDelegate
-- (void)tabIndexSelected:(NSInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender;
-- (BOOL)tabIndexShouldClose:(NSInteger)tabIndex sender:(id)sender;
-- (void)tabIndexClose:(NSInteger)tabIndex sender:(id)sender;
+- (void)tabIndexSelected:(NSUInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender;
+- (BOOL)tabIndexShouldClose:(NSUInteger)tabIndex sender:(id)sender;
+- (void)tabIndexClose:(NSUInteger)tabIndex sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@
 @property NSColor *colorDeSelectedMouseOver;
 @property NSColor *color;
 
-- (NSInteger)tabIndex;
+- (NSUInteger)tabIndex;
 - (void)updateTitle:(NSString *)title;
 - (void)updateErrorCount:(NSNumber *)errorCount;
 - (IBAction)buttonClose:(id)sender;

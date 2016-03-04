@@ -89,7 +89,7 @@
 
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:&error];
     if (fileAttributes) {
-        NSString *fileSize = [NSByteCountFormatter stringFromByteCount:[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
+        NSString *fileSize = [NSByteCountFormatter stringFromByteCount:(long long)[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
         fileInfoDict[PFCFileInfoLabel2] = @"Size:";
         fileInfoDict[PFCFileInfoDescription2] = fileSize ?: @"";
     }

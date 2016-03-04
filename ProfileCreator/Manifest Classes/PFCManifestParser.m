@@ -336,7 +336,7 @@
     if (selectedSegment == nil) {
         selectedSegmentString = [availableValues firstObject];
     } else if ([selectedSegment intValue] <= [availableValues count]) {
-        selectedSegmentString = availableValues[[selectedSegment intValue]];
+        selectedSegmentString = availableValues[[selectedSegment unsignedIntegerValue]];
     } else {
         return @[ manifestContentDict ];
     }
@@ -1287,7 +1287,6 @@
     if ([allowedFileTypes count] != 0) {
         NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
         NSString *fileType;
-        NSError *error;
         if ([fileURL getResourceValue:&fileType forKey:NSURLTypeIdentifierKey error:&error]) {
             __block BOOL validFileType = NO;
             [allowedFileTypes enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {

@@ -64,11 +64,11 @@
     if (_isCollapsed) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *_Nonnull context) {
           [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-          self.layoutConstraintDescriptionBottom.animator.constant += ([[_scrollViewTableView constraintForAttribute:NSLayoutAttributeHeight] constant] + 7);
+          self.layoutConstraintDescriptionBottom.animator.constant += ([[self->_scrollViewTableView constraintForAttribute:NSLayoutAttributeHeight] constant] + 7);
           [[[self view] superview] layoutSubtreeIfNeeded];
         }
             completionHandler:^{
-              [[self view] removeConstraint:_layoutConstraintDescriptionBottom];
+              [[self view] removeConstraint:self->_layoutConstraintDescriptionBottom];
               [self setIsCollapsed:NO];
             }];
     } else {
@@ -76,7 +76,7 @@
         [[self view] addConstraint:_layoutConstraintDescriptionBottom];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *_Nonnull context) {
           [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-          [[_layoutConstraintDescriptionBottom animator] setConstant:7];
+          [[self->_layoutConstraintDescriptionBottom animator] setConstant:7];
           [[[self view] superview] layoutSubtreeIfNeeded];
         }
             completionHandler:^{
@@ -92,7 +92,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_arrayPayloadInfo count];
+    return (NSInteger)[_arrayPayloadInfo count];
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -104,7 +104,7 @@
         return nil;
     }
 
-    NSDictionary *infoDict = _arrayPayloadInfo[row];
+    NSDictionary *infoDict = _arrayPayloadInfo[(NSUInteger)row];
     if ([[tableColumn identifier] isEqualToString:@"TableColumnInfoTitle"]) {
         CellViewInfoTitle *cellView = [tableView makeViewWithIdentifier:@"CellViewInfoTitle" owner:self];
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
