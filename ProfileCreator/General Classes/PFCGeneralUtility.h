@@ -19,5 +19,6 @@ typedef NS_ENUM(NSInteger, PFCFolders) { kPFCFolderUserApplicationSupport = 0, k
 + (void)removeSubviewsFromView:(NSView *)superview;
 + (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2;
 + (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView;
++ (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 
 @end

@@ -7,14 +7,14 @@
 //
 
 #import "PFCMainWindow.h"
+#import "PFCStatusView.h"
 #import <Cocoa/Cocoa.h>
 
 @interface PFCMainWindowPreview : NSViewController
 
 @property (weak) IBOutlet NSView *viewPreviewSuperview;
-@property (weak) IBOutlet NSView *viewPreviewSelectionUnavailable;
-@property BOOL profilePreviewHidden;
-@property BOOL profilePreviewSelectionUnavailableHidden;
+
+@property PFCStatusView *viewStatus;
 
 - (id)initWithMainWindow:(PFCMainWindow *)mainWindow;
 - (void)updatePreviewWithProfileDict:(NSDictionary *)profileDict;

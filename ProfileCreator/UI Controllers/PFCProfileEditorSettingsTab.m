@@ -6,16 +6,16 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
-#import "PFCProfileCreationTab.h"
+#import "PFCProfileEditorSettingsTab.h"
 
-@interface PFCProfileCreationTab ()
+@interface PFCProfileEditorSettingsTab ()
 
 @end
 
-@implementation PFCProfileCreationTab
+@implementation PFCProfileEditorSettingsTab
 
 - (id)init {
-    self = [super initWithNibName:@"PFCProfileCreationTab" bundle:nil];
+    self = [super initWithNibName:@"PFCProfileEditorSettingsTab" bundle:nil];
     if (self != nil) {
     }
     return self;
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation PFCProfileCreationTabView
+@implementation PFCProfileEditorSettingsTabView
 
 - (void)customInit {
     _color = [NSColor clearColor];

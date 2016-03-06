@@ -29,12 +29,15 @@
 #import "PFCManifestUtility.h"
 #import "PFCProfileCreationInfoView.h"
 #import "PFCProfileEditor.h"
+#import "PFCProfileEditorSettings.h"
 #import "PFCProfileUtility.h"
 #import "PFCSplitViews.h"
 #import "PFCTableViewCellsMenu.h"
 #import "PFCTableViewCellsSettings.h"
 
-#import "PFCProfileEditorPayloadLibraryMenu.h"
+#import "PFCStatusView.h"
+
+#import "PFCProfileEditorLibraryMenu.h"
 
 #import "PFCAvailability.h"
 #import "PFCCellTypeDatePicker.h"
@@ -55,7 +58,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 @interface PFCProfileEditor ()
 
-@property PFCProfileEditorPayloadLibraryMenu *viewPayloadLibraryMenu;
+@property PFCProfileEditorLibraryMenu *viewLibraryMenu;
+
+@property PFCStatusView *viewStatusLibrary;
+@property PFCStatusView *viewStatusLibrarySearch;
+@property PFCStatusView *viewStatusSettings;
+@property PFCStatusView *viewStatusInfo;
+
+@property PFCProfileEditorSettings *settings;
 
 @end
 
@@ -69,57 +79,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
 #pragma mark Temporary/Testing
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
-    // FIXME - This only catches half the divider, I don't know how to split up the divider rects in 3 (and also keep the 1 pixel across the top)
-    if (splitView == _splitViewPayload) {
-        NSRect viewBounds = [[_viewPayloadLibraryMenu view] bounds];
-        NSRect viewButtonBounds = [[_viewPayloadLibraryMenu viewButtons] bounds];
-        CGFloat dividerSpace = ((viewBounds.size.width - viewButtonBounds.size.width) / 2);
-        // NSRect leftRect = NSMakeRect(0, 0, dividerSpace, viewBounds.size.height);
-        NSRect rightRect = NSMakeRect((viewBounds.size.width - dividerSpace), 0, dividerSpace, viewBounds.size.height);
-        return [[_viewPayloadLibraryMenu view] convertRect:rightRect fromView:splitView];
-        // return [[_viewPayloadLibraryMenu view] convertRect:[[_viewPayloadLibraryMenu view] bounds] fromView:splitView]; // <-- Entire divider
-    }
-    return NSZeroRect;
-}
-
-- (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
-
-    // -------------------------------------------------------------------------
-    //  Set allowed date units to year, month and day
-    // -------------------------------------------------------------------------
-    unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-
-    // -------------------------------------------------------------------------
-    //  Use calendar US
-    // -------------------------------------------------------------------------
-    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
-
-    // -------------------------------------------------------------------------
-    //  Remove all components except the allowed date units
-    // -------------------------------------------------------------------------
-    NSDateComponents *components = [calendarUS components:allowedUnits fromDate:futureDate];
-    NSDate *date = [calendarUS dateFromComponents:components];
-    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
-
-    // -------------------------------------------------------------------------
-    //  Calculate the date interval
-    // -------------------------------------------------------------------------
-    NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
-
-    // -------------------------------------------------------------------------
-    //  Create date formatter to create the date in spelled out string format
-    // -------------------------------------------------------------------------
-    NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
-    [dateComponentsFormatter setAllowedUnits:allowedUnits];
-    [dateComponentsFormatter setMaximumUnitCount:3];
-    [dateComponentsFormatter setUnitsStyle:NSDateComponentsFormatterUnitsStyleFull];
-    [dateComponentsFormatter setCalendar:calendarUS];
-
-    return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
-} // dateIntervalFromNowToDate
 
 - (NSArray *)manifestContentForManifest:(NSDictionary *)manifest {
     NSMutableArray *manifestContent = [[NSMutableArray alloc] initWithArray:manifest[PFCManifestKeyManifestContent] ?: @[] copyItems:YES];
@@ -138,32 +97,18 @@ NSInteger const PFCMaximumPayloadCount = 8;
     return [manifestContent copy];
 } // manifestContentForManifest
 
-- (NSDictionary *)displayKeys {
-    return @{
-        PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
-        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
-        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
-        PFCManifestKeyDisabled : @(_showKeysDisabled),
-        PFCManifestKeyHidden : @(_showKeysHidden),
-        PFCManifestKeySupervisedOnly : @(_showKeysSupervised)
-    };
-} // displayKeys
-
 - (NSString *)expandVariablesInString:(NSString *)string overrideValues:(NSDictionary *)overrideValues {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     if (overrideValues[@"%NAME%"] != nil) {
         string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
     } else {
-        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:_profileName];
+        string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:[_settings profileName]];
     }
 
     if (overrideValues[@"%PROFILEUUID%"] != nil) {
         string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:overrideValues[@"%PROFILEUUID%"]];
     } else {
-        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:_profileUUID];
+        string = [string stringByReplacingOccurrencesOfString:@"%PROFILEUUID%" withString:[_settings profileUUID]];
     }
 
     string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
@@ -205,11 +150,17 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // ---------------------------------------------------------------------
         //  Initialize Views
         // ---------------------------------------------------------------------
-        _viewPayloadLibraryMenu = [[PFCProfileEditorPayloadLibraryMenu alloc] initWithProfileEditor:self];
+        _viewLibraryMenu = [[PFCProfileEditorLibraryMenu alloc] initWithProfileEditor:self];
+        _viewStatusLibrary = [[PFCStatusView alloc] init];
+        _viewStatusLibrarySearch = [[PFCStatusView alloc] init];
+        _viewStatusSettings = [[PFCStatusView alloc] init];
+        _viewStatusInfo = [[PFCStatusView alloc] initWithStatusType:kPFCStatusNoSelection];
+        _viewInfoController = [[PFCProfileCreationInfoView alloc] initWithDelegate:self];
 
         // ---------------------------------------------------------------------
         //  Initialize Settings
         // ---------------------------------------------------------------------
+        _settings = [[PFCProfileEditorSettings alloc] initWithProfile:profileDict profileEditor:self];
         _settingsProfile = [profileDict[@"Config"][PFCProfileTemplateKeySettings] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         _settingsManifest = [[NSMutableDictionary alloc] init];
         _settingsLocalManifest = [[NSMutableDictionary alloc] init];
@@ -218,19 +169,9 @@ NSInteger const PFCMaximumPayloadCount = 8;
         //  Initialize BOOLs (for clarity)
         // ---------------------------------------------------------------------
         _advancedSettings = NO;
-        _buttonAddHidden = YES;
-        _settingsStatusHidden = YES;
         _settingsHidden = YES;
-        _searchNoMatchesHidden = YES;
         _windowShouldClose = NO;
         _showSettingsLocal = YES;
-        _showKeysDisabled = YES;
-        _showKeysHidden = NO;
-
-        // ---------------------------------------------------------------------
-        //  Initialize Classes
-        // ---------------------------------------------------------------------
-        _viewInfoController = [[PFCProfileCreationInfoView alloc] initWithDelegate:self];
     }
     return self;
 } // init
@@ -243,10 +184,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
     [self removeObserver:self forKeyPath:@"showKeysSupervised" context:nil];
-    [self removeObserver:self forKeyPath:@"osxMaxVersion" context:nil];
-    [self removeObserver:self forKeyPath:@"osxMinVersion" context:nil];
-    [self removeObserver:self forKeyPath:@"iosMaxVersion" context:nil];
-    [self removeObserver:self forKeyPath:@"iosMinVersion" context:nil];
     if (_tableViewPayloadProfile) {
         [_tableViewPayloadProfile setDelegate:nil];
     }
@@ -281,7 +218,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:_viewPayloadProfileSuperview inSuperview:_viewPayloadProfileSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:_viewPayloadLibrarySuperview inSuperview:_viewPayloadLibrarySplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
     [PFCGeneralUtility insertSubview:_viewSettingsSuperView inSuperview:_viewSettingsSplitView hidden:NO];
 
     // -------------------------------------------------------------------------
@@ -295,15 +232,15 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Add error views to content views
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:_viewInfoNoSelection inSuperview:_viewInfoSplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:_viewSettingsStatus inSuperview:_viewSettingsSplitView hidden:YES];
-    [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoMatches inSuperview:_viewPayloadLibrarySplitView hidden:YES];
-    [PFCGeneralUtility insertSubview:_viewPayloadLibraryNoManifests inSuperview:_viewPayloadLibrarySplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[_viewStatusInfo view] inSuperview:_viewInfoSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewStatusSettings view] inSuperview:_viewSettingsSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[_viewStatusLibrarySearch view] inSuperview:_viewPayloadLibrarySplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[_viewStatusLibrary view] inSuperview:_viewPayloadLibrarySplitView hidden:YES];
 
     // -------------------------------------------------------------------------
     //  Add profile settings view
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:_viewProfileSettings inSuperview:_viewSettingsSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[_settings view] inSuperview:_viewSettingsSplitView hidden:YES];
 
     // -------------------------------------------------------------------------
     //  Register KVO observers
@@ -313,10 +250,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"showKeysSupervised" options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:@"osxMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:@"osxMinVersion" options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:@"iosMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:@"iosMinVersion" options:NSKeyValueObservingOptionNew context:nil];
 
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -404,16 +337,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [self updateTableColumnsSettings];
 
     // -------------------------------------------------------------------------
-    //  Setup Profile settings
-    // -------------------------------------------------------------------------
-    [self setupProfileSettings];
-
-    // -------------------------------------------------------------------------
-    //  Setup Display Settings
-    // -------------------------------------------------------------------------
-    [self setupDisplaySettings];
-
-    // -------------------------------------------------------------------------
     //  Setup settings tab bar
     // -------------------------------------------------------------------------
     [self setupSettingsTabBar];
@@ -473,10 +396,10 @@ NSInteger const PFCMaximumPayloadCount = 8;
     //  If this is a new profile (profile name is the Default name)
     //  Select profile settings and set profile name setting as first responder
     // -------------------------------------------------------------------------
-    if ([_profileName isEqualToString:PFCDefaultProfileName]) {
+    if ([[_settings profileName] isEqualToString:PFCDefaultProfileName]) {
         [_tableViewProfileHeader selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
         [self selectTableViewProfileHeader:self];
-        [[_viewProfileSettings window] setInitialFirstResponder:_textFieldProfileName];
+        [[[_settings view] window] setInitialFirstResponder:[_settings textFieldProfileName]];
     } else {
 
         // -------------------------------------------------------------------------
@@ -488,195 +411,20 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 } // selectFirstResponder
 
-- (void)setupProfileSettings {
-    [self setProfileName:_profileDict[@"Config"][PFCProfileTemplateKeyName] ?: PFCDefaultProfileName];
-    [self setProfileUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
-    [self setProfileIdentifierFormat:_profileDict[@"Config"][PFCProfileTemplateKeyIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat];
-    [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:nil]];
-    [self setupPopUpButtonOsVersion];
-} // setupProfileSettings
-
-- (void)setupDisplaySettings {
-    DDLogDebug(@"%s", __PRETTY_FUNCTION__);
-    NSDictionary *displaySettings = _profileDict[@"Config"][PFCProfileTemplateKeyDisplaySettings] ?: @{};
-
-    // -------------------------------------------------------------------------
-    //  Set "Advanced Settings" and "Supervised"
-    // -------------------------------------------------------------------------
-    [self setAdvancedSettings:[displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
-    [self setShowKeysSupervised:[displaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]];
-
-    NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
-    // -------------------------------------------------------------------------
-    //  Platform: OS X
-    // -------------------------------------------------------------------------
-    [self setIncludePlatformOSX:[platform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]];
-    NSString *osxMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"";
-    DDLogDebug(@"OS X Max Version: %@", osxMaxVersion);
-    if ([osxMaxVersion length] != 0 && [[_popUpButtonPlatformOSXMaxVersion itemTitles] containsObject:osxMaxVersion]) {
-        [self setOsxMaxVersion:osxMaxVersion];
-    } else {
-        [self setOsxMaxVersion:@"Latest"];
-    }
-
-    NSString *osxMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"";
-    DDLogDebug(@"OS X Min Version: %@", osxMinVersion);
-    if ([osxMinVersion length] != 0 && [[_popUpButtonPlatformOSXMinVersion itemTitles] containsObject:osxMinVersion]) {
-        [self setOsxMinVersion:osxMinVersion];
-    } else {
-        [self setOsxMinVersion:@"10.7"];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Platform: iOS
-    // -------------------------------------------------------------------------
-    [self setIncludePlatformiOS:[platform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]];
-    NSString *iosMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"";
-    DDLogDebug(@"iOS Max Version: %@", iosMaxVersion);
-    if ([iosMaxVersion length] != 0 && [[_popUpButtonPlatformiOSMaxVersion itemTitles] containsObject:iosMaxVersion]) {
-        [self setIosMaxVersion:iosMaxVersion];
-    } else {
-        [self setIosMaxVersion:@"Latest"];
-    }
-
-    NSString *iosMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"";
-    DDLogDebug(@"iOS Min Version: %@", iosMinVersion);
-    if ([iosMinVersion length] != 0 && [[_popUpButtonPlatformiOSMinVersion itemTitles] containsObject:iosMinVersion]) {
-        [self setIosMinVersion:iosMinVersion];
-    } else {
-        [self setIosMinVersion:@"7.0"];
-    }
-} // setupDisplaySettings
-
 - (void)setupSettingsTabBar {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
 
-    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
-    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    PFCProfileEditorSettingsTab *newTabController = [[PFCProfileEditorSettingsTab alloc] init];
+    PFCProfileEditorSettingsTabView *newTabView = (PFCProfileEditorSettingsTabView *)[newTabController view];
     [newTabView setDelegate:self];
     [_arrayPayloadTabs addObject:newTabView];
     [_stackViewTabBar addView:newTabView inGravity:NSStackViewGravityTrailing];
 
     [self hideSettingsTabBar];
 } // setupSettingsTabBar
-
-- (void)selectOSVersion:(id)sender {
-    // Dummy Action to be able to disable menu items
-} // selectOSVersion
-
-- (void)setupPopUpButtonOsVersion {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    // -------------------------------------------------------------------------
-    //  Create base menu
-    // -------------------------------------------------------------------------
-    NSMenu *menu = [[NSMenu alloc] init];
-    [menu setAutoenablesItems:YES];
-
-    // -------------------------------------------------------------------------
-    //  MenuItem: Latest
-    // -------------------------------------------------------------------------
-    NSMenuItem *menuItemLatest = [[NSMenuItem alloc] init];
-    [menuItemLatest setTarget:self];
-    [menuItemLatest setAction:@selector(selectOSVersion:)];
-    [menuItemLatest setTitle:@"Latest"];
-    [menu addItem:menuItemLatest];
-
-    // -------------------------------------------------------------------------
-    //  MenuItem: Separator
-    // -------------------------------------------------------------------------
-    [menu addItem:[NSMenuItem separatorItem]];
-
-    // -------------------------------------------------------------------------
-    //  Read OSVersions plist from bundle contents
-    // -------------------------------------------------------------------------
-    // FIXME - This should be a downloadable setting, read from appsupport first
-    NSError *error = nil;
-    NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
-    if (![osVersionsPlistURL checkResourceIsReachableAndReturnError:&error]) {
-        DDLogError(@"%@", [error localizedDescription]);
-        return;
-    }
-
-    NSDictionary *osVersions = [NSDictionary dictionaryWithContentsOfURL:osVersionsPlistURL];
-    if ([osVersions count] == 0) {
-        DDLogError(@"OS Versions dict was empty!");
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Create OS X versions menu and add to popUpButtons for OS X
-    // -------------------------------------------------------------------------
-    NSArray *osVersionsOSX = osVersions[@"OS X"] ?: @[];
-    if ([osVersionsOSX count] == 0) {
-        DDLogError(@"OS Versions array for OS X is empty!");
-    } else {
-
-        NSMenu *menuOSX = [menu copy];
-        NSArray *osxVersionArray;
-        int lastMajorVersion = 0;
-        NSMenuItem *menuItemOSXVersion = [[NSMenuItem alloc] init];
-        [menuItemOSXVersion setTarget:self];
-        [menuItemOSXVersion setAction:@selector(selectOSVersion:)];
-        for (NSString *osxVersion in osVersionsOSX) {
-
-            // -----------------------------------------------------------------
-            //  Add separator if major version of OS changed
-            // -----------------------------------------------------------------
-            osxVersionArray = [osxVersion componentsSeparatedByString:@"."];
-            if (2 <= [osxVersionArray count]) {
-                int majorVersion = [(NSString *)osxVersionArray[1] intValue];
-                if (lastMajorVersion != majorVersion) {
-                    [menuOSX addItem:[NSMenuItem separatorItem]];
-                    lastMajorVersion = majorVersion;
-                }
-            }
-            [menuItemOSXVersion setTitle:osxVersion];
-            [menuOSX addItem:[menuItemOSXVersion copy]];
-        }
-
-        [_popUpButtonPlatformOSXMinVersion setMenu:[menuOSX copy]];
-        [_popUpButtonPlatformOSXMaxVersion setMenu:[menuOSX copy]];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Create iOS versions menu and add to popUpButtons for iOS
-    // -------------------------------------------------------------------------
-    NSArray *osVersionsiOS = osVersions[@"iOS"] ?: @[];
-    if ([osVersionsiOS count] == 0) {
-        DDLogError(@"OS Versions array for iOS is empty!");
-    } else {
-
-        NSMenu *menuiOS = [menu copy];
-        NSArray *iosVersionArray;
-        int lastMajorVersion = 0;
-        NSMenuItem *menuItemiOSVersion = [[NSMenuItem alloc] init];
-        [menuItemiOSVersion setTarget:self];
-        [menuItemiOSVersion setAction:@selector(selectOSVersion:)];
-        for (NSString *iosVersion in osVersionsiOS) {
-
-            // -----------------------------------------------------------------
-            //  Add separator if major version of OS changed
-            // -----------------------------------------------------------------
-            iosVersionArray = [iosVersion componentsSeparatedByString:@"."];
-            if (1 <= [iosVersionArray count]) {
-                int majorVersion = [(NSString *)iosVersionArray[0] intValue];
-                if (lastMajorVersion != majorVersion) {
-                    [menuiOS addItem:[NSMenuItem separatorItem]];
-                    lastMajorVersion = majorVersion;
-                }
-            }
-            [menuItemiOSVersion setTitle:iosVersion];
-            [menuiOS addItem:[menuItemiOSVersion copy]];
-        }
-
-        [_popUpButtonPlatformiOSMinVersion setMenu:[menuiOS copy]];
-        [_popUpButtonPlatformiOSMaxVersion setMenu:[menuiOS copy]];
-    }
-} // setupPopUpButtonOsVersion
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -756,12 +504,12 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Get view that sent close notification and remove it form the stack view
     // -------------------------------------------------------------------------
-    if (![sender isKindOfClass:[PFCProfileCreationTabView class]]) {
+    if (![sender isKindOfClass:[PFCProfileEditorSettingsTabView class]]) {
         DDLogError(@"Class %@ is not allowed to send -tabIndexClose", [sender class]);
         return;
     }
 
-    PFCProfileCreationTabView *view = sender;
+    PFCProfileEditorSettingsTabView *view = sender;
     DDLogVerbose(@"Sender view: %@", view);
     if (view != nil) {
         if ([[_stackViewTabBar views] containsObject:view]) {
@@ -873,8 +621,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
         if ([[_tableViewProfileHeader selectedRowIndexes] count] == 0) {
             [self updateTableViewSettingsFromManifest:_selectedManifest];
         }
-    } else if ([@[ @"osxMaxVersion", @"osxMinVersion", @"iosMaxVersion", @"iosMinVersion" ] containsObject:keyPath]) {
-        [self updateManifests];
     }
 } // observeValueForKeyPath:ofObject:change:context
 
@@ -934,6 +680,20 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
     return NO;
 } // splitView:shouldHideDividerAtIndex
+
+- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
+    // FIXME - This only catches half the divider, I don't know how to split up the divider rects in 3 (and also keep the 1 pixel across the top)
+    if (splitView == _splitViewPayload) {
+        NSRect viewBounds = [[_viewLibraryMenu view] bounds];
+        NSRect viewButtonBounds = [[_viewLibraryMenu viewButtons] bounds];
+        CGFloat dividerSpace = ((viewBounds.size.width - viewButtonBounds.size.width) / 2);
+        // NSRect leftRect = NSMakeRect(0, 0, dividerSpace, viewBounds.size.height);
+        NSRect rightRect = NSMakeRect((viewBounds.size.width - dividerSpace), 0, dividerSpace, viewBounds.size.height);
+        return [[_viewLibraryMenu view] convertRect:rightRect fromView:splitView];
+        // return [[_viewPayloadLibraryMenu view] convertRect:[[_viewPayloadLibraryMenu view] bounds] fromView:splitView]; // <-- Entire divider
+    }
+    return NSZeroRect;
+}
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)notification {
     if ([notification object] == _splitViewPayload) {
@@ -1000,7 +760,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                     manifestContentDict:manifestContentDict
                     userSettingsDict:_settingsManifest[identifier] ?: @{}
                     localSettingsDict:(_showSettingsLocal) ? _settingsLocalManifest[identifier] : @{}
-                    displayKeys:[self displayKeys]
+                    displayKeys:[_settings displayKeys]
                     row:row
                     sender:self];
             }
@@ -1262,7 +1022,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_arraySettings removeAllObjects];
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
     NSArray *manifestContentArray =
-        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
+        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[_settings displayKeys]];
 
     // ------------------------------------------------------------------------------------------
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -1281,9 +1041,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             [self showSettingsHeader];
         }
 
-        if (!_settingsStatusHidden || _settingsStatusLoading) {
-            [self hideSettingsStatus];
-        }
+        [self hideSettingsStatus];
     } else {
         if (!_settingsHeaderHidden) {
             [self hideSettingsHeader];
@@ -1405,9 +1163,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
             [_buttonSaveSheetProfileName setEnabled:YES];
         }
         return;
-    } else if ([[sender object] isEqualTo:_textFieldProfileName]) {
-        [self setProfileIdentifier:[self expandVariablesInString:_profileIdentifierFormat overrideValues:@{ @"%NAME%" : inputText }]];
-        return;
     }
 
     // -------------------------------------------------------------------------
@@ -1506,7 +1261,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 } // controlTextDidChange
 
 - (void)updatePayloadTabTitle:(NSString *)title tabIndex:(NSUInteger)tabIndex {
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
+    PFCProfileEditorSettingsTabView *tab = (PFCProfileEditorSettingsTabView *)_arrayPayloadTabs[tabIndex];
     if ([title length] == 0) {
         title = [@(tabIndex) stringValue];
     }
@@ -1515,7 +1270,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSUInteger)tabIndex {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    PFCProfileCreationTabView *tab = (PFCProfileCreationTabView *)_arrayPayloadTabs[tabIndex];
+    PFCProfileEditorSettingsTabView *tab = (PFCProfileEditorSettingsTabView *)_arrayPayloadTabs[tabIndex];
     [tab updateErrorCount:errorCount ?: @0];
 } // updatePayloadTabErrorCount
 
@@ -1598,7 +1353,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             }
 
             NSMutableArray *arrayPayloadLibrarySource;
-            if (payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment) {
+            if (payloadLibrary == _selectedLibrary) {
                 [_tableViewPayloadLibrary beginUpdates];
                 [_arrayPayloadLibrary addObject:manifestDict];
                 [_arrayPayloadLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
@@ -1627,7 +1382,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                     [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadLibrary];
                     [self setTableViewPayloadLibrarySelectedRow:newRow];
-                    [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
+                    [self setTableViewPayloadLibrarySelectedRowSegment:_selectedLibrary];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
                 } else {
                     DDLogError(@"Could not find row for moved manifest in table view payload library");
@@ -1637,7 +1392,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             // -----------------------------------------------------------------------------
             //  If current cell dict was selected, move selection to table view payload library
             // -----------------------------------------------------------------------------
-            if (tableViewPayloadProfileSelectedRow == row && payloadLibrary == _segmentedControlPayloadLibrarySelectedSegment) {
+            if (tableViewPayloadProfileSelectedRow == row && payloadLibrary == _selectedLibrary) {
                 DDLogDebug(@"Current selection was clicked. Moving selection to table view payload library");
 
                 // -------------------------------------------------------------
@@ -1656,13 +1411,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                     [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
                     [[self window] makeFirstResponder:_tableViewPayloadLibrary];
                     [self setTableViewPayloadLibrarySelectedRow:newRow];
-                    [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
+                    [self setTableViewPayloadLibrarySelectedRowSegment:_selectedLibrary];
                     [self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
                 } else {
                     DDLogError(@"Could not find row for moved manifest in table view payload library");
                 }
 
-            } else if (tableViewPayloadProfileSelectedRow == row && payloadLibrary != _segmentedControlPayloadLibrarySelectedSegment) {
+            } else if (tableViewPayloadProfileSelectedRow == row && payloadLibrary != _selectedLibrary) {
                 DDLogDebug(@"Current selection was clicked but manifest's payload library is not selected. Moving selection to table view payload library.");
 
                 NSUInteger newRow = [arrayPayloadLibrarySource indexOfObject:manifestDict];
@@ -1792,7 +1547,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
             NSMutableDictionary *settingsManifestRoot = [_settingsProfile[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
             settingsManifestRoot[@"Selected"] = @YES;
-            settingsManifestRoot[@"PayloadLibrary"] = @(_segmentedControlPayloadLibrarySelectedSegment);
+            settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
             _settingsProfile[manifestDomain] = [settingsManifestRoot mutableCopy];
             DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
 
@@ -1848,7 +1603,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             settingsDict[PFCSettingsKeyEnabled] = @(state);
             _settingsManifest[identifier] = [settingsDict copy];
 
-            if (!_showKeysDisabled) {
+            if (![_settings showKeysDisabled]) {
                 [self updateTableViewSettingsFromManifest:_selectedManifest];
             } else {
                 [_tableViewSettings beginUpdates];
@@ -1928,7 +1683,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // ---------------------------------------------------------------------
         NSTextField *description =
             [(PFCDatePickerNoTitleCellView *)[_tableViewSettings viewAtColumn:[_tableViewSettings columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDateDescription];
-        [description setStringValue:[self dateIntervalFromNowToDate:datePickerDate] ?: @""];
+        [description setStringValue:[PFCGeneralUtility dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
 } // datePickerSelection
 
@@ -2108,26 +1863,6 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark Validating Menu Items
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    NSMenu *menu = [menuItem menu];
-    if (menu == [_popUpButtonPlatformOSXMinVersion menu]) {
-        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:_osxMaxVersion];
-    } else if (menu == [_popUpButtonPlatformOSXMaxVersion menu]) {
-        return [PFCGeneralUtility version:_osxMinVersion isLowerThanVersion:[menuItem title]];
-    } else if (menu == [_popUpButtonPlatformiOSMinVersion menu]) {
-        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:_iosMaxVersion];
-    } else if (menu == [_popUpButtonPlatformiOSMaxVersion menu]) {
-        return [PFCGeneralUtility version:_iosMinVersion isLowerThanVersion:[menuItem title]];
-    }
-    return YES;
-} // validateMenuItem
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark Manifest Updates
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -2148,7 +1883,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_arrayPayloadProfile removeAllObjects];
     [self updateManifestLibraryApple:enabledDomains];
     [self updateManifestLibraryUserLibrary:enabledDomains];
-    [self updateManifestLibraryMCX:enabledDomains];
+    //[self updateManifestLibraryMCX:enabledDomains];
+
+    [_tableViewPayloadProfile beginUpdates];
+    [_tableViewPayloadProfile reloadData];
+    [self sortArrayPayloadProfile];
+    [_tableViewPayloadProfile endUpdates];
+
+    [_tableViewPayloadLibrary beginUpdates];
+    [_tableViewPayloadLibrary reloadData];
+    [_tableViewPayloadLibrary endUpdates];
 }
 
 - (void)updateManifestLibraryApple:(NSArray *)enabledPayloadDomains {
@@ -2160,7 +1904,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
     if ([libraryAppleManifests count] != 0) {
         for (NSDictionary *manifest in libraryAppleManifests) {
-            if ([[PFCAvailability sharedInstance] showManifest:manifest displayKeys:[self displayKeys]]) {
+            if ([[PFCAvailability sharedInstance] showManifest:manifest displayKeys:[_settings displayKeys]]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
                     [_arrayPayloadProfile addObject:[manifest copy]];
@@ -2259,16 +2003,16 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // FIXME - Maybe check all before returning for logging purposes?
 
         DDLogDebug(@"Saved 'Name': %@", profileDict[PFCProfileTemplateKeyName]);
-        DDLogDebug(@"Current 'Name': %@", _profileName);
+        DDLogDebug(@"Current 'Name': %@", [_settings profileName]);
 
-        if (![profileDict[PFCProfileTemplateKeyName] isEqualToString:_profileName]) {
+        if (![profileDict[PFCProfileTemplateKeyName] isEqualToString:[_settings profileName]]) {
             return NO;
         }
 
         DDLogDebug(@"Saved 'UUID': %@", profileDict[PFCProfileTemplateKeyUUID]);
-        DDLogDebug(@"Current 'UUID': %@", _profileUUID);
+        DDLogDebug(@"Current 'UUID': %@", [_settings profileUUID]);
 
-        if (![profileDict[PFCProfileTemplateKeyUUID] isEqualToString:_profileUUID]) {
+        if (![profileDict[PFCProfileTemplateKeyUUID] isEqualToString:[_settings profileUUID]]) {
             return NO;
         }
 
@@ -2351,11 +2095,11 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 
     [self setSettingsProfile:[settingsProfile mutableCopy]];
-    configurationDict[PFCProfileTemplateKeyName] = _profileName ?: @"";
-    configurationDict[PFCProfileTemplateKeyIdentifier] = _profileIdentifier ?: @"";
-    configurationDict[PFCProfileTemplateKeySign] = @(_signProfile);
-    configurationDict[PFCProfileTemplateKeyEncrypt] = @(_encryptProfile);
-    configurationDict[PFCProfileTemplateKeyIdentifierFormat] = _profileIdentifierFormat ?: PFCDefaultProfileIdentifierFormat;
+    configurationDict[PFCProfileTemplateKeyName] = [_settings profileName] ?: @"";
+    configurationDict[PFCProfileTemplateKeyIdentifier] = [_settings profileIdentifier] ?: @"";
+    configurationDict[PFCProfileTemplateKeySign] = @([_settings signProfile]);
+    configurationDict[PFCProfileTemplateKeyEncrypt] = @([_settings encryptProfile]);
+    configurationDict[PFCProfileTemplateKeyIdentifierFormat] = [_settings profileIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat;
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
     configurationDict[PFCProfileTemplateKeyDisplaySettings] = [self currentDisplaySettings] ?: @{};
 
@@ -2382,14 +2126,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     NSMutableDictionary *displaySettings = [[NSMutableDictionary alloc] init];
 
     displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @(_advancedSettings);
-    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_showKeysSupervised);
+    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @([_settings showKeysSupervised]);
     displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
-        PFCProfileDisplaySettingsKeyPlatformOSX : @(_includePlatformOSX),
-        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _osxMaxVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _osxMinVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
-        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @""
+        PFCProfileDisplaySettingsKeyPlatformOSX : @([_settings includePlatformOSX]),
+        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_settings osxMaxVersion] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_settings osxMinVersion] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOS : @([_settings includePlatformiOS]),
+        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_settings iosMaxVersion] ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_settings iosMinVersion] ?: @""
     };
     DDLogDebug(@"displaySettings=%@", displaySettings);
     return [displaySettings copy];
@@ -2421,18 +2165,18 @@ NSInteger const PFCMaximumPayloadCount = 8;
         if (0 <= _tableViewPayloadLibrarySelectedRow) {
 
             // ---------------------------------------------------------------------------------------------------------------
-            //  Check what segment the currently selected manifest belongs to.
+            //  Check what library the currently selected manifest belongs to.
             //  If not the currently selected segment, read the manifest from the manifest's segment's array
             // ---------------------------------------------------------------------------------------------------------------
-            NSMutableArray *selectedSegmentArray;
-            if (_tableViewPayloadLibrarySelectedRowSegment == _segmentedControlPayloadLibrarySelectedSegment) {
-                selectedSegmentArray = _arrayPayloadLibrary;
+            NSMutableArray *selectedLibraryArray;
+            if (_tableViewPayloadLibrarySelectedRowSegment == _selectedLibrary) {
+                selectedLibraryArray = _arrayPayloadLibrary;
             } else {
-                selectedSegmentArray = [self arrayForPayloadLibrary:_tableViewPayloadLibrarySelectedRowSegment];
+                selectedLibraryArray = [self arrayForPayloadLibrary:_tableViewPayloadLibrarySelectedRowSegment];
             }
 
-            if (_tableViewPayloadLibrarySelectedRowSegment <= [selectedSegmentArray count]) {
-                NSMutableDictionary *manifestDict = [selectedSegmentArray[(NSUInteger)_tableViewPayloadLibrarySelectedRow] mutableCopy];
+            if (_tableViewPayloadLibrarySelectedRowSegment <= [selectedLibraryArray count]) {
+                NSMutableDictionary *manifestDict = [selectedLibraryArray[(NSUInteger)_tableViewPayloadLibrarySelectedRow] mutableCopy];
                 if ([_settingsManifest count] != 0) {
                     NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
                     if ([manifestDomain length] != 0) {
@@ -2486,54 +2230,48 @@ NSInteger const PFCMaximumPayloadCount = 8;
 - (void)showPayloadFooter {
     [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:NO];
-    [[_viewPayloadLibraryMenu lineTop] setHidden:NO];
-    [[_viewPayloadLibraryMenu lineBottom] setHidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
+    [[_viewLibraryMenu lineTop] setHidden:NO];
+    [[_viewLibraryMenu lineBottom] setHidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewLibraryMenu view] inSuperview:_viewPayloadLibraryMenuSuperview hidden:NO];
 } // showPayloadFooter
 
 - (void)hidePayloadFooter {
     [self setPayloadLibrarySplitViewCollapsed:YES];
     [_viewPayloadFooterSearch setHidden:YES];
-    [[_viewPayloadLibraryMenu lineTop] setHidden:YES];
-    [[_viewPayloadLibraryMenu lineBottom] setHidden:YES];
-    [PFCGeneralUtility insertSubview:[_viewPayloadLibraryMenu view] inSuperview:_viewPayloadFooterSuperview hidden:NO];
+    [[_viewLibraryMenu lineTop] setHidden:YES];
+    [[_viewLibraryMenu lineBottom] setHidden:YES];
+    [PFCGeneralUtility insertSubview:[_viewLibraryMenu view] inSuperview:_viewPayloadFooterSuperview hidden:NO];
 } // hidePayloadFooter
 
 - (void)showSettingsLoading {
-    NSLog(@"_settingsStatusLoaded=%@", (_settingsStatusLoading) ? @"YES" : @"NO");
     if (_settingsStatusLoading) {
-        [_textFieldSettingsStatus setStringValue:@"Loading Settings"];
-        [self setSettingsStatusHidden:NO];
-        [_viewProfileSettings setHidden:YES];
+        [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
+        [[_settings view] setHidden:YES];
         [_viewSettingsSuperView setHidden:YES];
-        [_viewSettingsStatus setHidden:NO];
+        [[_viewStatusSettings view] setHidden:NO];
     }
 } // showSettingsLoading
 
 - (void)showSettingsError {
-    [_textFieldSettingsStatus setStringValue:@"Error Loading Settings"];
-    [self setSettingsStatusHidden:NO];
+    [_viewStatusSettings showStatus:kPFCStatusErrorReadingSettings];
     [self setSettingsStatusLoading:NO];
-    [_viewProfileSettings setHidden:YES];
+    [[_settings view] setHidden:YES];
     [_viewSettingsSuperView setHidden:YES];
-    [_viewSettingsStatus setHidden:NO];
+    [[_viewStatusSettings view] setHidden:NO];
 } // showSettingsError
 
 - (void)showSettingsNoSettings {
-    [_textFieldSettingsStatus setStringValue:@"No Settings Available"];
-    [self setSettingsStatusHidden:NO];
+    [_viewStatusSettings showStatus:kPFCStatusNoSettings];
     [self setSettingsStatusLoading:NO];
-    [_viewProfileSettings setHidden:YES];
+    [[_settings view] setHidden:YES];
     [_viewSettingsSuperView setHidden:YES];
-    [_viewSettingsStatus setHidden:NO];
 } // showSettingsNoSettings
 
 - (void)showSettingsProfile {
-    [self setSettingsStatusHidden:NO];
     [self setSettingsStatusLoading:NO];
-    [_viewProfileSettings setHidden:NO];
+    [[_settings view] setHidden:NO];
     [_viewSettingsSuperView setHidden:YES];
-    [_viewSettingsStatus setHidden:YES];
+    [[_viewStatusSettings view] setHidden:YES];
 } // showSettingsProfile
 
 - (void)showSettings {
@@ -2547,46 +2285,47 @@ NSInteger const PFCMaximumPayloadCount = 8;
 } // hideSettings
 
 - (void)hideSettingsStatus {
-    [self setSettingsStatusHidden:YES];
     [self setSettingsStatusLoading:NO];
-    [_viewSettingsStatus setHidden:YES];
-    [_viewProfileSettings setHidden:YES];
+    [[_viewStatusSettings view] setHidden:YES];
+    [[_settings view] setHidden:YES];
     [_viewSettingsSuperView setHidden:NO];
-    [_textFieldSettingsStatus setStringValue:@""];
 } // hideSettingsError
 
 - (void)showSearchNoMatches {
-    [self setSearchNoMatchesHidden:NO];
-    [_viewPayloadLibraryNoMatches setHidden:NO];
-    [_viewPayloadLibraryNoManifests setHidden:YES];
+    [_viewStatusLibrarySearch showStatus:kPFCStatusNoMatches];
+    [[_viewStatusLibrary view] setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:YES];
 } // showSearchNoMatches
 
 - (void)hideSearchNoMatches {
-    [self setSearchNoMatchesHidden:YES];
-    [_viewPayloadLibraryNoMatches setHidden:YES];
-    [_viewPayloadLibraryNoManifests setHidden:YES];
+    [[_viewStatusLibrarySearch view] setHidden:YES];
+    [[_viewStatusLibrary view] setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:NO];
 } // hideSearchNoMatches
 
 - (void)showLibraryNoManifests {
-    [self setLibraryNoManifestsHidden:NO];
-    [_viewPayloadLibraryNoManifests setHidden:NO];
-    [_viewPayloadLibraryNoMatches setHidden:YES];
+    switch (_selectedLibrary) {
+    case kPFCPayloadLibraryMCX:
+        [_viewStatusLibrary showStatus:kPFCStatusNoManifestsMCX];
+        break;
+    case kPFCPayloadLibraryCustom:
+        [_viewStatusLibrary showStatus:kPFCStatusNoManifestsCustom];
+        break;
+    default:
+        [_viewStatusLibrary showStatus:kPFCStatusNoManifests];
+        break;
+    }
+    [[_viewStatusLibrarySearch view] setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:YES];
 } // showSearchNoMatches
 
 - (void)hideLibraryNoManifests {
-    [self setLibraryNoManifestsHidden:YES];
-    [_viewPayloadLibraryNoManifests setHidden:YES];
-    [_viewPayloadLibraryNoMatches setHidden:YES];
+    [[_viewStatusLibrary view] setHidden:YES];
+    [[_viewStatusLibrarySearch view] setHidden:YES];
     [_viewPayloadLibraryScrollView setHidden:NO];
 } // hideSearchNoMatches
 
 - (void)showButtonAdd {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [self setButtonAddHidden:NO];
     [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
     [_constraintSearchFieldLeading setConstant:26.0f];
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -2594,14 +2333,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
       context.allowsImplicitAnimation = YES;
       [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
     }
-                        completionHandler:nil];
-    [_buttonAdd setHidden:NO];
+        completionHandler:^{
+          [_buttonAdd setHidden:NO];
+        }];
+
 } // showButtonAdd
 
 - (void)hideButtonAdd {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [self setButtonAddHidden:YES];
     [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
     [_constraintSearchFieldLeading setConstant:5.0f];
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -2609,8 +2347,9 @@ NSInteger const PFCMaximumPayloadCount = 8;
       context.allowsImplicitAnimation = YES;
       [_viewPayloadLibrarySuperview layoutSubtreeIfNeeded];
     }
-                        completionHandler:nil];
-    [_buttonAdd setHidden:YES];
+        completionHandler:^{
+          [_buttonAdd setHidden:YES];
+        }];
 } // hideButtonAdd
 
 - (void)collapsePayloadLibrary {
@@ -2789,12 +2528,12 @@ NSInteger const PFCMaximumPayloadCount = 8;
 
 - (IBAction)buttonSave:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    if ([_profileName hasPrefix:@"Untitled Profile"]) {
+    if ([[_settings profileName] hasPrefix:@"Untitled Profile"]) {
 
         [_buttonSaveSheetProfileName setEnabled:NO];
         [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
         [_textFieldSheetProfileNameMessage setStringValue:@"You have to choose a name for your profile."];
-        [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
+        [_textFieldSheetProfileName setStringValue:[_settings profileName] ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
                      completionHandler:^(NSModalResponse __unused returnCode) {
@@ -2804,12 +2543,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
                            [self setWindowShouldClose:NO];
                        }
                      }];
-    } else if ([[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:_profileUUID] containsObject:_profileName]) {
+    } else if ([[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:[_settings profileUUID]] containsObject:[_settings profileName]]) {
 
         [_buttonSaveSheetProfileName setEnabled:NO];
         [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
-        [_textFieldSheetProfileNameMessage setStringValue:[NSString stringWithFormat:@"There already exist a profile with name: \"%@\". Please choose a unique name for your profile.", _profileName]];
-        [_textFieldSheetProfileName setStringValue:_profileName ?: PFCDefaultProfileName];
+        [_textFieldSheetProfileNameMessage
+            setStringValue:[NSString stringWithFormat:@"There already exist a profile with name: \"%@\". Please choose a unique name for your profile.", [_settings profileName]]];
+        [_textFieldSheetProfileName setStringValue:[_settings profileName] ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
                      completionHandler:^(NSModalResponse __unused returnCode) {
@@ -2854,7 +2594,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -----------------------------------------------------------------------------------------
     //  Update the profile name property (Profile Name TextField in the Profile Editor Window)
     // -----------------------------------------------------------------------------------------
-    [self setProfileName:newName];
+    [_settings setProfileName:newName];
 
     // -------------------------------------------------------------------------
     //  Save profile settings to disk
@@ -3036,7 +2776,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:manifest];
         NSArray *manifestContentArray =
-            [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
+            [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[_settings displayKeys]];
 
         // ------------------------------------------------------------------------------------------
         //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -3083,9 +2823,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 [self setTabBarHidden:NO];
             }
 
-            if (!_settingsStatusHidden || _settingsStatusLoading) {
-                [self hideSettingsStatus];
-            }
+            [self hideSettingsStatus];
 
             if (![_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]]) {
                 [_viewInfoController updateInfoForManifestDict:manifest];
@@ -3102,9 +2840,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             [self hideSettingsHeader];
         }
 
-        if (!_settingsStatusHidden || _settingsStatusLoading) {
-            [self hideSettingsStatus];
-        }
+        [self hideSettingsStatus];
 
         if (!_settingsHidden) {
             [self hideSettings];
@@ -3147,7 +2883,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_tableViewProfileHeader deselectAll:self];
     [self setTableViewPayloadProfileSelectedRow:-1];
     [self setTableViewPayloadLibrarySelectedRow:row];
-    [self setTableViewPayloadLibrarySelectedRowSegment:_segmentedControlPayloadLibrarySelectedSegment];
+    [self setTableViewPayloadLibrarySelectedRowSegment:_selectedLibrary];
 
     [_tableViewSettings beginUpdates];
     [_arraySettings removeAllObjects];
@@ -3217,7 +2953,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // ------------------------------------------------------------------------------------
         NSArray *manifestContent = [self manifestContentForManifest:_arrayPayloadLibrary[_tableViewPayloadLibrarySelectedRow]];
         NSArray *manifestContentArray =
-            [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[self displayKeys]];
+            [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[_settings displayKeys]];
 
         // ------------------------------------------------------------------------------------------
         //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -3264,9 +3000,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
                 [self setTabBarHidden:NO];
             }
 
-            if (!_settingsStatusHidden || _settingsStatusLoading) {
-                [self hideSettingsStatus];
-            }
+            [self hideSettingsStatus];
 
             if (![_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]]) {
                 [_viewInfoController updateInfoForManifestDict:manifest];
@@ -3283,9 +3017,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
             [self hideSettingsHeader];
         }
 
-        if (!_settingsStatusHidden || _settingsStatusLoading) {
-            [self hideSettingsStatus];
-        }
+        [self hideSettingsStatus];
 
         if (!_settingsHidden) {
             [self hideSettings];
@@ -3312,59 +3044,53 @@ NSInteger const PFCMaximumPayloadCount = 8;
         [self uncollapsePayloadLibrary];
     }
 
-    NSInteger selectedSegment = payloadLibrary;
-    DDLogDebug(@"Selected segment: %ld", (long)selectedSegment);
-    DDLogDebug(@"Saved Selected Segment: %ld", (long)_segmentedControlPayloadLibrarySelectedSegment);
-
     // -------------------------------------------------------------------------
-    //  If the selected segment already is selected, stop here
+    //  If the selected library already is selected, stop here
     // -------------------------------------------------------------------------
-    if (_segmentedControlPayloadLibrarySelectedSegment == selectedSegment) {
+    if (_selectedLibrary == payloadLibrary) {
         return;
     }
 
     // --------------------------------------------------------------------------
-    //  If the selected segment can add items, show button add, else hide button
+    //  If the selected library can add items, show button add, else hide button
     // --------------------------------------------------------------------------
-    if (selectedSegment == kPFCPayloadLibraryCustom && _buttonAddHidden) {
+    if (payloadLibrary == kPFCPayloadLibraryCustom && [_buttonAdd isHidden]) {
         [self showButtonAdd];
-    } else if (selectedSegment != kPFCPayloadLibraryCustom && !_buttonAddHidden) {
+    } else if (payloadLibrary != kPFCPayloadLibraryCustom && ![_buttonAdd isHidden]) {
         [self hideButtonAdd];
     }
 
     // --------------------------------------------------------------------------------------------
-    //  If a search is NOT active in the previous selected segment, save the previous segment array
-    //  ( If a search IS active, the previous segment array was saved when the search was started )
+    //  If a search is NOT active in the previous selected library, save the previous library array
+    //  ( If a search IS active, the previous library array was saved when the search was started )
     // --------------------------------------------------------------------------------------------
-    if (![self isSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment]) {
-        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+    if (![self isSearchingPayloadLibrary:_selectedLibrary]) {
+        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_selectedLibrary];
     }
 
-    [self setSegmentedControlPayloadLibrarySelectedSegment:selectedSegment];
+    [self setSelectedLibrary:payloadLibrary];
 
     // --------------------------------------------------------------------------------------------
-    //  If a search is saved in the selected segment, restore that search when loading the segment array
-    //  If a search is NOT saved, restore the whole segment array instead
+    //  If a search is saved in the selected library, restore that search when loading the library array
+    //  If a search is NOT saved, restore the whole library array instead
     // --------------------------------------------------------------------------------------------
-    if ([self isSearchingPayloadLibrary:selectedSegment]) {
-        [_searchFieldPayloadLibrary setStringValue:[self searchStringForPayloadLibrary:selectedSegment] ?: @""];
+    if ([self isSearchingPayloadLibrary:payloadLibrary]) {
+        [_searchFieldPayloadLibrary setStringValue:[self searchStringForPayloadLibrary:payloadLibrary] ?: @""];
         [self searchFieldPayloadLibrary:nil];
     } else {
-        if (!_searchNoMatchesHidden) {
-            [self hideSearchNoMatches];
-        }
+        [self hideSearchNoMatches];
         [_searchFieldPayloadLibrary setStringValue:@""];
         [_tableViewPayloadLibrary beginUpdates];
         [_arrayPayloadLibrary removeAllObjects];
-        [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:selectedSegment]];
+        [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:payloadLibrary]];
         [_tableViewPayloadLibrary reloadData];
         [_tableViewPayloadLibrary endUpdates];
     }
 
     // --------------------------------------------------------------------------------------------
-    //  If the currently selected payload is in the selected segment, restore that selection in the TableView
+    //  If the currently selected payload is in the selected library, restore that selection in the TableView
     // --------------------------------------------------------------------------------------------
-    if (0 <= _tableViewPayloadLibrarySelectedRow && _tableViewPayloadLibrarySelectedRowSegment == selectedSegment) {
+    if (0 <= _tableViewPayloadLibrarySelectedRow && _tableViewPayloadLibrarySelectedRowSegment == payloadLibrary) {
         [_tableViewPayloadLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:_tableViewPayloadLibrarySelectedRow] byExtendingSelection:NO];
     }
 
@@ -3377,7 +3103,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
         [self hideLibraryNoManifests];
     }
 
-} // selectSegmentedControlLibrary
+} // selectPayloadLibrary
 
 - (IBAction)selectTableViewProfileHeader:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -3516,14 +3242,13 @@ NSInteger const PFCMaximumPayloadCount = 8;
 ////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)searchFieldPayloadLibrary:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------------------------------
     //  Check if this is the beginning of a search, if so save the complete array before removing items
     // -------------------------------------------------------------------------------------------------
-    if (![self isSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment]) {
-        [self setIsSearchingPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment isSearching:YES];
-        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+    if (![self isSearchingPayloadLibrary:_selectedLibrary]) {
+        [self setIsSearchingPayloadLibrary:_selectedLibrary isSearching:YES];
+        [self saveArray:_arrayPayloadLibrary forPayloadLibrary:_selectedLibrary];
     }
 
     NSString *searchString = [_searchFieldPayloadLibrary stringValue];
@@ -3533,22 +3258,18 @@ NSInteger const PFCMaximumPayloadCount = 8;
         // ---------------------------------------------------------------------
         //  If user pressed (x) or deleted the search, restore the whole array
         // ---------------------------------------------------------------------
-        [self restoreSearchForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
-
-        if (!_searchNoMatchesHidden) {
-            [self hideSearchNoMatches];
-        }
+        [self restoreSearchForPayloadLibrary:_selectedLibrary];
     } else {
 
         // ---------------------------------------------------------------------
-        //  If this is a search, store the search string if user changes segment
+        //  If this is a search, store the search string if user changes library
         // ---------------------------------------------------------------------
-        [self setSearchStringForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment searchString:[searchString copy]];
+        [self setSearchStringForPayloadLibrary:_selectedLibrary searchString:[searchString copy]];
 
         // ---------------------------------------------------------------------
-        //  Get the whole array for the current segment to filter
+        //  Get the whole array for the current library to filter
         // ---------------------------------------------------------------------
-        NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:_segmentedControlPayloadLibrarySelectedSegment];
+        NSMutableArray *currentPayloadLibrary = [self arrayForPayloadLibrary:_selectedLibrary];
 
         // FIXME - Should add a setting to choose what the search should match. A pull down menu with some predicate choices like all, keys, settings (default), title, type, contains, is equal etc.
         NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"Title CONTAINS[cd] %@", searchString];
@@ -3559,12 +3280,12 @@ NSInteger const PFCMaximumPayloadCount = 8;
         NSMutableArray *matchedObjects = [[currentPayloadLibrary filteredArrayUsingPredicate:searchPredicate] mutableCopy];
         [self setArrayPayloadLibrary:matchedObjects];
 
-        // ------------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         //  If no matches were found, show text "No Matches" in payload library
-        // ------------------------------------------------------------------------
-        if ([matchedObjects count] == 0 && _searchNoMatchesHidden) {
+        // ---------------------------------------------------------------------
+        if ([matchedObjects count] == 0) {
             [self showSearchNoMatches];
-        } else if ([matchedObjects count] != 0 && !_searchNoMatchesHidden) {
+        } else if ([matchedObjects count] != 0) {
             [self hideSearchNoMatches];
         }
     }
@@ -3573,9 +3294,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     [_tableViewPayloadLibrary endUpdates];
 } // searchFieldPayloadLibrary
 
-- (void)setSearchStringForPayloadLibrary:(NSInteger)payloadLibrary searchString:(NSString *)searchString {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+- (void)setSearchStringForPayloadLibrary:(PFCPayloadLibrary)payloadLibrary searchString:(NSString *)searchString {
     switch (payloadLibrary) {
     case kPFCPayloadLibraryApple:
         [self setSearchStringPayloadLibraryApple:searchString];
@@ -3591,9 +3310,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 } // setSearchStringForPayloadLibrary:searchString
 
-- (NSString *)searchStringForPayloadLibrary:(NSInteger)payloadLibrary {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+- (NSString *)searchStringForPayloadLibrary:(PFCPayloadLibrary)payloadLibrary {
     switch (payloadLibrary) {
     case kPFCPayloadLibraryApple:
         return _searchStringPayloadLibraryApple;
@@ -3610,17 +3327,14 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 } // searchStringForPayloadLibrary
 
-- (void)restoreSearchForPayloadLibrary:(NSInteger)payloadLibrary {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+- (void)restoreSearchForPayloadLibrary:(PFCPayloadLibrary)payloadLibrary {
     [self setArrayPayloadLibrary:[self arrayForPayloadLibrary:payloadLibrary]];
     [self setIsSearchingPayloadLibrary:payloadLibrary isSearching:NO];
     [self setSearchStringForPayloadLibrary:payloadLibrary searchString:nil];
+    [self hideSearchNoMatches];
 } // restoreSearchForPayloadLibrary
 
-- (void)setIsSearchingPayloadLibrary:(NSInteger)payloadLibrary isSearching:(BOOL)isSearching {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+- (void)setIsSearchingPayloadLibrary:(PFCPayloadLibrary)payloadLibrary isSearching:(BOOL)isSearching {
     switch (payloadLibrary) {
     case kPFCPayloadLibraryApple:
         [self setIsSearchingPayloadLibraryApple:isSearching];
@@ -3636,9 +3350,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 } // setIsSearchingPayloadLibrary:isSearching
 
-- (BOOL)isSearchingPayloadLibrary:(NSInteger)payloadLibrary {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
+- (BOOL)isSearchingPayloadLibrary:(PFCPayloadLibrary)payloadLibrary {
     switch (payloadLibrary) {
     case kPFCPayloadLibraryApple:
         return _isSearchingPayloadLibraryApple;
@@ -3739,7 +3451,7 @@ NSInteger const PFCMaximumPayloadCount = 8;
     }
 
     if (![_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]]) {
-        [_viewInfoNoSelection setHidden:YES];
+        [[_viewStatusInfo view] setHidden:YES];
         [[_viewInfoController view] setHidden:NO];
         [_viewInfoController updateInfoForManifestContentDict:_arraySettings[row]];
     }
@@ -3780,8 +3492,8 @@ NSInteger const PFCMaximumPayloadCount = 8;
     // -------------------------------------------------------------------------
     //  Create a new view controller and extract the tab view
     // -------------------------------------------------------------------------
-    PFCProfileCreationTab *newTabController = [[PFCProfileCreationTab alloc] init];
-    PFCProfileCreationTabView *newTabView = (PFCProfileCreationTabView *)[newTabController view];
+    PFCProfileEditorSettingsTab *newTabController = [[PFCProfileEditorSettingsTab alloc] init];
+    PFCProfileEditorSettingsTabView *newTabView = (PFCProfileEditorSettingsTabView *)[newTabController view];
     [newTabView setDelegate:self];
     [newTabView setIsSelected:YES]; // This is when added
 

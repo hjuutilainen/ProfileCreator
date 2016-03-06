@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCStatusView">
+            <connections>
+                <outlet property="textFieldStatus" destination="jZx-9x-Mam" id="srE-HT-bq0"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="383" height="116"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jZx-9x-Mam">
+                    <rect key="frame" x="18" y="50" width="347" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Status" id="a36-GS-qrJ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="V8E-k3-RsQ">
+                    <rect key="frame" x="176" y="75" width="32" height="32"/>
+                </progressIndicator>
+            </subviews>
+            <constraints>
+                <constraint firstItem="jZx-9x-Mam" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="1kh-ou-LNU"/>
+                <constraint firstAttribute="trailing" secondItem="jZx-9x-Mam" secondAttribute="trailing" constant="20" symbolic="YES" id="4xD-XU-ilP"/>
+                <constraint firstItem="V8E-k3-RsQ" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="R8j-cz-igf"/>
+                <constraint firstItem="jZx-9x-Mam" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="aQt-cs-E9r"/>
+                <constraint firstItem="jZx-9x-Mam" firstAttribute="top" secondItem="V8E-k3-RsQ" secondAttribute="bottom" constant="8" symbolic="YES" id="eZa-cY-HV6"/>
+            </constraints>
+            <point key="canvasLocation" x="549.5" y="378"/>
+        </customView>
+    </objects>
+</document>

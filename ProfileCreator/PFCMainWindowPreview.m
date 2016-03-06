@@ -18,7 +18,6 @@
 @property (weak) IBOutlet NSScrollView *scrollViewProfilePreview;
 @property (weak) IBOutlet NSTextField *textFieldProfileName;
 @property (weak) IBOutlet NSTextField *textFieldPayloadCount;
-@property (weak) IBOutlet NSTextField *textFieldPreviewSelectionUnavailable;
 @property (weak) IBOutlet NSTextField *textFieldExportError;
 @property (weak) IBOutlet NSTextField *textFieldPlatform;
 @property (weak) IBOutlet NSTextField *textFieldSupervised;
@@ -46,9 +45,10 @@
     if (self != nil) {
         [self view];
         _mainWindow = mainWindow;
+
+        _viewStatus = [[PFCStatusView alloc] initWithStatusType:kPFCStatusNoProfileSelected];
+
         _arrayStackViewPreview = [[NSMutableArray alloc] init];
-        _profilePreviewHidden = YES;
-        _profilePreviewSelectionUnavailableHidden = YES;
     }
     return self;
 }
@@ -75,49 +75,26 @@
 }
 
 - (void)showProfilePreview {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     [_viewPreviewSuperview setHidden:NO];
-    [self setProfilePreviewHidden:NO];
-
-    [_viewPreviewSelectionUnavailable setHidden:YES];
-    [_textFieldPreviewSelectionUnavailable setStringValue:@""];
-    [self setProfilePreviewSelectionUnavailableHidden:YES];
+    [[_viewStatus view] setHidden:YES];
 } // showProfilePreview
 
 - (void)showProfilePreviewError {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [_textFieldPreviewSelectionUnavailable setStringValue:@"Error Reading Selected Profile"];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-
+    [_viewStatus showStatus:kPFCStatusErrorReadingSettings];
     [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
     [self setProfileUUID:nil];
 } // showProfilePreviewError
 
 - (void)showProfilePreviewNoSelection {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [_textFieldPreviewSelectionUnavailable setStringValue:@"No Profile Selected"];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-
+    [_viewStatus showStatus:kPFCStatusNoProfileSelected];
     [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
     [self setProfileUUID:nil];
 } // showProfilePreviewNoSelection
 
 - (void)showProfilePreviewMultipleSelections:(NSNumber *)count {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [_textFieldPreviewSelectionUnavailable setStringValue:[NSString stringWithFormat:@"%@ %@ Selected", [count stringValue], ([count intValue] == 1) ? @"Profile" : @"Profiles"]];
-    [_viewPreviewSelectionUnavailable setHidden:NO];
-    [self setProfilePreviewSelectionUnavailableHidden:NO];
-
+    [_viewStatus setCounter:count];
+    [_viewStatus showStatus:kPFCStatusMultipleProfilesSelected];
     [_viewPreviewSuperview setHidden:YES];
-    [self setProfilePreviewHidden:YES];
     [self setProfileUUID:nil];
 } // showProfilePreviewNoSelection
 
@@ -190,7 +167,7 @@
     //  Supervised
     // -------------------------------------------------------------------------
     [_textFieldSupervised setStringValue:[NSString stringWithFormat:@"%@", ([profileDisplaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]) ? @"Yes" : @"No"]];
-    DDLogDebug(@"Profile Supervised: %@", _textFieldSupervised);
+    DDLogDebug(@"Profile Supervised: %@", [_textFieldSupervised stringValue]);
 
     // -------------------------------------------------------------------------
     //  Sign

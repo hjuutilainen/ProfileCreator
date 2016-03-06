@@ -26,6 +26,20 @@ typedef NS_ENUM(NSInteger, PFCSessionTypes) {
     kPFCSessionTypeGUI
 };
 
+typedef NS_ENUM(NSInteger, PFCStatus) {
+    kPFCStatusLoadingSettings,
+    kPFCStatusNoManifestSelection,
+    kPFCStatusNoManifests,
+    kPFCStatusNoManifestsCustom,
+    kPFCStatusNoManifestsMCX,
+    kPFCStatusNoMatches,
+    kPFCStatusNoProfileSelected,
+    kPFCStatusNoSelection,
+    kPFCStatusNoSettings,
+    kPFCStatusMultipleProfilesSelected,
+    kPFCStatusErrorReadingSettings,
+};
+
 extern int const PFCTableViewGroupRowHeight;
 extern NSString *const PFCProfileDraggingType;
 

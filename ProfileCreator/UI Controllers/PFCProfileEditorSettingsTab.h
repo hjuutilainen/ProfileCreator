@@ -7,27 +7,27 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class PFCProfileCreationTabView;
+@class PFCProfileEditorSettingsTabView;
 
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark PFCProfileCreationTabDelegate
+#pragma mark PFCProfileEditorSettingsTabDelegate
 ////////////////////////////////////////////////////////////////////////////////
-@protocol PFCProfileCreationTabDelegate
+@protocol PFCProfileEditorSettingsTabDelegate
 - (void)tabIndexSelected:(NSUInteger)tabIndex saveSettings:(BOOL)saveSettings sender:(id)sender;
 - (BOOL)tabIndexShouldClose:(NSUInteger)tabIndex sender:(id)sender;
 - (void)tabIndexClose:(NSUInteger)tabIndex sender:(id)sender;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark PFCProfileCreationTab
+#pragma mark PFCProfileEditorSettingsTab
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCProfileCreationTab : NSViewController
+@interface PFCProfileEditorSettingsTab : NSViewController
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
-#pragma mark PFCProfileCreationTabView
+#pragma mark PFCProfileEditorSettingsTabView
 ////////////////////////////////////////////////////////////////////////////////
-@interface PFCProfileCreationTabView : NSView
+@interface PFCProfileEditorSettingsTabView : NSView
 
 // ------------------------------------------------------
 //  Delegate

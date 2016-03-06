@@ -134,7 +134,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Add error views to content views
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:[_preview viewPreviewSelectionUnavailable] inSuperview:_viewPreviewSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[[_preview viewStatus] view] inSuperview:_viewPreviewSplitView hidden:NO];
 
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -898,9 +898,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         //  Verify the profile has any content
         // ---------------------------------------------------------------------
         if ([profileDict count] == 0) {
-            if ([_preview profilePreviewSelectionUnavailableHidden]) {
-                [_preview showProfilePreviewError];
-            }
+
+            [_preview showProfilePreviewError];
             return;
         }
 
@@ -911,9 +910,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         DDLogDebug(@"Selected profile UUID: %@", profileUUID);
 
         if ([profileUUID length] == 0) {
-            if ([_preview profilePreviewSelectionUnavailableHidden]) {
-                [_preview showProfilePreviewError];
-            }
+            [_preview showProfilePreviewError];
             return;
         }
         [self setSelectedProfileUUID:profileUUID];
@@ -926,9 +923,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         // ---------------------------------------------------------------------
         //  Show selected profile preview (of not already visible)
         // ---------------------------------------------------------------------
-        if ([_preview profilePreviewHidden]) {
-            [_preview showProfilePreview];
-        }
+        [_preview showProfilePreview];
     } else {
 
         // ---------------------------------------------------------------------

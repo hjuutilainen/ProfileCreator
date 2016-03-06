@@ -79,7 +79,6 @@
 }
 
 + (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2 {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Is version: %@ lower than version: %@", version1, version2);
 
     if ([version1 isEqualToString:@"Latest"]) {
@@ -89,14 +88,49 @@
     if ([version2 isEqualToString:@"Latest"]) {
         version2 = @"999";
     }
-    DDLogDebug(@"version1=%@", version1);
-    DDLogDebug(@"version2=%@", version2);
-    DDLogDebug(@"ascending=%@", ([version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending) ? @"YES" : @"NO");
+    DDLogDebug(@"returning=%@", ([version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending) ? @"YES" : @"NO");
     if ([version1 isEqualToString:version2]) {
         return YES;
     } else {
         return [version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending;
     }
 } // version:isLaterThanVersion
+
++ (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate {
+
+    // -------------------------------------------------------------------------
+    //  Set allowed date units to year, month and day
+    // -------------------------------------------------------------------------
+    unsigned int allowedUnits = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+
+    // -------------------------------------------------------------------------
+    //  Use calendar US
+    // -------------------------------------------------------------------------
+    NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
+
+    // -------------------------------------------------------------------------
+    //  Remove all components except the allowed date units
+    // -------------------------------------------------------------------------
+    NSDateComponents *components = [calendarUS components:allowedUnits fromDate:futureDate];
+    NSDate *date = [calendarUS dateFromComponents:components];
+    NSDate *currentDate = [calendarUS dateFromComponents:[calendarUS components:allowedUnits fromDate:[NSDate date]]];
+
+    // -------------------------------------------------------------------------
+    //  Calculate the date interval
+    // -------------------------------------------------------------------------
+    NSTimeInterval secondsBetween = [date timeIntervalSinceDate:currentDate];
+
+    // -------------------------------------------------------------------------
+    //  Create date formatter to create the date in spelled out string format
+    // -------------------------------------------------------------------------
+    NSDateComponentsFormatter *dateComponentsFormatter = [[NSDateComponentsFormatter alloc] init];
+    [dateComponentsFormatter setAllowedUnits:allowedUnits];
+    [dateComponentsFormatter setMaximumUnitCount:3];
+    [dateComponentsFormatter setUnitsStyle:NSDateComponentsFormatterUnitsStyleFull];
+    [dateComponentsFormatter setCalendar:calendarUS];
+
+    return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
+} // dateIntervalFromNowToDate
 
 @end

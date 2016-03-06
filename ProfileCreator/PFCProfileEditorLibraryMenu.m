@@ -7,9 +7,9 @@
 //
 
 #import "PFCGeneralUtility.h"
-#import "PFCProfileEditorPayloadLibraryMenu.h"
+#import "PFCProfileEditorLibraryMenu.h"
 
-@interface PFCProfileEditorPayloadLibraryMenu ()
+@interface PFCProfileEditorLibraryMenu ()
 
 @property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
@@ -27,10 +27,10 @@
 
 @end
 
-@implementation PFCProfileEditorPayloadLibraryMenu
+@implementation PFCProfileEditorLibraryMenu
 
 - (id)initWithProfileEditor:(PFCProfileEditor *)profileEditor {
-    self = [super initWithNibName:@"PFCProfileEditorPayloadLibraryMenu" bundle:nil];
+    self = [super initWithNibName:@"PFCProfileEditorLibraryMenu" bundle:nil];
     if (self != nil) {
         _profileEditor = profileEditor;
     }

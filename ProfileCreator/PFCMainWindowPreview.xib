@@ -16,12 +16,10 @@
                 <outlet property="textFieldExportError" destination="kyc-bl-t5d" id="wZF-8t-yRR"/>
                 <outlet property="textFieldPayloadCount" destination="TXd-ff-stv" id="YcR-Ac-ro6"/>
                 <outlet property="textFieldPlatform" destination="FyI-DW-gdt" id="8vi-yd-SST"/>
-                <outlet property="textFieldPreviewSelectionUnavailable" destination="ckN-Cm-S1I" id="rVJ-6Q-Bh7"/>
                 <outlet property="textFieldProfileName" destination="ASE-hA-x6e" id="deO-jw-BpM"/>
                 <outlet property="textFieldSign" destination="ZhM-sE-Y4X" id="qTo-3z-3vQ"/>
                 <outlet property="textFieldSupervised" destination="efD-B1-jXj" id="2dq-ye-DjB"/>
                 <outlet property="view" destination="U70-8M-cvg" id="d7J-M0-nIz"/>
-                <outlet property="viewPreviewSelectionUnavailable" destination="4TR-RJ-IXW" id="nQX-iq-TmX"/>
                 <outlet property="viewPreviewSuperview" destination="U70-8M-cvg" id="1XS-aT-BWN"/>
             </connections>
         </customObject>
@@ -259,29 +257,11 @@
                 <constraint firstItem="FPu-AC-dl8" firstAttribute="trailing" secondItem="vcw-Gi-kA5" secondAttribute="trailing" id="xeJ-Fr-DhZ"/>
                 <constraint firstAttribute="trailing" secondItem="4qh-zp-etI" secondAttribute="trailing" constant="20" symbolic="YES" id="zh3-L0-kKz"/>
             </constraints>
-            <point key="canvasLocation" x="-1870" y="-149"/>
+            <point key="canvasLocation" x="-2056" y="-141"/>
         </customView>
         <stackView orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalClippingResistancePriority="250" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Vl7-af-sBq">
             <rect key="frame" x="0.0" y="0.0" width="453" height="139"/>
-            <point key="canvasLocation" x="-1572.5" y="-379.5"/>
+            <point key="canvasLocation" x="-1458.5" y="-374.5"/>
         </stackView>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="4TR-RJ-IXW">
-            <rect key="frame" x="0.0" y="0.0" width="453" height="393"/>
-            <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ckN-Cm-S1I">
-                    <rect key="frame" x="163" y="188" width="128" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Profile Selected" id="ErO-EW-PcV">
-                        <font key="font" metaFont="systemBold"/>
-                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-            </subviews>
-            <constraints>
-                <constraint firstItem="ckN-Cm-S1I" firstAttribute="centerY" secondItem="4TR-RJ-IXW" secondAttribute="centerY" id="TzE-f3-QLf"/>
-                <constraint firstItem="ckN-Cm-S1I" firstAttribute="centerX" secondItem="4TR-RJ-IXW" secondAttribute="centerX" id="r5f-Wu-YIV"/>
-            </constraints>
-            <point key="canvasLocation" x="-1572.5" y="-55.5"/>
-        </customView>
     </objects>
 </document>

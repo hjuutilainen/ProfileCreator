@@ -6,14 +6,14 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="PFCProfileCreationTab">
+        <customObject id="-2" userLabel="File's Owner" customClass="PFCProfileEditorSettingsTab">
             <connections>
                 <outlet property="view" destination="b7h-Ic-UKq" id="i5A-ZZ-po9"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="b7h-Ic-UKq" customClass="PFCProfileCreationTabView">
+        <customView id="b7h-Ic-UKq" customClass="PFCProfileEditorSettingsTabView">
             <rect key="frame" x="0.0" y="0.0" width="648" height="24"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>

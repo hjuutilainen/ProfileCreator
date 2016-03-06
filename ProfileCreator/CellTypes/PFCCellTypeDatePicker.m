@@ -6,12 +6,13 @@
 //  Copyright © 2016 Erik Berglund. All rights reserved.
 //
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCGeneralUtility.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
-#import "PFCAvailability.h"
 
 @interface PFCDatePickerCellView ()
 
@@ -131,7 +132,7 @@
     // ---------------------------------------------------------------------
     if ([manifest[PFCManifestKeyShowDateInterval] boolValue]) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-        [[cellView settingDateDescription] setStringValue:[(PFCProfileEditor *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+        [[cellView settingDateDescription] setStringValue:[PFCGeneralUtility dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
 
     return cellView;
@@ -239,7 +240,7 @@
     // ---------------------------------------------------------------------
     if ([manifest[PFCManifestKeyShowDateInterval] boolValue]) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
-        [[cellView settingDateDescription] setStringValue:[(PFCProfileEditor *)sender dateIntervalFromNowToDate:datePickerDate] ?: @""];
+        [[cellView settingDateDescription] setStringValue:[PFCGeneralUtility dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
 
     return cellView;

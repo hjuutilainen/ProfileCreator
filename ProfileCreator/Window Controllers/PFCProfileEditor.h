@@ -19,7 +19,7 @@
 
 #import "PFCManifestLibrary.h"
 #import "PFCProfileCreationInfoView.h"
-#import "PFCProfileCreationTab.h"
+#import "PFCProfileEditorSettingsTab.h"
 #import "PFCSplitViews.h"
 #import "PFCTableViews.h"
 #import "PFCViews.h"
@@ -30,7 +30,7 @@
 #pragma mark PFCProfileCreationWindowController
 ////////////////////////////////////////////////////////////////////////////////
 @interface PFCProfileEditor
-    : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileCreationTabDelegate>
+    : NSWindowController <NSSplitViewDelegate, NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource, PFCTableViewDelegate, PFCProfileCreationInfoDelegate, PFCProfileEditorSettingsTabDelegate>
 
 // -------------------------------------------------------------------------
 //  Unsorted
@@ -53,6 +53,7 @@
 //  Settings
 // -------------------------------------------------------------------------
 @property NSDictionary *selectedManifest;
+@property PFCPayloadLibrary selectedLibrary;
 
 // -------------------------------------------------------------------------
 //  Profile Header
@@ -60,41 +61,12 @@
 @property (weak) IBOutlet NSView *viewProfileHeaderSplitView;
 @property (weak) IBOutlet NSView *viewProfileHeader;
 @property (weak) IBOutlet NSTableView *tableViewProfileHeader;
-@property (weak) IBOutlet NSTextField *textFieldProfileName;
-@property (weak) IBOutlet NSTextField *textFieldProfileIdentifier;
-@property (weak) IBOutlet NSTextField *textFieldProfileIdentifierFormat;
 
 @property (strong) IBOutlet NSLayoutConstraint *constraintProfileHeaderHeight;
-@property NSString *profileUUID;
-@property (readwrite) NSString *profileName;
-@property NSString *profileIdentifier;
-@property NSString *profileIdentifierFormat;
 @property (readwrite) NSString *profileDescription;
 @property (readwrite) BOOL profileHeaderHidden;
 
 - (IBAction)selectTableViewProfileHeader:(id)sender;
-
-// -------------------------------------------------------------------------
-//  Profile Settings
-// -------------------------------------------------------------------------
-@property (weak) IBOutlet NSView *viewProfileSettings;
-@property (weak) IBOutlet NSButton *checkboxPlatformOSX;
-@property (weak) IBOutlet NSButton *checkboxPlatformiOS;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformOSXMinVersion;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformOSXMaxVersion;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformiOSMinVersion;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonPlatformiOSMaxVersion;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonCertificateSigning;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonCertificateEncryption;
-@property BOOL includePlatformOSX;
-@property NSString *osxMaxVersion;
-@property NSString *osxMinVersion;
-@property BOOL includePlatformiOS;
-@property NSString *iosMaxVersion;
-@property NSString *iosMinVersion;
-@property BOOL showAdvancedSettings;
-@property BOOL signProfile;
-@property BOOL encryptProfile;
 
 // -------------------------------------------------------------------------
 //  Payload
@@ -120,8 +92,6 @@
 @property (weak) IBOutlet RFOverlayScrollView *viewPayloadLibraryScrollView;
 @property (weak) IBOutlet NSView *viewPayloadLibrarySplitView;
 @property (weak) IBOutlet NSView *viewPayloadLibraryMenuSuperview;
-@property (weak) IBOutlet NSView *viewPayloadLibraryNoMatches;
-@property (weak) IBOutlet NSView *viewPayloadLibraryNoManifests;
 @property (weak) IBOutlet PFCTableView *tableViewPayloadLibrary;
 @property (readwrite) NSMutableArray *arrayPayloadLibrary;
 @property (readwrite) NSInteger tableViewPayloadLibrarySelectedRow;
@@ -160,9 +130,6 @@
 @property (weak) IBOutlet NSButton *buttonAdd;
 @property (strong) IBOutlet NSLayoutConstraint *constraintSearchFieldLeading;
 @property (weak) IBOutlet NSMenu *menuButtonAdd;
-@property (readwrite) BOOL searchNoMatchesHidden;
-@property (readwrite) BOOL libraryNoManifestsHidden;
-@property (readwrite) BOOL buttonAddHidden;
 @property (readwrite) BOOL payloadLibrarySplitViewCollapsed;
 
 - (IBAction)searchFieldPayloadLibrary:(id)sender;
@@ -194,9 +161,6 @@
 // -------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewSettingsSuperView;
 @property (weak) IBOutlet NSView *viewSettingsSplitView;
-@property (weak) IBOutlet NSView *viewSettingsStatus;
-@property (weak) IBOutlet NSProgressIndicator *progressIndicatorSettingsStatusLoading;
-@property (weak) IBOutlet NSTextField *textFieldSettingsStatus;
 @property (weak) IBOutlet PFCTableView *tableViewSettings;
 @property (readwrite) NSMutableArray *arraySettings;
 @property (readwrite) NSMutableDictionary *settingsProfile;
@@ -205,7 +169,6 @@
 @property (readwrite) BOOL settingsHidden;
 @property (readwrite) BOOL showSettingsLocal;
 @property (readwrite) BOOL settingsStatusLoading;
-@property (readwrite) BOOL settingsStatusHidden;
 
 // -------------------------------------------------------------------------
 //  SettingsFooter
@@ -214,9 +177,6 @@
 @property (weak) IBOutlet NSButton *buttonCancel;
 @property (weak) IBOutlet NSButton *buttonSave;
 @property (weak) IBOutlet NSButton *buttonToggleInfo;
-@property BOOL showKeysDisabled;
-@property BOOL showKeysHidden;
-@property BOOL showKeysSupervised;
 
 - (IBAction)buttonPopOverSettings:(id)sender;
 - (IBAction)buttonCancel:(id)sender;
@@ -233,7 +193,6 @@
 //  Info
 // -------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewInfoSplitView;
-@property (weak) IBOutlet PFCViewInfo *viewInfoNoSelection;
 @property (strong) PFCProfileCreationInfoView *viewInfoController;
 @property (readwrite) BOOL infoSplitViewCollapsed;
 
@@ -261,6 +220,8 @@
 - (IBAction)buttonCancelSheetProfileName:(id)sender;
 - (IBAction)buttonSaveSheetProfileName:(id)sender;
 
+- (void)updateManifests;
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark CellView Actions
@@ -272,6 +233,5 @@
 - (void)popUpButtonSelection:(NSPopUpButton *)popUpButton;
 - (void)selectFile:(NSButton *)button;
 - (void)segmentedControl:(NSSegmentedControl *)segmentedControl;
-- (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 - (id)initWithProfileDict:(NSDictionary *)profileDict sender:(id)sender;
 @end

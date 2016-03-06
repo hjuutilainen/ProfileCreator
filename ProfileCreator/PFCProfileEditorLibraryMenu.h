@@ -9,7 +9,7 @@
 #import "PFCProfileEditor.h"
 #import <Cocoa/Cocoa.h>
 
-@interface PFCProfileEditorPayloadLibraryMenu : NSViewController
+@interface PFCProfileEditorLibraryMenu : NSViewController
 
 @property (weak) IBOutlet NSView *viewButtons;
 @property (weak) IBOutlet NSBox *lineTop;
