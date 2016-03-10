@@ -50,6 +50,7 @@
 @property PFCProfileEditorManifest *manifest;
 @property (strong, readwrite) IBOutlet NSLayoutConstraint *constraintManifestHeaderHeight;
 - (void)showManifest;
+- (void)showManifestNoSettings;
 - (void)hideManifestStatus;
 
 // -------------------------------------------------------------------------

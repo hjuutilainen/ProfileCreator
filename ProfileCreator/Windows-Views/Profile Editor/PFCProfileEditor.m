@@ -140,7 +140,6 @@
         //  Initialize BOOLs (for clarity)
         // ---------------------------------------------------------------------
         _advancedSettings = NO;
-        _settingsHidden = YES;
         _windowShouldClose = NO;
         _showSettingsLocal = YES;
     }
@@ -726,44 +725,20 @@
     [self setLibrarySplitViewCollapsed:NO];
     [[_library viewLibrarySearch] setHidden:NO];
     [PFCGeneralUtility insertSubview:[[_library libraryMenu] view] inSuperview:[_library viewLibraryMenu] hidden:NO];
-} // showPayloadFooter
+} // showLibrarySearch
 
 - (void)hideLibrarySearch {
     [self setLibrarySplitViewCollapsed:YES];
     [[_library viewLibrarySearch] setHidden:YES];
     [PFCGeneralUtility insertSubview:[[_library libraryMenu] view] inSuperview:_viewLibraryFooterSuperview hidden:NO];
-} // hidePayloadFooter
+} // hideLibrarySearch
 
-- (void)showSettingsLoading {
-    if (_settingsStatusLoading) {
-        [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
-        [[_settings view] setHidden:YES];
-        [[_manifest view] setHidden:YES];
-        [[_viewStatusSettings view] setHidden:NO];
-    }
-} // showSettingsLoading
-
-- (void)showSettingsError {
-    [_viewStatusSettings showStatus:kPFCStatusErrorReadingSettings];
-    [self setSettingsStatusLoading:NO];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:YES];
-    [[_viewStatusSettings view] setHidden:NO];
-} // showSettingsError
-
-- (void)showSettingsNoSettings {
-    [_viewStatusSettings showStatus:kPFCStatusNoSettings];
-    [self setSettingsStatusLoading:NO];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:YES];
-} // showSettingsNoSettings
-
-- (void)showSettingsProfile {
+- (void)showSettings {
     [self setSettingsStatusLoading:NO];
     [[_settings view] setHidden:NO];
     [[_manifest view] setHidden:YES];
     [[_viewStatusSettings view] setHidden:YES];
-} // showSettingsProfile
+} // showSettings
 
 - (void)showManifest {
     [[_manifest view] setHidden:NO];
@@ -771,24 +746,38 @@
         [[_settings view] setHidden:YES];
     }
     [[_viewStatusSettings view] setHidden:YES];
-}
+} // showManifest
 
-- (void)showSettings {
-    [[_manifest view] setHidden:NO];
-    [self setSettingsHidden:NO];
-} // showSettings
+- (void)showManifestLoading {
+    if (_settingsStatusLoading) {
+        [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
+        [[_settings view] setHidden:YES];
+        [[_manifest view] setHidden:YES];
+        [[_viewStatusSettings view] setHidden:NO];
+    }
+} // showManifestLoading
 
-- (void)hideSettings {
+- (void)showManifestError {
+    [_viewStatusSettings showStatus:kPFCStatusErrorReadingSettings];
+    [self setSettingsStatusLoading:NO];
+    [[_settings view] setHidden:YES];
     [[_manifest view] setHidden:YES];
-    [self setSettingsHidden:YES];
-} // hideSettings
+    [[_viewStatusSettings view] setHidden:NO];
+} // showManifestError
+
+- (void)showManifestNoSettings {
+    [_viewStatusSettings showStatus:kPFCStatusNoSettings];
+    [self setSettingsStatusLoading:NO];
+    [[_settings view] setHidden:YES];
+    [[_manifest view] setHidden:YES];
+} // showManifestNoSettings
 
 - (void)hideManifestStatus {
     [self setSettingsStatusLoading:NO];
     [[_viewStatusSettings view] setHidden:YES];
     [[_settings view] setHidden:YES];
     [[_manifest view] setHidden:NO];
-} // hideSettingsError
+} // hideManifestStatus
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -960,7 +949,7 @@
 - (void)updateTableViewSelection:(NSString *)tableViewIdentifier {
     if ([tableViewIdentifier isEqualToString:@"Settings"]) {
         [_manifest updateManifestHeaderWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
-        [self showSettingsProfile];
+        [self showSettings];
         [[_library tableViewLibrary] deselectAll:self];
         [[_library tableViewProfile] deselectAll:self];
     } else if ([tableViewIdentifier isEqualToString:@"Profile"]) {

@@ -140,13 +140,13 @@
             [self updateManifestHeaderWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
         }
 
-        //[self hideSettingsStatus];
+        [_profileEditor hideManifestStatus];
     } else {
         if (![[_header view] isHidden]) {
             [self hideManifestHeader];
         }
 
-        //[self showSettingsNoSettings];
+        [_profileEditor showManifestNoSettings];
     }
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
@@ -185,12 +185,12 @@
     [[_header headerTitle] setStringValue:title];
     [[_header headerIcon] setImage:icon];
     [self showManifestHeader];
-}
+} // updateManifestHeaderWithTitle
 
 - (void)showManifestHeader {
     [[_header view] setHidden:NO];
     [[_profileEditor constraintManifestHeaderHeight] setConstant:48.0f];
-} // showSettingsHeader
+} // showManifestHeader
 
 - (void)hideManifestHeader {
     [[_header view] setHidden:YES];
@@ -198,7 +198,7 @@
     if (![_buttonAddTab isHidden]) {
         [_buttonAddTab setHidden:YES];
     }
-} // hideSettingsHeader
+} // hideManifestHeader
 
 - (void)selectManifest:(NSDictionary *)manifest inTableView:(NSString *)tableViewIdentifier {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -303,7 +303,7 @@
             [self hideManifestHeader];
         }
 
-        //[self showSettingsNoSettings];
+        [_profileEditor showManifestNoSettings];
     }
 
     [_tableViewManifestContent reloadData];
