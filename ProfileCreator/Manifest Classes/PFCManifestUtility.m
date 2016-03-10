@@ -1,5 +1,5 @@
 //
-//  PFCManifestTools.m
+//  PFCManifestUtility.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.

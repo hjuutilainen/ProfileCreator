@@ -1,5 +1,5 @@
 //
-//  PFCTableViewMenuCells.h
+//  PFCTableViewCellsMenu.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.

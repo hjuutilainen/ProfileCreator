@@ -19,11 +19,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCSplitViewWindow : NSSplitView
-@property (readonly, copy) NSColor *dividerColor;
-@property (readonly) CGFloat dividerThickness;
-@end
-
 @interface PFCSplitViewPayloadLibrary : NSSplitView
 @property (readonly, copy) NSColor *dividerColor;
 @property (readonly) CGFloat dividerThickness;

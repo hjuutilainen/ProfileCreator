@@ -2,16 +2,27 @@
 //  PFCCellTypeTextFieldDaysHours.m
 //  ProfileCreator
 //
-//  Created by Erik Berglund on 2016-02-25.
-//  Copyright © 2016 Erik Berglund. All rights reserved.
+//  Created by Erik Berglund.
+//  Copyright (c) 2016 ProfileCreator. All rights reserved.
 //
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeTextFieldDaysHours.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
-#import "PFCProfileEditor.h"
-#import "PFCAvailability.h"
+#import "PFCProfileEditorManifest.h"
 
 @implementation PFCTextFieldDaysHoursNoTitleCellView
 
@@ -35,7 +46,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
     if ((_sender != nil && [_cellIdentifier length] != 0) && ([keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"])) {
         int seconds = (([_stepperValueRemovalIntervalDays intValue] * 86400) + ([_stepperValueRemovalIntervalHours intValue] * 60));
-        NSMutableDictionary *settingsDict = [[(PFCProfileEditor *)_sender settingsManifest] mutableCopy];
+        NSMutableDictionary *settingsDict = [[(PFCProfileEditorManifest *)_sender settingsManifest] mutableCopy];
         if (seconds == 0) {
             [settingsDict removeObjectForKey:_cellIdentifier];
         } else {
@@ -43,7 +54,7 @@
             cellDict[PFCSettingsKeyValue] = @(seconds);
             settingsDict[_cellIdentifier] = cellDict;
         }
-        [(PFCProfileEditor *)_sender setSettingsManifest:settingsDict];
+        [(PFCProfileEditorManifest *)_sender setSettingsManifest:settingsDict];
     }
 } // observeValueForKeyPath
 

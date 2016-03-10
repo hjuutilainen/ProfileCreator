@@ -40,6 +40,17 @@ typedef NS_ENUM(NSInteger, PFCStatus) {
     kPFCStatusErrorReadingSettings,
 };
 
+typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
+    kPFCPayloadLibraryApple = 0,
+    kPFCPayloadLibraryUserPreferences,
+    kPFCPayloadLibraryCustom,
+    kPFCPayloadLibraryAll,
+    kPFCPayloadLibraryLibraryPreferences,
+    kPFCPayloadLibraryMCX,
+    kPFCLibraryProfile
+};
+
+extern NSInteger const PFCMaximumPayloadCount;
 extern int const PFCTableViewGroupRowHeight;
 extern NSString *const PFCProfileDraggingType;
 

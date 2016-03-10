@@ -1,5 +1,5 @@
 //
-//  PFCController.m
+//  PFCAppDelegate.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.

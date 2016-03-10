@@ -19,6 +19,7 @@
 
 #import "PFCConstants.h"
 
+NSInteger const PFCMaximumPayloadCount = 8;
 int const PFCTableViewGroupRowHeight = 24;
 NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 
