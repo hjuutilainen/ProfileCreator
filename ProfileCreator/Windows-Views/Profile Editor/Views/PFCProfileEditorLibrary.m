@@ -34,7 +34,6 @@
 @property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
 @property PFCPayloadLibrary selectedLibrary;
-
 @property PFCStatusView *viewStatusLibrary;
 
 @property NSString *selectedIdentifier;
@@ -214,6 +213,12 @@
     return YES;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Selection Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
 - (void)checkboxMenuEnabled:(NSButton *)checkbox {
 
     // -------------------------------------------------------------------------
@@ -226,279 +231,105 @@
     }
     NSUInteger row = [buttonTag integerValue];
 
-    if ([[[checkbox superview] class] isSubclassOfClass:[CellViewMenuEnabled class]]) {
+    // -------------------------------------------------------------------------
+    //  Check if checkbox is in table view profile
+    // -------------------------------------------------------------------------
+    if ((row < [_arrayProfile count]) &&
+        checkbox == [(CellViewMenuEnabled *)[_tableViewProfile viewAtColumn:[_tableViewProfile columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
 
         // ---------------------------------------------------------------------
-        //  Check if checkbox is in table view profile
+        //  Get manifest to move
         // ---------------------------------------------------------------------
-        if ((row < [_arrayProfile count]) &&
-            checkbox == [(CellViewMenuEnabled *)[_tableViewProfile viewAtColumn:[_tableViewProfile columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
+        NSDictionary *manifest = _arrayProfile[row];
 
-            // -----------------------------------------------------------------
-            //  Store the cell dict for move
-            // -----------------------------------------------------------------
-            NSDictionary *manifestDict = _arrayProfile[row];
-            NSString *manifestDomain = manifestDict[PFCManifestKeyDomain];
-            DDLogInfo(@"Removing manifest with domain: %@ from table view profile", manifestDomain);
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain];
+        DDLogInfo(@"Removing manifest with domain: %@ from table view profile", manifestDomain);
 
-            NSInteger tableViewPayloadProfileSelectedRow = [_tableViewProfile selectedRow];
-            DDLogDebug(@"Table view profile selected row: %ld", (long)tableViewPayloadProfileSelectedRow);
+        NSMutableDictionary *manifestSettings = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
 
-            NSMutableDictionary *manifestSettings = [_profileEditor profileSettings][manifestDomain];
-            DDLogVerbose(@"Clicked manifest settings: %@", manifestSettings);
-
-            // -------------------------------------------------------------------------------------------
-            //  Sanity check, any manifest in table view profile should have setting key "PayloadLibrary"
-            // -------------------------------------------------------------------------------------------
-            NSInteger payloadLibrary;
-            if (manifestSettings[PFCSettingsKeyPayloadLibrary] != nil) {
-                payloadLibrary = [manifestSettings[PFCSettingsKeyPayloadLibrary] integerValue];
-            } else {
-                DDLogError(@"Manifest settings is missing required information about originating library");
-                payloadLibrary = 2;
-            }
-            DDLogDebug(@"Clicked manifest payload library: %ld", (long)payloadLibrary);
-
-            // -----------------------------------------------------------------
-            //  Remove the cell dict from table view profile
-            // -----------------------------------------------------------------
-            [_tableViewProfile beginUpdates];
-            [_arrayProfile removeObjectAtIndex:(NSUInteger)row];
-            [_tableViewProfile reloadData];
-            [_tableViewProfile endUpdates];
-
-            // ----------------------------------------------------------------------
-            //  If current cell dict wasn't selected, restore selection after reload
-            // ----------------------------------------------------------------------
-            if (0 <= tableViewPayloadProfileSelectedRow && tableViewPayloadProfileSelectedRow != row) {
-                DDLogDebug(@"Current selection was not clicked. Restoring selection to table view profile.");
-
-                NSInteger selectedRow = (row < tableViewPayloadProfileSelectedRow) ? (tableViewPayloadProfileSelectedRow - 1) : tableViewPayloadProfileSelectedRow;
-                DDLogDebug(@"Table view profile new selected row: %ld", (long)selectedRow);
-
-                [_tableViewProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)selectedRow] byExtendingSelection:NO];
-                //[self setTableViewPayloadProfileSelectedRow:selectedRow];
-            }
-
-            // -----------------------------------------------------------------
-            //  Add the cell dict to table view payload library
-            // -----------------------------------------------------------------
-            NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewLibrary selectedRow];
-            DDLogDebug(@"Table view payload library selected row: %ld", (long)tableViewPayloadLibrarySelectedRow);
-
-            NSDictionary *tableViewPayloadLibrarySelectedManifest;
-            if (0 <= tableViewPayloadLibrarySelectedRow) {
-                tableViewPayloadLibrarySelectedManifest = _arrayLibrary[(NSUInteger)tableViewPayloadLibrarySelectedRow];
-                DDLogDebug(@"Table view payload library selected domain: %@", tableViewPayloadLibrarySelectedManifest[PFCManifestKeyDomain]);
-            }
-
-            NSMutableArray *arrayPayloadLibrarySource;
-            if (payloadLibrary == _selectedLibrary) {
-                [_tableViewLibrary beginUpdates];
-                [_arrayLibrary addObject:manifestDict];
-                [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
-                [_tableViewLibrary reloadData];
-                [_tableViewLibrary endUpdates];
-            } else {
-                /*
-                 arrayPayloadLibrarySource = [self arrayForPayloadLibrary:payloadLibrary];
-                 [arrayPayloadLibrarySource addObject:manifestDict];
-                 [arrayPayloadLibrarySource sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
-                 [self saveArray:arrayPayloadLibrarySource forPayloadLibrary:payloadLibrary];
-                 */
-            }
-
-            // -----------------------------------------------------------------------------
-            //  If item in table view payload library was selected, restore selection after reload
-            // -----------------------------------------------------------------------------
-            if (0 <= tableViewPayloadLibrarySelectedRow && tableViewPayloadProfileSelectedRow != row) {
-                DDLogDebug(@"Current selection was not clicked. Restoring selection to table view payload library.");
-
-                // -------------------------------------------------------------
-                //  Find index of moved cell dict and select it
-                // -------------------------------------------------------------
-                NSUInteger newRow = [_arrayLibrary indexOfObject:tableViewPayloadLibrarySelectedManifest];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
-
-                if (newRow != NSNotFound) {
-                    [_tableViewLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
-                    [[_profileEditor window] makeFirstResponder:_tableViewLibrary]; // FIXME - This might not work
-                    //[self setTableViewPayloadLibrarySelectedRow:newRow];
-                    //[self setTableViewPayloadLibrarySelectedRowSegment:_selectedLibrary];
-                    //[self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
-                } else {
-                    DDLogError(@"Could not find row for moved manifest in table view payload library");
-                }
-            }
-
-            // -----------------------------------------------------------------------------
-            //  If current cell dict was selected, move selection to table view payload library
-            // -----------------------------------------------------------------------------
-            if (tableViewPayloadProfileSelectedRow == row && payloadLibrary == _selectedLibrary) {
-                DDLogDebug(@"Current selection was clicked. Moving selection to table view payload library");
-
-                // -------------------------------------------------------------
-                //  Deselect items in table view profile
-                // -------------------------------------------------------------
-                [_tableViewProfile deselectAll:self];
-                //[self setTableViewPayloadProfileSelectedRow:-1];
-
-                // -------------------------------------------------------------
-                //  Find index of moved cell dict and select it
-                // -------------------------------------------------------------
-                NSUInteger newRow = [_arrayLibrary indexOfObject:manifestDict];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
-
-                if (newRow != NSNotFound) {
-                    [_tableViewLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-                    [[_profileEditor window] makeFirstResponder:_tableViewLibrary]; // FIXME - This might not work
-                    //[self setTableViewPayloadLibrarySelectedRow:newRow];
-                    //[self setTableViewPayloadLibrarySelectedRowSegment:_selectedLibrary];
-                    //[self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadLibrary identifier]];
-                } else {
-                    DDLogError(@"Could not find row for moved manifest in table view payload library");
-                }
-
-            } else if (tableViewPayloadProfileSelectedRow == row && payloadLibrary != _selectedLibrary) {
-                DDLogDebug(@"Current selection was clicked but manifest's payload library is not selected. Moving selection to table view payload library.");
-
-                NSUInteger newRow = [arrayPayloadLibrarySource indexOfObject:manifestDict];
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)newRow);
-
-                if (newRow != NSNotFound) {
-                    //[self setSelectedPayloadTableViewIdentifier:[_tableViewLibrary identifier]];
-                    //[self setTableViewPayloadLibrarySelectedRow:newRow];
-                    //[self setTableViewPayloadLibrarySelectedRowSegment:payloadLibrary];
-                } else {
-                    DDLogError(@"Could not find row for moved manifest in table view payload library");
-                }
-            }
-
-            NSMutableDictionary *settingsManifestRoot = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
-            [settingsManifestRoot removeObjectForKey:@"Selected"];
-            [settingsManifestRoot removeObjectForKey:@"PayloadLibrary"];
-            [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
-
-            // -----------------------------------------------------------------
-            //  Check if checkbox is in table view payload library
-            // -----------------------------------------------------------------
-        } else if ((row < [_arrayLibrary count]) &&
-                   checkbox == [(CellViewMenuEnabled *)[_tableViewLibrary viewAtColumn:[_tableViewLibrary columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
-
-            // -----------------------------------------------------------------
-            //  Store the cell dict for move
-            // -----------------------------------------------------------------
-            NSDictionary *manifest = _arrayLibrary[row];
-            DDLogVerbose(@"Clicked manifest: %@", manifest);
-
-            NSString *manifestDomain = manifest[PFCManifestKeyDomain];
-            DDLogInfo(@"Adding manifest with domain: %@ to profile", manifestDomain);
-
-            // -----------------------------------------------------------------
-            //  Remove the cell dict from table view payload library
-            // -----------------------------------------------------------------
-            NSInteger tableViewPayloadLibrarySelectedRow = [_tableViewLibrary selectedRow];
-            DDLogDebug(@"Table view payload library selected row: %ld", (long)tableViewPayloadLibrarySelectedRow);
-
-            [_tableViewLibrary beginUpdates];
-            [_arrayLibrary removeObjectAtIndex:(NSUInteger)row];
-            [_tableViewLibrary reloadData];
-            [_tableViewLibrary endUpdates];
-
-            // ----------------------------------------------------------------------
-            //  If current cell dict wasn't selected, restore selection after reload
-            // ----------------------------------------------------------------------
-            if (0 <= tableViewPayloadLibrarySelectedRow && tableViewPayloadLibrarySelectedRow != row) {
-                DDLogDebug(@"Current selection was not clicked. Restoring selection to table view payload library.");
-
-                NSInteger selectedRow = (row < tableViewPayloadLibrarySelectedRow) ? (tableViewPayloadLibrarySelectedRow - 1) : tableViewPayloadLibrarySelectedRow;
-                DDLogDebug(@"Table view payload library new selected row: %ld", (long)selectedRow);
-
-                [_tableViewLibrary selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
-                //[self setTableViewPayloadLibrarySelectedRow:selectedRow];
-            }
-
-            // -----------------------------------------------------------------
-            //  Add the cell dict to table view profile
-            // -----------------------------------------------------------------
-            NSInteger tableViewPayloadProfileSelectedRow = [_tableViewProfile selectedRow];
-            DDLogDebug(@"Table view profile selected row: %ld", (long)tableViewPayloadProfileSelectedRow);
-
-            NSDictionary *tableViewPayloadProfileSelectedManifest;
-            if (0 <= tableViewPayloadProfileSelectedRow) {
-                tableViewPayloadProfileSelectedManifest = _arrayProfile[tableViewPayloadProfileSelectedRow];
-                DDLogDebug(@"Table view profile selected domain: %@", tableViewPayloadProfileSelectedManifest[PFCManifestKeyDomain]);
-            }
-
-            [_tableViewProfile beginUpdates];
-            [_arrayProfile addObject:manifest];
-            [_tableViewProfile reloadData];
-            [_tableViewProfile endUpdates];
-
-            // -----------------------------------------------------------------------------
-            //  If item in table view profile was selected, restore selection after reload
-            // -----------------------------------------------------------------------------
-            if (0 <= tableViewPayloadProfileSelectedRow && tableViewPayloadLibrarySelectedRow != row) {
-                DDLogDebug(@"Current selection was not clicked. Restoring selection to table view profile.");
-
-                // -------------------------------------------------------------
-                //  Find index of current selection select it
-                // -------------------------------------------------------------
-                NSUInteger newRow = [_arrayProfile indexOfObject:tableViewPayloadProfileSelectedManifest];
-                DDLogDebug(@"Table view profile new selected row: %ld", (long)newRow);
-
-                if (newRow != NSNotFound) {
-                    [_tableViewProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
-                    [[_profileEditor window] makeFirstResponder:_tableViewProfile]; // FIXME - This might not work
-                    //[self setTableViewPayloadProfileSelectedRow:newRow];
-                    //[self setSelectedPayloadTableViewIdentifier:[_tableViewProfile identifier]];
-                } else {
-                    DDLogError(@"Could not find row for moved manifest in table view profile");
-                }
-            }
-
-            // -------------------------------------------------------------------------
-            //  If current cell dict was selected, move selection to table view profile
-            // -------------------------------------------------------------------------
-            if (tableViewPayloadLibrarySelectedRow == row) {
-                DDLogDebug(@"Current selection was clicked. Moving selection to table view payload library");
-
-                // -------------------------------------------------------------
-                //  Deselect items in table view payload library
-                // -------------------------------------------------------------
-                [_tableViewLibrary deselectAll:self];
-                //[self setTableViewPayloadLibrarySelectedRow:-1];
-
-                // -------------------------------------------------------------
-                //  Find index of moved cell dict and select it
-                // -------------------------------------------------------------
-                NSUInteger newRow = [_arrayProfile indexOfObject:manifest];
-                DDLogDebug(@"Table view profile new selected row: %ld", (long)newRow);
-
-                if (newRow != NSNotFound) {
-                    [_tableViewProfile selectRowIndexes:[NSIndexSet indexSetWithIndex:newRow] byExtendingSelection:NO];
-                    [[_profileEditor window] makeFirstResponder:_tableViewProfile]; // FIXME - This might not work
-                    //[self setTableViewPayloadProfileSelectedRow:newRow];
-                    //[self setSelectedPayloadTableViewIdentifier:[_tableViewPayloadProfile identifier]];
-                } else {
-                    DDLogError(@"Could not find row for moved manifest in table view profile");
-                }
-            }
-
-            NSMutableDictionary *settingsManifestRoot = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
-            settingsManifestRoot[@"Selected"] = @YES;
-            settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
-            [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
-            DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
-
-            // -----------------------------------------------------------------
-            //  Update errors for manifest
-            // -----------------------------------------------------------------
-            [[_profileEditor manifest] errorForManifest:manifest updateTabBar:YES];
-            [self reloadManifest:manifest];
+        // ---------------------------------------------------------------------
+        //  Get manifest's originating library
+        // ---------------------------------------------------------------------
+        NSInteger payloadLibrary;
+        if (manifestSettings[PFCSettingsKeyPayloadLibrary] != nil) {
+            payloadLibrary = [manifestSettings[PFCSettingsKeyPayloadLibrary] integerValue];
+        } else {
+            DDLogError(@"Manifest settings is missing required information about originating library");
+            payloadLibrary = 2;
         }
-    } else {
-        DDLogError(@"Checkbox superview class is not CellViewMenuEnabled: %@", [[checkbox superview] class]);
+        DDLogDebug(@"Manifest payload library: %ld", (long)payloadLibrary);
+
+        // ---------------------------------------------------------------------
+        //  Remove manifest from library profile
+        // ---------------------------------------------------------------------
+        [_arrayProfile removeObjectAtIndex:(NSUInteger)row];
+        [self sortArrayProfile];
+        [self reloadTableView:_tableViewProfile updateFirstResponder:YES];
+
+        // ---------------------------------------------------------------------
+        //  Add manifest to originating library
+        // ---------------------------------------------------------------------
+        NSMutableArray *arrayPayloadLibrarySource;
+        if (payloadLibrary == _selectedLibrary) {
+            [_arrayLibrary addObject:manifest];
+            [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+            [self reloadTableView:_tableViewLibrary updateFirstResponder:YES];
+        } else {
+            arrayPayloadLibrarySource = [self arrayForLibrary:payloadLibrary];
+            [arrayPayloadLibrarySource addObject:manifest];
+            [arrayPayloadLibrarySource sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+            [self setArray:arrayPayloadLibrarySource forLibrary:payloadLibrary];
+        }
+
+        // ---------------------------------------------------------------------
+        //  Update settings
+        // ---------------------------------------------------------------------
+        [manifestSettings removeObjectForKey:@"Selected"];
+        [manifestSettings removeObjectForKey:@"PayloadLibrary"];
+        [_profileEditor profileSettings][manifestDomain] = [manifestSettings mutableCopy];
+
+        // ---------------------------------------------------------------------
+        //  Check if checkbox is in table view payload library
+        // ---------------------------------------------------------------------
+    } else if ((row < [_arrayLibrary count]) &&
+               checkbox == [(CellViewMenuEnabled *)[_tableViewLibrary viewAtColumn:[_tableViewLibrary columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
+
+        // ---------------------------------------------------------------------
+        //  Get manifest to move
+        // ---------------------------------------------------------------------
+        NSDictionary *manifest = _arrayLibrary[row];
+
+        NSString *manifestDomain = manifest[PFCManifestKeyDomain];
+        DDLogInfo(@"Adding manifest with domain: %@ to profile", manifestDomain);
+
+        // ---------------------------------------------------------------------
+        //  Remove manifest from library
+        // ---------------------------------------------------------------------
+        [_arrayLibrary removeObjectAtIndex:(NSUInteger)row];
+        [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+        [self reloadTableView:_tableViewLibrary updateFirstResponder:YES];
+
+        // ---------------------------------------------------------------------
+        //  Add manifest to library profile
+        // ---------------------------------------------------------------------
+        [_arrayProfile addObject:manifest];
+        [self sortArrayProfile];
+        [self reloadTableView:_tableViewProfile updateFirstResponder:YES];
+
+        // ---------------------------------------------------------------------
+        //  Update settings
+        // ---------------------------------------------------------------------
+        NSMutableDictionary *settingsManifestRoot = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        settingsManifestRoot[@"Selected"] = @YES;
+        settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
+        [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
+        DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
+
+        // ---------------------------------------------------------------------
+        //  Update errors for manifest
+        // ---------------------------------------------------------------------
+        [[_profileEditor manifest] errorForManifest:manifest updateTabBar:YES];
+        [self reloadManifest:manifest];
     }
 
     if ([_arrayLibrary count] == 0) {
@@ -507,12 +338,6 @@
         [self hideLibraryStatus];
     }
 } // checkboxMenuEnabled
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Selection Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)selectManifest:(id)sender {
 
@@ -592,11 +417,9 @@
     } else {
         [self hideLibraryStatus];
         [_searchFieldLibrary setStringValue:@""];
-        [_tableViewLibrary beginUpdates];
         [_arrayLibrary removeAllObjects];
         [self setArrayLibrary:[self arrayForLibrary:library]];
-        [_tableViewLibrary reloadData];
-        [_tableViewLibrary endUpdates];
+        [self reloadTableView:_tableViewLibrary updateFirstResponder:YES];
     }
 
     // --------------------------------------------------------------------------------------------------------
@@ -626,14 +449,38 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
+- (void)reloadTableView:(id)tableView updateFirstResponder:(BOOL)updateFirstResponder {
+    [tableView beginUpdates];
+    [tableView reloadData];
+    [tableView endUpdates];
+
+    NSInteger selectedManifestIndex = NSNotFound;
+    if (tableView == _tableViewProfile) {
+        selectedManifestIndex = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull manifest, NSUInteger idx, BOOL *_Nonnull stop) {
+          return [manifest isEqualToDictionary:_selectedManifest];
+        }];
+    } else if (tableView == _tableViewLibrary) {
+        selectedManifestIndex = [_arrayLibrary indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull manifest, NSUInteger idx, BOOL *_Nonnull stop) {
+          return [manifest isEqualToDictionary:_selectedManifest];
+        }];
+    }
+
+    if (selectedManifestIndex != NSNotFound) {
+        [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedManifestIndex] byExtendingSelection:NO];
+        if (updateFirstResponder) {
+            [[_profileEditor window] makeFirstResponder:tableView];
+        }
+    }
+}
+
 - (void)reloadManifest:(NSDictionary *)manifest {
-    NSUInteger Index = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSUInteger index = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
       return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:manifest[PFCManifestKeyDomain] ?: @""];
     }];
 
-    if (Index != NSNotFound) {
+    if (index != NSNotFound) {
         NSRange allColumns = NSMakeRange(0, [[_tableViewProfile tableColumns] count]);
-        [_tableViewProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:Index] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+        [_tableViewProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
     }
 } // reloadManifest
 
@@ -657,17 +504,13 @@
     [self updateManifestLibraryMCX:enabledDomains];
     [self sortArrayProfile];
 
-    [_tableViewProfile beginUpdates];
-    [_tableViewProfile reloadData];
-    [_tableViewProfile endUpdates];
+    [self reloadTableView:_tableViewProfile updateFirstResponder:NO];
 
     [_arrayLibrary removeAllObjects];
     [self setArrayLibrary:[self arrayForLibrary:_selectedLibrary]];
     [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
 
-    [_tableViewLibrary beginUpdates];
-    [_tableViewLibrary reloadData];
-    [_tableViewLibrary endUpdates];
+    [self reloadTableView:_tableViewLibrary updateFirstResponder:NO];
 } // updateManifests
 
 - (void)updateManifestLibraryApple:(NSArray *)enabledPayloadDomains {
@@ -988,7 +831,6 @@
     }
 
     NSString *searchString = [_searchFieldLibrary stringValue];
-    [_tableViewLibrary beginUpdates];
     if (![searchString length]) {
 
         // ---------------------------------------------------------------------
@@ -1027,8 +869,7 @@
         }
     }
 
-    [_tableViewLibrary reloadData];
-    [_tableViewLibrary endUpdates];
+    [self reloadTableView:_tableViewLibrary updateFirstResponder:NO];
 } // searchFieldLibrary
 
 - (void)setSearchStringForLibrary:(PFCPayloadLibrary)library searchString:(NSString *)searchString {
