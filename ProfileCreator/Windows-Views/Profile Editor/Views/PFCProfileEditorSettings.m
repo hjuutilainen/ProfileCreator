@@ -108,26 +108,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark NSTableView DataSource Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return 1;
-} // numberOfRowsInTableView
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark NSTableView Delegate Methods
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    return [tableView makeViewWithIdentifier:@"CellViewProfileHeader" owner:self];
-} // tableView:viewForTableColumn:row
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark Validating Menu Items
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -279,9 +259,6 @@
 
 - (void)controlTextDidChange:(NSNotification *)sender {
 
-    // -------------------------------------------------------------------------
-    //  Get current entered text
-    // -------------------------------------------------------------------------
     NSDictionary *userInfo = [sender userInfo];
     NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
 
@@ -367,9 +344,4 @@
     return string;
 } // expandVariables:overrideValues
 
-- (IBAction)selectProfile:(id)sender {
-    if (_profileEditor) {
-        [_profileEditor updateTableViewSelection:@"Settings"];
-    }
-}
 @end

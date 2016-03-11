@@ -22,9 +22,6 @@
 
 @interface PFCProfileEditorSettings : NSViewController
 
-@property (weak) IBOutlet NSView *viewTableViewProfile;
-@property (weak) IBOutlet NSTableView *tableViewProfile;
-
 @property BOOL showKeysDisabled;
 @property BOOL showKeysHidden;
 @property BOOL showKeysSupervised;
@@ -47,8 +44,6 @@
 @property BOOL encryptProfile;
 
 @property (weak) IBOutlet NSTextField *textFieldProfileName;
-
-- (IBAction)selectProfile:(id)sender;
 
 - (id)initWithProfile:(NSDictionary *)profile profileEditor:(PFCProfileEditor *)profileEditor;
 - (NSDictionary *)displayKeys;

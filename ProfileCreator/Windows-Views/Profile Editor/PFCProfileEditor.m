@@ -39,6 +39,7 @@
 // -------------------------------------------------------------------------
 //  Toolbar
 // -------------------------------------------------------------------------
+@property (weak) IBOutlet NSView *viewWindow;
 
 // -------------------------------------------------------------------------
 //  Settings
@@ -235,8 +236,7 @@
     //  Select profile settings and set profile name setting as first responder
     // -------------------------------------------------------------------------
     if ([[_settings profileName] isEqualToString:PFCDefaultProfileName]) {
-        [[_settings tableViewProfile] selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-        [_settings selectProfile:self];
+        [self buttonSettings:self];
         [[self window] setInitialFirstResponder:[_settings textFieldProfileName]];
     } else {
 
@@ -949,20 +949,18 @@
 } // buttonToggleInfo
 
 - (void)updateTableViewSelection:(NSString *)tableViewIdentifier {
-    if ([tableViewIdentifier isEqualToString:@"Settings"]) {
-        [_manifest updateToolbarWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
-        [self showSettings];
-        [[_library tableViewLibrary] deselectAll:self];
-        [[_library tableViewProfile] deselectAll:self];
-    } else if ([tableViewIdentifier isEqualToString:@"Profile"]) {
-        [[_settings tableViewProfile] deselectAll:self];
+    if ([tableViewIdentifier isEqualToString:@"Profile"]) {
         [[_library tableViewLibrary] deselectAll:self];
     } else if ([tableViewIdentifier isEqualToString:@"Library"]) {
         [[_library tableViewProfile] deselectAll:self];
-        [[_settings tableViewProfile] deselectAll:self];
     }
 }
 
 - (IBAction)buttonSettings:(id)sender {
+    [_manifest updateToolbarWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
+    [_manifest saveSelectedManifest];
+    [self showSettings];
+    [[_library tableViewLibrary] deselectAll:self];
+    [[_library tableViewProfile] deselectAll:self];
 }
 @end

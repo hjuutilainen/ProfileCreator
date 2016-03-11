@@ -29,6 +29,7 @@
                 <outlet property="viewLibraryProfileSplitView" destination="KbT-sv-zbF" id="lV0-Ss-3mg"/>
                 <outlet property="viewLibrarySplitView" destination="dOs-pi-DS9" id="iKL-S7-GYp"/>
                 <outlet property="viewManifestSplitView" destination="iSH-YF-Ulb" id="7rE-5e-bQl"/>
+                <outlet property="viewWindow" destination="se5-gp-TjO" id="WHS-Jq-ZlF"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -238,11 +239,11 @@ Gw
                     <toolbarItem implicitItemIdentifier="4AB6246A-5A68-4F8C-B049-99AF56376F6E" label="Title" paletteLabel="Title" id="A2s-AH-OLi">
                         <nil key="toolTip"/>
                         <size key="minSize" width="38" height="17"/>
-                        <size key="maxSize" width="100" height="17"/>
+                        <size key="maxSize" width="110" height="19"/>
                         <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="wSf-bu-Bxr">
-                            <rect key="frame" x="0.0" y="14" width="38" height="17"/>
+                            <rect key="frame" x="0.0" y="14" width="110" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Preferences" id="pVs-39-zpJ">
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Profile Settings" id="pVs-39-zpJ">
                                 <font key="font" metaFont="systemLight" size="16"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -294,7 +295,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-3363" y="-1361"/>
+            <point key="canvasLocation" x="-3677" y="-1381"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
