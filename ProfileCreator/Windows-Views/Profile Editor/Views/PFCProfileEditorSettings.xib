@@ -569,6 +569,9 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <visualEffectView appearanceType="vibrantLight" blendingMode="behindWindow" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="KQI-Un-O1F">
+                                                        <rect key="frame" x="0.0" y="0.0" width="190" height="48"/>
+                                                    </visualEffectView>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Czh-HN-uID">
                                                         <rect key="frame" x="18" y="24" width="166" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Name" id="GeW-mK-wKz">
@@ -603,7 +606,11 @@
                                                     <constraint firstItem="AlK-5X-ucd" firstAttribute="leading" secondItem="3zQ-yl-r5a" secondAttribute="leading" id="9sE-jS-aqx"/>
                                                     <constraint firstAttribute="bottom" secondItem="AlK-5X-ucd" secondAttribute="bottom" id="BKT-ah-bLZ"/>
                                                     <constraint firstItem="2g7-nn-1P7" firstAttribute="leading" secondItem="Czh-HN-uID" secondAttribute="leading" id="BWO-IT-gj6"/>
+                                                    <constraint firstAttribute="trailing" secondItem="KQI-Un-O1F" secondAttribute="trailing" id="H40-PA-mAJ"/>
+                                                    <constraint firstItem="KQI-Un-O1F" firstAttribute="top" secondItem="3zQ-yl-r5a" secondAttribute="top" id="IXf-Pd-dwP"/>
+                                                    <constraint firstItem="KQI-Un-O1F" firstAttribute="leading" secondItem="3zQ-yl-r5a" secondAttribute="leading" id="LPf-6b-YHq"/>
                                                     <constraint firstAttribute="trailing" secondItem="Czh-HN-uID" secondAttribute="trailing" constant="8" id="Shr-t8-8Np"/>
+                                                    <constraint firstAttribute="bottom" secondItem="KQI-Un-O1F" secondAttribute="bottom" id="XkZ-pd-7ks"/>
                                                     <constraint firstItem="2g7-nn-1P7" firstAttribute="top" secondItem="Czh-HN-uID" secondAttribute="bottom" constant="3" id="scO-Sc-I2W"/>
                                                 </constraints>
                                                 <connections>

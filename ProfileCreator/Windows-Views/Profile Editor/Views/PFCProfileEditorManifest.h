@@ -17,21 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCProfileEditorManifestHeader.h"
 #import "PFCProfileEditorManifestTab.h"
 #import <Cocoa/Cocoa.h>
 @class PFCProfileEditor;
 
 @interface PFCProfileEditorManifest : NSViewController <NSTableViewDataSource, NSTableViewDelegate, PFCProfileEditorManifestTabDelegate>
 
-@property PFCProfileEditorManifestHeader *header;
-
 @property (readwrite) NSMutableDictionary *settingsManifest;
 
 @property NSUInteger selectedTab;
 
 - (id)initWithProfileEditor:(PFCProfileEditor *)profileEditor;
-- (void)updateManifestHeaderWithTitle:(NSString *)title icon:(NSImage *)icon;
+- (void)updateToolbarWithTitle:(NSString *)title icon:(NSImage *)icon;
 - (void)saveSelectedManifest;
 - (void)selectManifest:(NSDictionary *)manifest inTableView:(NSString *)tableViewIdentifier;
 - (NSInteger)errorForManifest:(NSDictionary *)manifest updateTabBar:(BOOL)updateTabBar;

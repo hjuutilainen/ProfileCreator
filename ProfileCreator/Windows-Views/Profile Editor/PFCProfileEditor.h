@@ -34,6 +34,12 @@
 - (id)initWithProfileDict:(NSDictionary *)profileDict mainWindow:(PFCMainWindow *)mainWindow;
 
 // -------------------------------------------------------------------------
+//  Toolbar
+// -------------------------------------------------------------------------
+@property (weak) IBOutlet NSImageView *imageViewToolbar;
+@property (weak) IBOutlet NSTextField *textFieldToolbar;
+
+// -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
 @property PFCProfileEditorSettings *settings;
@@ -48,7 +54,6 @@
 //  Manifest
 // -------------------------------------------------------------------------
 @property PFCProfileEditorManifest *manifest;
-@property (strong, readwrite) IBOutlet NSLayoutConstraint *constraintManifestHeaderHeight;
 - (void)showManifest;
 - (void)showManifestNoSettings;
 - (void)hideManifestStatus;

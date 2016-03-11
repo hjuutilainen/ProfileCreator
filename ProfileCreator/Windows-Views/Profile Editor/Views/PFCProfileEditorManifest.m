@@ -39,7 +39,10 @@
 @interface PFCProfileEditorManifest ()
 
 - (IBAction)buttonAddTab:(id)sender;
-@property (weak) IBOutlet NSButton *buttonAddTab;
+@property (strong) IBOutlet NSButton *buttonAddTab;
+@property (strong) IBOutlet NSStackView *stackViewTabBar;
+@property (strong) IBOutlet RFOverlayScrollView *scrollViewManifest;
+@property (strong) IBOutlet NSLayoutConstraint *constraintScollViewManifestTop;
 
 @property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
@@ -48,9 +51,9 @@
 
 @property (readwrite) BOOL showSettingsLocal;
 
-@property BOOL advancedSettings;
-
 @property BOOL tabBarHidden;
+
+@property BOOL advancedSettings;
 
 @property NSDictionary *selectedManifest;
 @property PFCPayloadLibrary selectedManifestLibrary;
@@ -58,7 +61,6 @@
 @property (readwrite) NSMutableDictionary *settingsLocalManifest;
 
 @property (weak) IBOutlet PFCTableView *tableViewManifestContent;
-@property (weak) IBOutlet NSStackView *stackViewTabBar;
 
 @end
 
@@ -77,8 +79,6 @@
 
         _arrayManifestContent = [[NSMutableArray alloc] init];
         _arrayManifestTabs = [[NSMutableArray alloc] init];
-
-        _header = [[PFCProfileEditorManifestHeader alloc] init];
 
         [self view];
     }
@@ -135,17 +135,9 @@
     // ------------------------------------------------------------------------------------------
     if (3 <= [manifestContentArray count]) {
         [_arrayManifestContent addObjectsFromArray:manifestContentArray];
-
-        if ([[_header view] isHidden]) {
-            [self updateManifestHeaderWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
-        }
-
+        [self updateToolbarWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
         [_profileEditor hideManifestStatus];
     } else {
-        if (![[_header view] isHidden]) {
-            [self hideManifestHeader];
-        }
-
         [_profileEditor showManifestNoSettings];
     }
     [_tableViewManifestContent reloadData];
@@ -181,24 +173,10 @@
     return [manifestContent copy];
 } // manifestContentForManifest
 
-- (void)updateManifestHeaderWithTitle:(NSString *)title icon:(NSImage *)icon {
-    [[_header headerTitle] setStringValue:title];
-    [[_header headerIcon] setImage:icon];
-    [self showManifestHeader];
-} // updateManifestHeaderWithTitle
-
-- (void)showManifestHeader {
-    [[_header view] setHidden:NO];
-    [[_profileEditor constraintManifestHeaderHeight] setConstant:48.0f];
-} // showManifestHeader
-
-- (void)hideManifestHeader {
-    [[_header view] setHidden:YES];
-    [[_profileEditor constraintManifestHeaderHeight] setConstant:0.0f];
-    if (![_buttonAddTab isHidden]) {
-        [_buttonAddTab setHidden:YES];
-    }
-} // hideManifestHeader
+- (void)updateToolbarWithTitle:(NSString *)title icon:(NSImage *)icon {
+    [[_profileEditor textFieldToolbar] setStringValue:title];
+    [[_profileEditor imageViewToolbar] setImage:icon];
+} // updateToolbarWithTitle:icon
 
 - (void)selectManifest:(NSDictionary *)manifest inTableView:(NSString *)tableViewIdentifier {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
@@ -262,8 +240,7 @@
     // ------------------------------------------------------------------------------------------
     if (3 <= [manifestContentArray count]) {
         [_arrayManifestContent addObjectsFromArray:[manifestContentArray copy]];
-
-        [self updateManifestHeaderWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
+        [self updateToolbarWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
         [_profileEditor showManifest];
 
         // -----------------------------------------------------------------
@@ -284,7 +261,7 @@
         // --------------------------------------------------------------------------
         //  Show/Hide tab view and button depending on current manifest and settings
         // --------------------------------------------------------------------------
-        [_buttonAddTab setHidden:![manifest[PFCManifestKeyAllowMultiplePayloads] boolValue]];
+        [self allowMultiplePayloads:[manifest[PFCManifestKeyAllowMultiplePayloads] boolValue]];
         if (manifestTabCount == 1) {
             [self setTabBarHidden:YES];
         } else {
@@ -299,15 +276,41 @@
         }
          */
     } else {
-        if (![[_header view] isHidden]) {
-            [self hideManifestHeader];
-        }
-
         [_profileEditor showManifestNoSettings];
     }
 
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
+}
+
+- (void)allowMultiplePayloads:(BOOL)allowMultiplePayloads {
+    if (allowMultiplePayloads && [_constraintScollViewManifestTop constant] == 0.0f) {
+        [_constraintScollViewManifestTop setConstant:24.0f];
+
+        [[self view] addSubview:_buttonAddTab positioned:NSWindowAbove relativeTo:nil];
+        [_buttonAddTab setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_buttonAddTab]-0-[_scrollViewManifest]"
+                                                                            options:0
+                                                                            metrics:nil
+                                                                              views:NSDictionaryOfVariableBindings(_buttonAddTab, _scrollViewManifest)]];
+        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_buttonAddTab(24)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonAddTab)]];
+
+        [[self view] addSubview:_stackViewTabBar positioned:NSWindowAbove relativeTo:nil];
+        [_stackViewTabBar setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_stackViewTabBar]-0-[_scrollViewManifest]"
+                                                                            options:0
+                                                                            metrics:nil
+                                                                              views:NSDictionaryOfVariableBindings(_stackViewTabBar, _scrollViewManifest)]];
+        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_stackViewTabBar]-0-[_buttonAddTab]"
+                                                                            options:0
+                                                                            metrics:nil
+                                                                              views:NSDictionaryOfVariableBindings(_stackViewTabBar, _buttonAddTab)]];
+
+    } else if (!allowMultiplePayloads && [_constraintScollViewManifestTop constant] == 24.0f) {
+        [_constraintScollViewManifestTop setConstant:0.0f];
+        [_stackViewTabBar removeFromSuperview];
+        [_buttonAddTab removeFromSuperview];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

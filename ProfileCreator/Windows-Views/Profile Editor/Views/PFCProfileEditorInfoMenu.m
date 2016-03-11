@@ -1,5 +1,5 @@
 //
-//  PFCProfileEditorManifestHeader.h
+//  PFCProfileEditorInfoMenu.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,11 +17,28 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
+#import "PFCProfileEditorInfo.h"
+#import "PFCProfileEditorInfoMenu.h"
 
-@interface PFCProfileEditorManifestHeader : NSViewController
+@interface PFCProfileEditorInfoMenu ()
 
-@property (weak) IBOutlet NSTextField *headerTitle;
-@property (weak) IBOutlet NSImageView *headerIcon;
+@property PFCProfileEditorInfo *info;
+
+@end
+
+@implementation PFCProfileEditorInfoMenu
+
+- (id)initWithProfileEditorInfo:(PFCProfileEditorInfo *)profileEditorInfo {
+    self = [super initWithNibName:@"PFCProfileEditorInfoMenu" bundle:nil];
+    if (self != nil) {
+        _info = profileEditorInfo;
+        [self view];
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
 
 @end

@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCProfileEditorInfoMenu.h"
 #import <Cocoa/Cocoa.h>
 @class PFCViewInfo;
 
@@ -30,6 +31,8 @@
 //  Delegate
 // ------------------------------------------------------
 @property (nonatomic, weak) id delegate;
+
+@property PFCProfileEditorInfoMenu *infoMenu;
 
 @property (weak) IBOutlet NSScrollView *scrollViewPayloadInfo;
 @property (weak) IBOutlet NSTableView *tableViewPayloadInfo;

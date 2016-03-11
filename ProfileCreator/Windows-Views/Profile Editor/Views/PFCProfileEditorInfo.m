@@ -20,10 +20,15 @@
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
 #import "PFCProfileEditorInfo.h"
+#import "PFCProfileEditorInfoMenu.h"
 #import "PFCTableViewCellsProfileInfo.h"
 #import "PFCViews.h"
 
 int const PFCTableViewPayloadInfoRowHeight = 17;
+
+@interface PFCProfileEditorInfo ()
+
+@end
 
 @implementation PFCProfileEditorInfo
 
@@ -31,8 +36,8 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
     self = [super initWithNibName:@"PFCProfileEditorInfo" bundle:nil];
     if (self != nil) {
         _delegate = delegate;
-
         _arrayPayloadInfo = [[NSMutableArray alloc] init];
+        _infoMenu = [[PFCProfileEditorInfoMenu alloc] initWithProfileEditorInfo:self];
     }
     return self;
 }

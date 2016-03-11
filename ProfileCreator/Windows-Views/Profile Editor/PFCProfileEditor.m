@@ -37,10 +37,15 @@
 @property (nonatomic, weak) PFCMainWindow *mainWindow;
 
 // -------------------------------------------------------------------------
+//  Toolbar
+// -------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
 @property PFCStatusView *viewStatusSettings;
-@property (weak) IBOutlet NSView *viewSettingsSplitView;
+@property (weak) IBOutlet NSButton *buttonSettings;
+- (IBAction)buttonSettings:(id)sender;
 
 // -------------------------------------------------------------------------
 //  Library
@@ -54,7 +59,6 @@
 //  Manifest
 // -------------------------------------------------------------------------
 @property (weak) IBOutlet NSView *viewManifestSplitView;
-@property (weak) IBOutlet NSView *viewManifestHeaderSplitView;
 
 // -------------------------------------------------------------------------
 //  ManifestFooter
@@ -73,7 +77,6 @@
 //  Info
 // -------------------------------------------------------------------------
 @property PFCStatusView *viewStatusInfo;
-@property (weak) IBOutlet PFCViewInfo *viewInfoHeader;     // FIXME - This will be moved
 @property (weak) IBOutlet NSView *viewInfoFooterSplitView; // FIXME - Not done yet
 @property (weak) IBOutlet NSView *viewInfoSplitView;
 @property (weak) IBOutlet NSView *viewInfoHeaderSplitView;
@@ -173,19 +176,18 @@
     // -------------------------------------------------------------------------
     [[self window] setDelegate:self];
     [[self window] setBackgroundColor:[NSColor whiteColor]];
+    [[self window] setTitleVisibility:NSWindowTitleHidden];
 
     // -------------------------------------------------------------------------
     //  Library
     // -------------------------------------------------------------------------
     [PFCGeneralUtility insertSubview:[_library viewProfile] inSuperview:_viewLibraryProfileSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_library viewLibrary] inSuperview:_viewLibrarySplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:[_settings viewTableViewProfile] inSuperview:_viewSettingsSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_library viewLibrarySearch] inSuperview:_viewLibraryFooterSuperview hidden:NO];
 
     // -------------------------------------------------------------------------
     //  Manifest
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:[[_manifest header] view] inSuperview:_viewManifestHeaderSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_manifest view] inSuperview:_viewManifestSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_viewStatusSettings view] inSuperview:_viewManifestSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:[_settings view] inSuperview:_viewManifestSplitView hidden:YES];
@@ -193,9 +195,9 @@
     // -------------------------------------------------------------------------
     //  Info
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:_viewInfoHeader inSuperview:_viewInfoHeaderSplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewStatusInfo view] inSuperview:_viewInfoSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_info view] inSuperview:_viewInfoSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:[[_info infoMenu] view] inSuperview:_viewInfoHeaderSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:[_viewStatusInfo view] inSuperview:_viewInfoSplitView hidden:NO];
 
     // -------------------------------------------------------------------------
     //  Register KVO observers
@@ -948,7 +950,7 @@
 
 - (void)updateTableViewSelection:(NSString *)tableViewIdentifier {
     if ([tableViewIdentifier isEqualToString:@"Settings"]) {
-        [_manifest updateManifestHeaderWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
+        [_manifest updateToolbarWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
         [self showSettings];
         [[_library tableViewLibrary] deselectAll:self];
         [[_library tableViewProfile] deselectAll:self];
@@ -961,4 +963,6 @@
     }
 }
 
+- (IBAction)buttonSettings:(id)sender {
+}
 @end
