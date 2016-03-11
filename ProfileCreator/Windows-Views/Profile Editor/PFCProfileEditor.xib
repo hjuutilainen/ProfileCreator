@@ -38,7 +38,7 @@
         <window title="Profile Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" visibleAtLaunch="NO" appearanceType="aqua" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="240" width="892" height="550"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" focusRingType="none" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="892" height="550"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -238,7 +238,7 @@ Gw
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="4AB6246A-5A68-4F8C-B049-99AF56376F6E" label="Title" paletteLabel="Title" id="A2s-AH-OLi">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="38" height="17"/>
+                        <size key="minSize" width="38" height="19"/>
                         <size key="maxSize" width="110" height="19"/>
                         <textField key="view" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="wSf-bu-Bxr">
                             <rect key="frame" x="0.0" y="14" width="110" height="19"/>
@@ -301,7 +301,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="464" height="165"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="ZPH-fG-Mc4">
                 <rect key="frame" x="0.0" y="0.0" width="464" height="165"/>
                 <autoresizingMask key="autoresizingMask"/>

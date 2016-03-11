@@ -859,18 +859,7 @@
     if (tabIndex == _selectedTab) {
         DDLogVerbose(@"Currently selected tab was closed");
 
-        if ([_arrayManifestTabs count] == 1) {
-
-            // -----------------------------------------------------------------
-            //  If there is only one tab remaining in the array, select it
-            // -----------------------------------------------------------------
-            [self selectTab:0 saveSettings:NO sender:self];
-
-            // -----------------------------------------------------------------
-            //  Hide the tab bar when there's only one payload configured
-            // -----------------------------------------------------------------
-            [self setTabBarHidden:YES];
-        } else if (tabIndex == [_arrayManifestTabs count]) {
+        if (tabIndex == [_arrayManifestTabs count]) {
 
             // --------------------------------------------------------------------
             //  If the closed tab was last in the view, select the "new" last view
@@ -902,13 +891,22 @@
         //  Closed tab was left of the current selection, update the tab selected
         // -----------------------------------------------------------------------
         [self selectTab:_selectedTab saveSettings:NO sender:self];
+    }
 
-        // ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    //  Hide the tab bar when there's only one payload configured
+    // ---------------------------------------------------------------------
+    if ([_arrayManifestTabs count] == 1) {
+
+        // -----------------------------------------------------------------
+        //  If there is only one tab remaining in the array, select it
+        // -----------------------------------------------------------------
+        [self selectTab:0 saveSettings:NO sender:self];
+
+        // -----------------------------------------------------------------
         //  Hide the tab bar when there's only one payload configured
-        // ---------------------------------------------------------------------
-        if ([_arrayManifestTabs count] == 1) {
-            [self setTabBarHidden:YES];
-        }
+        // -----------------------------------------------------------------
+        [self setTabBarHidden:YES];
     }
 
     [self updateTabBarTitles];

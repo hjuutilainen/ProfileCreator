@@ -80,27 +80,13 @@
 - (void)updateWindowSizeForView:(NSView *)view {
 
     NSRect frame = [[self window] frame];
-    NSRect oldView = [_viewPreferences frame];
+    NSRect oldView = [[[self window] contentView] frame];
     NSRect newView = [view frame];
 
-    // frame.origin.y = ( frame.size.height + (( frame.size.height - oldView.size.height ) + newView.size.height ) );
+    frame.origin.y = frame.origin.y + (oldView.size.height - newView.size.height);
     frame.size.height = ((frame.size.height - oldView.size.height) + newView.size.height);
 
     [[self window] setFrame:frame display:YES animate:YES];
-
-    /*
-     NSDictionary *windowResize = [NSDictionary dictionaryWithObjectsAndKeys: [self window], NSViewAnimationTargetKey,[NSValue valueWithRect: frame],NSViewAnimationEndFrameKey, nil];
-     NSDictionary *oldFadeOut = [NSDictionary dictionaryWithObjectsAndKeys:@{}, NSViewAnimationTargetKey,NSViewAnimationFadeOutEffect,NSViewAnimationEffectKey, nil];
-     NSDictionary *newFadeIn = [NSDictionary dictionaryWithObjectsAndKeys:@{}, NSViewAnimationTargetKey,NSViewAnimationFadeInEffect, NSViewAnimationEffectKey, nil];
-
-     NSArray *animations = [NSArray arrayWithObjects:windowResize, newFadeIn, oldFadeOut, nil];
-     NSViewAnimation *animation = [[NSViewAnimation alloc] initWithViewAnimations: animations];
-
-     [animation setAnimationBlockingMode: NSAnimationBlocking];
-     [animation setAnimationCurve: NSAnimationEaseIn];
-     [animation setDuration: 2];
-     [animation startAnimation];
-     */
 }
 
 @end

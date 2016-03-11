@@ -26,7 +26,7 @@
                 <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="81" horizontalPageScroll="10" verticalLineScroll="81" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPe-jL-F1J" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="509" height="1717"/>
                     <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="lRk-Zd-2KF">
-                        <rect key="frame" x="0.25" y="0.0" width="509" height="1717"/>
+                        <rect key="frame" x="0.0" y="0.0" width="509" height="1717"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="81" rowSizeStyle="automatic" viewBased="YES" id="jL4-4V-5fE" userLabel="TableViewSettings" customClass="PFCTableView">
@@ -1531,7 +1531,7 @@
             <connections>
                 <binding destination="-2" name="hidden" keyPath="self.tabBarHidden" id="p8Z-tv-fQP"/>
             </connections>
-            <point key="canvasLocation" x="-20.5" y="12"/>
+            <point key="canvasLocation" x="-186.5" y="-283"/>
         </stackView>
         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nTe-86-tuV">
             <rect key="frame" x="0.0" y="0.0" width="24" height="11"/>
