@@ -35,7 +35,7 @@
     self = [super initWithNibName:@"PFCMainWindowPreviewPayload" bundle:nil];
     if (self != nil) {
         [[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self addObserver:self forKeyPath:@"payloadErrorCount" options:0 context:nil];
+        [self addObserver:self forKeyPath:NSStringFromSelector(@selector(payloadErrorCount)) options:0 context:nil];
         _isCollapsed = YES;
     }
     return self;
@@ -58,7 +58,7 @@
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"payloadErrorCount"];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(payloadErrorCount))];
 } // dealloc
 
 - (void)viewDidLoad {

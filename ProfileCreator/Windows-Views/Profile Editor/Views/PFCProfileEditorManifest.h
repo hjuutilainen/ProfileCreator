@@ -25,6 +25,11 @@
 
 @property (readwrite) NSMutableDictionary *settingsManifest;
 
+@property (weak) IBOutlet NSView *viewPopUpDisplaySettings;
+
+@property (readwrite) BOOL showKeysHidden;
+@property (readwrite) BOOL showKeysDisabled;
+
 @property NSUInteger selectedTab;
 
 - (id)initWithProfileEditor:(PFCProfileEditor *)profileEditor;

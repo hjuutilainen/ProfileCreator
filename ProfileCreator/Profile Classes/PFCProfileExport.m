@@ -97,7 +97,7 @@
     //  Get index of general settings and remove it from manifest array
     // -------------------------------------------------------------------------
     NSUInteger index = [payloadArray indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadType] isEqualToString:@"com.apple.profile"];
+      return [item[PFCManifestKeyPayloadType] isEqualToString:@"com.apple.profile"];
     }];
 
     DDLogDebug(@"Profile settings index in payload array: %lu", (unsigned long)index);
@@ -107,7 +107,7 @@
         return;
     }
 
-    NSMutableDictionary *profileRootKeys = [[payloadArray objectAtIndex:index] mutableCopy];
+    NSMutableDictionary *profileRootKeys = [payloadArray[index] mutableCopy];
     [payloadArray removeObjectAtIndex:index];
     [profile addEntriesFromDictionary:[self profileRootKeysFromGeneralPayload:profileRootKeys]];
 
@@ -300,7 +300,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  If a PayloadValue was found in the array, update the payload
     // -------------------------------------------------------------------------
     if (idxPayloadValue != NSNotFound) {
-        NSDictionary *payloadValueDict = [selectedValueArray objectAtIndex:idxPayloadValue]; // Same as manifestContentDict
+        NSDictionary *payloadValueDict = selectedValueArray[idxPayloadValue]; // Same as manifestContentDict
 
         // ---------------------------------------------------------------------
         //  Remove the PayloadValue from the array
@@ -354,7 +354,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  Get index of current payload in payload array
         // ---------------------------------------------------------------------
         NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-          return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUID];
+          return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUID];
         }];
 
         // ----------------------------------------------------------------------------------
@@ -396,7 +396,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  If a SharedKey was found in the array, update the payload
     // -------------------------------------------------------------------------
     if (idxSharedKey != NSNotFound) {
-        NSDictionary *sharedKeyDict = [selectedValueArray objectAtIndex:idxSharedKey];
+        NSDictionary *sharedKeyDict = selectedValueArray[idxSharedKey];
 
         // ---------------------------------------------------------------------
         //  Remove the SharedKey from the array
@@ -603,7 +603,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -768,7 +768,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -887,7 +887,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  Get index of current payload in payload array
         // ---------------------------------------------------------------------
         NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-          return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDTextField ?: @""];
+          return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDTextField ?: @""];
         }];
 
         // ----------------------------------------------------------------------------------
@@ -941,7 +941,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -1066,7 +1066,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -1175,7 +1175,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -1264,7 +1264,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------

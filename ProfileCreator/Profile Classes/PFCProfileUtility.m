@@ -119,7 +119,9 @@
 
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_savedProfilesFolderURL path] ?: @"" error:&error];
     if ([attributes count] != 0) {
-        return (NSDate *)[attributes objectForKey:NSFileModificationDate];
+        return (NSDate *)attributes[NSFileModificationDate];
+    } else {
+        DDLogError(@"%@", [error localizedDescription]);
     }
     return nil;
 }
@@ -131,9 +133,6 @@
 
     NSDate *modificationDate = [self savedProfilesFolderModificationDate];
     if (modificationDate) {
-        DDLogDebug(@"Profile save folder modification date: %@", modificationDate);
-        DDLogDebug(@"Profile save folder cached modification date: %@", _savedProfilesModificationDate);
-
         if (_savedProfilesModificationDate) {
             if ([modificationDate isEqualToDate:_savedProfilesModificationDate]) {
                 DDLogDebug(@"Profile save folder have not changed, returning cached profile array");

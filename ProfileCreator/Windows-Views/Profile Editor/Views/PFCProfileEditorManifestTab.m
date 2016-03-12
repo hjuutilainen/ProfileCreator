@@ -53,7 +53,7 @@
     // --------------------------------------------------------------
     //  Add Notification Observers
     // --------------------------------------------------------------
-    [self addObserver:self forKeyPath:@"isSelected" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(isSelected)) options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (id)initWithFrame:(CGRect)aRect {
@@ -72,7 +72,7 @@
 
 - (void)dealloc {
     _delegate = nil;
-    [self removeObserver:self forKeyPath:@"isSelected" context:nil];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(isSelected)) context:nil];
 } // dealloc
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {

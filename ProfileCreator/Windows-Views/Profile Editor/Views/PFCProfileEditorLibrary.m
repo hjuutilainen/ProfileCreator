@@ -114,6 +114,9 @@
     if (_tableViewLibrary) {
         [_tableViewLibrary setDelegate:nil];
     }
+    if (_tableViewProfile) {
+        [_tableViewProfile setDelegate:nil];
+    }
 } // dealloc
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -351,13 +354,13 @@
 
     if (sender == _tableViewLibrary) {
         if (0 <= selectedRow && selectedRow < [_arrayLibrary count]) {
-            [self setSelectedManifest:[_arrayLibrary objectAtIndex:selectedRow]];
+            [self setSelectedManifest:_arrayLibrary[selectedRow]];
         } else {
             return;
         }
     } else if (sender == _tableViewProfile) {
         if (0 <= selectedRow && selectedRow < [_arrayProfile count]) {
-            [self setSelectedManifest:[_arrayProfile objectAtIndex:selectedRow]];
+            [self setSelectedManifest:_arrayProfile[selectedRow]];
         } else {
             return;
         }
@@ -475,7 +478,7 @@
 
 - (void)reloadManifest:(NSDictionary *)manifest {
     NSUInteger index = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:manifest[PFCManifestKeyDomain] ?: @""];
+      return [item[PFCManifestKeyDomain] isEqualToString:manifest[PFCManifestKeyDomain] ?: @""];
     }];
 
     if (index != NSNotFound) {
@@ -590,7 +593,7 @@
     //  Find index of menu item com.apple.general and move it to the top of array payload profile
     // -------------------------------------------------------------------------------------------
     NSUInteger index = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [[item objectForKey:PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
+      return [item[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
     }];
 
     if (index != NSNotFound) {
@@ -715,7 +718,7 @@
         return;
     }
 
-    NSDictionary *manifestDict = [tableViewArray objectAtIndex:row];
+    NSDictionary *manifestDict = tableViewArray[row];
 
     // -------------------------------------------------------------------------------
     //  MenuItem - "Show Source In Finder"
@@ -739,7 +742,7 @@
         return;
     }
 
-    NSDictionary *manifestDict = [tableViewArray objectAtIndex:_clickedPayloadTableViewRow];
+    NSDictionary *manifestDict = tableViewArray[_clickedPayloadTableViewRow];
 
     // ----------------------------------------------------------------------------------------
     //  If key 'PlistPath' is set, check if it's a valid path. If it is, open it in Finder
@@ -751,7 +754,7 @@
         if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
         } else {
-            NSLog(@"[ERROR] %@", [error localizedDescription]);
+            DDLogError(@"%@", [error localizedDescription]);
         }
     }
 } // menuItemShowInFinder

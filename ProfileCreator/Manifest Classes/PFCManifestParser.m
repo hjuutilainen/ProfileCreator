@@ -202,8 +202,6 @@
 
     } else if ([cellType length] != 0) {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
-    } else {
-        // NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
 
     return @[];
@@ -287,7 +285,7 @@
     // -------------------------------------------------------------------------
     NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     if ([selectedItem length] == 0 || ![availableValues containsObject:selectedItem]) {
-        NSLog(@"[WARNING] PopUpButton selection is invalid, selecting first available item");
+        DDLogWarn(@"PopUpButton selection is invalid, selecting first available item");
         selectedItem = [availableValues firstObject];
     }
 
@@ -411,9 +409,9 @@
         // ---------------------------------------------------------------------------
         if (![[valueKeys[value] class] isSubclassOfClass:[NSArray class]]) {
             /*
-             NSLog(@"[DEBUG] Selected value is: %@", value);
-             NSLog(@"[DEBUG] Selected value class is: %@", [valueKeys[value] class]);
-             NSLog(@"[DEBUG] Available ValueKeys: %@", valueKeys);
+             DDLogDebug(@"Selected value is: %@", value);
+             DDLogDebug(@"Selected value class is: %@", [valueKeys[value] class]);
+             DDLogDebug(@"Available ValueKeys: %@", valueKeys);
              */
             return @[];
         }
@@ -424,7 +422,6 @@
         // ---------------------------------------------------------------------
         NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier] ?: @"";
         if ([identifier length] == 0) {
-            NSLog(@"[ERROR] No identifier!");
             return @[];
         }
 
@@ -451,7 +448,7 @@
                 if ([valueKeysShared count] != 0) {
                     mutableValueDict = valueKeysShared[sharedKey];
                 } else {
-                    NSLog(@"Shared Key is defined, but no ValueKeysShared dict was found!");
+                    DDLogError(@"Shared Key is defined, but no ValueKeysShared dict was found!");
                     continue;
                 }
             } else {
@@ -837,7 +834,7 @@
                 } else if ([valueTypeString isEqualToString:PFCValueTypeBoolean]) {
                     contentDict[key] = @{PFCSettingsKeyValue : dict[key]};
                 } else {
-                    // NSLog(@"key=%@", dict[key]);
+                    DDLogDebug(@"TableViewContent, key=%@", dict[key]);
                 }
             }
 
@@ -979,11 +976,7 @@
         return [self verifyCellTypeTextField:manifestContentDict settings:settings];
 
     } else if ([cellType length] != 0) {
-
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
-    } else {
-
-        // NSLog(@"[DEBUG] No CellType for manifest content dict: %@", manifestContentDict);
     }
 
     return @{};
@@ -1037,7 +1030,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
     BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
     NSString *value = contentDictSettings[PFCSettingsKeyValue];
@@ -1064,7 +1057,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
 
     BOOL required = [manifestContentDict[@"Required"] boolValue];
@@ -1092,7 +1085,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
 
     BOOL required = [manifestContentDict[@"Required"] boolValue];
@@ -1120,7 +1113,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
     // Host
     NSMutableArray *array = [NSMutableArray array];
@@ -1176,7 +1169,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
     // Host
     NSMutableArray *array = [NSMutableArray array];
@@ -1232,7 +1225,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
     BOOL required = [manifestContentDict[@"Required"] boolValue];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
@@ -1273,7 +1266,7 @@
 
     NSDictionary *contentDictSettings = settings[identifier];
     if ([contentDictSettings count] == 0) {
-        // NSLog(@"No settings!");
+        DDLogDebug(@"No settings!");
     }
     // BOOL required = [cellDict[@"Required"] boolValue];
     NSString *filePath = contentDictSettings[@"FilePath"];
@@ -1300,7 +1293,7 @@
                 return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
             }
         } else {
-            NSLog(@"[ERROR] %@", [error localizedDescription]);
+            DDLogError(@"%@", [error localizedDescription]);
         }
     }
 

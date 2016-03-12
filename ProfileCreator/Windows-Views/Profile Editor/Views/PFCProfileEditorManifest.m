@@ -49,11 +49,11 @@
 @property NSMutableArray *arrayManifestContent;
 @property NSMutableArray *arrayManifestTabs;
 
-@property (readwrite) BOOL showSettingsLocal;
+@property (readwrite) BOOL showValuesSource;
+@property (readwrite) BOOL showColumnDisabled;
+@property (weak) IBOutlet NSButton *checkboxShowKeysSupervised;
 
 @property BOOL tabBarHidden;
-
-@property BOOL advancedSettings;
 
 @property NSDictionary *selectedManifest;
 @property PFCPayloadLibrary selectedManifestLibrary;
@@ -80,10 +80,26 @@
         _arrayManifestContent = [[NSMutableArray alloc] init];
         _arrayManifestTabs = [[NSMutableArray alloc] init];
 
+        // Setup some defaults
+        _showColumnDisabled = NO;
+        _showValuesSource = YES;
+        _showKeysHidden = NO;
+        _showKeysDisabled = NO;
+
         [self view];
     }
     return self;
 } // initWithProfileEditor
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showColumnDisabled)) context:nil];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showValuesSource)) context:nil];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysHidden)) context:nil];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysDisabled)) context:nil];
+    if ([_profileEditor settings]) {
+        [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) context:nil];
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -97,6 +113,19 @@
 } // viewDidLoad
 
 - (void)viewSetup {
+
+    // -------------------------------------------------------------------------
+    //  Register KVO observers
+    // -------------------------------------------------------------------------
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showColumnDisabled)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showValuesSource)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysHidden)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysDisabled)) options:NSKeyValueObservingOptionNew context:nil];
+    if ([_profileEditor settings]) {
+        [[_profileEditor settings] addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:NSKeyValueObservingOptionNew context:nil];
+        [_checkboxShowKeysSupervised bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:nil];
+    }
+
     [self setupTabBar];
     [self updateManifestColumns];
 } // viewSetup
@@ -115,7 +144,7 @@
 - (void)updateManifestColumns {
     for (NSTableColumn *column in [_tableViewManifestContent tableColumns]) {
         if ([[column identifier] isEqualToString:@"ColumnSettingsEnabled"]) {
-            [column setHidden:!_advancedSettings];
+            [column setHidden:!_showColumnDisabled];
         } else if ([[column identifier] isEqualToString:@"ColumnMinOS"]) {
             [column setHidden:YES];
         }
@@ -352,7 +381,7 @@
                 tableView:tableView
                 manifestContentDict:manifestContentDict
                 userSettingsDict:_settingsManifest[identifier] ?: @{}
-                localSettingsDict:(_showSettingsLocal) ? _settingsLocalManifest[identifier] : @{}
+                localSettingsDict:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
                 displayKeys:[[_profileEditor settings] displayKeys]
                 row:row
                 sender:self];
@@ -365,7 +394,7 @@
 
             NSDictionary *userSettingsDict = _settingsManifest[identifier];
             NSDictionary *localSettingsDict;
-            if (_showSettingsLocal) {
+            if (_showValuesSource) {
                 localSettingsDict = _settingsLocalManifest[identifier];
             }
 
@@ -420,6 +449,25 @@
         [rowView setBackgroundColor:[NSColor clearColor]];
     }
 } // tableView:didAddRowView:forRow
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark NSKeyValueObserving
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
+    if ([keyPath isEqualToString:@"showColumnDisabled"]) {
+        [self updateManifestColumns];
+    } else if ([keyPath isEqualToString:@"showValuesSource"]) {
+        [_tableViewManifestContent beginUpdates];
+        [_tableViewManifestContent reloadData];
+        [_tableViewManifestContent endUpdates];
+    } else if ([keyPath isEqualToString:@"showKeysDisabled"] || [keyPath isEqualToString:@"showKeysHidden"]) {
+        [self updateTableViewSettingsFromManifest:_selectedManifest];
+    } else if ([keyPath isEqualToString:@"showKeysSupervised"]) {
+        [self updateTableViewSettingsFromManifest:_selectedManifest];
+    }
+} // observeValueForKeyPath:ofObject:change:context
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -793,7 +841,7 @@
         [manifestSettings addObject:[settings copy]];
     } else {
         DDLogDebug(@"Replacing current settings at index %ld", (long)manifestTabIndex);
-        [manifestSettings replaceObjectAtIndex:manifestTabIndex withObject:[settings copy]];
+        manifestSettings[manifestTabIndex] = [settings copy];
     }
 
     // -------------------------------------------------------------------------
@@ -823,7 +871,6 @@
     }
 
     PFCProfileEditorManifestTabView *view = sender;
-    DDLogVerbose(@"Sender view: %@", view);
     if (view != nil) {
         if ([[_stackViewTabBar views] containsObject:view]) {
             DDLogDebug(@"Removing tab view from stack view!");
@@ -914,6 +961,8 @@
 } // tabIndexClose:sender
 
 - (void)updateTableViewSettingsFromManifestContentDict:(NSDictionary *)manifestContentDict atRow:(NSInteger)row {
+
+#warning check that settings isn't currently selected.
 
     // -------------------------------------------------------------------------
     //  Sanity check so that:   Row isn't less than 0
@@ -1014,7 +1063,7 @@
     //  Make sure it's a settings segmented control
     // -------------------------------------------------------------------------
     if (![[[segmentedControl superview] class] isSubclassOfClass:[PFCSegmentedControlCellView class]]) {
-        NSLog(@"[ERROR] SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
+        DDLogError(@"SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
         return;
     }
 
@@ -1023,7 +1072,7 @@
     // -------------------------------------------------------------------------
     NSNumber *segmentedControlTag = @([segmentedControl tag]);
     if (segmentedControlTag == nil) {
-        NSLog(@"[ERROR] SegmentedControl: %@ tag is nil", segmentedControl);
+        DDLogError(@"SegmentedControl: %@ tag is nil", segmentedControl);
         return;
     }
     NSInteger row = [segmentedControlTag integerValue];
@@ -1036,13 +1085,13 @@
 
         NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
         if ([selectedSegment length] == 0) {
-            NSLog(@"[ERROR] SegmentedControl: %@ selected segment is nil", segmentedControl);
+            DDLogError(@"SegmentedControl: %@ selected segment is nil", segmentedControl);
             return;
         }
 
         NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
         manifestContentDict[PFCSettingsKeyValue] = @([segmentedControl selectedSegment]);
-        [_arrayManifestContent replaceObjectAtIndex:(NSUInteger)row withObject:[manifestContentDict copy]];
+        _arrayManifestContent[(NSUInteger)row] = [manifestContentDict copy];
 
         // ---------------------------------------------------------------------
         //  Add subkeys for selected segmented control
@@ -1190,7 +1239,7 @@
     // -------------------------------------------------------------------------
     NSNumber *datePickerTag = @([datePicker tag]);
     if (datePickerTag == nil) {
-        NSLog(@"[ERROR] DatePicker: %@ tag is nil", datePicker);
+        DDLogError(@"DatePicker: %@ tag is nil", datePicker);
         return;
     }
     NSInteger row = [datePickerTag integerValue];
@@ -1202,7 +1251,7 @@
     if ([identifier length] != 0) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
-        NSLog(@"[ERROR] No key returned from manifest dict!");
+        DDLogError(@"No key returned from manifest dict!");
         return;
     }
 
@@ -1365,7 +1414,7 @@
     if ([identifier length] != 0) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
-        NSLog(@"[ERROR] No key returned from manifest dict!");
+        DDLogError(@"No key returned from manifest dict!");
         return;
     }
 
@@ -1375,7 +1424,7 @@
             settingsDict[PFCSettingsKeyEnabled] = @(state);
             _settingsManifest[identifier] = [settingsDict copy];
 
-            if (![[_profileEditor settings] showKeysDisabled]) {
+            if (!_showKeysDisabled) {
                 [self updateTableViewSettingsFromManifest:_selectedManifest];
             } else {
                 [_tableViewManifestContent beginUpdates];

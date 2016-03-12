@@ -59,31 +59,29 @@
     if (self != nil) {
         _profile = profile;
         _profileEditor = profileEditor;
-        _showKeysDisabled = YES;
-        _showKeysHidden = NO;
+
+        _showKeysSupervised = NO;
         [self view];
     }
     return self;
 } // init
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"osxMinVersion"];
-    [self removeObserver:self forKeyPath:@"osxMaxVersion"];
-    [self removeObserver:self forKeyPath:@"iosMinVersion"];
-    [self removeObserver:self forKeyPath:@"iosMaxVersion"];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(osxMinVersion))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(osxMaxVersion))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion))];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (_profile) {
-        [self addObserver:self forKeyPath:@"osxMinVersion" options:NSKeyValueObservingOptionNew context:nil];
-        [self addObserver:self forKeyPath:@"osxMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
-        [self addObserver:self forKeyPath:@"iosMinVersion" options:NSKeyValueObservingOptionNew context:nil];
-        [self addObserver:self forKeyPath:@"iosMaxVersion" options:NSKeyValueObservingOptionNew context:nil];
-        [self setupSettings];
-        [self setupPopUpButtonOsVersion];
-        [self setupDisplaySettings];
-    }
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(osxMinVersion)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(osxMaxVersion)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion)) options:NSKeyValueObservingOptionNew context:nil];
+    [self setupSettings];
+    [self setupPopUpButtonOsVersion];
+    [self setupDisplaySettings];
 }
 
 - (void)setupSettings {
@@ -134,8 +132,8 @@
         PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
         PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
-        PFCManifestKeyDisabled : @(_showKeysDisabled),
-        PFCManifestKeyHidden : @(_showKeysHidden),
+        PFCManifestKeyDisabled : @([[_profileEditor manifest] showKeysDisabled]),
+        PFCManifestKeyHidden : @([[_profileEditor manifest] showKeysHidden]),
         PFCManifestKeySupervisedOnly : @(_showKeysSupervised)
     };
 } // displayKeys
@@ -275,7 +273,8 @@
     // -------------------------------------------------------------------------
     //  Set "Advanced Settings" and "Supervised"
     // -------------------------------------------------------------------------
-    //[self setAdvancedSettings:[displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
+    // FIXME - What is this trying to do?
+    //[self setShowAdvancedSettings:[displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] boolValue]];
     [self setShowKeysSupervised:[displaySettings[PFCProfileDisplaySettingsKeySupervised] boolValue]];
 
     NSDictionary *platform = displaySettings[PFCProfileDisplaySettingsKeyPlatform] ?: @{};
@@ -284,7 +283,6 @@
     // -------------------------------------------------------------------------
     [self setIncludePlatformOSX:[platform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]];
     NSString *osxMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"";
-    DDLogDebug(@"OS X Max Version: %@", osxMaxVersion);
     if ([osxMaxVersion length] != 0 && [[_popUpButtonPlatformOSXMaxVersion itemTitles] containsObject:osxMaxVersion]) {
         [self setOsxMaxVersion:osxMaxVersion];
     } else {
@@ -293,7 +291,6 @@
     [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:_osxMaxVersion];
 
     NSString *osxMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"";
-    DDLogDebug(@"OS X Min Version: %@", osxMinVersion);
     if ([osxMinVersion length] != 0 && [[_popUpButtonPlatformOSXMinVersion itemTitles] containsObject:osxMinVersion]) {
         [self setOsxMinVersion:osxMinVersion];
     } else {
@@ -306,7 +303,6 @@
     // -------------------------------------------------------------------------
     [self setIncludePlatformiOS:[platform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]];
     NSString *iosMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"";
-    DDLogDebug(@"iOS Max Version: %@", iosMaxVersion);
     if ([iosMaxVersion length] != 0 && [[_popUpButtonPlatformiOSMaxVersion itemTitles] containsObject:iosMaxVersion]) {
         [self setIosMaxVersion:iosMaxVersion];
     } else {
@@ -315,7 +311,6 @@
     [_popUpButtonPlatformiOSMaxVersion selectItemWithTitle:_iosMaxVersion];
 
     NSString *iosMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMinVersion] ?: @"";
-    DDLogDebug(@"iOS Min Version: %@", iosMinVersion);
     if ([iosMinVersion length] != 0 && [[_popUpButtonPlatformiOSMinVersion itemTitles] containsObject:iosMinVersion]) {
         [self setIosMinVersion:iosMinVersion];
     } else {

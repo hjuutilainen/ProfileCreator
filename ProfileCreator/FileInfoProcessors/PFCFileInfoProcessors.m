@@ -88,10 +88,12 @@
     fileInfoDict[PFCFileInfoDescription1] = [_fileURL path] ?: @"";
 
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:&error];
-    if (fileAttributes) {
+    if ([fileAttributes count] != 0) {
         NSString *fileSize = [NSByteCountFormatter stringFromByteCount:(long long)[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
         fileInfoDict[PFCFileInfoLabel2] = @"Size:";
         fileInfoDict[PFCFileInfoDescription2] = fileSize ?: @"";
+    } else {
+        DDLogError(@"%@", [error localizedDescription]);
     }
 
     return [fileInfoDict copy];

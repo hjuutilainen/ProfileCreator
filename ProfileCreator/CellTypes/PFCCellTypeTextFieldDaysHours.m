@@ -32,15 +32,15 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
-        [self addObserver:self forKeyPath:@"stepperValueRemovalIntervalDays" options:NSKeyValueObservingOptionNew context:nil];
-        [self addObserver:self forKeyPath:@"stepperValueRemovalIntervalHours" options:NSKeyValueObservingOptionNew context:nil];
+        [self addObserver:self forKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalDays)) options:NSKeyValueObservingOptionNew context:nil];
+        [self addObserver:self forKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours)) options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 } // initWithCoder
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"stepperValueRemovalIntervalDays"];
-    [self removeObserver:self forKeyPath:@"stepperValueRemovalIntervalHours"];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalDays))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours))];
 } // dealloc
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
@@ -111,16 +111,30 @@
     // ---------------------------------------------------------------------
     [[cellView settingDays] setEnabled:enabled];
     [[cellView settingDays] setTag:row];
-    [[cellView settingDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepperDays] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalDays" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepperDays] bind:NSValueBinding
+                               toObject:self
+                            withKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalDays))
+                                options:@{
+                                    NSContinuouslyUpdatesValueBindingOption : @YES
+                                }];
 
     // ---------------------------------------------------------------------
     //  Hours
     // ---------------------------------------------------------------------
     [[cellView settingHours] setEnabled:enabled];
     [[cellView settingHours] setTag:row];
-    [[cellView settingHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepperHours] bind:@"value" toObject:self withKeyPath:@"stepperValueRemovalIntervalHours" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingHours] bind:NSValueBinding
+                         toObject:self
+                      withKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours))
+                          options:@{
+                              NSContinuouslyUpdatesValueBindingOption : @YES
+                          }];
+    [[cellView settingStepperHours] bind:NSValueBinding
+                                toObject:self
+                             withKeyPath:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours))
+                                 options:@{
+                                     NSContinuouslyUpdatesValueBindingOption : @YES
+                                 }];
 
     // ---------------------------------------------------------------------
     //  Tool Tip

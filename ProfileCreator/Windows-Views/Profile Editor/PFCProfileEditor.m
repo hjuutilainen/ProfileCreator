@@ -47,6 +47,7 @@
 @property PFCStatusView *viewStatusSettings;
 @property (weak) IBOutlet NSButton *buttonSettings;
 - (IBAction)buttonSettings:(id)sender;
+@property (weak) IBOutlet NSViewController *viewControllerDisplaySettings;
 
 // -------------------------------------------------------------------------
 //  Library
@@ -150,16 +151,6 @@
     return self;
 } // init
 
-- (void)dealloc {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    [self removeObserver:self forKeyPath:@"advancedSettings" context:nil];
-    [self removeObserver:self forKeyPath:@"showSettingsLocal" context:nil];
-    [_settings removeObserver:self forKeyPath:@"showKeysDisabled" context:nil];
-    [_settings removeObserver:self forKeyPath:@"showKeysHidden" context:nil];
-    [_settings removeObserver:self forKeyPath:@"showKeysSupervised" context:nil];
-} // dealloc
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark ViewSetup
@@ -192,6 +183,7 @@
     [PFCGeneralUtility insertSubview:[_manifest view] inSuperview:_viewManifestSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_viewStatusSettings view] inSuperview:_viewManifestSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:[_settings view] inSuperview:_viewManifestSplitView hidden:YES];
+    [_viewControllerDisplaySettings setView:[_manifest viewPopUpDisplaySettings]];
 
     // -------------------------------------------------------------------------
     //  Info
@@ -199,15 +191,6 @@
     [PFCGeneralUtility insertSubview:[_info view] inSuperview:_viewInfoSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:[[_info infoMenu] view] inSuperview:_viewInfoHeaderSplitView hidden:NO];
     [PFCGeneralUtility insertSubview:[_viewStatusInfo view] inSuperview:_viewInfoSplitView hidden:NO];
-
-    // -------------------------------------------------------------------------
-    //  Register KVO observers
-    // -------------------------------------------------------------------------
-    [self addObserver:self forKeyPath:@"advancedSettings" options:NSKeyValueObservingOptionNew context:nil];
-    [self addObserver:self forKeyPath:@"showSettingsLocal" options:NSKeyValueObservingOptionNew context:nil];
-    [_settings addObserver:self forKeyPath:@"showKeysDisabled" options:NSKeyValueObservingOptionNew context:nil];
-    [_settings addObserver:self forKeyPath:@"showKeysHidden" options:NSKeyValueObservingOptionNew context:nil];
-    [_settings addObserver:self forKeyPath:@"showKeysSupervised" options:NSKeyValueObservingOptionNew context:nil];
 
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -310,31 +293,6 @@
 - (void)closeWindow {
     [[self window] performClose:self];
 } // closeWindow
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark NSKeyValueObserving
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
-    NSLog(@"keyPath=%@", keyPath);
-    if ([keyPath isEqualToString:@"advancedSettings"]) {
-        //[self updateTableColumnsSettings];
-    } else if ([keyPath isEqualToString:@"showSettingsLocal"]) {
-        /*
-        [_tableViewSettings beginUpdates];
-        [_tableViewSettings reloadData];
-        [_tableViewSettings endUpdates];
-         */
-    } else if ([keyPath isEqualToString:@"showKeysDisabled"] || [keyPath isEqualToString:@"showKeysHidden"]) {
-        //[self updateTableViewSettingsFromManifest:_selectedManifest];
-    } else if ([keyPath isEqualToString:@"showKeysSupervised"]) {
-        // if ([[_tableViewProfileHeader selectedRowIndexes] count] == 0) {
-        //[self updateTableViewSettingsFromManifest:_selectedManifest];
-        //}
-    }
-} // observeValueForKeyPath:ofObject:change:context
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -484,8 +442,8 @@
     // -------------------------------------------------------------------------
     //  Get the instances, frames and sizes of the subviews
     // -------------------------------------------------------------------------
-    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
-    NSView *viewCenter = [[_splitViewWindow subviews] objectAtIndex:1];
+    NSView *viewInfo = [_splitViewWindow subviews][2];
+    NSView *viewCenter = [_splitViewWindow subviews][1];
     NSRect viewCenterFrame = [viewCenter frame];
 
     NSRect splitViewWindowFrame = [_splitViewWindow frame];
@@ -513,10 +471,10 @@
     // -------------------------------------------------------------------------
     //  Get the instances, frames and sizes of the subviews
     // -------------------------------------------------------------------------
-    NSView *viewCenter = [[_splitViewWindow subviews] objectAtIndex:1];
+    NSView *viewCenter = [_splitViewWindow subviews][1];
     NSRect viewCenterFrame = [viewCenter frame];
 
-    NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+    NSView *viewInfo = [_splitViewWindow subviews][2];
     NSRect viewInfoFrame = [viewInfo frame];
 
     CGFloat dividerThickness = [_librarySplitView dividerThickness];
@@ -696,7 +654,7 @@
         return YES;
     } else {
         // FIXME - Should notify the user that the save failed!
-        NSLog(@"[ERROR] Saving profile template failed!");
+        DDLogError(@"Saving profile template failed!");
         return NO;
     }
 } // saveProfile
@@ -810,7 +768,7 @@
         [_textFieldSheetProfileName setStringValue:[_settings profileName] ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
-                     completionHandler:^(NSModalResponse __unused returnCode) {
+                     completionHandler:^(NSModalResponse returnCode) {
                        if (returnCode == NSModalResponseOK && _windowShouldClose) {
                            [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
                        } else if (_windowShouldClose) {
@@ -826,7 +784,7 @@
         [_textFieldSheetProfileName setStringValue:[_settings profileName] ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
-                     completionHandler:^(NSModalResponse __unused returnCode) {
+                     completionHandler:^(NSModalResponse returnCode) {
                        if (returnCode == NSModalResponseOK && _windowShouldClose) {
                            [self performSelectorOnMainThread:@selector(closeWindow) withObject:self waitUntilDone:NO];
                        } else if (_windowShouldClose) {
@@ -890,7 +848,7 @@
      BOOL isCollapsed = [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]];
      DDLogDebug(@"View info is collapsed: %@", isCollapsed ? @"YES" : @"NO");
 
-     NSView *viewInfo = [[_splitViewWindow subviews] objectAtIndex:2];
+     NSView *viewInfo = [_splitViewWindow subviews][2];
 
      // -------------------------------------------------------------------------
      //  Set the holding priorities for window resizing

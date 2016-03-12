@@ -382,7 +382,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         return;
     }
 
-    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[_arrayProfileLibrary objectAtIndex:(NSUInteger)row] ?: @""];
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[(NSUInteger)row] ?: @""];
 
     // -------------------------------------------------------------------------------
     //  MenuItem - "Show In Finder"
@@ -1040,7 +1040,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         return;
     }
 
-    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:[_arrayProfileLibrary objectAtIndex:_clickedTableViewRow] ?: @""];
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[_clickedTableViewRow] ?: @""];
 
     // ----------------------------------------------------------------------------------------
     //  If key 'Path' is set, check if it's a valid path. If it is, open it in Finder
@@ -1052,7 +1052,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
         } else {
-            NSLog(@"[ERROR] %@", [error localizedDescription]);
+            DDLogError(@"%@", [error localizedDescription]);
         }
     }
 }

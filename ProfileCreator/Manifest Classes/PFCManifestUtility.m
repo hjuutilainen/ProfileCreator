@@ -153,7 +153,7 @@
         if (5 <= numberType && numberType <= 6)
             return PFCValueTypeFloat;
 
-        NSLog(@"[ERROR] Unknown CFNumberType: %ld", numberType);
+        DDLogError(@"Unknown CFNumberType: %ld", numberType);
         return @"Number";
     }
     if ([value isKindOfClass:[NSArray class]])

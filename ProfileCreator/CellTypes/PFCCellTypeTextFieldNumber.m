@@ -124,8 +124,8 @@
     if (_stepperValue == nil) {
         [self setStepperValue:value];
     }
-    [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingTextField] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepper] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
 
     // ---------------------------------------------------------------------
     //  Tool Tip
@@ -238,8 +238,8 @@
     if (_stepperValue == nil) {
         [self setStepperValue:settings[PFCSettingsKeyValue] ?: @0];
     }
-    [[cellView settingTextField] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepper] bind:@"value" toObject:self withKeyPath:@"stepperValue" options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingTextField] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [[cellView settingStepper] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
 
     // ---------------------------------------------------------------------
     //  Tool Tip

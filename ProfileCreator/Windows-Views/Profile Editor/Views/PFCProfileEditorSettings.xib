@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="checkboxPlatformOSX" destination="N4R-zu-vX1" id="Gvy-QA-wKt"/>
                 <outlet property="checkboxPlatformiOS" destination="o4R-md-jXe" id="gzg-7d-b1W"/>
+                <outlet property="checkboxSupervised" destination="fwF-6w-kiU" id="oRf-pi-wMd"/>
                 <outlet property="popUpButtonCertificateEncryption" destination="5gO-HW-JSO" id="dlO-Xg-X1M"/>
                 <outlet property="popUpButtonCertificateSigning" destination="GGr-nJ-IkH" id="fAD-Qe-XAI"/>
                 <outlet property="popUpButtonPlatformOSXMaxVersion" destination="cl2-86-lpT" id="ZCl-ts-aJE"/>
@@ -222,6 +223,9 @@
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.showKeysSupervised" id="sPh-k1-CqS"/>
+                    </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ztK-jn-MYi">
                     <rect key="frame" x="18" y="307" width="106" height="17"/>
@@ -239,7 +243,7 @@
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XGe-wt-qVx">
                     <rect key="frame" x="18" y="384" width="479" height="14"/>
-                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Limit Visible Payloads" id="lIC-uM-qaV">
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Limit Available Payloads" id="lIC-uM-qaV">
                         <font key="font" metaFont="smallSystemBold"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

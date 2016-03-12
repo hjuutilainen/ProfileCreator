@@ -22,6 +22,7 @@
                 <outlet property="textFieldSheetProfileNameMessage" destination="cbe-l8-fdH" id="yDK-S9-WRx"/>
                 <outlet property="textFieldSheetProfileNameTitle" destination="obt-uE-A7v" id="DxC-l7-6ZW"/>
                 <outlet property="textFieldToolbar" destination="wSf-bu-Bxr" id="bk5-8e-71Z"/>
+                <outlet property="viewControllerDisplaySettings" destination="aQ1-lO-naI" id="MZO-RE-rZ1"/>
                 <outlet property="viewInfoFooterSplitView" destination="2lq-8H-smG" id="940-LC-b7s"/>
                 <outlet property="viewInfoHeaderSplitView" destination="s5y-w7-ixS" id="Oh9-ft-THb"/>
                 <outlet property="viewInfoSplitView" destination="yEZ-hH-ZF6" id="KTz-T0-Hey"/>
@@ -295,7 +296,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="-3677" y="-1381"/>
+            <point key="canvasLocation" x="-3399" y="-1363"/>
         </window>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="vmu-y3-Ojw">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -397,76 +398,7 @@ Gw
                 <outlet property="contentViewController" destination="aQ1-lO-naI" id="ia7-Eh-PfK"/>
             </connections>
         </popover>
-        <viewController id="aQ1-lO-naI" userLabel="Popover View Controller">
-            <connections>
-                <outlet property="view" destination="Nqm-St-D7R" id="5Fb-yV-Z2A"/>
-            </connections>
-        </viewController>
-        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-St-D7R" userLabel="view PopUp Advanced Settings">
-            <rect key="frame" x="0.0" y="0.0" width="183" height="104"/>
-            <subviews>
-                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="NiK-2b-YWJ">
-                    <rect key="frame" x="7" y="25" width="158" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show source values" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="knz-Uq-vpo">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                    <connections>
-                        <binding destination="-2" name="value" keyPath="self.showSettingsLocal" id="7W2-pQ-Aj6"/>
-                    </connections>
-                </button>
-                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="IqR-Mx-jTe">
-                    <rect key="frame" x="7" y="7" width="158" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show disable key settings" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="3Ek-Nq-NDM">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                    <connections>
-                        <binding destination="-2" name="value" keyPath="self.advancedSettings" id="ZWi-su-mwX"/>
-                    </connections>
-                </button>
-                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="yYL-Fb-Abb">
-                    <rect key="frame" x="7" y="43" width="158" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show hidden keys" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="F1k-PM-g85">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                </button>
-                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="DEF-cr-fOe">
-                    <rect key="frame" x="7" y="61" width="158" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show disabled keys" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="KPo-7R-3Wk">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                </button>
-                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="yWE-kf-ihr">
-                    <rect key="frame" x="7" y="79" width="158" height="18"/>
-                    <buttonCell key="cell" type="check" title="Show supervised keys" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" focusRingType="none" inset="2" id="jfr-yE-0oJ">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                </button>
-            </subviews>
-            <constraints>
-                <constraint firstAttribute="trailing" secondItem="IqR-Mx-jTe" secondAttribute="trailing" constant="20" symbolic="YES" id="75f-kU-62S"/>
-                <constraint firstAttribute="trailing" secondItem="DEF-cr-fOe" secondAttribute="trailing" constant="20" symbolic="YES" id="CpO-D2-KeB"/>
-                <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="DEF-cr-fOe" secondAttribute="leading" id="El8-hd-TTN"/>
-                <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="Nqm-St-D7R" secondAttribute="leading" constant="10" id="H71-8E-vHL"/>
-                <constraint firstAttribute="trailing" secondItem="yYL-Fb-Abb" secondAttribute="trailing" constant="20" symbolic="YES" id="MWt-pW-huR"/>
-                <constraint firstItem="DEF-cr-fOe" firstAttribute="leading" secondItem="yWE-kf-ihr" secondAttribute="leading" id="O2c-Al-Fk0"/>
-                <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="NiK-2b-YWJ" secondAttribute="leading" id="QJB-fy-ja7"/>
-                <constraint firstItem="IqR-Mx-jTe" firstAttribute="top" secondItem="NiK-2b-YWJ" secondAttribute="bottom" constant="6" symbolic="YES" id="RRI-iF-Sa3"/>
-                <constraint firstItem="NiK-2b-YWJ" firstAttribute="top" secondItem="yYL-Fb-Abb" secondAttribute="bottom" constant="6" symbolic="YES" id="Sdi-hQ-MjP"/>
-                <constraint firstItem="yYL-Fb-Abb" firstAttribute="top" secondItem="DEF-cr-fOe" secondAttribute="bottom" constant="6" symbolic="YES" id="UCk-hk-CKK"/>
-                <constraint firstItem="IqR-Mx-jTe" firstAttribute="leading" secondItem="yYL-Fb-Abb" secondAttribute="leading" id="Xwr-6j-3Yn"/>
-                <constraint firstItem="yWE-kf-ihr" firstAttribute="top" secondItem="Nqm-St-D7R" secondAttribute="top" constant="10" id="bu6-9D-WL6"/>
-                <constraint firstAttribute="trailing" secondItem="NiK-2b-YWJ" secondAttribute="trailing" constant="20" symbolic="YES" id="hct-Pu-5f5"/>
-                <constraint firstAttribute="bottom" secondItem="IqR-Mx-jTe" secondAttribute="bottom" constant="10" id="iJL-Ga-Y4J"/>
-                <constraint firstAttribute="trailing" secondItem="yWE-kf-ihr" secondAttribute="trailing" constant="20" symbolic="YES" id="ryf-Nc-5e7"/>
-                <constraint firstItem="DEF-cr-fOe" firstAttribute="top" secondItem="yWE-kf-ihr" secondAttribute="bottom" constant="6" symbolic="YES" id="sLH-wu-eaz"/>
-            </constraints>
-            <point key="canvasLocation" x="-2994.5" y="-865"/>
-        </customView>
+        <viewController id="aQ1-lO-naI" userLabel="Popover View Controller"/>
     </objects>
     <resources>
         <image name="Menu-17" width="17" height="17"/>

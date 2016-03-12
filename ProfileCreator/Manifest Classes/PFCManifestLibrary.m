@@ -199,6 +199,10 @@
 
     NSError *error = nil;
     NSArray *manifestLibrary = [self libraryAll:&error acceptCached:YES];
+    if ([manifestLibrary count] == 0) {
+        DDLogError(@"%@", [error localizedDescription]);
+        return @[];
+    }
 
     NSMutableArray *manifests = [[NSMutableArray alloc] init];
 
@@ -256,13 +260,18 @@
         break;
     }
 
+    if ([manifestLibrary count] == 0) {
+        DDLogError(@"%@", [error localizedDescription]);
+        return @{};
+    }
+
     for (NSDictionary *manifest in manifestLibrary ?: @[]) {
         NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
         if ([manifestDomain isEqualToString:domain]) {
             return manifest;
         }
     }
-    return nil;
+    return @{};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
