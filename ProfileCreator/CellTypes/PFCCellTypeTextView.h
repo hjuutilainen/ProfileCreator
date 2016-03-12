@@ -29,6 +29,8 @@
                                       row:(NSInteger)row
                                    sender:(id)sender;
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+
 - (void)showRequired:(BOOL)show;
 
 @end

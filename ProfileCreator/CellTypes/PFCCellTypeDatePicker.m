@@ -149,6 +149,11 @@
     return cellView;
 } // populateCellViewDatePicker
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    // FIXME - Write verification
+    return @{};
+}
+
 @end
 
 @interface PFCDatePickerNoTitleCellView ()
@@ -256,5 +261,10 @@
 
     return cellView;
 } // populateCellViewCheckbox:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    // FIXME - Write verification
+    return @{};
+}
 
 @end

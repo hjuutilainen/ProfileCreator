@@ -21,6 +21,8 @@
 #import "PFCCellTypeTextFieldNumber.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
+#import "PFCLog.h"
 #import "PFCManifestUtility.h"
 
 @interface PFCTextFieldNumberCellView ()
@@ -141,6 +143,37 @@
     return cellView;
 } // populateCellViewTextField:settings:row
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = contentDictSettings[PFCManifestKeyDefaultValue];
+    }
+
+    NSNumber *minValue = manifestContentDict[PFCManifestKeyMinValue];
+    NSNumber *maxValue = manifestContentDict[PFCManifestKeyMaxValue];
+
+    if (required && (value == nil || value <= minValue || maxValue < value)) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    return nil;
+}
+
 @end
 
 @interface PFCTextFieldNumberLeftCellView ()
@@ -254,5 +287,9 @@
 
     return cellView;
 } // populateCellViewTextField:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCTextFieldNumberCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 @end

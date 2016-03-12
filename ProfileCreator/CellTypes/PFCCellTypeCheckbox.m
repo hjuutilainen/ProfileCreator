@@ -21,6 +21,7 @@
 #import "PFCCellTypeCheckbox.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCManifestParser.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -113,6 +114,17 @@
 
     return cellView;
 } // populateCellViewSettingsCheckbox:manifest:settings:settingsLocal:row:sender
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    NSString *checkboxState = [settings[PFCSettingsKeyValue] boolValue] ? @"True" : @"False";
+    NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys];
+    if (valueKeys[checkboxState]) {
+        return [[PFCManifestParser sharedParser] settingsErrorForManifestContent:valueKeys[checkboxState] settings:settings displayKeys:displayKeys];
+    }
+
+    return nil;
+}
 
 @end
 
@@ -208,5 +220,9 @@
 
     return cellView;
 } // populateCellViewSettingsCheckboxNoDescription:manifest:settings:settingsLocal:row:sender
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 @end

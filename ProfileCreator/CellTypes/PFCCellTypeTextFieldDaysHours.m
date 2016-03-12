@@ -21,6 +21,8 @@
 #import "PFCCellTypeTextFieldDaysHours.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
+#import "PFCLog.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
 
@@ -44,7 +46,8 @@
 } // dealloc
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
-    if ((_sender != nil && [_cellIdentifier length] != 0) && ([keyPath isEqualToString:@"stepperValueRemovalIntervalDays"] || [keyPath isEqualToString:@"stepperValueRemovalIntervalHours"])) {
+    if ((_sender != nil && [_cellIdentifier length] != 0) &&
+        ([keyPath isEqualToString:NSStringFromSelector(@selector(stepperValueRemovalIntervalDays))] || [keyPath isEqualToString:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours))])) {
         int seconds = (([_stepperValueRemovalIntervalDays intValue] * 86400) + ([_stepperValueRemovalIntervalHours intValue] * 60));
         NSMutableDictionary *settingsDict = [[(PFCProfileEditorManifest *)_sender settingsManifest] mutableCopy];
         if (seconds == 0) {
@@ -143,5 +146,33 @@
 
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = contentDictSettings[PFCManifestKeyDefaultValue];
+    }
+
+    if (required && value == nil) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    return nil;
+}
 
 @end

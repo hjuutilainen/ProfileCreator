@@ -19,6 +19,7 @@
 
 #import "NSColor+PFCColors.h"
 #import "PFCAvailability.h"
+#import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextView.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
@@ -129,6 +130,10 @@
 
     return cellView;
 } // populateTextView:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCTextFieldCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 - (void)showRequired:(BOOL)show {
     if (show) {

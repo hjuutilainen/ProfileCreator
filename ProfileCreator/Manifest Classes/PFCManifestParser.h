@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //  Verify Manifest
 // -----------------------------------------------------------------------------
-- (NSDictionary *)settingsErrorForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings;
-- (NSDictionary *)settingsErrorForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings;
+- (NSDictionary *)settingsErrorForManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+- (NSDictionary *)settingsErrorForManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
 
 @end

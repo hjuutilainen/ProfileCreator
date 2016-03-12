@@ -22,6 +22,8 @@
 #import "PFCCellTypeTextFieldHostPort.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
+#import "PFCLog.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -166,6 +168,53 @@
 
     return cellView;
 } // populateCellViewSettingsTextFieldHostPort:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+    // Host
+    NSMutableArray *array = [NSMutableArray array];
+
+    BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+
+    NSString *valueHost = contentDictSettings[PFCSettingsKeyValueHost];
+    if ([valueHost length] == 0) {
+        valueHost = contentDictSettings[PFCManifestKeyDefaultValueHost];
+    }
+
+    if (requiredHost && [valueHost length] == 0) {
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
+    }
+
+    // Port
+    BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+
+    NSString *valuePort = contentDictSettings[PFCSettingsKeyValuePort];
+    if ([valuePort length] == 0) {
+        valuePort = contentDictSettings[PFCManifestKeyDefaultValuePort];
+    }
+
+    if (requiredPort && [valuePort length] == 0) {
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
+    }
+
+    if ([array count] != 0) {
+        return @{identifier : [array copy]};
+    }
+
+    return nil;
+}
 
 - (void)showRequired:(BOOL)show {
     if (show) {
@@ -336,7 +385,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if (requiredHost && [valueHost length] == 0) {
+    if ((requiredHost || requiredPort) && [valueHost length] == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
@@ -344,6 +393,53 @@
 
     return cellView;
 } // populateCellViewSettingsTextFieldHostPort:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+    // Host
+    NSMutableArray *array = [NSMutableArray array];
+
+    BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+
+    NSString *valueHost = contentDictSettings[PFCSettingsKeyValueHost];
+    if ([valueHost length] == 0) {
+        valueHost = contentDictSettings[PFCManifestKeyDefaultValueHost];
+    }
+
+    if (requiredHost && [valueHost length] == 0) {
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
+    }
+
+    // Port
+    BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+
+    NSNumber *valuePort = contentDictSettings[PFCSettingsKeyValuePort];
+    if (valuePort == nil) {
+        valuePort = contentDictSettings[PFCManifestKeyDefaultValuePort];
+    }
+
+    if (requiredPort && valuePort == nil) {
+        [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
+    }
+
+    if ([array count] != 0) {
+        return @{identifier : [array copy]};
+    }
+
+    return nil;
+}
 
 - (void)showRequired:(BOOL)show {
     if (show) {

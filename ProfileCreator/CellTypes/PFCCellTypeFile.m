@@ -21,6 +21,7 @@
 #import "PFCCellTypeFile.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
 #import "PFCFileInfoProcessors.h"
 #import "PFCLog.h"
 #import "PFCManifestUtility.h"
@@ -215,5 +216,52 @@
 
     return cellView;
 } // populateCellViewSettingsFile:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    // BOOL required = [cellDict[@"Required"] boolValue];
+    NSString *filePath = contentDictSettings[@"FilePath"];
+    NSURL *fileURL = [NSURL fileURLWithPath:filePath ?: @""];
+    NSError *error = nil;
+    if (![fileURL checkResourceIsReachableAndReturnError:&error]) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    NSArray *allowedFileTypes = manifestContentDict[PFCManifestKeyAllowedFileTypes];
+    if ([allowedFileTypes count] != 0) {
+        NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+        NSString *fileType;
+        if ([fileURL getResourceValue:&fileType forKey:NSURLTypeIdentifierKey error:&error]) {
+            __block BOOL validFileType = NO;
+            [allowedFileTypes enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+              if ([workspace type:fileType conformsToType:obj]) {
+                  validFileType = YES;
+                  *stop = YES;
+              }
+            }];
+
+            if (!validFileType) {
+                return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+            }
+        } else {
+            DDLogError(@"%@", [error localizedDescription]);
+        }
+    }
+
+    return nil;
+}
 
 @end

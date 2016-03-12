@@ -19,6 +19,7 @@
 
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCConstants.h"
+#import "PFCManifestParser.h"
 #import "PFCProfileEditor.h"
 
 @interface PFCSegmentedControlCellView ()
@@ -67,5 +68,17 @@
 
     return cellView;
 } // populateCellViewSettingsSegmentedControl:manifest:row:sender
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    NSMutableDictionary *report = [[NSMutableDictionary alloc] init];
+    NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys];
+    for (NSString *selection in manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]) {
+        NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:valueKeys[selection] settings:settings displayKeys:displayKeys];
+        if ([settingsError count] != 0) {
+            [report addEntriesFromDictionary:settingsError];
+        }
+    }
+    return [report copy];
+}
 
 @end

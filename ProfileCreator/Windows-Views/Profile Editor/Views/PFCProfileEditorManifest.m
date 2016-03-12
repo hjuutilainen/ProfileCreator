@@ -280,7 +280,9 @@
 
             // Fix to get the first tab to also get an initial error count, could possibly be done somewhere else
             if (manifestTabCount == 1) {
-                NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifest[PFCManifestKeyManifestContent] settings:_settingsManifest];
+                NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifest[PFCManifestKeyManifestContent]
+                                                                                                       settings:_settingsManifest
+                                                                                                    displayKeys:[[_profileEditor settings] displayKeys]];
                 NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
                 [self updatePayloadTabErrorCount:errorCount tabIndex:0];
             }
@@ -621,7 +623,8 @@
     // -------------------------------------------------------------------------
     //  Update new tab with errors
     // -------------------------------------------------------------------------
-    NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{}];
+    NSDictionary *settingsError =
+        [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{} displayKeys:[[_profileEditor settings] displayKeys]];
     NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
     [self updatePayloadTabErrorCount:errorCount tabIndex:newIndex];
     [[_profileEditor library] reloadManifest:_selectedManifest];
@@ -721,7 +724,8 @@
           }
           DDLogDebug(@"Tab settings: %@", settings);
 
-          NSDictionary *verificationReport = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings] ?: @{};
+          NSDictionary *verificationReport =
+              [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings displayKeys:[[_profileEditor settings] displayKeys]] ?: @{};
           [settingsError addObject:verificationReport];
 
           NSNumber *errorCount = @([[verificationReport allKeys] count]) ?: @0;

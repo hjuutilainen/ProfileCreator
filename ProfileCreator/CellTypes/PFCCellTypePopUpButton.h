@@ -31,6 +31,8 @@
                                          row:(NSInteger)row
                                       sender:(id)sender;
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+
 @end
 
 @interface PFCPopUpButtonLeftCellView : NSTableCellView
@@ -45,6 +47,8 @@
                                              row:(NSInteger)row
                                           sender:(id)sender;
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+
 @end
 
 @interface PFCPopUpButtonNoTitleCellView : NSTableCellView
@@ -58,5 +62,7 @@
                                         displayKeys:(NSDictionary *)displayKeys
                                                 row:(NSInteger)row
                                              sender:(id)sender;
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
 
 @end

@@ -31,4 +31,6 @@
                                   row:(NSInteger)row
                                sender:(id)sender;
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+
 @end

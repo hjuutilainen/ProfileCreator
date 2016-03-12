@@ -21,6 +21,8 @@
 #import "PFCCellTypePopUpButton.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
+#import "PFCManifestParser.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -124,6 +126,37 @@
     return cellView;
 } // populateCellViewPopUpButton:settings:row
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSString *selectedItem = settings[PFCSettingsKeyValue];
+    if ([selectedItem length] == 0) {
+        selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    if ([selectedItem length] == 0) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"No Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    if (![manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] containsObject:selectedItem]) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys];
+    if (valueKeys[selectedItem]) {
+        return [[PFCManifestParser sharedParser] settingsErrorForManifestContent:valueKeys[selectedItem] settings:settings displayKeys:displayKeys];
+    }
+
+    return nil;
+}
+
 @end
 
 @interface PFCPopUpButtonLeftCellView ()
@@ -212,6 +245,10 @@
 
     return cellView;
 } // populateCellViewPopUpButtonLeft:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCPopUpButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 @end
 
@@ -303,5 +340,9 @@
 
     return cellView;
 } // populateCellViewSettingsPopUpButtonNoTitle:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCPopUpButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 @end

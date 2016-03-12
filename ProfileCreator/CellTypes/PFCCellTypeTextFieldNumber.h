@@ -29,6 +29,8 @@
                                              row:(NSInteger)row
                                           sender:(id)sender;
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
+
 @end
 
 @interface PFCTextFieldNumberLeftCellView : NSTableCellView
@@ -40,5 +42,7 @@
                                          displayKeys:(NSDictionary *)displayKeys
                                                  row:(NSInteger)row
                                               sender:(id)sender;
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
 
 @end

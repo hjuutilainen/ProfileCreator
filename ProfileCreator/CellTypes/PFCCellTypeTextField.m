@@ -22,6 +22,8 @@
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
+#import "PFCLog.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -130,6 +132,34 @@
 
     return cellView;
 } // populateCellViewTextField:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    NSString *value = contentDictSettings[PFCSettingsKeyValue];
+    if ([value length] == 0) {
+        value = contentDictSettings[PFCManifestKeyDefaultValue];
+    }
+
+    if (required && [value length] == 0) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    return nil;
+}
 
 - (void)showRequired:(BOOL)show {
     if (show) {
@@ -271,6 +301,34 @@
     return cellView;
 } // populateCellViewSettingsTextFieldHostPort:settings:row
 
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([identifier length] == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if ([contentDictSettings count] == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    NSString *value = contentDictSettings[PFCSettingsKeyValueTextField];
+    if ([value length] == 0) {
+        value = contentDictSettings[PFCManifestKeyDefaultValueTextField];
+    }
+
+    if (required && [value length] == 0) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    return nil;
+}
+
 - (void)showRequired:(BOOL)show {
     if (show) {
         [_constraintTextFieldPortTrailing setConstant:34.0];
@@ -390,6 +448,10 @@
 
     return cellView;
 } // populateCellViewTextField:settings:row
+
++ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    return [PFCTextFieldCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
 
 - (void)showRequired:(BOOL)show {
     if (show) {
