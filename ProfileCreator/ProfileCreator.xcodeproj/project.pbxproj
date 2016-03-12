@@ -1411,6 +1411,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1436,6 +1437,7 @@
 					"-Wnewline-eof",
 					"-Wfloat-equal",
 					"-Wshadow",
+					"-Wundef",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ProfileCreator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1455,6 +1457,7 @@
 					"-Wnewline-eof",
 					"-Wfloat-equal",
 					"-Wshadow",
+					"-Wundef",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ProfileCreator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
