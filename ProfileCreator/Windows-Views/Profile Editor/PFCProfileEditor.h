@@ -33,6 +33,9 @@
 // -------------------------------------------------------------------------
 - (id)initWithProfileDict:(NSDictionary *)profileDict mainWindow:(PFCMainWindow *)mainWindow;
 
+// Set to yes when window is closing so all KVO observers of other classes than self will be removed
+@property (readwrite) BOOL deallocKVO;
+
 // -------------------------------------------------------------------------
 //  Toolbar
 // -------------------------------------------------------------------------
@@ -42,18 +45,19 @@
 // -------------------------------------------------------------------------
 //  Settings
 // -------------------------------------------------------------------------
-@property PFCProfileEditorSettings *settings;
+@property (strong) PFCProfileEditorSettings *settings;
 
 // -------------------------------------------------------------------------
 //  Library
 // -------------------------------------------------------------------------
-@property PFCProfileEditorLibrary *library;
+@property (strong) PFCProfileEditorLibrary *library;
 @property (weak) IBOutlet PFCSplitViewPayloadLibrary *librarySplitView;
 
 // -------------------------------------------------------------------------
 //  Manifest
 // -------------------------------------------------------------------------
-@property PFCProfileEditorManifest *manifest;
+@property (weak) IBOutlet NSView *viewManifestSplitView;
+@property (strong) PFCProfileEditorManifest *manifest;
 - (void)showManifest;
 - (void)showManifestNoSettings;
 - (void)hideManifestStatus;
@@ -61,7 +65,7 @@
 // -------------------------------------------------------------------------
 //  Info
 // -------------------------------------------------------------------------
-@property PFCProfileEditorInfo *info;
+@property (strong) PFCProfileEditorInfo *info;
 
 // -------------------------------------------------------------------------
 //  SplitView
@@ -77,12 +81,5 @@
 @property (readonly) BOOL librarySplitViewCollapsed;
 @property (readonly) BOOL infoSplitViewCollapsed;
 - (void)updateTableViewSelection:(NSString *)tableViewIdentifier;
-
-////// UNSORTED BELOW
-
-@property (readwrite) BOOL advancedSettings;
-@property (readwrite) BOOL settingsHidden;
-@property (readwrite) BOOL showSettingsLocal;
-@property (readwrite) BOOL settingsStatusLoading;
 
 @end

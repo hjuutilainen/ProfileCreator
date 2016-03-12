@@ -58,11 +58,6 @@
 @property (readwrite) BOOL librarySplitViewCollapsed;
 
 // -------------------------------------------------------------------------
-//  Manifest
-// -------------------------------------------------------------------------
-@property (weak) IBOutlet NSView *viewManifestSplitView;
-
-// -------------------------------------------------------------------------
 //  ManifestFooter
 // -------------------------------------------------------------------------
 @property (weak) IBOutlet NSPopover *popOverSettings;
@@ -144,9 +139,8 @@
         // ---------------------------------------------------------------------
         //  Initialize BOOLs (for clarity)
         // ---------------------------------------------------------------------
-        _advancedSettings = NO;
         _windowShouldClose = NO;
-        _showSettingsLocal = YES;
+        _deallocKVO = NO;
     }
     return self;
 } // init
@@ -247,12 +241,14 @@
     //  If true the user has seen this warning and acted upon it, and the window can close
     // ------------------------------------------------------------------------------------
     if (_windowShouldClose) {
+        [self setDeallocKVO:YES];
         [self setWindowShouldClose:NO];
         [_mainWindow closeProfileEditorForProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
         return YES;
     }
 
     if ([self settingsSaved]) {
+        [self setDeallocKVO:YES];
         [self setWindowShouldClose:NO];
         [_mainWindow closeProfileEditorForProfileWithUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
         return YES;
@@ -662,7 +658,7 @@
 - (NSDictionary *)currentDisplaySettings {
     NSMutableDictionary *displaySettings = [[NSMutableDictionary alloc] init];
 
-    displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @(_advancedSettings);
+    displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @([_settings showAdvancedSettings]);
     displaySettings[PFCProfileDisplaySettingsKeySupervised] = @([_settings showKeysSupervised]);
     displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
         PFCProfileDisplaySettingsKeyPlatformOSX : @([_settings includePlatformOSX]),
@@ -694,7 +690,6 @@
 } // hideLibrarySearch
 
 - (void)showSettings {
-    [self setSettingsStatusLoading:NO];
     [[_settings view] setHidden:NO];
     [[_manifest view] setHidden:YES];
     [[_viewStatusSettings view] setHidden:YES];
@@ -709,17 +704,14 @@
 } // showManifest
 
 - (void)showManifestLoading {
-    if (_settingsStatusLoading) {
-        [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
-        [[_settings view] setHidden:YES];
-        [[_manifest view] setHidden:YES];
-        [[_viewStatusSettings view] setHidden:NO];
-    }
+    [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
+    [[_settings view] setHidden:YES];
+    [[_manifest view] setHidden:YES];
+    [[_viewStatusSettings view] setHidden:NO];
 } // showManifestLoading
 
 - (void)showManifestError {
     [_viewStatusSettings showStatus:kPFCStatusErrorReadingSettings];
-    [self setSettingsStatusLoading:NO];
     [[_settings view] setHidden:YES];
     [[_manifest view] setHidden:YES];
     [[_viewStatusSettings view] setHidden:NO];
@@ -727,13 +719,11 @@
 
 - (void)showManifestNoSettings {
     [_viewStatusSettings showStatus:kPFCStatusNoSettings];
-    [self setSettingsStatusLoading:NO];
     [[_settings view] setHidden:YES];
     [[_manifest view] setHidden:YES];
 } // showManifestNoSettings
 
 - (void)hideManifestStatus {
-    [self setSettingsStatusLoading:NO];
     [[_viewStatusSettings view] setHidden:YES];
     [[_settings view] setHidden:YES];
     [[_manifest view] setHidden:NO];

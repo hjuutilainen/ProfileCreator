@@ -27,10 +27,9 @@
 
 @property NSDictionary *profile;
 
-@property (nonatomic, weak) PFCProfileEditor *profileEditor;
+@property (readwrite) BOOL showAdvancedSettings;
 
-// Advanced Settings
-@property BOOL showAdvancedSettings;
+@property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
 // Target Platform
 @property NSArray *osxVersions;

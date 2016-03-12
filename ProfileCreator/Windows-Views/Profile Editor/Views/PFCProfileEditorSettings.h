@@ -22,6 +22,7 @@
 
 @interface PFCProfileEditorSettings : NSViewController
 
+@property (readonly) BOOL showAdvancedSettings;
 @property (readwrite) BOOL showKeysSupervised;
 
 // Profile Name

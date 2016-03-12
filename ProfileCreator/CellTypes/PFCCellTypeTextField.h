@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <Cocoa/Cocoa.h>
+@class PFCProfileExport;
 
 @interface PFCTextFieldCellView : NSTableCellView
 
@@ -30,6 +31,7 @@
                                     sender:(id)sender;
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
 
 - (void)showRequired:(BOOL)show;
 
@@ -48,6 +50,7 @@
                                             sender:(id)sender;
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
 
 @end
 
@@ -62,6 +65,7 @@
                                            sender:(id)sender;
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
 
 - (void)showRequired:(BOOL)show;
 

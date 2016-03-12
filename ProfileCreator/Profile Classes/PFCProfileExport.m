@@ -17,6 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeCheckbox.h"
+#import "PFCCellTypePopUpButton.h"
+#import "PFCCellTypeTextField.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
@@ -217,20 +220,26 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark ManifestContentDict Methods
+#pragma mark ManifestContentDict Error Methods
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-void (^payloadManifestKeyError)(NSString *key, NSDictionary *manifestContentDict) = ^(NSString *key, NSDictionary *manifestContentDict) {
-  DDLogError(@"Manifest is missing required key: %@", key);
-  DDLogError(@"Manifest: %@", manifestContentDict);
-}; // payloadManifestKeyError
+- (void)payloadErrorForManifestKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict {
+    DDLogError(@"Manifest is missing required key: %@", key);
+    DDLogError(@"Manifest: %@", manifestContentDict);
+}
 
-void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArray *expectedClasses) = ^(NSString *payloadKey, NSString *valueClass, NSArray *expectedClasses) {
-  DDLogError(@"Value for payload key: %@ is not of the correct class", payloadKey);
-  DDLogError(@"Expected classes: %@", expectedClasses);
-  DDLogError(@"Value class: %@", valueClass);
-}; // payloadValueClassError
+- (void)payloadErrorForValueClass:(NSString *)valueClass payloadKey:(NSString *)payloadKey exptectedClasses:(NSArray *)expectedClasses {
+    DDLogError(@"Value for payload key: %@ is not of the correct class", payloadKey);
+    DDLogError(@"Expected classes: %@", expectedClasses);
+    DDLogError(@"Value class: %@", valueClass);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark ManifestContentDict Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 
 - (BOOL)verifyRequiredManifestContentDictKeys:(NSArray *)manifestContentDictKeys manifestContentDict:(NSDictionary *)manifestContentDict {
     __block BOOL verified = YES;
@@ -238,7 +247,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
       if (manifestContentDict[key] != nil) {
           DDLogDebug(@"%@: %@", key, manifestContentDict[key]);
       } else {
-          payloadManifestKeyError(key, manifestContentDict);
+          [self payloadErrorForManifestKey:key manifestContentDict:manifestContentDict];
           verified = NO;
           *stop = YES;
       }
@@ -411,7 +420,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
             DDLogError(@"SharedKey was empty");
             return;
         } else if (![[value class] isSubclassOfClass:[NSString class]]) {
-            payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([value class]), @[ NSStringFromClass([NSString class]) ]);
+            return
+                [self payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
         } else {
 
             // -----------------------------------------------------------------
@@ -453,13 +463,13 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     //  Checkbox
     // -------------------------------------------------------------------------
     if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
-        [self createPayloadFromCellTypeCheckbox:manifestContentDict settings:settings payloads:payloads];
+        [PFCCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  CheckboxNoDescription
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        [self createPayloadFromCellTypeCheckbox:manifestContentDict settings:settings payloads:payloads];
+        [PFCCheckboxNoDescriptionCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  DatePicker
@@ -480,19 +490,19 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  PopUpButton
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
-        [self createPayloadFromCellTypePopUpButton:manifestContentDict settings:settings payloads:payloads];
+        [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  PopUpButtonLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
-        [self createPayloadFromCellTypePopUpButton:manifestContentDict settings:settings payloads:payloads];
+        [PFCPopUpButtonLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  PopUpButtonNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        [self createPayloadFromCellTypePopUpButton:manifestContentDict settings:settings payloads:payloads];
+        [PFCPopUpButtonNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  SegmentedControl
@@ -509,13 +519,13 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  TextField
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
-        [self createPayloadFromCellTypeTextField:manifestContentDict settings:settings payloads:payloads];
+        [PFCTextFieldCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldCheckbox
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldCheckbox]) {
-        [self createPayloadFromCellTypeTextFieldCheckbox:manifestContentDict settings:settings payloads:payloads];
+        [PFCTextFieldCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldDaysHoursNoTitle
@@ -538,7 +548,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         //  TextFieldNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        [self createPayloadFromCellTypeTextField:manifestContentDict settings:settings payloads:payloads];
+        [PFCTextFieldNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber
@@ -556,135 +566,6 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }
 } // createPayloadFromManifestContentDict:settings:payloads
-
-- (void)createPayloadFromCellTypeCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
-
-    // -------------------------------------------------------------------------
-    //  Verify required keys for CellType: 'Checkbox'
-    // -------------------------------------------------------------------------
-    if (![self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Get value for Checkbox
-    // -------------------------------------------------------------------------
-    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    id value = contentDictSettings[PFCSettingsKeyValue];
-    if (value == nil) {
-        value = manifestContentDict[PFCManifestKeyDefaultValue];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Verify CheckboxValue is of the expected class type(s)
-    // -------------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if (value == nil) {
-        DDLogWarn(@"CheckboxValue is empty");
-
-        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
-            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
-            return;
-        }
-    } else if (![[value class] isEqualTo:[@(YES) class]] && ![[value class] isEqualTo:[@(0) class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([value class]), @[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]);
-    } else {
-        checkboxState = [(NSNumber *)value boolValue];
-        DDLogDebug(@"CheckboxValue: %@", (checkboxState) ? @"YES" : @"NO");
-    }
-
-    // ---------------------------------------------------------------------
-    //  Resolve any nested payload keys
-    //  FIXME - Need to implement this for nested keys
-    // ---------------------------------------------------------------------
-    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
-
-    // -------------------------------------------------------------------------
-    //  Get index of current payload in payload array
-    // -------------------------------------------------------------------------
-    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
-    }];
-
-    // ----------------------------------------------------------------------------------
-    //  Create mutable version of current payload, or create new payload if none existed
-    // ----------------------------------------------------------------------------------
-    NSMutableDictionary *payloadDictDict;
-    if (index != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
-    } else {
-        payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Add current key and value to payload
-    // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
-
-    // -------------------------------------------------------------------------
-    //  Save payload to payload array
-    // -------------------------------------------------------------------------
-    if (index != NSNotFound) {
-        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
-    } else {
-        [*payloads addObject:[payloadDictDict copy]];
-    }
-
-    // -------------------------------------------------------------------------
-    //
-    // -------------------------------------------------------------------------
-    [self createPayloadFromValueKey:(checkboxState) ? @"True" : @"False"
-                    availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
-                manifestContentDict:manifestContentDict
-                           settings:settings
-                         payloadKey:nil
-                        payloadType:nil
-                        payloadUUID:nil
-                           payloads:payloads];
-} // createPayloadFromCellTypeCheckbox:settings:payloads
-
-- (void)createPayloadFromCellTypePopUpButton:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
-
-    // -------------------------------------------------------------------------
-    //  Verify required keys for CellType: 'PopUpButton'
-    // -------------------------------------------------------------------------
-    if (![self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyAvailableValues ] manifestContentDict:manifestContentDict]) {
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Get selected title
-    // -------------------------------------------------------------------------
-    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    id value = contentDictSettings[PFCSettingsKeyValue];
-    if (value == nil) {
-        value = manifestContentDict[PFCManifestKeyDefaultValue];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Verify value is of the expected class type(s)
-    // -------------------------------------------------------------------------
-    if (value == nil) {
-        DDLogError(@"Value is empty");
-        return;
-    } else if (![[value class] isSubclassOfClass:[NSString class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([value class]), @[ NSStringFromClass([NSString class]) ]);
-    } else {
-        DDLogDebug(@"Selected title: %@", value);
-    }
-
-    // -------------------------------------------------------------------------
-    //
-    // -------------------------------------------------------------------------
-    [self createPayloadFromValueKey:value
-                    availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
-                manifestContentDict:manifestContentDict
-                           settings:settings
-                         payloadKey:nil
-                        payloadType:nil
-                        payloadUUID:nil
-                           payloads:payloads];
-} // createPayloadFromCellTypePopUpButton:settings:payloads
 
 - (void)createPayloadFromCellTypeSegmentedControl:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
 
@@ -721,266 +602,6 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
     }
 } // createPayloadFromCellTypeSegmentedControl:settings:payloads
 
-- (void)createPayloadFromCellTypeTextField:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
-    // -------------------------------------------------------------------------
-    //  Verify required keys for CellType: 'TextField'
-    // -------------------------------------------------------------------------
-    if (![self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Get value for current PayloadKey
-    // -------------------------------------------------------------------------
-    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    id value = contentDictSettings[PFCSettingsKeyValue];
-    if (value == nil) {
-        value = manifestContentDict[PFCManifestKeyDefaultValue];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Verify value is of the expected class type(s)
-    // -------------------------------------------------------------------------
-    if (value == nil || ([[value class] isSubclassOfClass:[NSString class]] && [value length] == 0)) {
-        DDLogDebug(@"PayloadValue is empty");
-
-        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
-            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
-            return;
-        }
-
-        value = @"";
-    } else if (![[value class] isSubclassOfClass:[NSString class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([value class]), @[ NSStringFromClass([NSString class]) ]);
-    } else {
-        DDLogDebug(@"PayloadValue: %@", value);
-    }
-
-    // -------------------------------------------------------------------------
-    //  Resolve any nested payload keys
-    //  FIXME - Need to implement this for nested keys
-    // -------------------------------------------------------------------------
-    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
-
-    // -------------------------------------------------------------------------
-    //  Get index of current payload in payload array
-    // -------------------------------------------------------------------------
-    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
-    }];
-
-    // ----------------------------------------------------------------------------------
-    //  Create mutable version of current payload, or create new payload if none existed
-    // ----------------------------------------------------------------------------------
-    NSMutableDictionary *payloadDictDict;
-    if (index != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
-    } else {
-        payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Add current key and value to payload
-    // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = value;
-
-    // -------------------------------------------------------------------------
-    //  Save payload to payload array
-    // -------------------------------------------------------------------------
-    if (index != NSNotFound) {
-        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
-    } else {
-        [*payloads addObject:[payloadDictDict copy]];
-    }
-} // createPayloadFromCellTypeTextField:settings:payloads
-
-- (void)createPayloadFromCellTypeTextFieldCheckbox:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
-
-    // -------------------------------------------------------------------------
-    //  Verify required keys for CellType: 'TextFieldCheckbox'
-    // -------------------------------------------------------------------------
-    if (![self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Get value for Checkbox
-    // -------------------------------------------------------------------------
-    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    id valueCheckbox = contentDictSettings[PFCSettingsKeyValueCheckbox];
-    if (valueCheckbox == nil) {
-        valueCheckbox = manifestContentDict[PFCManifestKeyDefaultValueCheckbox];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Verify CheckboxValue is of the expected class type(s)
-    // -------------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if (valueCheckbox == nil) {
-        DDLogWarn(@"CheckboxValue is empty");
-
-        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
-            // FIXME - Log this different, if checkbox payload key is empty for example, or log both payload keys?
-            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]);
-            return;
-        }
-    } else if (![[valueCheckbox class] isEqualTo:[@(YES) class]] && ![[valueCheckbox class] isEqualTo:[@(0) class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valueCheckbox class]),
-                                      @[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]);
-    } else {
-        checkboxState = [(NSNumber *)valueCheckbox boolValue];
-        DDLogDebug(@"CheckboxValue: %@", (checkboxState) ? @"YES" : @"NO");
-    }
-
-    // -------------------------------------------------------------------------
-    //  If Checkbox is enabled, verify required keys for TextField
-    // -------------------------------------------------------------------------
-    if (checkboxState && [self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyPayloadKeyTextField ] manifestContentDict:manifestContentDict]) {
-
-        // ---------------------------------------------------------------------
-        //  Get value for TextField
-        // ---------------------------------------------------------------------
-        id valueTextField = contentDictSettings[PFCSettingsKeyValue];
-        if (valueTextField == nil) {
-            valueTextField = manifestContentDict[PFCManifestKeyDefaultValue];
-        }
-
-        // ---------------------------------------------------------------------
-        //  Verify value is of the expected class type(s)
-        // ---------------------------------------------------------------------
-        if (valueTextField == nil || ([[valueTextField class] isSubclassOfClass:[NSString class]] && [valueTextField length] == 0)) {
-            DDLogDebug(@"PayloadValue is empty");
-
-            if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
-                DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
-                return;
-            }
-
-            valueTextField = @"";
-        } else if (![[valueTextField class] isSubclassOfClass:[NSString class]]) {
-            return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valueTextField class]), @[ NSStringFromClass([NSString class]) ]);
-        } else {
-            DDLogDebug(@"PayloadValue: %@", valueTextField);
-        }
-
-        // ---------------------------------------------------------------------
-        //  Resolve any nested payload keys
-        //  FIXME - Need to implement this for nested keys
-        // ---------------------------------------------------------------------
-        // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
-
-        //  FIXME - Add UUID for PayloadTypeTextField/Checkbox
-        //  FIXME - Rename PFCProfileTemplateKeyUUID to PayloadUUID and use a SettingsKey
-        NSString *payloadTypeTextField;
-        NSString *payloadUUIDTextField;
-        if (manifestContentDict[PFCManifestKeyPayloadTypeCheckbox] != nil) {
-            payloadTypeTextField = manifestContentDict[PFCManifestKeyPayloadTypeTextField];
-            payloadUUIDTextField = settings[@"PayloadUUIDTextField"] ?: settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
-        } else {
-            payloadTypeTextField = manifestContentDict[PFCManifestKeyPayloadType];
-            payloadUUIDTextField = settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
-        }
-
-        // ---------------------------------------------------------------------
-        //  Get index of current payload in payload array
-        // ---------------------------------------------------------------------
-        NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-          return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDTextField ?: @""];
-        }];
-
-        // ----------------------------------------------------------------------------------
-        //  Create mutable version of current payload, or create new payload if none existed
-        // ----------------------------------------------------------------------------------
-        NSMutableDictionary *payloadDictDict;
-        if (index != NSNotFound) {
-            payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
-        } else {
-            payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeTextField payloadUUID:payloadUUIDTextField];
-        }
-
-        // ---------------------------------------------------------------------
-        //  Add current key and value to payload
-        // ---------------------------------------------------------------------
-        payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKeyTextField]] = valueTextField;
-
-        // ---------------------------------------------------------------------
-        //  Save payload to payload array
-        // ---------------------------------------------------------------------
-        if (index != NSNotFound) {
-            [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
-        } else {
-            [*payloads addObject:[payloadDictDict copy]];
-        }
-    }
-
-    if (![self verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyPayloadKeyCheckbox ] manifestContentDict:manifestContentDict]) {
-        return;
-    }
-
-    // -------------------------------------------------------------------------
-    //  Resolve any nested payload keys
-    //  FIXME - Need to implement this for nested keys
-    // -------------------------------------------------------------------------
-    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
-
-    //  FIXME - Add UUID for PayloadTypeTextField/Checkbox
-    //  FIXME - Rename PFCProfileTemplateKeyUUID to PayloadUUID and use a SettingsKey
-    NSString *payloadTypeCheckbox;
-    NSString *payloadUUIDCheckbox;
-    if (manifestContentDict[PFCManifestKeyPayloadTypeCheckbox] != nil) {
-        payloadTypeCheckbox = manifestContentDict[PFCManifestKeyPayloadTypeCheckbox];
-        payloadUUIDCheckbox = settings[@"PayloadUUIDCheckbox"] ?: settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
-    } else {
-        payloadTypeCheckbox = manifestContentDict[PFCManifestKeyPayloadType];
-        payloadUUIDCheckbox = settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Get index of current payload in payload array
-    // -------------------------------------------------------------------------
-    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUIDCheckbox ?: @""];
-    }];
-
-    // ----------------------------------------------------------------------------------
-    //  Create mutable version of current payload, or create new payload if none existed
-    // ----------------------------------------------------------------------------------
-    NSMutableDictionary *payloadDictDict;
-    if (index != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
-    } else {
-        payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadTypeCheckbox payloadUUID:payloadUUIDCheckbox];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Add current key and value to payload
-    // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]] = @(checkboxState);
-
-    // -------------------------------------------------------------------------
-    //  Save payload to payload array
-    // -------------------------------------------------------------------------
-    if (index != NSNotFound) {
-        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
-    } else {
-        [*payloads addObject:[payloadDictDict copy]];
-    }
-
-    // -------------------------------------------------------------------------
-    //
-    // -------------------------------------------------------------------------
-    [self createPayloadFromValueKey:(checkboxState) ? @"True" : @"False"
-                    availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
-                manifestContentDict:manifestContentDict
-                           settings:settings
-                         payloadKey:manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]
-                        payloadType:payloadTypeCheckbox
-                        payloadUUID:payloadUUIDCheckbox
-                           payloads:payloads];
-} // createPayloadFromCellTypeTextFieldCheckbox:settings:payloads
-
 - (void)createPayloadFromCellTypeTextFieldHostPort:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
 
     // -------------------------------------------------------------------------
@@ -1006,7 +627,8 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         DDLogDebug(@"PayloadValueHost is empty");
         valueHost = @"";
     } else if (![[valueHost class] isSubclassOfClass:[NSString class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valueHost class]), @[ NSStringFromClass([NSString class]) ]);
+        return
+            [self payloadErrorForValueClass:NSStringFromClass([valueHost class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
     } else {
         DDLogDebug(@"PayloadValueHost: %@", valueHost);
     }
@@ -1031,7 +653,9 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         // ---------------------------------------------------------------------
         valuePort = @([(NSString *)valuePort integerValue]);
     } else if (![[valuePort class] isEqualTo:[@(0) class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valuePort class]), @[ NSStringFromClass([NSString class]), NSStringFromClass([@(0) class]) ]);
+        return [self payloadErrorForValueClass:NSStringFromClass([valuePort class])
+                                    payloadKey:manifestContentDict[PFCManifestKeyPayloadType]
+                              exptectedClasses:@[ NSStringFromClass([NSString class]), NSStringFromClass([@(0) class]) ]];
     } else {
         DDLogDebug(@"PayloadValuePort: %@", valuePort);
     }
@@ -1130,8 +754,9 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
             return;
         }
     } else if (![[valueCheckbox class] isEqualTo:[@(YES) class]] && ![[valueCheckbox class] isEqualTo:[@(0) class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([valueCheckbox class]),
-                                      @[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]);
+        return [self payloadErrorForValueClass:NSStringFromClass([valueCheckbox class])
+                                    payloadKey:manifestContentDict[PFCManifestKeyPayloadType]
+                              exptectedClasses:@[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]];
     } else {
         checkboxState = [(NSNumber *)valueCheckbox boolValue];
         DDLogDebug(@"CheckboxValue: %@", (checkboxState) ? @"YES" : @"NO");
@@ -1251,7 +876,7 @@ void (^payloadValueClassError)(NSString *payloadKey, NSString *valueClass, NSArr
         DDLogError(@"Value is empty");
         return;
     } else if (![[value class] isSubclassOfClass:[@(0) class]]) {
-        return payloadValueClassError(manifestContentDict[PFCManifestKeyPayloadType], NSStringFromClass([value class]), @[ NSStringFromClass([@(0) class]) ]);
+        return [self payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([@(0) class]) ]];
     }
 
     // -------------------------------------------------------------------------

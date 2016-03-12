@@ -22,7 +22,21 @@
 
 @interface PFCProfileExport : NSObject
 
+- (void)payloadErrorForManifestKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict;
+- (void)payloadErrorForValueClass:(NSString *)valueClass payloadKey:(NSString *)payloadKey exptectedClasses:(NSArray *)expectedClasses;
+
 - (id)initWithProfileSettings:(NSDictionary *)settings mainWindow:(PFCMainWindow *)mainWindow;
 - (void)exportProfileToURL:(NSURL *)url manifests:(NSArray *)manifests settings:(NSDictionary *)settings;
+
+- (NSMutableDictionary *)payloadRootFromManifest:(NSDictionary *)manifest settings:(NSDictionary *)settings payloadType:(NSString *)payloadType payloadUUID:(NSString *)payloadUUID;
+- (void)createPayloadFromValueKey:(NSString *)selectedValue
+                  availableValues:(NSArray *)availableValues
+              manifestContentDict:(NSDictionary *)manifestContentDict
+                         settings:(NSDictionary *)settings
+                       payloadKey:(NSString *)payloadKey
+                      payloadType:(NSString *)payloadType
+                      payloadUUID:(NSString *)payloadUUID
+                         payloads:(NSMutableArray **)payloads;
+- (BOOL)verifyRequiredManifestContentDictKeys:(NSArray *)manifestContentDictKeys manifestContentDict:(NSDictionary *)manifestContentDict;
 
 @end

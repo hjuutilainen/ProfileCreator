@@ -96,9 +96,6 @@
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showValuesSource)) context:nil];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysHidden)) context:nil];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysDisabled)) context:nil];
-    if ([_profileEditor settings]) {
-        [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) context:nil];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +118,7 @@
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showValuesSource)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysHidden)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysDisabled)) options:NSKeyValueObservingOptionNew context:nil];
+    [_profileEditor addObserver:self forKeyPath:NSStringFromSelector(@selector(deallocKVO)) options:NSKeyValueObservingOptionNew context:nil];
     if ([_profileEditor settings]) {
         [[_profileEditor settings] addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:NSKeyValueObservingOptionNew context:nil];
         [_checkboxShowKeysSupervised bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:nil];
@@ -152,6 +150,14 @@
 }
 
 - (void)updateTableViewSettingsFromManifest:(NSDictionary *)manifest {
+
+    // -------------------------------------------------------------------------
+    //  Check that profile settings isn't currently visible
+    // -------------------------------------------------------------------------
+    if (![[[_profileEditor settings] view] isHidden]) {
+        return;
+    }
+
     [_tableViewManifestContent beginUpdates];
     [_arrayManifestContent removeAllObjects];
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
@@ -458,16 +464,21 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
-    if ([keyPath isEqualToString:@"showColumnDisabled"]) {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(showColumnDisabled))]) {
         [self updateManifestColumns];
-    } else if ([keyPath isEqualToString:@"showValuesSource"]) {
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showValuesSource))]) {
         [_tableViewManifestContent beginUpdates];
         [_tableViewManifestContent reloadData];
         [_tableViewManifestContent endUpdates];
-    } else if ([keyPath isEqualToString:@"showKeysDisabled"] || [keyPath isEqualToString:@"showKeysHidden"]) {
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
-    } else if ([keyPath isEqualToString:@"showKeysSupervised"]) {
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {
+        if ([change[NSKeyValueChangeNewKey] boolValue]) {
+            [_profileEditor removeObserver:self forKeyPath:NSStringFromSelector(@selector(deallocKVO)) context:nil];
+            [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) context:nil];
+        }
     }
 } // observeValueForKeyPath:ofObject:change:context
 
