@@ -19,8 +19,10 @@
 
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCConstants.h"
+#import "PFCLog.h"
 #import "PFCManifestParser.h"
 #import "PFCProfileEditor.h"
+#import "PFCProfileExport.h"
 
 @interface PFCSegmentedControlCellView ()
 
@@ -79,6 +81,41 @@
         }
     }
     return [report copy];
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(id)sender {
+
+    // -------------------------------------------------------------------------
+    //  Verify required keys for CellType: 'SegmentedControl'
+    // -------------------------------------------------------------------------
+    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyAvailableValues, PFCManifestKeyValueKeys ] manifestContentDict:manifestContentDict]) {
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Verify AvailableValues isn't empty
+    // -------------------------------------------------------------------------
+    NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
+    if ([availableValues count] == 0) {
+        DDLogError(@"AvailableValues is empty");
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Verify ValueKeys isn't empty
+    // -------------------------------------------------------------------------
+    NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
+    if ([valueKeys count] == 0) {
+        DDLogError(@"ValueKeys is empty");
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Loop through all values in "AvailableValues" and add to payloads
+    // -------------------------------------------------------------------------
+    for (NSString *selection in availableValues) {
+        [sender createPayloadFromManifestContent:valueKeys[selection] settings:settings payloads:payloads];
+    }
 }
 
 @end

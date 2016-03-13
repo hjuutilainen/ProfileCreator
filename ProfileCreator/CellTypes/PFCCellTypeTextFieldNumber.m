@@ -24,6 +24,7 @@
 #import "PFCError.h"
 #import "PFCLog.h"
 #import "PFCManifestUtility.h"
+#import "PFCProfileExport.h"
 
 @interface PFCTextFieldNumberCellView ()
 
@@ -174,6 +175,86 @@
     return nil;
 }
 
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+
+    // -------------------------------------------------------------------------
+    //  Verify required keys for CellType: 'TextFieldNumber'
+    // -------------------------------------------------------------------------
+    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey, PFCManifestKeyPayloadValueType ]
+                                   manifestContentDict:manifestContentDict]) {
+        return;
+    }
+
+    NSString *payloadKey = manifestContentDict[PFCManifestKeyPayloadKey];
+
+    // -------------------------------------------------------------------------
+    //  Verify PayloadValueType is set and valid
+    // -------------------------------------------------------------------------
+    NSString *payloadValueType = manifestContentDict[PFCManifestKeyPayloadValueType];
+    if (![payloadValueType isEqualToString:@"Integer"] && ![payloadValueType isEqualToString:@"Float"]) {
+        DDLogError(@"Unknown PayloadValueType: %@ for CellType: %@", payloadValueType, PFCCellTypeTextFieldNumber);
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Get value
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    id value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    if (value == nil) {
+        // FIXME - Value for a number cannot be empty, how to handle this?
+        DDLogError(@"Value is empty");
+        return;
+    } else if (![[value class] isSubclassOfClass:[@(0) class]]) {
+        return [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([@(0) class]) ]];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Resolve any nested payload keys
+    //  FIXME - Need to implement this for nested keys
+    // -------------------------------------------------------------------------
+    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+    // -------------------------------------------------------------------------
+    //  Get index of current payload in payload array
+    // -------------------------------------------------------------------------
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+    }];
+
+    // ----------------------------------------------------------------------------------
+    //  Create mutable version of current payload, or create new payload if none existed
+    // ----------------------------------------------------------------------------------
+    NSMutableDictionary *payloadDictDict;
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
+    } else {
+        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    if ([payloadValueType isEqualToString:@"Integer"]) {
+        payloadDictDict[payloadKey] = @([(NSNumber *)value integerValue]);
+    } else if ([payloadValueType isEqualToString:@"Float"]) {
+        payloadDictDict[payloadKey] = @([(NSNumber *)value floatValue]);
+    }
+
+    // -------------------------------------------------------------------------
+    //  Save payload to payload array
+    // -------------------------------------------------------------------------
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+    } else {
+        [*payloads addObject:[payloadDictDict copy]];
+    }
+}
+
 @end
 
 @interface PFCTextFieldNumberLeftCellView ()
@@ -290,6 +371,10 @@
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     return [PFCTextFieldNumberCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+    [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
 }
 
 @end

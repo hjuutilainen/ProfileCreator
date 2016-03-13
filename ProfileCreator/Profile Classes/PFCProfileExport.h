@@ -37,6 +37,7 @@
                       payloadType:(NSString *)payloadType
                       payloadUUID:(NSString *)payloadUUID
                          payloads:(NSMutableArray **)payloads;
+- (void)createPayloadFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
 - (BOOL)verifyRequiredManifestContentDictKeys:(NSArray *)manifestContentDictKeys manifestContentDict:(NSDictionary *)manifestContentDict;
 
 @end
