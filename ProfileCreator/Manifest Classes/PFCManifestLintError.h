@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, PFCLintErrorCodes) {
     kPFCLintErrorKeyRequiredNotFound,
     kPFCLintErrorKeySuggestedNotFound,
     kPFCLintErrorValueInvalid,
+    kPFCLintErrorValueRequiredNotFound,
     kPFCLintErrorDuplicate,
     kPFCLintErrorResourceNotFound,
     kPFCLintErrorKeyIncompatible

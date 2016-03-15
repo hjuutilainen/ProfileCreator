@@ -119,11 +119,11 @@
 
 - (NSString *)typeStringFromValue:(id)value {
     id valueClass = [value class];
-    if ([value isKindOfClass:[NSString class]])
+    if ([value isKindOfClass:[NSString class]]) {
         return PFCValueTypeString;
-    if ([valueClass isEqualTo:[@(YES) class]])
+    } else if ([valueClass isEqualTo:[@(YES) class]]) {
         return PFCValueTypeBoolean;
-    if ([valueClass isEqualTo:[@(0) class]]) {
+    } else if ([valueClass isEqualTo:[@(0) class]]) {
         CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
 
         /*
@@ -155,16 +155,17 @@
 
         DDLogError(@"Unknown CFNumberType: %ld", numberType);
         return @"Number";
-    }
-    if ([value isKindOfClass:[NSArray class]])
+    } else if ([value isKindOfClass:[NSArray class]]) {
         return PFCValueTypeArray;
-    if ([value isKindOfClass:[NSDictionary class]])
+    } else if ([value isKindOfClass:[NSDictionary class]]) {
         return PFCValueTypeDict;
-    if ([value isKindOfClass:[NSDate class]])
+    } else if ([value isKindOfClass:[NSDate class]]) {
         return PFCValueTypeDate;
-    if ([value isKindOfClass:[NSData class]])
+    } else if ([value isKindOfClass:[NSData class]]) {
         return PFCValueTypeData;
-    return PFCValueTypeUnknown;
+    } else {
+        return PFCValueTypeUnknown;
+    }
 } // typeStringFromValue
 
 - (NSString *)cellTypeFromTypeString:(NSString *)typeString {

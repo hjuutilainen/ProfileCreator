@@ -285,23 +285,131 @@
 
 - (NSArray *)reportForManifestContent:(NSDictionary *)manifest {
     NSMutableArray *reportContent = [[NSMutableArray alloc] init];
-    NSString *keyPath = [NSString stringWithFormat:@":%@", PFCManifestKeyManifestContent];
-    for (NSDictionary *manifestContentDict in manifest[PFCManifestKeyManifestContent] ?: @[]) {
-        [reportContent addObjectsFromArray:[self reportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:keyPath]];
-    }
+    NSString *parentKeyPath = [NSString stringWithFormat:@":%@", PFCManifestKeyManifestContent];
+    __block NSString *keyPath;
+    [manifest[PFCManifestKeyManifestContent] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull manifestContentDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
+      keyPath = [NSString stringWithFormat:@"%@:%lu", parentKeyPath, (unsigned long)idx];
+      [reportContent addObjectsFromArray:[self reportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[keyPath copy]]];
+    }];
     return [reportContent copy];
 }
 
 - (NSArray *)reportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     NSMutableArray *reportContentDict = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  Reports for general keys
+    // -------------------------------------------------------------------------
+    [reportContentDict addObject:[self reportForIdentifier:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];         // Key: Identifier
+    [reportContentDict addObject:[self reportForOptional:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Optional
+    [reportContentDict addObject:[self reportForToolTipDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ToolTipDescription
+
+    // -------------------------------------------------------------------------
+    //  Reports for CellType specific keys
+    // -------------------------------------------------------------------------
     if (manifestContentDict[PFCManifestKeyCellType] != nil) {
         NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
 
-        // -------------------------------------------------------------------------
-        //  CellType: TextField
-        // -------------------------------------------------------------------------
-        if ([cellType isEqualToString:PFCCellTypeTextField]) {
-            [reportContentDict addObjectsFromArray:[self reportForCellTypeTextField:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+        // ---------------------------------------------------------------------
+        //  Checkbox
+        // ---------------------------------------------------------------------
+        if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
+
+            // ---------------------------------------------------------------------
+            //  CheckboxNoDescription
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
+
+            // ---------------------------------------------------------------------
+            //  DatePicker
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
+
+            // ---------------------------------------------------------------------
+            //  DatePickerNoTitle
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle]) {
+
+            // ---------------------------------------------------------------------
+            //  File
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeFile]) {
+
+            // ---------------------------------------------------------------------
+            //  Padding
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypePadding]) {
+
+            // ---------------------------------------------------------------------
+            //  PopUpButton
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
+
+            // ---------------------------------------------------------------------
+            //  PopUpButtonLeft
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
+
+            // ---------------------------------------------------------------------
+            //  PopUpButtonNoTitle
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
+
+            // ---------------------------------------------------------------------
+            //  SegmentedControl
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
+
+            // ---------------------------------------------------------------------
+            //  TableView
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
+
+            // ---------------------------------------------------------------------
+            //  TextField
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
+            [reportContentDict addObjectsFromArray:[self reportForCellTypeTextField:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
+
+            // ---------------------------------------------------------------------
+            //  TextFieldCheckbox
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldCheckbox]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldDaysHoursNoTitle
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldHostPort
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldHostPortCheckbox
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldNoTitle
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldNumber
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumber]) {
+
+            // ---------------------------------------------------------------------
+            //  TextFieldNumberLeft
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
+
+            // ---------------------------------------------------------------------
+            //  TextView
+            // ---------------------------------------------------------------------
+        } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
 
             // -------------------------------------------------------------------------
             //  CellType: *UNKNOWN*
@@ -320,11 +428,11 @@
     return [reportContentDict copy];
 }
 
-- (NSArray *)reportForCellTypeTextField:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportTextField;
-    [reportTextField addObject:[self reportForIdentifier:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Identifier
-    return [reportTextField copy];
-}
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark General Keys
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
 
 - (NSDictionary *)reportForIdentifier:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyIdentifier] != nil) {
@@ -349,6 +457,177 @@
         }
     } else {
         return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyIdentifier keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForOptional:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && manifestContentDict[PFCManifestKeyOptional] != nil) {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                               key:PFCManifestKeyOptional
+                                           keyPath:parentKeyPath
+                                             value:manifestContentDict[PFCManifestKeyOptional]
+                                          manifest:manifest
+                                         overrides:nil];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForToolTipDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[PFCManifestKeyToolTipDescription] != nil) {
+        if ([manifestContentDict[PFCManifestKeyToolTipDescription] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyToolTipDescription keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        }
+    }
+    return @{};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Payload Keys
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSDictionary *)reportForPayloadKey:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
+    if (manifestContentDict[PFCManifestKeyPayloadKey] != nil) {
+        if (ignored) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                                   key:PFCManifestKeyPayloadKey
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyPayloadKey]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+        if ([manifestContentDict[PFCManifestKeyPayloadKey] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadKey keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        }
+
+        if ([_payloadKeys containsObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[PFCManifestKeyPayloadKey]]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorDuplicate
+                                                   key:PFCManifestKeyPayloadKey
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyPayloadKey]
+                                              manifest:manifest
+                                             overrides:nil];
+        } else {
+            [_payloadKeys addObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[PFCManifestKeyPayloadKey]]];
+        }
+
+    } else if (!ignored) {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadKey keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForPayloadType:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
+    if (manifestContentDict[PFCManifestKeyPayloadType] != nil) {
+        if (ignored) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                                   key:PFCManifestKeyPayloadType
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyPayloadType]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+        if ([manifestContentDict[PFCManifestKeyPayloadType] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        }
+
+        if (![_payloadTypes containsObject:manifestContentDict[PFCManifestKeyPayloadType]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueRequiredNotFound
+                                                   key:PFCManifestKeyPayloadKey
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyPayloadType]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+    } else if (!ignored) {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForPayloadValueType:(NSDictionary *)manifestContentDict
+                                   manifest:(NSDictionary *)manifest
+                              parentKeyPath:(NSString *)parentKeyPath
+                                    ignored:(BOOL)ignored
+                               allowedTypes:(NSArray *)allowedTypes {
+    if (manifestContentDict[PFCManifestKeyPayloadValueType] != nil) {
+        if (ignored) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                                   key:PFCManifestKeyPayloadValueType
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyPayloadValueType]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+        // FIXME - Finish these tests
+    } else if (!ignored) {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadValueType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark CellType Keys
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSArray *)reportForCellTypeTextField:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextField;
+    [reportTextField addObject:[self reportForPayloadKey:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:NO]];  // Key: PayloadKey
+    [reportTextField addObject:[self reportForPayloadType:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:NO]]; // Key: PayloadType
+    [reportTextField
+        addObject:[self reportForPayloadValueType:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:YES allowedTypes:@[ PFCValueTypeString ]]]; // Key: PayloadValueType
+    return [reportTextField copy];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Availability
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSArray *)reportForAvailability:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportAvailability = [[NSMutableArray alloc] init];
+    NSString *keyPath = [NSString stringWithFormat:@"%@:%@", parentKeyPath, PFCManifestKeyAvailability];
+    __block NSString *arrayKeyPath;
+    [manifestContentDict[PFCManifestKeyAvailability] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull availabilityDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
+      arrayKeyPath = [NSString stringWithFormat:@"%@:%lu", keyPath, (unsigned long)idx];
+      [reportAvailability addObject:[self reportForAvailabilityKey:availabilityDict manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:arrayKeyPath]];
+    }];
+    return [reportAvailability copy];
+}
+
+- (NSDictionary *)reportForAvailabilityKey:(NSDictionary *)availabilityDict
+                       manifestContentDict:(NSDictionary *)manifestContentDict
+                                  manifest:(NSDictionary *)manifest
+                             parentKeyPath:(NSString *)parentKeyPath {
+    if (availabilityDict[@"AvailabilityKey"] != nil) {
+        if ([manifestContentDict[@"AvailabilityKey"] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
+                                                   key:@"AvailabilityKey"
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[@"AvailabilityKey"]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+        if (![[manifestContentDict allKeys] containsObject:manifestContentDict[@"AvailabilityKey"]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
+                                                   key:@"AvailabilityKey"
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[@"AvailabilityKey"]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+    } else {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:@"AvailabilityKey" keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }

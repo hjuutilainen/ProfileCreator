@@ -69,7 +69,7 @@
     } else if ([valueType isEqualToString:PFCValueTypeData]) {
         return (NSData *)value;
     } else {
-        return @"Unknown";
+        return @"<Empty>";
     }
 }
 
@@ -109,6 +109,12 @@
         errorMessage = @"Value for key is invalid";
         errorSeverity = @(kPFCLintErrorSeverityError);
         errorRecovery = @"Update value";
+        break;
+
+    case kPFCLintErrorValueRequiredNotFound:
+        errorMessage = @"Required value not found";
+        errorSeverity = @(kPFCLintErrorSeverityError);
+        errorRecovery = @"Update value definition";
         break;
 
     case kPFCLintErrorDuplicate:

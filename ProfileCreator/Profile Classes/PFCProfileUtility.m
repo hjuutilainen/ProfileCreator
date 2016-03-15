@@ -135,7 +135,6 @@
     if (modificationDate) {
         if (_savedProfilesModificationDate) {
             if ([modificationDate isEqualToDate:_savedProfilesModificationDate]) {
-                DDLogDebug(@"Profile save folder have not changed, returning cached profile array");
                 return NO;
             } else {
                 DDLogDebug(@"Profile save folder have changed, reloading saved profiles from disk...");
