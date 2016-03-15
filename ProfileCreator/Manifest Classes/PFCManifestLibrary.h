@@ -41,11 +41,12 @@
 // -----------------------------------------------------------------------------
 //  Library Methods
 // -----------------------------------------------------------------------------
-- (NSArray *)libraryApple:(NSError **)error acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryLibraryPreferencesLocal:(NSError **)error acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryCustom:(NSError **)error acceptCached:(BOOL)acceptCached;
-- (NSArray *)libraryMCX:(NSError **)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryAll:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryApple:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryUserLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryLibraryPreferencesLocal:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryCustom:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
+- (NSArray *)libraryMCX:(NSError *__autoreleasing *)error acceptCached:(BOOL)acceptCached;
 - (NSDictionary *)manifestFromLibrary:(PFCPayloadLibrary)library withDomain:(NSString *)domain;
 - (NSArray *)manifestsWithDomains:(NSArray *)domains;
 

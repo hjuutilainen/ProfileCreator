@@ -23,12 +23,14 @@
 
 #import "PFCMainWindow.h"
 #import "PFCManifestLibrary.h"
+#import "PFCManifestLinter.h"
 #import "PFCPreferences.h"
 
 @interface PFCAppDelegate ()
 
 @property PFCMainWindow *mainWindowController;
 @property PFCPreferences *preferencesController;
+@property PFCManifestLinter *manifestLinter;
 
 @end
 
@@ -95,6 +97,17 @@
     }
 }
 
+- (void)menuItemManifestLinter {
+
+    if (!_manifestLinter) {
+        _manifestLinter = [[PFCManifestLinter alloc] init];
+    }
+
+    if (_manifestLinter) {
+        [[_manifestLinter window] makeKeyAndOrderFront:self];
+    }
+}
+
 - (void)setupMenuItems {
 
     // --------------------------------------------------------------
@@ -137,6 +150,20 @@
     if (newGroup) {
         [newGroup setTarget:_mainWindowController];
         [newGroup setAction:@selector(menuItemNewGroup)];
+    }
+
+    // --------------------------------------------------------------
+    //  Get Main Menu -> Developer
+    // --------------------------------------------------------------
+    NSMenu *menuDeveloper = [[mainMenu itemWithTitle:@"Developer"] submenu];
+
+    // --------------------------------------------------------------
+    //  Update Menu Item -> Developer -> Manifest Linter
+    // --------------------------------------------------------------
+    NSMenuItem *manifestLinter = [menuDeveloper itemWithTitle:@"Manifest Linter"];
+    if (manifestLinter) {
+        [manifestLinter setTarget:self];
+        [manifestLinter setAction:@selector(menuItemManifestLinter)];
     }
 } // setupMenuItems
 

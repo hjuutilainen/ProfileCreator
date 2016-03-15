@@ -24,7 +24,7 @@
         <window title="ProfileCreator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="ZQo-mr-iCl">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
             <rect key="contentRect" x="335" y="390" width="800" height="625"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" focusRingType="none" id="hM9-4C-HuU">
                 <rect key="frame" x="0.0" y="0.0" width="800" height="625"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -165,7 +165,7 @@
                     <toolbarItem reference="5a6-ou-IaM"/>
                 </defaultToolbarItems>
             </toolbar>
-            <point key="canvasLocation" x="-1753" y="-133.5"/>
+            <point key="canvasLocation" x="-2054" y="-329.5"/>
         </window>
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>

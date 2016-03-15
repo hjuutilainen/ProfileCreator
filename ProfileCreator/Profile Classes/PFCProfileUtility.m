@@ -251,8 +251,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)profilesWithUUIDs:(NSArray *)profileUUIDs {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogDebug(@"Profile UUIDs: %@", profileUUIDs);
     if ([self shouldUpdateProfileCache]) {
         [self updateProfileCache];
     }
@@ -267,8 +265,6 @@
 } // profilesWithUUIDs
 
 - (NSDictionary *)profileWithUUID:(NSString *)uuid {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogDebug(@"Profile UUID: %@", uuid);
     if ([self shouldUpdateProfileCache]) {
         [self updateProfileCache];
     }

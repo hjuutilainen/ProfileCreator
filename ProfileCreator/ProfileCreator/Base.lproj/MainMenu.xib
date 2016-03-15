@@ -646,6 +646,23 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Developer" id="83j-oD-O5V">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Developer" id="E0Q-xj-Oih">
+                        <items>
+                            <menuItem title="Manifest Linter" id="FLL-q6-e9j">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <binding destination="qFD-xY-xi6" name="hidden" keyPath="values.ShowDeveloperMenu" id="wyS-0O-yBE">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </menuItem>
                 <menuItem title="Help" id="wpr-3q-Mcd">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
@@ -660,5 +677,6 @@
                 </menuItem>
             </items>
         </menu>
+        <userDefaultsController representsSharedInstance="YES" id="qFD-xY-xi6"/>
     </objects>
 </document>

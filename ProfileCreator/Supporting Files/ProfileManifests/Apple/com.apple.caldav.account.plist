@@ -14,7 +14,7 @@
 		</dict>
 	</array>
 	<key>CellType</key>
-	<string>Menu</string>
+	<string>TextField</string>
 	<key>Domain</key>
 	<string>com.apple.caldav.account</string>
 	<key>Description</key>

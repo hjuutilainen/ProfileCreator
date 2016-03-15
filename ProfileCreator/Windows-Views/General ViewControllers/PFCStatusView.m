@@ -108,7 +108,7 @@
     case kPFCStatusNoMatches:
         break;
     case kPFCStatusNoProfileSelected:
-        attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:14];
+        attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:19];
         break;
     case kPFCStatusNoSelection:
         break;

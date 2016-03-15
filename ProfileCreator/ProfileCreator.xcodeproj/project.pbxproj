@@ -109,6 +109,10 @@
 		538BC07B1C6D06990099F779 /* PFCMainWindowPreviewPayload.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538BC0791C6D06990099F779 /* PFCMainWindowPreviewPayload.xib */; };
 		538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 538C31801C5E94E100D0125C /* PFCManifestLibrary.m */; };
 		53908EAD1C540FA4009468F0 /* PFCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 53908EAC1C540FA4009468F0 /* PFCError.m */; };
+		539272051C9596FF00C15343 /* PFCManifestLint.m in Sources */ = {isa = PBXBuildFile; fileRef = 539272041C9596FF00C15343 /* PFCManifestLint.m */; };
+		539272171C95A0CC00C15343 /* PFCManifestLintError.m in Sources */ = {isa = PBXBuildFile; fileRef = 539272161C95A0CC00C15343 /* PFCManifestLintError.m */; };
+		5392721C1C95A4BA00C15343 /* PFCManifestLinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5392721A1C95A4BA00C15343 /* PFCManifestLinter.m */; };
+		5392721D1C95A4BA00C15343 /* PFCManifestLinter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5392721B1C95A4BA00C15343 /* PFCManifestLinter.xib */; };
 		539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */; };
 		539616661C823FDB00FE6470 /* com.apple.applicationaccess.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */; };
 		53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */; };
@@ -445,6 +449,13 @@
 		538C31801C5E94E100D0125C /* PFCManifestLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLibrary.m; path = "Manifest Classes/PFCManifestLibrary.m"; sourceTree = "<group>"; };
 		53908EAB1C540FA4009468F0 /* PFCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCError.h; path = "General Classes/PFCError.h"; sourceTree = SOURCE_ROOT; };
 		53908EAC1C540FA4009468F0 /* PFCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCError.m; path = "General Classes/PFCError.m"; sourceTree = SOURCE_ROOT; };
+		539272031C9596FF00C15343 /* PFCManifestLint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestLint.h; path = "Manifest Classes/PFCManifestLint.h"; sourceTree = "<group>"; };
+		539272041C9596FF00C15343 /* PFCManifestLint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLint.m; path = "Manifest Classes/PFCManifestLint.m"; sourceTree = "<group>"; };
+		539272151C95A0CC00C15343 /* PFCManifestLintError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestLintError.h; path = "Manifest Classes/PFCManifestLintError.h"; sourceTree = "<group>"; };
+		539272161C95A0CC00C15343 /* PFCManifestLintError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLintError.m; path = "Manifest Classes/PFCManifestLintError.m"; sourceTree = "<group>"; };
+		539272191C95A4BA00C15343 /* PFCManifestLinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestLinter.h; path = "Windows-Views/Manifest Linter/PFCManifestLinter.h"; sourceTree = "<group>"; };
+		5392721A1C95A4BA00C15343 /* PFCManifestLinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLinter.m; path = "Windows-Views/Manifest Linter/PFCManifestLinter.m"; sourceTree = "<group>"; };
+		5392721B1C95A4BA00C15343 /* PFCManifestLinter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCManifestLinter.xib; path = "Windows-Views/Manifest Linter/PFCManifestLinter.xib"; sourceTree = "<group>"; };
 		539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.applicationaccess.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.applicationaccess.plist"; sourceTree = "<group>"; };
 		53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+NSLayoutConstraintFilter.h"; path = "Categories/NSView+NSLayoutConstraintFilter.h"; sourceTree = "<group>"; };
 		53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+NSLayoutConstraintFilter.m"; path = "Categories/NSView+NSLayoutConstraintFilter.m"; sourceTree = "<group>"; };
@@ -594,6 +605,10 @@
 				53597D8A1C5268C50062AADC /* PFCManifestParser.m */,
 				538C317F1C5E94E100D0125C /* PFCManifestLibrary.h */,
 				538C31801C5E94E100D0125C /* PFCManifestLibrary.m */,
+				539272031C9596FF00C15343 /* PFCManifestLint.h */,
+				539272041C9596FF00C15343 /* PFCManifestLint.m */,
+				539272151C95A0CC00C15343 /* PFCManifestLintError.h */,
+				539272161C95A0CC00C15343 /* PFCManifestLintError.m */,
 			);
 			name = "Manifest Classes";
 			sourceTree = "<group>";
@@ -790,6 +805,16 @@
 			name = "Profile Classes";
 			sourceTree = "<group>";
 		};
+		539272181C95A47800C15343 /* Manifest Linter */ = {
+			isa = PBXGroup;
+			children = (
+				539272191C95A4BA00C15343 /* PFCManifestLinter.h */,
+				5392721A1C95A4BA00C15343 /* PFCManifestLinter.m */,
+				5392721B1C95A4BA00C15343 /* PFCManifestLinter.xib */,
+			);
+			name = "Manifest Linter";
+			sourceTree = "<group>";
+		};
 		539FC5CB1C53A1D00074CEC9 /* Apple */ = {
 			isa = PBXGroup;
 			children = (
@@ -928,6 +953,7 @@
 				53C782311C85C16C00E731B1 /* Preferences */,
 				53C8B26D1C6A62D8003B15FF /* Main Window */,
 				53A5E4631C7F9CA700A79E44 /* Profile Editor */,
+				539272181C95A47800C15343 /* Manifest Linter */,
 				53C3E3261C8B0BBF00C15B73 /* General ViewControllers */,
 			);
 			name = "Windows-Views";
@@ -1233,6 +1259,7 @@
 				537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */,
 				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
 				53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */,
+				5392721D1C95A4BA00C15343 /* PFCManifestLinter.xib in Resources */,
 				539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */,
 				5307CD8C1C921EAA000064A6 /* PFCProfileEditorInfoMenu.xib in Resources */,
 				53FCF0171C1F5DB500E440CB /* com.apple.proxies.plist in Resources */,
@@ -1265,6 +1292,7 @@
 				5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */,
 				53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */,
 				53C782441C85C18900E731B1 /* PFCPreferences.m in Sources */,
+				539272171C95A0CC00C15343 /* PFCManifestLintError.m in Sources */,
 				5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */,
 				53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */,
 				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
@@ -1294,12 +1322,14 @@
 				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
 				537564D21C903862007F8829 /* PFCProfileEditorManifest.m in Sources */,
 				53ADF6261C7F9792005BA0FC /* PFCCellTypeTextFieldNumber.m in Sources */,
+				539272051C9596FF00C15343 /* PFCManifestLint.m in Sources */,
 				5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */,
 				53C7824A1C85C2E600E731B1 /* PFCPreferencesGeneral.m in Sources */,
 				53C3E32A1C8B0CA800C15B73 /* PFCStatusView.m in Sources */,
 				53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */,
 				53D5A50E1C8E14B60099CD8A /* PFCProfileEditorLibrary.m in Sources */,
 				538C31811C5E94E100D0125C /* PFCManifestLibrary.m in Sources */,
+				5392721C1C95A4BA00C15343 /* PFCManifestLinter.m in Sources */,
 				53FC42DB1C79D40B00F3A7AD /* PFCProfileExport.m in Sources */,
 				536888FE1C7E47CF00759E68 /* PFCCellTypeTextView.m in Sources */,
 				537B02261C61449F0072093C /* PFCMainWindow.m in Sources */,
