@@ -93,6 +93,7 @@
 		537564D31C903862007F8829 /* PFCProfileEditorManifest.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537564D11C903862007F8829 /* PFCProfileEditorManifest.xib */; };
 		537612F81C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 537612F61C662D8E00CFCE1D /* PFCMainWindowGroupTitle.m */; };
 		537612F91C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537612F71C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib */; };
+		5379F70F1C999D09003BF7BD /* com.apple.passcode.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
@@ -290,6 +291,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				5379F70F1C999D09003BF7BD /* com.apple.passcode.plist in Copy Manifests */,
 				539616661C823FDB00FE6470 /* com.apple.applicationaccess.plist in Copy Manifests */,
 				53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */,
 				53751FE61C1B5DC500FF3CB0 /* com.apple.security.certificate.plist in Copy Manifests */,

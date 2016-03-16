@@ -16,6 +16,12 @@
 	<string>/Applications/Mail.app/Contents/Resources/ApplicationIcon.icns</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>84E7E56D-DE77-409A-BC7A-C90FFCC61389</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.mail.managed</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>
@@ -92,7 +98,7 @@
 				</array>
 			</dict>
 			<key>ToolTipDescription</key>
-			<string></string>
+			<string>The protocol for accessing the account</string>
 		</dict>
 		<dict>
 			<key>Identifier</key>

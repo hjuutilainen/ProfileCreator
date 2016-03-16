@@ -33,6 +33,10 @@
 @property NSMutableArray *payloadKeys;
 @property NSMutableArray *payloadTypes;
 @property NSString *payloadTabTitle;
+@property NSMutableArray *manifestRootKeys;
+
+// Reset each manifest content dict
+@property NSMutableArray *manifestContentDictKeys;
 
 @end
 
@@ -47,6 +51,9 @@
         _payloadKeys = [[NSMutableArray alloc] init];
         _payloadTypes = [[NSMutableArray alloc] init];
         _manifestIdentifiers = [[NSMutableArray alloc] init];
+        _manifestRootKeys = [[NSMutableArray alloc] init];
+
+        _manifestContentDictKeys = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -86,6 +93,9 @@
 
 - (NSArray *)reportForManifestRoot:(NSDictionary *)manifest {
     NSMutableArray *manifestReportRoot = [[NSMutableArray alloc] init];
+
+    [_manifestRootKeys removeAllObjects];
+
     [manifestReportRoot addObject:[self reportForManifestRootCellType:manifest]];        // Key: CellType
     [manifestReportRoot addObject:[self reportForManifestRootDomain:manifest]];          // Key: Domain
     [manifestReportRoot addObjectsFromArray:[self reportForManifestRootIcon:manifest]];  // Key: IconName, IconPath, IconBundlePath
@@ -94,11 +104,19 @@
     [manifestReportRoot addObject:[self reportForManifestRootPayloadTypes:manifest]];    // Key: PayloadTypes
     [manifestReportRoot addObject:[self reportForManifestRootRequired:manifest]];        // Key: Required
     [manifestReportRoot addObject:[self reportForManifestRootTitle:manifest]];           // Key: Title
+
+    for (NSString *key in [manifest allKeys]) {
+        if (![_manifestRootKeys containsObject:key]) {
+            [manifestReportRoot addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyIncompatible key:key keyPath:nil value:manifest[key] manifest:manifest overrides:nil]];
+        }
+    }
+
     return [manifestReportRoot copy];
 }
 
 - (NSDictionary *)reportForManifestRootCellType:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyCellType] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyCellType];
         if (![manifest[PFCManifestKeyCellType] isEqualToString:@"Menu"]) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyCellType keyPath:nil value:manifest[PFCManifestKeyCellType] manifest:manifest overrides:nil];
         }
@@ -110,6 +128,7 @@
 
 - (NSDictionary *)reportForManifestRootDomain:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyDomain] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyDomain];
         if ([manifest[PFCManifestKeyDomain] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyDomain keyPath:nil value:manifest[PFCManifestKeyDomain] manifest:manifest overrides:nil];
         }
@@ -138,6 +157,7 @@
 - (NSDictionary *)reportForManifestRootIconName:(NSDictionary *)manifest {
     // FIXME - Haven't tested thoroughly
     if (manifest[PFCManifestKeyIconName] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyIconName];
         if ([manifest[PFCManifestKeyIconName] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyIconName keyPath:nil value:manifest[PFCManifestKeyIconName] manifest:manifest overrides:nil];
         } else if ([NSImage imageNamed:manifest[PFCManifestKeyIconName]] == nil) {
@@ -150,6 +170,7 @@
 - (NSDictionary *)reportForManifestRootIconPath:(NSDictionary *)manifest {
     // FIXME - Haven't tested thoroughly
     if (manifest[PFCManifestKeyIconPath] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyIconPath];
         if ([manifest[PFCManifestKeyIconPath] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyIconPath keyPath:nil value:manifest[PFCManifestKeyIconPath] manifest:manifest overrides:nil];
         }
@@ -170,6 +191,7 @@
 - (NSDictionary *)reportForManifestRootIconPathBundle:(NSDictionary *)manifest {
     // FIXME - Haven't tested thoroughly
     if (manifest[PFCManifestKeyIconPathBundle] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyIconPathBundle];
         if ([manifest[PFCManifestKeyIconPathBundle] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
                                                    key:PFCManifestKeyIconPathBundle
@@ -204,6 +226,7 @@
 
 - (NSDictionary *)reportForManifestRootManifestContent:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyManifestContent] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyManifestContent];
         if ([manifest[PFCManifestKeyManifestContent] count] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
                                                    key:PFCManifestKeyManifestContent
@@ -220,7 +243,8 @@
 
 - (NSDictionary *)reportForManifestRootPayloadTabTitle:(NSDictionary *)manifest {
     [self setPayloadTabTitle:manifest[PFCManifestKeyPayloadTabTitle] ?: @""];
-    if ([_payloadTabTitle length] != 0) {
+    if (manifest[PFCManifestKeyPayloadTabTitle] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyPayloadTabTitle];
         if (![manifest[PFCManifestKeyAllowMultiplePayloads] boolValue]) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:PFCManifestKeyPayloadTabTitle keyPath:nil value:nil manifest:manifest overrides:nil];
         }
@@ -232,6 +256,7 @@
 
 - (NSDictionary *)reportForManifestRootPayloadTypes:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyPayloadTypes] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyPayloadTypes];
         if ([manifest[PFCManifestKeyPayloadTypes] count] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadTypes keyPath:nil value:manifest[PFCManifestKeyPayloadTypes] manifest:manifest overrides:nil];
         }
@@ -254,14 +279,18 @@
         //  ..and contains key 'Required' at the root, return error
         // -------------------------------------------------------------------------
         if (manifest[PFCManifestKeyRequired] != nil) {
+            [_manifestRootKeys addObject:PFCManifestKeyRequired];
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:PFCManifestKeyRequired keyPath:nil value:manifest[PFCManifestKeyRequired] manifest:manifest overrides:nil];
         }
+    } else if (manifest[PFCManifestKeyRequired] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyRequired];
     }
     return @{};
 }
 
 - (NSDictionary *)reportForManifestRootTitle:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyTitle] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyTitle];
         if ([manifest[PFCManifestKeyTitle] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyTitle keyPath:nil value:manifest[PFCManifestKeyTitle] manifest:manifest overrides:nil];
         }
@@ -288,6 +317,7 @@
     NSString *parentKeyPath = [NSString stringWithFormat:@":%@", PFCManifestKeyManifestContent];
     __block NSString *keyPath;
     [manifest[PFCManifestKeyManifestContent] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull manifestContentDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
+      [_manifestContentDictKeys removeAllObjects];
       keyPath = [NSString stringWithFormat:@"%@:%lu", parentKeyPath, (unsigned long)idx];
       [reportContent addObjectsFromArray:[self reportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[keyPath copy]]];
     }];
@@ -425,6 +455,14 @@
     } else {
         [reportContentDict addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyCellType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil]];
     }
+
+    for (NSString *key in [manifestContentDict allKeys]) {
+        if (![_manifestContentDictKeys containsObject:key]) {
+            [reportContentDict
+                addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyIncompatible key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil]];
+        }
+    }
+
     return [reportContentDict copy];
 }
 
@@ -436,6 +474,8 @@
 
 - (NSDictionary *)reportForIdentifier:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyIdentifier] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyIdentifier];
+
         if ([manifestContentDict[PFCManifestKeyIdentifier] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
                                                    key:PFCManifestKeyIdentifier
@@ -462,19 +502,24 @@
 }
 
 - (NSDictionary *)reportForOptional:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && manifestContentDict[PFCManifestKeyOptional] != nil) {
-        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
-                                               key:PFCManifestKeyOptional
-                                           keyPath:parentKeyPath
-                                             value:manifestContentDict[PFCManifestKeyOptional]
-                                          manifest:manifest
-                                         overrides:nil];
+    if (manifestContentDict[PFCManifestKeyOptional] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyOptional];
+
+        if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && manifestContentDict[PFCManifestKeyOptional] != nil) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                                   key:PFCManifestKeyOptional
+                                               keyPath:parentKeyPath
+                                                 value:manifestContentDict[PFCManifestKeyOptional]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
     }
     return @{};
 }
 
 - (NSDictionary *)reportForToolTipDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyToolTipDescription] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyToolTipDescription];
         if ([manifestContentDict[PFCManifestKeyToolTipDescription] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyToolTipDescription keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
         }
@@ -490,6 +535,7 @@
 
 - (NSDictionary *)reportForPayloadKey:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
     if (manifestContentDict[PFCManifestKeyPayloadKey] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadKey];
         if (ignored) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
                                                    key:PFCManifestKeyPayloadKey
@@ -513,7 +559,6 @@
         } else {
             [_payloadKeys addObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[PFCManifestKeyPayloadKey]]];
         }
-
     } else if (!ignored) {
         return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadKey keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
@@ -522,6 +567,7 @@
 
 - (NSDictionary *)reportForPayloadType:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
     if (manifestContentDict[PFCManifestKeyPayloadType] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadType];
         if (ignored) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
                                                    key:PFCManifestKeyPayloadType
@@ -556,6 +602,7 @@
                                     ignored:(BOOL)ignored
                                allowedTypes:(NSArray *)allowedTypes {
     if (manifestContentDict[PFCManifestKeyPayloadValueType] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadValueType];
         if (ignored) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
                                                    key:PFCManifestKeyPayloadValueType

@@ -16,6 +16,12 @@
 	<string>/System/Library/Frameworks/SecurityInterface.framework/Versions/A/Resources/CertLargeRoot@2x.png</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>65DF04E0-D3BD-4246-9317-195AF87ABB9C</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.security.certificate</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

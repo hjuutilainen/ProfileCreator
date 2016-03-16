@@ -206,12 +206,12 @@ extern NSString *const PFCAlertTagDeleteProfilesInGroup;
 #pragma mark FileInfoKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCFileInfoTitle;
-extern NSString *const PFCFileInfoLabel1;
-extern NSString *const PFCFileInfoDescription1;
-extern NSString *const PFCFileInfoLabel2;
-extern NSString *const PFCFileInfoDescription2;
-extern NSString *const PFCFileInfoLabel3;
-extern NSString *const PFCFileInfoDescription3;
+extern NSString *const PFCFileInfoLabelTop;
+extern NSString *const PFCFileInfoDescriptionTop;
+extern NSString *const PFCFileInfoLabelMiddle;
+extern NSString *const PFCFileInfoDescriptionMiddle;
+extern NSString *const PFCFileInfoLabelBottom;
+extern NSString *const PFCFileInfoDescriptionBottom;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark FontWeights

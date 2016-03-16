@@ -175,12 +175,12 @@ NSString *const PFCAlertTagDeleteProfilesInGroup = @"AlertTagDeleteProfilesInGro
 #pragma mark FileInfoKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCFileInfoTitle = @"Title";
-NSString *const PFCFileInfoLabel1 = @"Label1";
-NSString *const PFCFileInfoDescription1 = @"Description1";
-NSString *const PFCFileInfoLabel2 = @"Label2";
-NSString *const PFCFileInfoDescription2 = @"Description2";
-NSString *const PFCFileInfoLabel3 = @"Label3";
-NSString *const PFCFileInfoDescription3 = @"Description3";
+NSString *const PFCFileInfoLabelTop = @"LabelTop";
+NSString *const PFCFileInfoDescriptionTop = @"DescriptionTop";
+NSString *const PFCFileInfoLabelMiddle = @"LabelMiddle";
+NSString *const PFCFileInfoDescriptionMiddle = @"DescriptionMiddle";
+NSString *const PFCFileInfoLabelBottom = @"LabelBottom";
+NSString *const PFCFileInfoDescriptionBottom = @"DescriptionBottom";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark FontWeights

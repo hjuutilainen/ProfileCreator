@@ -93,7 +93,7 @@
 			<key>CellType</key>
 			<string>TextView</string>
 			<key>ToolTipDescription</key>
-			<string></string>
+			<string>A message that will be displayed during profile installation</string>
 		</dict>
 		<dict>
 			<key>Identifier</key>

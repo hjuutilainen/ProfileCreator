@@ -624,7 +624,7 @@
                                                     </textField>
                                                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BkJ-hf-fZ6">
                                                         <rect key="frame" x="55" y="21" width="64" height="26"/>
-                                                        <popUpButtonCell key="cell" type="push" title="Item" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5WJ-05-bcx" id="uTe-h3-8IU">
+                                                        <popUpButtonCell key="cell" type="push" title="Item" bezelStyle="rounded" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5WJ-05-bcx" id="uTe-h3-8IU">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="menu"/>
                                                             <menu key="menu" id="N5K-wv-7Cg">
@@ -1445,12 +1445,12 @@
                                                 <connections>
                                                     <outlet property="settingButtonAdd" destination="QaN-qB-XSO" id="wLt-g7-Asz"/>
                                                     <outlet property="settingDescription" destination="64f-Cb-DSa" id="O91-HX-sRe"/>
-                                                    <outlet property="settingFileDescription1" destination="Xff-VP-zac" id="anP-CR-NKL"/>
-                                                    <outlet property="settingFileDescription2" destination="mhY-hw-Ym1" id="W8M-sW-Hfl"/>
-                                                    <outlet property="settingFileDescription3" destination="XM2-cH-1Jm" id="5Fm-uL-g3j"/>
-                                                    <outlet property="settingFileDescriptionLabel1" destination="QtY-hS-lO7" id="4cZ-bu-2eI"/>
-                                                    <outlet property="settingFileDescriptionLabel2" destination="ndF-UI-f1E" id="UlK-nL-TRt"/>
-                                                    <outlet property="settingFileDescriptionLabel3" destination="2JJ-lb-4UV" id="RZw-TP-bNb"/>
+                                                    <outlet property="settingFileDescriptionBottom" destination="XM2-cH-1Jm" id="lxI-L3-n2y"/>
+                                                    <outlet property="settingFileDescriptionLabelBottom" destination="2JJ-lb-4UV" id="4dl-Gg-stN"/>
+                                                    <outlet property="settingFileDescriptionLabelMiddle" destination="ndF-UI-f1E" id="jOZ-72-qJs"/>
+                                                    <outlet property="settingFileDescriptionLabelTop" destination="QtY-hS-lO7" id="6mI-ns-wN8"/>
+                                                    <outlet property="settingFileDescriptionMiddle" destination="mhY-hw-Ym1" id="rG5-KM-wN0"/>
+                                                    <outlet property="settingFileDescriptionTop" destination="Xff-VP-zac" id="XYk-hk-PlL"/>
                                                     <outlet property="settingFileIcon" destination="Klf-ov-idL" id="Mvu-GD-5mn"/>
                                                     <outlet property="settingFileTitle" destination="7zZ-fK-n33" id="Gay-6c-9V4"/>
                                                     <outlet property="settingFileView" destination="djI-rm-Ovy" id="nhP-cp-gbn"/>

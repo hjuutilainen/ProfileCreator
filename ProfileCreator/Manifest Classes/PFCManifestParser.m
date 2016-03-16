@@ -578,6 +578,11 @@
     manifest[PFCManifestKeyAllowMultiplePayloads] = @NO;
 
     // ---------------------------------------------------------------------
+    //  Add payload types
+    // ---------------------------------------------------------------------
+    manifest[PFCManifestKeyPayloadTypes] = @[ @"com.apple.ManagedClient.preferences" ];
+
+    // ---------------------------------------------------------------------
     //  Set the domain to the plist name (without the file extension)
     // ---------------------------------------------------------------------
     NSString *domain = [[fileURL lastPathComponent] stringByDeletingPathExtension] ?: @"";
@@ -692,6 +697,7 @@
         manifestDict[PFCManifestKeyIdentifier] = identifier;
         manifestDict[PFCManifestKeyPayloadKey] = key;
         manifestDict[PFCManifestKeyTitle] = key;
+        manifestDict[PFCManifestKeyPayloadType] = @"com.apple.ManagedClient.preferences";
 
         // ---------------------------------------------------------------------
         //  Cast the value to id and check what type the value is stored as

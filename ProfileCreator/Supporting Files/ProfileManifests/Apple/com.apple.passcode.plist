@@ -12,15 +12,23 @@
 	<string>Passcode</string>
 	<key>IconName</key>
 	<string>MenuIconPasscode.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string></string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>37B92E5A-A953-4DCE-91C7-518FB12E37BF</string>
 			<key>Title</key>
 			<string>Allow simple value</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>Boolean</string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>allowSimple</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
 			<key>Description</key>
 			<string>Permit the use of repeating, ascending and descending character sequances</string>
 			<key>CellType</key>
@@ -29,28 +37,44 @@
 			<true/>
 			<key>DefaultValue</key>
 			<true/>
+			<key>ToolTipDescription</key>
+			<string>Determines whether a simple passcode is allowed. A simple passcode is defined as containing repeated characters, or increasing/decreasing characters (such as 123 or CBA). Setting this value to false is synonymous to setting minComplexChars to &quot;1&quot;.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>663E1061-08EE-436F-89A8-A53BB7722320</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
 			<string>Require alphanumeric value</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKey</key>
+			<string>requireAlphanumeric</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
 			<key>Description</key>
 			<string>Requires passcode to contain at least one letter and one number</string>
 			<key>CellType</key>
 			<string>Checkbox</string>
 			<key>IndentLeft</key>
 			<true/>
+			<key>DefaultValue</key>
+			<false/>
+			<key>ToolTipDescription</key>
+			<string>Specifies whether the user must enter alphabetic characters (&quot;abcd&quot;), or if numbers are sufficient.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>C5CFE6B1-F0CD-4015-AA04-839AF5AF0EFB</string>
 			<key>Title</key>
 			<string>Minimum passcode length</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>minLength</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Smalles number of passcode characters allowed</string>
 			<key>CellType</key>
@@ -75,16 +99,139 @@
 				<string>15</string>
 				<string>16</string>
 			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>1</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>1</integer>
+					</dict>
+				</array>
+				<key>2</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>2</integer>
+					</dict>
+				</array>
+				<key>3</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>3</integer>
+					</dict>
+				</array>
+				<key>4</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>4</integer>
+					</dict>
+				</array>
+				<key>5</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>5</integer>
+					</dict>
+				</array>
+				<key>6</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>6</integer>
+					</dict>
+				</array>
+				<key>7</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>7</integer>
+					</dict>
+				</array>
+				<key>8</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>8</integer>
+					</dict>
+				</array>
+				<key>9</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>9</integer>
+					</dict>
+				</array>
+				<key>10</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>10</integer>
+					</dict>
+				</array>
+				<key>11</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>11</integer>
+					</dict>
+				</array>
+				<key>12</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>12</integer>
+					</dict>
+				</array>
+				<key>13</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>13</integer>
+					</dict>
+				</array>
+				<key>14</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>14</integer>
+					</dict>
+				</array>
+				<key>15</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>15</integer>
+					</dict>
+				</array>
+				<key>16</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>16</integer>
+					</dict>
+				</array>
+			</dict>
 			<key>DefaultValue</key>
 			<string>--</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the minimum overall length of the passcode. This parameter is independent of the also optional minComplexChars argument.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>F408C524-8341-474E-AD4E-BDC03DD3D95E</string>
 			<key>Title</key>
 			<string>Minimum number of complex characters</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>minComplexChars</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Smalles number of non-alphanumeric characters allowed</string>
 			<key>CellType</key>
@@ -97,16 +244,55 @@
 				<string>3</string>
 				<string>4</string>
 			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>1</key>
+				<array>
+					<dict>
+						<key>PayloadValye</key>
+						<integer>1</integer>
+					</dict>
+				</array>
+				<key>2</key>
+				<array>
+					<dict>
+						<key>PayloadValye</key>
+						<integer>2</integer>
+					</dict>
+				</array>
+				<key>3</key>
+				<array>
+					<dict>
+						<key>PayloadValye</key>
+						<integer>3</integer>
+					</dict>
+				</array>
+				<key>4</key>
+				<array>
+					<dict>
+						<key>PayloadValye</key>
+						<integer>4</integer>
+					</dict>
+				</array>
+			</dict>
 			<key>DefaultValue</key>
 			<string>--</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the minimum number of complex characters that a passcode must contain. A &quot;complex&quot; character is a character other than a number or a letter, such as &amp;%$#.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>4F5CABB9-FE48-484D-86CC-733F1C90D64E</string>
 			<key>Title</key>
 			<string>Maximum passcode age (0-730 days, 0 = none)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>maxPINAgeInDays</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Days after which the passcode must be changed</string>
 			<key>CellType</key>
@@ -115,14 +301,22 @@
 			<integer>0</integer>
 			<key>MaxValue</key>
 			<integer>730</integer>
+			<key>ToolTipDescription</key>
+			<string>Specifies the number of days for which the passcode can remain unchanged. After this number of days, the user is forced to change the passcode before the device is unlocked.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>0F597267-FF6B-441E-A38F-12F99B1000B1</string>
 			<key>Title</key>
 			<string>Maximum Auto-Lock</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>maxInactivity</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Longest auto-lock time available to the user</string>
 			<key>CellType</key>
@@ -136,16 +330,63 @@
 				<string>4 minutes</string>
 				<string>5 minutes</string>
 			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>1 minute</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>1</integer>
+					</dict>
+				</array>
+				<key>2 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>2</integer>
+					</dict>
+				</array>
+				<key>3 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>3</integer>
+					</dict>
+				</array>
+				<key>4 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>4</integer>
+					</dict>
+				</array>
+				<key>5 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>5</integer>
+					</dict>
+				</array>
+			</dict>
 			<key>DefaultValue</key>
 			<string>--</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the number of minutes for which the device can be idle (without being unlocked by the user) before it gets locked by the system. Once this limit is reached, the device is locked and the passcode must be entered.
+In OS X, this will be translated to screensaver settings.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>9760E295-67C7-4EA3-90A4-688940E1B3A5</string>
 			<key>Title</key>
 			<string>Passcode history (0-50 passcodes, 0 = none)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>pinHistory</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Number of unique passcodes before reuse</string>
 			<key>CellType</key>
@@ -154,14 +395,22 @@
 			<integer>0</integer>
 			<key>MaxValue</key>
 			<integer>50</integer>
+			<key>ToolTipDescription</key>
+			<string>When the user changes the passcode, it has to be unique within the last N entries in the history. Minimum value is 1, maximum value is 50.</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>91D6C945-4D11-41D9-87F3-2E7B25EB93FA</string>
 			<key>Title</key>
 			<string>Maximum grace period for device lock</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>maxGracePeriod</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Longest device lock grace period available to the user</string>
 			<key>CellType</key>
@@ -176,16 +425,81 @@
 				<string>1 hour</string>
 				<string>4 hours</string>
 			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Immediately</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>1 minute</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>1</integer>
+					</dict>
+				</array>
+				<key>5 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>5</integer>
+					</dict>
+				</array>
+				<key>15 minutes</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>15</integer>
+					</dict>
+				</array>
+				<key>1 hour</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>60</integer>
+					</dict>
+				</array>
+				<key>4 hours</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>240</integer>
+					</dict>
+				</array>
+			</dict>
 			<key>DefaultValue</key>
 			<string>--</string>
+			<key>ToolTipDescription</key>
+			<string>The maximum grace period, in minutes, to unlock the phone without entering a passcode. Default is 0, that is no grace period, which requires a passcode immediately.
+In OS X, this will be translated to screensaver settings.</string>
 		</dict>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Self</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>Available</key>
+					<false/>
+				</dict>
+			</array>
+			<key>Identifier</key>
+			<string>CFFA409F-0AF9-483F-A3BF-DDB2AC3E29B5</string>
 			<key>Title</key>
 			<string>Maximum number of failed attempts</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>maxFailedAttempts</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Number of passcode entry attempts allowed before all data on device will be erased (iOS) or locked (OS X)</string>
 			<key>CellType</key>
@@ -202,26 +516,108 @@
 				<string>8</string>
 				<string>9</string>
 				<string>10</string>
-				<string>11</string>
 			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>2</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>2</integer>
+					</dict>
+				</array>
+				<key>3</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>3</integer>
+					</dict>
+				</array>
+				<key>4</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>4</integer>
+					</dict>
+				</array>
+				<key>5</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>5</integer>
+					</dict>
+				</array>
+				<key>6</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>6</integer>
+					</dict>
+				</array>
+				<key>7</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>7</integer>
+					</dict>
+				</array>
+				<key>8</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>8</integer>
+					</dict>
+				</array>
+				<key>9</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>9</integer>
+					</dict>
+				</array>
+				<key>10</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<integer>10</integer>
+					</dict>
+				</array>
+			</dict>
 			<key>DefaultValue</key>
 			<string>--</string>
+			<key>ToolTipDescription</key>
+			<string>Specifies the number of allowed failed attempts to enter the passcode at the device&apos;s lock screen. Once this number is exceeded, the device is locked and must be connected to its designated iTunes in order to be unlocked</string>
 		</dict>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Self</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>Available</key>
+					<false/>
+				</dict>
+			</array>
+			<key>Identifier</key>
+			<string>4356A8DF-FE1D-4A6B-AD84-DD04E042708B</string>
 			<key>Title</key>
-			<string>Delay after failed login attempts ( 0 = none )</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<string>Allow Fingerprint Modification</string>
+			<key>PayloadKey</key>
+			<string>allowFingerprintModification</string>
+			<key>PayloadType</key>
+			<string>com.apple.mobiledevice.passwordpolicy</string>
+			<key>SupervisedOnly</key>
+			<true/>
 			<key>Description</key>
-			<string>Delay after maximum number of failed attempts, in minutes</string>
+			<string>Allows the user to modify Touch ID</string>
 			<key>CellType</key>
-			<string>TextFieldNumberLeft</string>
-			<key>MinValue</key>
-			<integer>0</integer>
-			<key>MaxValue</key>
-			<integer>999</integer>
+			<string>Checkbox</string>
+			<key>IndentLeft</key>
+			<true/>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 	</array>
 </dict>

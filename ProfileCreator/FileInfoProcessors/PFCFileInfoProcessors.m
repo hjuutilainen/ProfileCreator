@@ -84,14 +84,14 @@
 
     fileInfoDict[PFCFileInfoTitle] = [_fileURL lastPathComponent];
 
-    fileInfoDict[PFCFileInfoLabel1] = @"Path:";
-    fileInfoDict[PFCFileInfoDescription1] = [_fileURL path] ?: @"";
+    fileInfoDict[PFCFileInfoLabelTop] = @"Path:";
+    fileInfoDict[PFCFileInfoDescriptionTop] = [_fileURL path] ?: @"";
 
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:&error];
     if ([fileAttributes count] != 0) {
         NSString *fileSize = [NSByteCountFormatter stringFromByteCount:(long long)[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
-        fileInfoDict[PFCFileInfoLabel2] = @"Size:";
-        fileInfoDict[PFCFileInfoDescription2] = fileSize ?: @"";
+        fileInfoDict[PFCFileInfoLabelMiddle] = @"Size:";
+        fileInfoDict[PFCFileInfoDescriptionMiddle] = fileSize ?: @"";
     } else {
         DDLogError(@"%@", [error localizedDescription]);
     }
@@ -136,25 +136,25 @@
     MDItemRef fontMDItem = MDItemCreateWithURL(kCFAllocatorDefault, (CFURLRef)_fileURL);
     if (fontMDItem) {
         NSString *copyright = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemCopyright));
-        fileInfoDict[PFCFileInfoLabel1] = @"Copyright:";
-        fileInfoDict[PFCFileInfoDescription1] = copyright ?: @"";
+        fileInfoDict[PFCFileInfoLabelTop] = @"Copyright:";
+        fileInfoDict[PFCFileInfoDescriptionTop] = copyright ?: @"";
 
         NSString *version = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemVersion));
         if ([version containsString:@";"]) {
             version = [[version componentsSeparatedByString:@";"] firstObject];
         }
-        fileInfoDict[PFCFileInfoLabel2] = @"Version:";
-        fileInfoDict[PFCFileInfoDescription2] = version ?: @"";
+        fileInfoDict[PFCFileInfoLabelMiddle] = @"Version:";
+        fileInfoDict[PFCFileInfoDescriptionMiddle] = version ?: @"";
 
         NSArray *publishers = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemPublishers));
         if ([publishers count] != 0) {
-            fileInfoDict[PFCFileInfoLabel3] = @"Publisher:";
-            fileInfoDict[PFCFileInfoDescription3] = [publishers componentsJoinedByString:@", "];
+            fileInfoDict[PFCFileInfoLabelBottom] = @"Publisher:";
+            fileInfoDict[PFCFileInfoDescriptionBottom] = [publishers componentsJoinedByString:@", "];
         } else {
             NSString *creator = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemCreator));
             if ([creator length] != 0) {
-                fileInfoDict[PFCFileInfoLabel3] = @"Creator:";
-                fileInfoDict[PFCFileInfoDescription3] = creator;
+                fileInfoDict[PFCFileInfoLabelBottom] = @"Creator:";
+                fileInfoDict[PFCFileInfoDescriptionBottom] = creator;
             }
         }
         CFRelease(fontMDItem);

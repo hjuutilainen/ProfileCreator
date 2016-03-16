@@ -14,6 +14,12 @@
 	<string>MenuIconIdentification.png</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>7FA93154-5F79-44B8-A51F-099FDD5CB2CB</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.configurationprofile.identification</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

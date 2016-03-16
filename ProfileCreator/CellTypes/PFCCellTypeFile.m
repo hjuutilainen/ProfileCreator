@@ -35,12 +35,12 @@
 @property (weak) IBOutlet NSView *settingFileView;
 @property (weak) IBOutlet NSTextField *settingFileViewPrompt;
 @property (weak) IBOutlet NSTextField *settingFileTitle;
-@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel1;
-@property (weak) IBOutlet NSTextField *settingFileDescription1;
-@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel2;
-@property (weak) IBOutlet NSTextField *settingFileDescription2;
-@property (weak) IBOutlet NSTextField *settingFileDescriptionLabel3;
-@property (weak) IBOutlet NSTextField *settingFileDescription3;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabelTop;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionTop;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabelMiddle;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionMiddle;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionLabelBottom;
+@property (weak) IBOutlet NSTextField *settingFileDescriptionBottom;
 @property (weak) IBOutlet NSImageView *settingFileIcon;
 
 @end
@@ -66,37 +66,37 @@
     if ([fileInfo count] != 0) {
         [_settingFileTitle setStringValue:fileInfo[PFCFileInfoTitle] ?: [fileURL lastPathComponent]];
 
-        if (fileInfo[PFCFileInfoDescription1] != nil) {
-            [_settingFileDescriptionLabel1 setStringValue:fileInfo[PFCFileInfoLabel1] ?: @""];
-            [_settingFileDescription1 setStringValue:fileInfo[PFCFileInfoDescription1] ?: @""];
+        if (fileInfo[PFCFileInfoDescriptionTop] != nil) {
+            [_settingFileDescriptionLabelTop setStringValue:fileInfo[PFCFileInfoLabelTop] ?: @""];
+            [_settingFileDescriptionTop setStringValue:fileInfo[PFCFileInfoDescriptionTop] ?: @""];
 
-            [_settingFileDescriptionLabel1 setHidden:NO];
-            [_settingFileDescription1 setHidden:NO];
+            [_settingFileDescriptionLabelTop setHidden:NO];
+            [_settingFileDescriptionTop setHidden:NO];
         } else {
-            [_settingFileDescriptionLabel1 setHidden:YES];
-            [_settingFileDescription1 setHidden:YES];
+            [_settingFileDescriptionLabelTop setHidden:YES];
+            [_settingFileDescriptionTop setHidden:YES];
         }
 
-        if (fileInfo[PFCFileInfoDescription2] != nil) {
-            [_settingFileDescriptionLabel2 setStringValue:fileInfo[PFCFileInfoLabel2] ?: @""];
-            [_settingFileDescription2 setStringValue:fileInfo[PFCFileInfoDescription2] ?: @""];
+        if (fileInfo[PFCFileInfoDescriptionMiddle] != nil) {
+            [_settingFileDescriptionLabelMiddle setStringValue:fileInfo[PFCFileInfoLabelMiddle] ?: @""];
+            [_settingFileDescriptionMiddle setStringValue:fileInfo[PFCFileInfoDescriptionMiddle] ?: @""];
 
-            [_settingFileDescriptionLabel2 setHidden:NO];
-            [_settingFileDescription2 setHidden:NO];
+            [_settingFileDescriptionLabelMiddle setHidden:NO];
+            [_settingFileDescriptionMiddle setHidden:NO];
         } else {
-            [_settingFileDescriptionLabel2 setHidden:YES];
-            [_settingFileDescription2 setHidden:YES];
+            [_settingFileDescriptionLabelMiddle setHidden:YES];
+            [_settingFileDescriptionMiddle setHidden:YES];
         }
 
-        if (fileInfo[PFCFileInfoDescription3] != nil) {
-            [_settingFileDescriptionLabel3 setStringValue:fileInfo[PFCFileInfoLabel3] ?: @""];
-            [_settingFileDescription3 setStringValue:fileInfo[PFCFileInfoDescription3] ?: @""];
+        if (fileInfo[PFCFileInfoDescriptionBottom] != nil) {
+            [_settingFileDescriptionLabelBottom setStringValue:fileInfo[PFCFileInfoLabelBottom] ?: @""];
+            [_settingFileDescriptionBottom setStringValue:fileInfo[PFCFileInfoDescriptionBottom] ?: @""];
 
-            [_settingFileDescriptionLabel3 setHidden:NO];
-            [_settingFileDescription3 setHidden:NO];
+            [_settingFileDescriptionLabelBottom setHidden:NO];
+            [_settingFileDescriptionBottom setHidden:NO];
         } else {
-            [_settingFileDescriptionLabel3 setHidden:YES];
-            [_settingFileDescription3 setHidden:YES];
+            [_settingFileDescriptionLabelBottom setHidden:YES];
+            [_settingFileDescriptionBottom setHidden:YES];
         }
     }
 }
@@ -174,12 +174,12 @@
         [[cellView settingFileViewPrompt] setHidden:NO];
         [[cellView settingFileIcon] setHidden:YES];
         [[cellView settingFileTitle] setHidden:YES];
-        [[cellView settingFileDescriptionLabel1] setHidden:YES];
-        [[cellView settingFileDescription1] setHidden:YES];
-        [[cellView settingFileDescriptionLabel2] setHidden:YES];
-        [[cellView settingFileDescription2] setHidden:YES];
-        [[cellView settingFileDescriptionLabel3] setHidden:YES];
-        [[cellView settingFileDescription3] setHidden:YES];
+        [[cellView settingFileDescriptionLabelTop] setHidden:YES];
+        [[cellView settingFileDescriptionTop] setHidden:YES];
+        [[cellView settingFileDescriptionLabelMiddle] setHidden:YES];
+        [[cellView settingFileDescriptionMiddle] setHidden:YES];
+        [[cellView settingFileDescriptionLabelBottom] setHidden:YES];
+        [[cellView settingFileDescriptionBottom] setHidden:YES];
         return cellView;
     }
 

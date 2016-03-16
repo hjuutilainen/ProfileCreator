@@ -14,6 +14,12 @@
 	<string>MenuIconLDAP.png</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>7AB49012-EFF9-4507-80DB-3C626B71DE30</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.ldap</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

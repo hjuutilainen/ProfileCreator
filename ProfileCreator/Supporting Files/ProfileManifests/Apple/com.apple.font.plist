@@ -16,6 +16,12 @@
 	<string>/Applications/Font Book.app/Contents/Resources/appicon.icns</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>43F88A1A-98E7-4B3B-A32C-AE8DF4BD04F2</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.font</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

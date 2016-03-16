@@ -16,6 +16,12 @@
 	<string>/System/Library/PrivateFrameworks/AccountsUI.framework/Versions/A/Resources/exchange.tiff</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>9D5ACD31-CD0B-42C9-9A16-4F7A37CA5656</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.ews.account</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>
@@ -91,6 +97,8 @@
 		<dict>
 			<key>CellType</key>
 			<string>SegmentedControl</string>
+			<key>Identifier</key>
+			<string>F7D6BD0C-1187-4423-B99E-66E54F91FFD4</string>
 			<key>AvailableValues</key>
 			<array>
 				<string>Internal Server</string>

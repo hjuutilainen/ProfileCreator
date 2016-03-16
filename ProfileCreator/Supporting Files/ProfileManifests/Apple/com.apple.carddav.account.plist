@@ -16,6 +16,8 @@
 	<string>/Applications/Contacts.app/Contents/Resources/vCard.icns</string>
 	<key>AllowMultiplePayloads</key>
 	<true/>
+	<key>PayloadTabTitle</key>
+	<string>A5A60ECB-7A48-4EFF-9F42-84287229C339</string>
 	<key>Availability</key>
 	<array>
 		<dict>
@@ -36,6 +38,8 @@
 		<dict>
 			<key>Identifier</key>
 			<string>DAB4F476-B623-4A4A-A771-09B41983FDBD</string>
+			<key>Optional</key>
+			<true/>
 			<key>Title</key>
 			<string>Account Description</string>
 			<key>PayloadType</key>
@@ -55,6 +59,8 @@
 			<key>Title</key>
 			<string>Account Hostname and Port</string>
 			<key>RequiredHost</key>
+			<true/>
+			<key>OptionalPort</key>
 			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.carddav.account</string>
@@ -76,6 +82,8 @@
 			<string>E3B10B08-5704-43F8-9A4C-A70183452562</string>
 			<key>Title</key>
 			<string>Principal URL</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
@@ -110,6 +118,8 @@
 			<string>308B9727-1AC6-4FB2-9193-2BE485E797C1</string>
 			<key>Title</key>
 			<string>Account Password</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
@@ -126,6 +136,8 @@
 			<string>F86E60CB-6492-4120-996D-3CF907F4EF65</string>
 			<key>Title</key>
 			<string>Use SSL</string>
+			<key>Optional</key>
+			<true/>
 			<key>PayloadType</key>
 			<string>com.apple.carddav.account</string>
 			<key>PayloadKey</key>
