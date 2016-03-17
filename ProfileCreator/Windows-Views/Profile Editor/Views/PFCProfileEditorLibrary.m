@@ -522,7 +522,7 @@
     NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
     if ([libraryAppleManifests count] != 0) {
         for (NSDictionary *manifest in libraryAppleManifests) {
-            if ([[PFCAvailability sharedInstance] showManifest:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
+            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
                     [_arrayProfile addObject:[manifest copy]];
@@ -569,7 +569,7 @@
     NSArray *libraryMCXManifests = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
     if ([libraryMCXManifests count] != 0) {
         for (NSDictionary *manifest in libraryMCXManifests) {
-            if ([[PFCAvailability sharedInstance] showManifest:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
+            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain]) {
                     [_arrayProfile addObject:[manifest copy]];

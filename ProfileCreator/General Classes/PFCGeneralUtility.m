@@ -90,8 +90,6 @@
 }
 
 + (BOOL)version:(NSString *)version1 isLowerThanVersion:(NSString *)version2 {
-    DDLogDebug(@"Is version: %@ lower than version: %@", version1, version2);
-
     if ([version1 isEqualToString:@"Latest"]) {
         version1 = @"999";
     }
@@ -99,7 +97,7 @@
     if ([version2 isEqualToString:@"Latest"]) {
         version2 = @"999";
     }
-    DDLogDebug(@"returning=%@", ([version1 compare:version2 options:NSNumericSearch] == NSOrderedAscending) ? @"YES" : @"NO");
+
     if ([version1 isEqualToString:version2]) {
         return YES;
     } else {
@@ -143,5 +141,116 @@
 
     return [dateComponentsFormatter stringFromTimeInterval:secondsBetween];
 } // dateIntervalFromNowToDate
+
++ (void)setupOSVersionsButtonOSXMin:(NSPopUpButton *)osxMinVersion osxMax:(NSPopUpButton *)osxMaxVersion iOSMin:(NSPopUpButton *)iosMinVersion iOSMax:(NSPopUpButton *)iosMaxVersion sender:(id)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    // -------------------------------------------------------------------------
+    //  Create base menu
+    // -------------------------------------------------------------------------
+    NSMenu *menu = [[NSMenu alloc] init];
+    [menu setAutoenablesItems:YES];
+
+    // -------------------------------------------------------------------------
+    //  MenuItem: Latest
+    // -------------------------------------------------------------------------
+    NSMenuItem *menuItemLatest = [[NSMenuItem alloc] init];
+    [menuItemLatest setTarget:sender];
+    [menuItemLatest setAction:@selector(selectOSVersion:)];
+    [menuItemLatest setTitle:@"Latest"];
+    [menu addItem:menuItemLatest];
+
+    // -------------------------------------------------------------------------
+    //  MenuItem: Separator
+    // -------------------------------------------------------------------------
+    [menu addItem:[NSMenuItem separatorItem]];
+
+    // -------------------------------------------------------------------------
+    //  Read OSVersions plist from bundle contents
+    // -------------------------------------------------------------------------
+    // FIXME - This should be a downloadable setting, read from appsupport first
+    NSError *error = nil;
+    NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
+    if (![osVersionsPlistURL checkResourceIsReachableAndReturnError:&error]) {
+        DDLogError(@"%@", [error localizedDescription]);
+        return;
+    }
+
+    NSDictionary *osVersions = [NSDictionary dictionaryWithContentsOfURL:osVersionsPlistURL];
+    if ([osVersions count] == 0) {
+        DDLogError(@"OS Versions dict was empty!");
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Create OS X versions menu and add to popUpButtons for OS X
+    // -------------------------------------------------------------------------
+    NSArray *osVersionsOSX = osVersions[@"OS X"] ?: @[];
+    if ([osVersionsOSX count] == 0) {
+        DDLogError(@"OS Versions array for OS X is empty!");
+    } else {
+
+        NSMenu *menuOSX = [menu copy];
+        NSArray *osxVersionArray;
+        int lastMajorVersion = 0;
+        NSMenuItem *menuItemOSXVersion = [[NSMenuItem alloc] init];
+        [menuItemOSXVersion setTarget:sender];
+        [menuItemOSXVersion setAction:@selector(selectOSVersion:)];
+        for (NSString *osxVersion in osVersionsOSX) {
+
+            // -----------------------------------------------------------------
+            //  Add separator if major version of OS changed
+            // -----------------------------------------------------------------
+            osxVersionArray = [osxVersion componentsSeparatedByString:@"."];
+            if (2 <= [osxVersionArray count]) {
+                int majorVersion = [(NSString *)osxVersionArray[1] intValue];
+                if (lastMajorVersion != majorVersion) {
+                    [menuOSX addItem:[NSMenuItem separatorItem]];
+                    lastMajorVersion = majorVersion;
+                }
+            }
+            [menuItemOSXVersion setTitle:osxVersion];
+            [menuOSX addItem:[menuItemOSXVersion copy]];
+        }
+
+        [osxMinVersion setMenu:[menuOSX copy]];
+        [osxMaxVersion setMenu:[menuOSX copy]];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Create iOS versions menu and add to popUpButtons for iOS
+    // -------------------------------------------------------------------------
+    NSArray *osVersionsiOS = osVersions[@"iOS"] ?: @[];
+    if ([osVersionsiOS count] == 0) {
+        DDLogError(@"OS Versions array for iOS is empty!");
+    } else {
+
+        NSMenu *menuiOS = [menu copy];
+        NSArray *iosVersionArray;
+        int lastMajorVersion = 0;
+        NSMenuItem *menuItemiOSVersion = [[NSMenuItem alloc] init];
+        [menuItemiOSVersion setTarget:self];
+        [menuItemiOSVersion setAction:@selector(selectOSVersion:)];
+        for (NSString *iosVersion in osVersionsiOS) {
+
+            // -----------------------------------------------------------------
+            //  Add separator if major version of OS changed
+            // -----------------------------------------------------------------
+            iosVersionArray = [iosVersion componentsSeparatedByString:@"."];
+            if (1 <= [iosVersionArray count]) {
+                int majorVersion = [(NSString *)iosVersionArray[0] intValue];
+                if (lastMajorVersion != majorVersion) {
+                    [menuiOS addItem:[NSMenuItem separatorItem]];
+                    lastMajorVersion = majorVersion;
+                }
+            }
+            [menuItemiOSVersion setTitle:iosVersion];
+            [menuiOS addItem:[menuItemiOSVersion copy]];
+        }
+
+        [iosMinVersion setMenu:[menuiOS copy]];
+        [iosMaxVersion setMenu:[menuiOS copy]];
+    }
+}
 
 @end

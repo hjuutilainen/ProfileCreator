@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeCheckbox.h"
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypeFile.h"
@@ -52,6 +53,14 @@
 @property (readwrite) BOOL showValuesSource;
 @property (readwrite) BOOL showColumnDisabled;
 @property (weak) IBOutlet NSButton *checkboxShowKeysSupervised;
+
+@property (weak) IBOutlet NSButton *checkboxOSX;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonOSXMinVersion;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonOSXMaxVersion;
+
+@property (weak) IBOutlet NSButton *checkboxiOS;
+@property (weak) IBOutlet NSPopUpButton *popUpButtoniOSMinVersion;
+@property (weak) IBOutlet NSPopUpButton *popUpButtoniOSMaxVersion;
 
 @property BOOL tabBarHidden;
 
@@ -121,11 +130,26 @@
     [_profileEditor addObserver:self forKeyPath:NSStringFromSelector(@selector(deallocKVO)) options:NSKeyValueObservingOptionNew context:nil];
     if ([_profileEditor settings]) {
         [[_profileEditor settings] addObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:NSKeyValueObservingOptionNew context:nil];
+        [[_profileEditor settings] addObserver:self forKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) options:NSKeyValueObservingOptionNew context:nil];
+        [[_profileEditor settings] addObserver:self forKeyPath:NSStringFromSelector(@selector(includePlatformiOS)) options:NSKeyValueObservingOptionNew context:nil];
+
+        // -------------------------------------------------------------------------
+        //  Bindings
+        // -------------------------------------------------------------------------
         [_checkboxShowKeysSupervised bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:nil];
+
+        [_checkboxOSX bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) options:nil];
+        [_popUpButtonOSXMinVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(osxMinVersion)) options:nil];
+        [_popUpButtonOSXMaxVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(osxMaxVersion)) options:nil];
+
+        [_checkboxiOS bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformiOS)) options:nil];
+        [_popUpButtoniOSMinVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(iosMinVersion)) options:nil];
+        [_popUpButtoniOSMaxVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(iosMaxVersion)) options:nil];
     }
 
     [self setupTabBar];
     [self updateManifestColumns];
+    [PFCGeneralUtility setupOSVersionsButtonOSXMin:_popUpButtonOSXMinVersion osxMax:_popUpButtonOSXMaxVersion iOSMin:_popUpButtoniOSMinVersion iOSMax:_popUpButtoniOSMaxVersion sender:self];
 } // viewSetup
 
 - (void)setupTabBar {
@@ -148,6 +172,33 @@
         }
     }
 }
+
+- (void)selectOSVersion:(NSMenuItem *)menuItem {
+    NSMenu *menu = [menuItem menu];
+    if (menu == [_popUpButtonOSXMinVersion menu]) {
+        [[_profileEditor settings] setOsxMinVersion:[menuItem title]];
+    } else if (menu == [_popUpButtonOSXMaxVersion menu]) {
+        [[_profileEditor settings] setOsxMaxVersion:[menuItem title]];
+    } else if (menu == [_popUpButtoniOSMinVersion menu]) {
+        [[_profileEditor settings] setIosMinVersion:[menuItem title]];
+    } else if (menu == [_popUpButtoniOSMaxVersion menu]) {
+        [[_profileEditor settings] setIosMaxVersion:[menuItem title]];
+    }
+} // selectOSVersion
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    NSMenu *menu = [menuItem menu];
+    if (menu == [_popUpButtonOSXMinVersion menu]) {
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[[_profileEditor settings] osxMaxVersion]];
+    } else if (menu == [_popUpButtonOSXMaxVersion menu]) {
+        return [PFCGeneralUtility version:[[_profileEditor settings] osxMinVersion] isLowerThanVersion:[menuItem title]];
+    } else if (menu == [_popUpButtoniOSMinVersion menu]) {
+        return [PFCGeneralUtility version:[menuItem title] isLowerThanVersion:[[_profileEditor settings] iosMaxVersion]];
+    } else if (menu == [_popUpButtoniOSMaxVersion menu]) {
+        return [PFCGeneralUtility version:[[_profileEditor settings] iosMinVersion] isLowerThanVersion:[menuItem title]];
+    }
+    return YES;
+} // validateMenuItem
 
 - (void)updateTableViewSettingsFromManifest:(NSDictionary *)manifest {
 
@@ -192,7 +243,14 @@
 } // tableView:heightOfRow
 
 - (NSArray *)manifestContentForManifest:(NSDictionary *)manifest {
-    NSMutableArray *manifestContent = [[NSMutableArray alloc] initWithArray:manifest[PFCManifestKeyManifestContent] ?: @[] copyItems:YES];
+    NSMutableArray *manifestContent = [[NSMutableArray alloc] init];
+    NSArray *manifestContentAll = manifest[PFCManifestKeyManifestContent] ?: @[];
+    [manifestContentAll enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull manifestContentDict, NSUInteger idx, BOOL *_Nonnull stop) {
+      if ([[PFCAvailability sharedInstance] showSelf:manifestContentDict displayKeys:[[_profileEditor settings] displayKeys]]) {
+          [manifestContent addObject:manifestContentDict];
+      }
+    }];
+
     if ([manifestContent count] != 0) {
 
         // ---------------------------------------------------------------------
@@ -470,14 +528,16 @@
         [_tableViewManifestContent beginUpdates];
         [_tableViewManifestContent reloadData];
         [_tableViewManifestContent endUpdates];
-    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))]) {
-        [self updateTableViewSettingsFromManifest:_selectedManifest];
-    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))]) {
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))] ||
+               [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))] || [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformOSX))] ||
+               [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {
         if ([change[NSKeyValueChangeNewKey] boolValue]) {
             [_profileEditor removeObserver:self forKeyPath:NSStringFromSelector(@selector(deallocKVO)) context:nil];
             [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) context:nil];
+            [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) context:nil];
+            [[_profileEditor settings] removeObserver:self forKeyPath:NSStringFromSelector(@selector(includePlatformiOS)) context:nil];
         }
     }
 } // observeValueForKeyPath:ofObject:change:context
@@ -976,8 +1036,6 @@
 } // tabIndexClose:sender
 
 - (void)updateTableViewSettingsFromManifestContentDict:(NSDictionary *)manifestContentDict atRow:(NSInteger)row {
-
-#warning check that settings isn't currently selected.
 
     // -------------------------------------------------------------------------
     //  Sanity check so that:   Row isn't less than 0

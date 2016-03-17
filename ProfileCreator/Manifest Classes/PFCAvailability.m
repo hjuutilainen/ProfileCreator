@@ -34,8 +34,8 @@
     return sharedInstance;
 } // sharedUtility
 
-- (BOOL)showManifest:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys {
-    BOOL showManifest = YES;
+- (BOOL)showSelf:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys {
+    BOOL showSelf = YES;
     for (NSDictionary *availabilityDict in manifest[PFCManifestKeyAvailability] ?: @[]) {
 
         // -------------------------------------------------------------------------------
@@ -46,13 +46,38 @@
         //  The compatibility warnings will be mor clear when exporting.
         // -------------------------------------------------------------------------------
         if ([availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
-            showManifest = NO;
-            if ([self currentSelectionWithinVersionForOS:availabilityDict[@"AvailabilityOS"] availabilityDict:availabilityDict displayKeys:displayKeys]) {
-                return YES;
+            showSelf = NO;
+
+            if ([self availableForOS:availabilityDict[@"AvailabilityOS"] availabilityDict:availabilityDict displayKeys:displayKeys]) {
+                if ([self currentSelectionWithinVersionForOS:availabilityDict[@"AvailabilityOS"] availabilityDict:availabilityDict displayKeys:displayKeys]) {
+                    return YES;
+                }
             }
         }
     }
-    return showManifest;
+    return showSelf;
+}
+
+- (BOOL)availableForOS:(NSString *)os availabilityDict:(NSDictionary *)availabilityDict displayKeys:(NSDictionary *)displayKeys {
+    BOOL availableForOS = YES;
+
+    if (availabilityDict[@"Available"] == nil) {
+        return availableForOS;
+    }
+
+    if ([os isEqualToString:@"OSX"] && ![availabilityDict[@"Available"] boolValue]) {
+        if (![displayKeys[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]) {
+            return NO;
+        }
+    } else if ([os isEqualToString:@"iOS"] && ![availabilityDict[@"Available"] boolValue]) {
+        if (![displayKeys[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]) {
+            return NO;
+        }
+    } else {
+        DDLogError(@"Unknown OS: %@", os);
+        return NO;
+    }
+    return availableForOS;
 }
 
 - (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {

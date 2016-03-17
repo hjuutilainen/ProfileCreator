@@ -26,7 +26,7 @@
 // -----------------------------------------------------------------------------
 + (id)sharedInstance;
 
-- (BOOL)showManifest:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys;
+- (BOOL)showSelf:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredHostForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredPortForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;

@@ -25,6 +25,14 @@
 @property (weak) IBOutlet NSTableView *tableViewReport;
 
 @property NSInteger selectedSeverity;
+@property BOOL onlyShowSelectedSeverity;
+
+@property NSNumber *manifestCount;
+@property NSNumber *errorCount;
+@property NSNumber *warningCount;
+@property NSNumber *noticeCount;
+@property NSNumber *infoCount;
+@property NSNumber *debugCount;
 
 @end
 
@@ -41,31 +49,72 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
     if (self != nil) {
 
         _arrayReport = [[NSMutableArray alloc] init];
+        _onlyShowSelectedSeverity = NO;
     }
     return self;
 }
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(selectedSeverity)) context:nil];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(onlyShowSelectedSeverity)) context:nil];
 }
 
 - (void)windowDidLoad {
     [super windowDidLoad];
 
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(selectedSeverity)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(onlyShowSelectedSeverity)) options:NSKeyValueObservingOptionNew context:nil];
+    [self resetCounters];
+}
+
+- (void)resetCounters {
+    [self setManifestCount:@(0)];
+    [self setErrorCount:@(0)];
+    [self setWarningCount:@(0)];
+    [self setNoticeCount:@(0)];
+    [self setInfoCount:@(0)];
+    [self setDebugCount:@(0)];
+}
+
+- (void)updateCounters {
+    [_arrayReportAll enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull lintDict, NSUInteger idx, BOOL *_Nonnull stop) {
+      switch ([lintDict[@"LintErrorSeverity"] integerValue]) {
+      case kPFCLintErrorSeverityError:
+          [self setErrorCount:@(([_errorCount integerValue] + 1))];
+          break;
+      case kPFCLintErrorSeverityWarning:
+          [self setWarningCount:@(([_warningCount integerValue] + 1))];
+          break;
+      case kPFCLintErrorSeverityNotice:
+          [self setNoticeCount:@(([_noticeCount integerValue] + 1))];
+          break;
+      case kPFCLintErrorSeverityInfo:
+          [self setInfoCount:@(([_infoCount integerValue] + 1))];
+          break;
+      case kPFCLintErrorSeverityDebug:
+          [self setDebugCount:@(([_debugCount integerValue] + 1))];
+          break;
+      default:
+          break;
+      }
+    }];
 }
 
 - (IBAction)buttonRun:(id)sender {
 
     [sender setEnabled:NO];
     [_progressIndicatorRun startAnimation:self];
+    [self resetCounters];
 
     dispatch_queue_t taskQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(taskQueue, ^{
 
       NSError *error = nil;
-      NSArray *manifests = [[PFCManifestLibrary sharedLibrary] libraryAll:&error acceptCached:YES];
+      NSArray *manifests = [[PFCManifestLibrary sharedLibrary] libraryAll:&error acceptCached:NO];
       if ([manifests count] != 0) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self setManifestCount:@([manifests count])];
+          });
           DDLogInfo(@"Found %lu manifests...", (unsigned long)[manifests count]);
 
           PFCManifestLint *linter = [[PFCManifestLint alloc] init];
@@ -79,10 +128,8 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
                 [_arrayReport addObjectsFromArray:[self arrayForSeverity:_selectedSeverity]];
                 [_tableViewReport reloadData];
                 [_tableViewReport endUpdates];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                  [sender setEnabled:YES];
-                  [_progressIndicatorRun stopAnimation:self];
-                });
+                [sender setEnabled:YES];
+                [_progressIndicatorRun stopAnimation:self];
               });
           } else {
               // FIXME - Should notify user that all manifests passed without notice
@@ -92,6 +139,10 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
                 [_progressIndicatorRun stopAnimation:self];
               });
           }
+
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateCounters];
+          });
       } else {
           // FIXME - Should notify user that we didn't find any manifests.
           DDLogError(@"No manifests returned for linting");
@@ -105,7 +156,11 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 }
 
 - (NSArray *)arrayForSeverity:(PFCLintErrorSeverity)severity {
-    return [_arrayReportAll filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K <= %@", @"LintErrorSeverity", @(severity)]];
+    if (_onlyShowSelectedSeverity) {
+        return [_arrayReportAll filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"LintErrorSeverity", @(severity)]];
+    } else {
+        return [_arrayReportAll filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K <= %@", @"LintErrorSeverity", @(severity)]];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,7 +229,7 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(selectedSeverity))]) {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(selectedSeverity))] || [keyPath isEqualToString:NSStringFromSelector(@selector(onlyShowSelectedSeverity))]) {
         [_tableViewReport beginUpdates];
         [_arrayReport removeAllObjects];
         [_arrayReport addObjectsFromArray:[self arrayForSeverity:_selectedSeverity]];

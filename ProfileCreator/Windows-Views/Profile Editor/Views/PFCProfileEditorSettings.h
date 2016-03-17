@@ -45,6 +45,7 @@
 @property (weak) IBOutlet NSTextField *textFieldProfileName;
 
 - (id)initWithProfile:(NSDictionary *)profile profileEditor:(PFCProfileEditor *)profileEditor;
+- (void)selectOSVersion:(NSMenuItem *)menuItem;
 - (NSDictionary *)displayKeys;
 
 @end
