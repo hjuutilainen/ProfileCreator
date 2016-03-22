@@ -17,6 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
+#import "PFCCellTypeTextField.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
 #import "PFCManifestLint.h"
@@ -101,19 +103,20 @@
 
     [_manifestRootKeys removeAllObjects];
 
-    [manifestReportRoot addObject:[self reportForManifestRootAllowMultiplePayloads:manifest]]; // Key: AllowMultiplePayloads
-    [manifestReportRoot addObject:[self reportForManifestRootCellType:manifest]];              // Key: CellType
-    [manifestReportRoot addObject:[self reportForManifestRootDescription:manifest]];           // Key: Description
-    [manifestReportRoot addObject:[self reportForManifestRootDomain:manifest]];                // Key: Domain
-    [manifestReportRoot addObjectsFromArray:[self reportForManifestRootIcon:manifest]];        // Key: IconName, IconPath, IconBundlePath
-    [manifestReportRoot addObject:[self reportForManifestRootManifestContent:manifest]];       // Key: ManifestContent
-    [manifestReportRoot addObject:[self reportForManifestRootPayloadTabTitle:manifest]];       // Key: PayloadTabTitle
-    [manifestReportRoot addObject:[self reportForManifestRootPayloadTypes:manifest]];          // Key: PayloadTypes
-    [manifestReportRoot addObject:[self reportForManifestRootRequired:manifest]];              // Key: Required
-    [manifestReportRoot addObject:[self reportForManifestRootTitle:manifest]];                 // Key: Title
+    [manifestReportRoot addObjectsFromArray:[self reportForManifestRootAvailability:manifest]]; // Key: Availability
+    [manifestReportRoot addObject:[self reportForManifestRootAllowMultiplePayloads:manifest]];  // Key: AllowMultiplePayloads
+    [manifestReportRoot addObject:[self reportForManifestRootCellType:manifest]];               // Key: CellType
+    [manifestReportRoot addObject:[self reportForManifestRootDescription:manifest]];            // Key: Description
+    [manifestReportRoot addObject:[self reportForManifestRootDomain:manifest]];                 // Key: Domain
+    [manifestReportRoot addObjectsFromArray:[self reportForManifestRootIcon:manifest]];         // Key: IconName, IconPath, IconBundlePath
+    [manifestReportRoot addObject:[self reportForManifestRootManifestContent:manifest]];        // Key: ManifestContent
+    [manifestReportRoot addObject:[self reportForManifestRootPayloadTabTitle:manifest]];        // Key: PayloadTabTitle
+    [manifestReportRoot addObject:[self reportForManifestRootPayloadTypes:manifest]];           // Key: PayloadTypes
+    [manifestReportRoot addObject:[self reportForManifestRootRequired:manifest]];               // Key: Required
+    [manifestReportRoot addObject:[self reportForManifestRootTitle:manifest]];                  // Key: Title
 
     for (NSString *key in [manifest allKeys]) {
-        if (![_manifestRootKeys containsObject:key]) {
+        if (![_manifestRootKeys containsObject:key] && ![key isEqualToString:@"Path"]) {
             [manifestReportRoot addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyIncompatible key:key keyPath:nil value:manifest[key] manifest:manifest overrides:nil]];
         }
     }
@@ -124,6 +127,40 @@
 - (NSDictionary *)reportForManifestRootAllowMultiplePayloads:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyAllowMultiplePayloads] != nil) {
         [_manifestRootKeys addObject:PFCManifestKeyAllowMultiplePayloads];
+    }
+    return @{};
+}
+
+- (NSArray *)reportForManifestRootAvailability:(NSDictionary *)manifest {
+    NSMutableArray *reportAvailability = [[NSMutableArray alloc] init];
+    NSString *keyPath = @":Availability";
+    if (manifest[PFCManifestKeyAvailability] != nil) {
+        [_manifestRootKeys addObject:PFCManifestKeyAvailability];
+
+        __block NSString *arrayKeyPath;
+        [manifest[PFCManifestKeyAvailability] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull availabilityDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
+          arrayKeyPath = [NSString stringWithFormat:@"%@:%lu", keyPath, (unsigned long)idx];
+          [reportAvailability addObject:[self reportForRootAvailabilityKey:availabilityDict manifest:manifest parentKeyPath:arrayKeyPath]];
+        }];
+    }
+    return [reportAvailability copy];
+}
+
+- (NSDictionary *)reportForRootAvailabilityKey:(NSDictionary *)availabilityDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (availabilityDict[@"AvailabilityKey"] != nil) {
+        [_manifestRootKeys addObject:@"AvailabilityKey"];
+
+        if ([availabilityDict[@"AvailabilityKey"] length] == 0) {
+            return
+                [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:@"AvailabilityKey" keyPath:parentKeyPath value:availabilityDict[@"AvailabilityKey"] manifest:manifest overrides:nil];
+        }
+
+        if (![[manifest allKeys] containsObject:availabilityDict[@"AvailabilityKey"]] && ![availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
+            return
+                [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:@"AvailabilityKey" keyPath:parentKeyPath value:availabilityDict[@"AvailabilityKey"] manifest:manifest overrides:nil];
+        }
+    } else {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:@"AvailabilityKey" keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }
@@ -251,6 +288,7 @@
 - (NSDictionary *)reportForManifestRootManifestContent:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyManifestContent] != nil) {
         [_manifestRootKeys addObject:PFCManifestKeyManifestContent];
+
         if ([manifest[PFCManifestKeyManifestContent] count] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
                                                    key:PFCManifestKeyManifestContent
@@ -269,6 +307,7 @@
     [self setPayloadTabTitle:manifest[PFCManifestKeyPayloadTabTitle] ?: @""];
     if (manifest[PFCManifestKeyPayloadTabTitle] != nil) {
         [_manifestRootKeys addObject:PFCManifestKeyPayloadTabTitle];
+
         if (![manifest[PFCManifestKeyAllowMultiplePayloads] boolValue]) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:PFCManifestKeyPayloadTabTitle keyPath:nil value:nil manifest:manifest overrides:nil];
         }
@@ -281,8 +320,11 @@
 - (NSDictionary *)reportForManifestRootPayloadTypes:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyPayloadTypes] != nil) {
         [_manifestRootKeys addObject:PFCManifestKeyPayloadTypes];
+
         if ([manifest[PFCManifestKeyPayloadTypes] count] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadTypes keyPath:nil value:manifest[PFCManifestKeyPayloadTypes] manifest:manifest overrides:nil];
+        } else {
+            [_payloadTypes addObjectsFromArray:manifest[PFCManifestKeyPayloadTypes]];
         }
 
         // FIXME - Here should check that this matches all collected payload types, but, that might be better to do last in manifest.
@@ -315,6 +357,7 @@
 - (NSDictionary *)reportForManifestRootTitle:(NSDictionary *)manifest {
     if (manifest[PFCManifestKeyTitle] != nil) {
         [_manifestRootKeys addObject:PFCManifestKeyTitle];
+
         if ([manifest[PFCManifestKeyTitle] length] == 0) {
             return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyTitle keyPath:nil value:manifest[PFCManifestKeyTitle] manifest:manifest overrides:nil];
         }
@@ -354,16 +397,17 @@
     // -------------------------------------------------------------------------
     //  Reports for general keys
     // -------------------------------------------------------------------------
-    // [reportContentDict addObject:[self reportForAvailability:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];   // Key: Availability
-    [reportContentDict addObject:[self reportForIdentifier:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];         // Key: Identifier
-    [reportContentDict addObject:[self reportForOptional:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Optional
-    [reportContentDict addObject:[self reportForRequired:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Required
-    [reportContentDict addObject:[self reportForToolTipDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ToolTipDescription
+    [reportContentDict addObjectsFromArray:[self reportForAvailability:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                 // Key: Availability
+    [reportContentDict addObject:[self reportForIdentifier:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                             // Key: Identifier
+    [reportContentDict addObject:[self reportForOptionalKey:PFCManifestKeyOptional manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Optional
+    [reportContentDict addObject:[self reportForRequiredKey:PFCManifestKeyRequired manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Required
+    [reportContentDict addObject:[self reportForToolTipDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                     // Key: ToolTipDescription
 
     // -------------------------------------------------------------------------
     //  Reports for CellType specific keys
     // -------------------------------------------------------------------------
     if (manifestContentDict[PFCManifestKeyCellType] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyCellType];
         [reportContentDict
             addObjectsFromArray:[self reportForCellType:manifestContentDict[PFCManifestKeyCellType] manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
     } else {
@@ -449,23 +493,25 @@
     return @{};
 }
 
-- (NSDictionary *)reportForDefaultValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath allowedTypes:(NSArray *)allowedTypes {
-    if (manifestContentDict[PFCManifestKeyDefaultValue] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyDefaultValue];
+// -----------------------------------------------------------------------------
+//  DefaultValue(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForDefaultValueKey:(NSString *)key
+                       manifestContentDict:(NSDictionary *)manifestContentDict
+                                  manifest:(NSDictionary *)manifest
+                             parentKeyPath:(NSString *)parentKeyPath
+                              allowedTypes:(NSArray *)allowedTypes {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
 
-        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[PFCManifestKeyDefaultValue]];
+        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[key]];
         if (![allowedTypes containsObject:valueType]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:PFCManifestKeyDefaultValue
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyDefaultValue]
-                                              manifest:manifest
-                                             overrides:nil];
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         }
 
         if ([valueType isEqualToString:PFCValueTypeString]) {
-            if ([manifestContentDict[PFCManifestKeyDefaultValue] length] == 0) {
-                return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyDefaultValue keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+            if ([manifestContentDict[key] length] == 0) {
+                return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
             }
         }
 
@@ -474,46 +520,9 @@
     return @{};
 }
 
-- (NSDictionary *)reportForDefaultValueCheckbox:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath allowedTypes:(NSArray *)allowedTypes {
-    if (manifestContentDict[PFCManifestKeyDefaultValueCheckbox] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyDefaultValueCheckbox];
-
-        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[PFCManifestKeyDefaultValueCheckbox]];
-        if (![allowedTypes containsObject:valueType]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:PFCManifestKeyDefaultValue
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyDefaultValueCheckbox]
-                                              manifest:manifest
-                                             overrides:nil];
-        }
-    }
-    return @{};
-}
-
-- (NSDictionary *)reportForDefaultValueTextField:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath allowedTypes:(NSArray *)allowedTypes {
-    if (manifestContentDict[PFCManifestKeyDefaultValueTextField] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyDefaultValueTextField];
-
-        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[PFCManifestKeyDefaultValueTextField]];
-        if (![allowedTypes containsObject:valueType]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:PFCManifestKeyDefaultValueTextField
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyDefaultValueTextField]
-                                              manifest:manifest
-                                             overrides:nil];
-        }
-
-        if ([valueType isEqualToString:PFCValueTypeString]) {
-            if ([manifestContentDict[PFCManifestKeyDefaultValueTextField] length] == 0) {
-                return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyDefaultValueTextField keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
-            }
-        }
-    }
-    return @{};
-}
-
+// -----------------------------------------------------------------------------
+//  Description
+// -----------------------------------------------------------------------------
 - (NSDictionary *)reportForDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyDescription] != nil) {
         [_manifestContentDictKeys addObject:PFCManifestKeyDescription];
@@ -598,6 +607,9 @@
     return @{};
 }
 
+// -----------------------------------------------------------------------------
+//  IndentLevel
+// -----------------------------------------------------------------------------
 - (NSDictionary *)reportForIndentLevel:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
         [_manifestContentDictKeys addObject:PFCManifestKeyIndentLevel];
@@ -619,6 +631,20 @@
                                               manifest:manifest
                                              overrides:nil];
         }
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForMaxValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[PFCManifestKeyMaxValue] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyMaxValue];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForMinValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[PFCManifestKeyMinValue] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyMinValue];
     }
     return @{};
 }
@@ -671,49 +697,46 @@
     return @{};
 }
 
-- (NSDictionary *)reportForOptional:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    if (manifestContentDict[PFCManifestKeyOptional] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyOptional];
+- (NSDictionary *)reportForOptionalKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
 
-        if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && manifestContentDict[PFCManifestKeyOptional] != nil) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
-                                                   key:PFCManifestKeyOptional
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyOptional]
-                                              manifest:manifest
-                                             overrides:nil];
+        if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && manifestContentDict[key] != nil) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         }
     }
     return @{};
 }
 
-- (NSDictionary *)reportForPlaceholderValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath allowedTypes:(NSArray *)allowedTypes {
-    if (manifestContentDict[PFCManifestKeyPlaceholderValue] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyPlaceholderValue];
-        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[PFCManifestKeyPlaceholderValue]];
+// -----------------------------------------------------------------------------
+//  PlaceholderValue(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForPlaceholderValueKey:(NSString *)key
+                           manifestContentDict:(NSDictionary *)manifestContentDict
+                                      manifest:(NSDictionary *)manifest
+                                 parentKeyPath:(NSString *)parentKeyPath
+                                  allowedTypes:(NSArray *)allowedTypes {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
+        NSString *valueType = [[PFCManifestUtility sharedUtility] typeStringFromValue:manifestContentDict[key]];
         if (![allowedTypes containsObject:valueType]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:PFCManifestKeyPlaceholderValue
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPlaceholderValue]
-                                              manifest:manifest
-                                             overrides:nil];
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         }
 
         if ([valueType isEqualToString:PFCValueTypeString]) {
-            if ([manifestContentDict[PFCManifestKeyPlaceholderValue] length] == 0) {
-                return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPlaceholderValue keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+            if ([manifestContentDict[key] length] == 0) {
+                return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
             }
         }
 
         // FIXME - Finish these tests
     }
     return @{};
-}
+} // reportForPlaceholderValueKey:manifestContentDict:manifest:parentKeyPath:allowedTypes
 
-- (NSDictionary *)reportForRequired:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    if (manifestContentDict[PFCManifestKeyRequired] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyRequired];
+- (NSDictionary *)reportForRequiredKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
     }
     return @{};
 }
@@ -732,6 +755,9 @@
     return @{};
 }
 
+// -----------------------------------------------------------------------------
+//  Title
+// -----------------------------------------------------------------------------
 - (NSDictionary *)reportForTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     if (manifestContentDict[PFCManifestKeyTitle] != nil) {
         [_manifestContentDictKeys addObject:PFCManifestKeyTitle];
@@ -752,6 +778,19 @@
     return @{};
 }
 
+- (NSDictionary *)reportForUnit:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[PFCManifestKeyUnit] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyUnit];
+        if ([manifestContentDict[PFCManifestKeyUnit] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyUnit keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        }
+    }
+    return @{};
+}
+
+// -----------------------------------------------------------------------------
+//  ValueKeys
+// -----------------------------------------------------------------------------
 - (NSArray *)reportForValueKeys:(NSDictionary *)manifestContentDict
                        manifest:(NSDictionary *)manifest
                   parentKeyPath:(NSString *)parentKeyPath
@@ -795,6 +834,9 @@
     return [reportValueKeys copy];
 }
 
+// -----------------------------------------------------------------------------
+//  ValueKeysShared
+// -----------------------------------------------------------------------------
 - (NSArray *)reportForValueKeysShared:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     NSMutableArray *reportValueKeysShared;
     NSString *keyPath = [NSString stringWithFormat:@"%@:%@", parentKeyPath, PFCManifestKeyValueKeysShared];
@@ -838,88 +880,161 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSDictionary *)reportForPayloadKey:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
+- (NSArray *)reportForPayloadKeys:(NSArray *)payloadKeys
+              manifestContentDict:(NSDictionary *)manifestContentDict
+                         manifest:(NSDictionary *)manifest
+                    parentKeyPath:(NSString *)parentKeyPath
+                     allowedTypes:(NSArray *)allowedTypes {
+
+    NSMutableArray *reportPayload = [[NSMutableArray alloc] init];
     if (manifestContentDict[PFCManifestKeyPayloadKey] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadKey];
-        if (ignored) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
-                                                   key:PFCManifestKeyPayloadKey
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPayloadKey]
-                                              manifest:manifest
-                                             overrides:nil];
+        [reportPayload addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKey
+                                       manifestContentDict:manifestContentDict
+                                                  manifest:manifest
+                                             parentKeyPath:parentKeyPath
+                                                  optional:[manifestContentDict[PFCManifestKeyOptional] boolValue]
+                                                  required:[manifestContentDict[PFCManifestKeyRequired] boolValue]]];
+
+        [reportPayload addObject:[self reportForPayloadTypeKey:PFCManifestKeyPayloadType manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+        [reportPayload addObject:[self reportForPayloadValueTypeKey:PFCManifestKeyPayloadValueType
+                                                manifestContentDict:manifestContentDict
+                                                           manifest:manifest
+                                                      parentKeyPath:parentKeyPath
+                                                       allowedTypes:allowedTypes]];
+    } else {
+        for (NSDictionary *payloadKeyDict in payloadKeys ?: @[]) {
+            [reportPayload addObjectsFromArray:[self reportForPayloadKeySuffix:payloadKeyDict[@"PayloadKeySuffix"]
+                                                           manifestContentDict:manifestContentDict
+                                                                      manifest:manifest
+                                                                 parentKeyPath:parentKeyPath
+                                                                  allowedTypes:payloadKeyDict[@"AllowedTypes"]]];
+        }
+    }
+    return [reportPayload copy];
+}
+
+- (NSArray *)reportForPayloadKeySuffix:(NSString *)suffix
+                   manifestContentDict:(NSDictionary *)manifestContentDict
+                              manifest:(NSDictionary *)manifest
+                         parentKeyPath:(NSString *)parentKeyPath
+                          allowedTypes:(NSArray *)allowedTypes {
+    NSMutableArray *reportPayloadKeySuffix = [[NSMutableArray alloc] init];
+    NSDictionary *payloadKeySuffixDict;
+    if ([suffix isEqualToString:@"Checkbox"]) {
+        payloadKeySuffixDict = @{
+            @"Key" : PFCManifestKeyPayloadKeyCheckbox,
+            @"Optinal" : @([manifestContentDict[PFCManifestKeyOptionalCheckbox] boolValue]),
+            @"Required" : @([manifestContentDict[PFCManifestKeyRequiredCheckbox] boolValue]),
+            @"Type" : PFCManifestKeyPayloadTypeCheckbox,
+            @"ValueType" : PFCManifestKeyPayloadValueTypeCheckbox
+        };
+    } else if ([suffix isEqualToString:@"Host"]) {
+        payloadKeySuffixDict = @{
+            @"Key" : PFCManifestKeyPayloadKeyHost,
+            @"Optinal" : @([manifestContentDict[PFCManifestKeyOptionalHost] boolValue]),
+            @"Required" : @([manifestContentDict[PFCManifestKeyRequiredHost] boolValue]),
+            @"Type" : PFCManifestKeyPayloadTypeHost,
+            @"ValueType" : PFCManifestKeyPayloadValueTypeHost
+        };
+    } else if ([suffix isEqualToString:@"Port"]) {
+        payloadKeySuffixDict = @{
+            @"Key" : PFCManifestKeyPayloadKeyPort,
+            @"Optinal" : @([manifestContentDict[PFCManifestKeyOptionalPort] boolValue]),
+            @"Required" : @([manifestContentDict[PFCManifestKeyRequiredPort] boolValue]),
+            @"Type" : PFCManifestKeyPayloadTypePort,
+            @"ValueType" : PFCManifestKeyPayloadValueTypePort
+        };
+    } else if ([suffix isEqualToString:@"TextField"]) {
+        payloadKeySuffixDict = @{
+            @"Key" : PFCManifestKeyPayloadKeyTextField,
+            @"Optinal" : @([manifestContentDict[PFCManifestKeyOptionalTextField] boolValue]),
+            @"Required" : @([manifestContentDict[PFCManifestKeyRequiredTextField] boolValue]),
+            @"Type" : PFCManifestKeyPayloadTypeTextField,
+            @"ValueType" : PFCManifestKeyPayloadValueTypeTextField
+        };
+    } else {
+        DDLogError(@"Unknown payload key suffix: %@", suffix);
+        return @[];
+    }
+
+    [reportPayloadKeySuffix addObject:[self reportForPayloadKey:payloadKeySuffixDict[@"Key"]
+                                            manifestContentDict:manifestContentDict
+                                                       manifest:manifest
+                                                  parentKeyPath:parentKeyPath
+                                                       optional:[payloadKeySuffixDict[@"Optinal"] boolValue]
+                                                       required:[payloadKeySuffixDict[@"Required"] boolValue]]];
+
+    [reportPayloadKeySuffix addObject:[self reportForPayloadTypeKey:payloadKeySuffixDict[@"Type"] manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    [reportPayloadKeySuffix addObject:[self reportForPayloadValueTypeKey:payloadKeySuffixDict[@"ValueType"]
+                                                     manifestContentDict:manifestContentDict
+                                                                manifest:manifest
+                                                           parentKeyPath:parentKeyPath
+                                                            allowedTypes:allowedTypes]];
+
+    return [reportPayloadKeySuffix copy];
+}
+
+- (NSDictionary *)reportForPayloadKey:(NSString *)key
+                  manifestContentDict:(NSDictionary *)manifestContentDict
+                             manifest:(NSDictionary *)manifest
+                        parentKeyPath:(NSString *)parentKeyPath
+                             optional:(BOOL)optional
+                             required:(BOOL)required {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
+
+        if (required && !optional && [manifestContentDict[key] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
         }
 
-        if ([manifestContentDict[PFCManifestKeyPayloadKey] length] == 0) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadKey keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
-        }
-
-        if ([_payloadKeys containsObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[PFCManifestKeyPayloadKey]]]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorDuplicate
-                                                   key:PFCManifestKeyPayloadKey
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPayloadKey]
-                                              manifest:manifest
-                                             overrides:nil];
+        if ([_payloadKeys containsObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[key]]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorDuplicate key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         } else {
-            [_payloadKeys addObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[PFCManifestKeyPayloadKey]]];
+            [_payloadKeys addObject:[NSString stringWithFormat:@"%@:%@", parentKeyPath, manifestContentDict[key]]];
         }
-    } else if (!ignored) {
+    } else if (required) {
         return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadKey keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }
 
-- (NSDictionary *)reportForPayloadType:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath ignored:(BOOL)ignored {
-    if (manifestContentDict[PFCManifestKeyPayloadType] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadType];
-        if (ignored) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
-                                                   key:PFCManifestKeyPayloadType
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPayloadType]
-                                              manifest:manifest
-                                             overrides:nil];
+- (NSDictionary *)reportForPayloadTypeKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
+
+        if ([manifestContentDict[key] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
         }
 
-        if ([manifestContentDict[PFCManifestKeyPayloadType] length] == 0) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:PFCManifestKeyPayloadType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        if (![_payloadTypes containsObject:manifestContentDict[key]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueRequiredNotFound key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         }
 
-        if (![_payloadTypes containsObject:manifestContentDict[PFCManifestKeyPayloadType]]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueRequiredNotFound
-                                                   key:PFCManifestKeyPayloadKey
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPayloadType]
-                                              manifest:manifest
-                                             overrides:nil];
-        }
-
-    } else if (!ignored) {
-        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    } else {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }
 
-- (NSDictionary *)reportForPayloadValueType:(NSDictionary *)manifestContentDict
-                                   manifest:(NSDictionary *)manifest
-                              parentKeyPath:(NSString *)parentKeyPath
-                                    ignored:(BOOL)ignored
-                               allowedTypes:(NSArray *)allowedTypes {
-    if (manifestContentDict[PFCManifestKeyPayloadValueType] != nil) {
-        [_manifestContentDictKeys addObject:PFCManifestKeyPayloadValueType];
-        if (ignored) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
-                                                   key:PFCManifestKeyPayloadValueType
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[PFCManifestKeyPayloadValueType]
-                                              manifest:manifest
-                                             overrides:nil];
+- (NSDictionary *)reportForPayloadValueTypeKey:(NSString *)key
+                           manifestContentDict:(NSDictionary *)manifestContentDict
+                                      manifest:(NSDictionary *)manifest
+                                 parentKeyPath:(NSString *)parentKeyPath
+                                  allowedTypes:(NSArray *)allowedTypes {
+    if (manifestContentDict[key] != nil) {
+        [_manifestContentDictKeys addObject:key];
+
+        if ([allowedTypes ?: @[] count] == 1) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
         }
 
-        // FIXME - Finish these tests
-    } else if (!ignored) {
-        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyPayloadValueType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        if (![allowedTypes containsObject:manifestContentDict[key]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil];
+        }
+    } else if (![allowedTypes ?: @[] count] == 1) {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }
@@ -1002,48 +1117,55 @@
         //  TextField
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
-        [reportCellType addObjectsFromArray:[self reportForCellTypeTextField:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
+        [reportCellType addObjectsFromArray:[PFCTextFieldCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
 
         // ---------------------------------------------------------------------
         //  TextFieldCheckbox
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldCheckbox]) {
-        [reportCellType addObjectsFromArray:[self reportForCellTypeTextFieldCheckbox:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
+        [reportCellType addObjectsFromArray:[PFCTextFieldCheckboxCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
 
         // ---------------------------------------------------------------------
         //  TextFieldDaysHoursNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
+        // No Checks
 
         // ---------------------------------------------------------------------
         //  TextFieldHostPort
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort]) {
+        [reportCellType addObjectsFromArray:[self reportForCellTypeTextFieldHostPort:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
 
         // ---------------------------------------------------------------------
         //  TextFieldHostPortCheckbox
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
+        [reportCellType addObjectsFromArray:[self reportForCellTypeTextFieldHostPortCheckbox:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
 
         // ---------------------------------------------------------------------
         //  TextFieldNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
+        [reportCellType addObjectsFromArray:[PFCTextFieldNoTitleCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumber]) {
+        [reportCellType addObjectsFromArray:[self reportForCellTypeTextFieldNumber:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumberLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
+        [reportCellType addObjectsFromArray:[self reportForCellTypeTextFieldNumberLeft:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
 
         // ---------------------------------------------------------------------
         //  TextView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
+        [reportCellType addObjectsFromArray:[self reportForCellTypeTextView:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy]]];
 
         // -------------------------------------------------------------------------
         //  CellType: *UNKNOWN*
@@ -1061,121 +1183,340 @@
 }
 
 - (NSArray *)reportForCellTypeCheckbox:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportCheckbox;
-    [reportCheckbox addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValue
-    [reportCheckbox addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                        // Key: Description
-    [reportCheckbox addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                         // Key: IndentLeft
-    [reportCheckbox addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                        // Key: IndentLevel
-    [reportCheckbox addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                              // Key: Title
+    NSMutableArray *reportCheckbox = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportCheckbox addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                         manifestContentDict:manifestContentDict
+                                                    manifest:manifest
+                                               parentKeyPath:parentKeyPath
+                                                allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [reportCheckbox addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportCheckbox addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportCheckbox addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];  // Key: IndentLeft
+    [reportCheckbox addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportCheckbox addObjectsFromArray:[self reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean ]]];
+
+    // -------------------------------------------------------------------------
+    //  ValueKeys
+    // -------------------------------------------------------------------------
     [reportCheckbox
         addObjectsFromArray:[self reportForValueKeys:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath required:NO availableValues:@[ @"True", @"False" ]]]; // Key: ValueKeys
     return [reportCheckbox copy];
 }
 
 - (NSArray *)reportForCellTypeCheckboxNoDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportCheckboxNoDescription;
-    [reportCheckboxNoDescription addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValue
-    [reportCheckboxNoDescription addObject:[self reportForFontWeight:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                         // Key: FontWeight
-    [reportCheckboxNoDescription addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                         // Key: IndentLeft
-    [reportCheckboxNoDescription addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                        // Key: IndentLevel
-    [reportCheckboxNoDescription addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                              // Key: Title
+    NSMutableArray *reportCheckboxNoDescription = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportCheckboxNoDescription addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                      manifestContentDict:manifestContentDict
+                                                                 manifest:manifest
+                                                            parentKeyPath:parentKeyPath
+                                                             allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  FontWeight
+    // -------------------------------------------------------------------------
+    [reportCheckboxNoDescription addObject:[self reportForFontWeight:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: FontWeight
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportCheckboxNoDescription addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];  // Key: IndentLeft
+    [reportCheckboxNoDescription addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportCheckboxNoDescription
+        addObjectsFromArray:[self reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean ]]];
+
+    // -------------------------------------------------------------------------
+    //  Title
+    // -------------------------------------------------------------------------
+    [reportCheckboxNoDescription addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Title
+
+    // -------------------------------------------------------------------------
+    //  ValueKeys
+    // -------------------------------------------------------------------------
     [reportCheckboxNoDescription
         addObjectsFromArray:[self reportForValueKeys:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath required:NO availableValues:@[ @"True", @"False" ]]]; // Key: ValueKeys
     return [reportCheckboxNoDescription copy];
 }
 
 - (NSArray *)reportForCellTypeDatePicker:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportDatePicker;
-    [reportDatePicker addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeDate ]]]; // Key: DefaultValue
-    [reportDatePicker addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                     // Key: Description
-    [reportDatePicker addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                      // Key: IndentLeft
-    [reportDatePicker addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                     // Key: IndentLevel
-    [reportDatePicker addObject:[self reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                              // Key: MinValueOffsetDays
-    [reportDatePicker addObject:[self reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                             // Key: MinValueOffsetHours
-    [reportDatePicker addObject:[self reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                           // Key: MinValueOffsetMinutes
-    [reportDatePicker addObject:[self reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                // Key: ShowDateInterval
-    [reportDatePicker addObject:[self reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                    // Key: ShowDateTime
-    [reportDatePicker addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                           // Key: Title
+    NSMutableArray *reportDatePicker = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                           manifestContentDict:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                  allowedTypes:@[ PFCValueTypeDate ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportDatePicker addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];  // Key: IndentLeft
+    [reportDatePicker addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObjectsFromArray:[self reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeDate ]]];
+
+    // -------------------------------------------------------------------------
+    //  ValueOffset
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObject:[self reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MinValueOffsetDays
+    [reportDatePicker addObject:[self reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];   // Key: MinValueOffsetHours
+    [reportDatePicker addObject:[self reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: MinValueOffsetMinutes
+
+    // -------------------------------------------------------------------------
+    //  Show Date Input
+    // -------------------------------------------------------------------------
+    [reportDatePicker addObject:[self reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ShowDateInterval
+    [reportDatePicker addObject:[self reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];     // Key: ShowDateTime
+
     return [reportDatePicker copy];
 }
 
 - (NSArray *)reportForCellTypeDatePickerNoTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportDatePicker;
-    [reportDatePicker addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeDate ]]]; // Key: DefaultValue
-    [reportDatePicker addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                      // Key: IndentLeft
-    [reportDatePicker addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                     // Key: IndentLevel
-    [reportDatePicker addObject:[self reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                              // Key: MinValueOffsetDays
-    [reportDatePicker addObject:[self reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                             // Key: MinValueOffsetHours
-    [reportDatePicker addObject:[self reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                           // Key: MinValueOffsetMinutes
-    [reportDatePicker addObject:[self reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                // Key: ShowDateInterval
-    [reportDatePicker addObject:[self reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                    // Key: ShowDateTime
-    return [reportDatePicker copy];
+    NSMutableArray *reportDatePickerNoTitle = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportDatePickerNoTitle addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                  manifestContentDict:manifestContentDict
+                                                             manifest:manifest
+                                                        parentKeyPath:parentKeyPath
+                                                         allowedTypes:@[ PFCValueTypeDate ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportDatePickerNoTitle addObject:[self reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];  // Key: IndentLeft
+    [reportDatePickerNoTitle addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportDatePickerNoTitle
+        addObjectsFromArray:[self reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeDate ]]];
+
+    // -------------------------------------------------------------------------
+    //  ValueOffset
+    // -------------------------------------------------------------------------
+    [reportDatePickerNoTitle addObject:[self reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MinValueOffsetDays
+    [reportDatePickerNoTitle addObject:[self reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];   // Key: MinValueOffsetHours
+    [reportDatePickerNoTitle addObject:[self reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: MinValueOffsetMinutes
+
+    // -------------------------------------------------------------------------
+    //  Show Date Input
+    // -------------------------------------------------------------------------
+    [reportDatePickerNoTitle addObject:[self reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ShowDateInterval
+    [reportDatePickerNoTitle addObject:[self reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];     // Key: ShowDateTime
+    return [reportDatePickerNoTitle copy];
 }
 
 - (NSArray *)reportForCellTypeFile:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportFile;
+    NSMutableArray *reportFile = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AllowedInput
+    // -------------------------------------------------------------------------
     [reportFile addObject:[self reportForAllowedFileTypes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];      // Key: AllowedFileTypes
     [reportFile addObject:[self reportForAllowedFileExtensions:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: AllowedFileExtensions
-    [reportFile addObject:[self reportForButtonTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: ButtonTitle
-    [reportFile addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Description
-    [reportFile addObject:[self reportForFileInfoProcessor:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];     // Key: FileInfoProcessor
-    [reportFile addObject:[self reportForFilePrompt:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];            // Key: FilePrompt
-    [reportFile addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                 // Key: Title
-    [reportFile addObject:[self reportForPayloadValueType:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:YES allowedTypes:@[ PFCValueTypeData ]]]; // Key: PayloadValueType
+
+    // -------------------------------------------------------------------------
+    //  Prompts
+    // -------------------------------------------------------------------------
+    [reportFile addObject:[self reportForButtonTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ButtonTitle
+    [reportFile addObject:[self reportForFilePrompt:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];  // Key: FilePrompt
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [reportFile addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportFile addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  FileInfoProcessor
+    // -------------------------------------------------------------------------
+    [reportFile addObject:[self reportForFileInfoProcessor:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: FileInfoProcessor
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportFile addObjectsFromArray:[self reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeData ]]];
+
     return [reportFile copy];
 }
 
 - (NSArray *)reportForCellTypePopUpButton:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportPopUpButton;
+    NSMutableArray *reportPopUpButton = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
     [reportPopUpButton addObject:[self reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: AvailableValues
-    [reportPopUpButton addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];     // Key: IndentLevel
-    [reportPopUpButton addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Title
-    [reportPopUpButton
-        addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
-    [reportPopUpButton addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                             // Key: Description
     [reportPopUpButton addObjectsFromArray:[self reportForValueKeys:manifestContentDict
                                                            manifest:manifest
                                                       parentKeyPath:parentKeyPath
                                                            required:YES
                                                     availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];                      // Key: ValueKeys
     [reportPopUpButton addObjectsFromArray:[self reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ValueKeysShared
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportPopUpButton addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [reportPopUpButton addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportPopUpButton addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportPopUpButton addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                            manifestContentDict:manifestContentDict
+                                                       manifest:manifest
+                                                  parentKeyPath:parentKeyPath
+                                                   allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportPopUpButton addObjectsFromArray:[self reportForPayloadKeys:nil
+                                                  manifestContentDict:manifestContentDict
+                                                             manifest:manifest
+                                                        parentKeyPath:parentKeyPath
+                                                         allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]];
+
     return [reportPopUpButton copy];
 }
 
 - (NSArray *)reportForCellTypePopUpButtonLeft:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportPopUpButtonLeft;
+    NSMutableArray *reportPopUpButtonLeft = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
     [reportPopUpButtonLeft addObject:[self reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: AvailableValues
-    [reportPopUpButtonLeft addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];           // Key: Title
-    [reportPopUpButtonLeft
-        addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
-    [reportPopUpButtonLeft addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                         // Key: Description
     [reportPopUpButtonLeft addObjectsFromArray:[self reportForValueKeys:manifestContentDict
                                                                manifest:manifest
                                                           parentKeyPath:parentKeyPath
                                                                required:YES
                                                         availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];                      // Key: ValueKeys
     [reportPopUpButtonLeft addObjectsFromArray:[self reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ValueKeysShared
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonLeft addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportPopUpButtonLeft addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonLeft addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                manifestContentDict:manifestContentDict
+                                                           manifest:manifest
+                                                      parentKeyPath:parentKeyPath
+                                                       allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonLeft addObjectsFromArray:[self reportForPayloadKeys:nil
+                                                      manifestContentDict:manifestContentDict
+                                                                 manifest:manifest
+                                                            parentKeyPath:parentKeyPath
+                                                             allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]];
+
     return [reportPopUpButtonLeft copy];
 }
 
 - (NSArray *)reportForCellTypePopUpButtonNoTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportPopUpButtonNoTitle;
+    NSMutableArray *reportPopUpButtonNoTitle = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
     [reportPopUpButtonNoTitle addObject:[self reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: AvailableValues
-    [reportPopUpButtonNoTitle addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];     // Key: IndentLevel
-    [reportPopUpButtonNoTitle
-        addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
-    [reportPopUpButtonNoTitle addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                      // Key: Description
     [reportPopUpButtonNoTitle addObjectsFromArray:[self reportForValueKeys:manifestContentDict
                                                                   manifest:manifest
                                                              parentKeyPath:parentKeyPath
                                                                   required:YES
                                                            availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];                      // Key: ValueKeys
     [reportPopUpButtonNoTitle addObjectsFromArray:[self reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: ValueKeysShared
+
+    // -------------------------------------------------------------------------
+    //  Description
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonNoTitle addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonNoTitle addObject:[self reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: IndentLevel
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonNoTitle addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                   manifestContentDict:manifestContentDict
+                                                              manifest:manifest
+                                                         parentKeyPath:parentKeyPath
+                                                          allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]]; // Key: DefaultValue
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [reportPopUpButtonNoTitle addObjectsFromArray:[self reportForPayloadKeys:nil
+                                                         manifestContentDict:manifestContentDict
+                                                                    manifest:manifest
+                                                               parentKeyPath:parentKeyPath
+                                                                allowedTypes:@[ PFCValueTypeBoolean, PFCValueTypeString ]]];
+
     return [reportPopUpButtonNoTitle copy];
 }
 
 - (NSArray *)reportForCellTypeSegmentedControl:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportSegmentedControl;
+    NSMutableArray *reportSegmentedControl = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
     [reportSegmentedControl addObject:[self reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: AvailableValues
     [reportSegmentedControl addObjectsFromArray:[self reportForValueKeys:manifestContentDict
                                                                 manifest:manifest
@@ -1186,30 +1527,161 @@
     return [reportSegmentedControl copy];
 }
 
-- (NSArray *)reportForCellTypeTextField:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportTextField;
-    [reportTextField addObject:[self reportForDefaultValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeString ]]]; // Key: DefaultValue
-    [reportTextField addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                       // Key: Description
-    [reportTextField addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                             // Key: Title
-    [reportTextField addObject:[self reportForPayloadKey:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:NO]];                             // Key: PayloadKey
-    [reportTextField addObject:[self reportForPayloadType:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:NO]];                            // Key: PayloadType
-    [reportTextField
-        addObject:[self reportForPayloadValueType:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath ignored:YES allowedTypes:@[ PFCValueTypeString ]]];  // Key: PayloadValueType
-    [reportTextField addObject:[self reportForPlaceholderValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeString ]]]; // Key: PlaceholderValue
-    return [reportTextField copy];
+- (NSArray *)reportForCellTypeTextFieldHostPort:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextFieldHostPort = [[NSMutableArray alloc] init];
+    [reportTextFieldHostPort addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValueHost
+                                                  manifestContentDict:manifestContentDict
+                                                             manifest:manifest
+                                                        parentKeyPath:parentKeyPath
+                                                         allowedTypes:@[ PFCValueTypeString ]]]; // Key: DefaultValueHost
+    [reportTextFieldHostPort addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValuePort
+                                                  manifestContentDict:manifestContentDict
+                                                             manifest:manifest
+                                                        parentKeyPath:parentKeyPath
+                                                         allowedTypes:@[ PFCValueTypeInteger ]]];                                      // Key: DefaultValuePort     // FIXME - Possibly string?
+    [reportTextFieldHostPort addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+    [reportTextFieldHostPort
+        addObject:[self reportForOptionalKey:PFCManifestKeyOptionalHost manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: OptionalHost
+    [reportTextFieldHostPort
+        addObject:[self reportForOptionalKey:PFCManifestKeyOptionalPort manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: OptionalPort
+    /*
+    [reportTextFieldHostPort addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKeyHost
+                                             manifestContentDict:manifestContentDict
+                                                        manifest:manifest
+                                                   parentKeyPath:parentKeyPath
+                                                        optional:NO
+                                                         ignored:NO]]; // Key: PayloadKeyHost
+    [reportTextFieldHostPort addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKeyPort
+                                             manifestContentDict:manifestContentDict
+                                                        manifest:manifest
+                                                   parentKeyPath:parentKeyPath
+                                                        optional:NO
+                                                         ignored:NO]]; // Key: PayloadKeyPort
+    [reportTextFieldHostPort addObject:[self reportForPayloadTypeKey:PFCManifestKeyPayloadType
+                                                 manifestContentDict:manifestContentDict
+                                                            manifest:manifest
+                                                       parentKeyPath:parentKeyPath
+                                                            optional:NO
+                                                             ignored:NO]]; // Key: PayloadType
+     */
+    [reportTextFieldHostPort addObject:[self reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValueHost
+                                                      manifestContentDict:manifestContentDict
+                                                                 manifest:manifest
+                                                            parentKeyPath:parentKeyPath
+                                                             allowedTypes:@[ PFCValueTypeString ]]]; // Key: PlaceholderValueHost
+    [reportTextFieldHostPort addObject:[self reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValuePort
+                                                      manifestContentDict:manifestContentDict
+                                                                 manifest:manifest
+                                                            parentKeyPath:parentKeyPath
+                                                             allowedTypes:@[ PFCValueTypeInteger ]]]; // Key: PlaceholderValuePort
+    [reportTextFieldHostPort
+        addObject:[self reportForRequiredKey:PFCManifestKeyRequiredHost manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: RequiredHost
+    [reportTextFieldHostPort
+        addObject:[self reportForRequiredKey:PFCManifestKeyRequiredPort manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: RequiredPort
+    [reportTextFieldHostPort addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                 // Key: Title
+    return [reportTextFieldHostPort copy];
 }
 
-- (NSArray *)reportForCellTypeTextFieldCheckbox:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
-    NSMutableArray *reportTextFieldCheckbox;
-    [reportTextFieldCheckbox
-        addObject:[self reportForDefaultValueCheckbox:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValueCheckbox
-    [reportTextFieldCheckbox
-        addObject:[self reportForDefaultValueTextField:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeString ]]]; // Key: DefaultValueTextField
-    [reportTextFieldCheckbox addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                           // Key: Description
-    [reportTextFieldCheckbox addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                                 // Key: Title
+- (NSArray *)reportForCellTypeTextFieldHostPortCheckbox:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextFieldHostPortCheckbox = [[NSMutableArray alloc] init];
+    [reportTextFieldHostPortCheckbox addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValueCheckbox
+                                                          manifestContentDict:manifestContentDict
+                                                                     manifest:manifest
+                                                                parentKeyPath:parentKeyPath
+                                                                 allowedTypes:@[ PFCValueTypeBoolean ]]]; // Key: DefaultValueCheckbox
+    [reportTextFieldHostPortCheckbox addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValueHost
+                                                          manifestContentDict:manifestContentDict
+                                                                     manifest:manifest
+                                                                parentKeyPath:parentKeyPath
+                                                                 allowedTypes:@[ PFCValueTypeString ]]]; // Key: DefaultValueHost
+    [reportTextFieldHostPortCheckbox addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValuePort
+                                                          manifestContentDict:manifestContentDict
+                                                                     manifest:manifest
+                                                                parentKeyPath:parentKeyPath
+                                                                 allowedTypes:@[ PFCValueTypeInteger ]]];                                      // Key: DefaultValuePort     // FIXME - Possibly string?
+    [reportTextFieldHostPortCheckbox addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+    [reportTextFieldHostPortCheckbox
+        addObject:[self reportForOptionalKey:PFCManifestKeyOptionalHost manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: OptionalHost
+    [reportTextFieldHostPortCheckbox
+        addObject:[self reportForOptionalKey:PFCManifestKeyOptionalPort manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: OptionalPort
+    [reportTextFieldHostPortCheckbox addObject:[self reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValueHost
+                                                              manifestContentDict:manifestContentDict
+                                                                         manifest:manifest
+                                                                    parentKeyPath:parentKeyPath
+                                                                     allowedTypes:@[ PFCValueTypeString ]]]; // Key: PlaceholderValueHost
+    [reportTextFieldHostPortCheckbox addObject:[self reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValuePort
+                                                              manifestContentDict:manifestContentDict
+                                                                         manifest:manifest
+                                                                    parentKeyPath:parentKeyPath
+                                                                     allowedTypes:@[ PFCValueTypeInteger ]]]; // Key: PlaceholderValuePort
+    [reportTextFieldHostPortCheckbox
+        addObject:[self reportForRequiredKey:PFCManifestKeyRequiredHost manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: RequiredHost
+    [reportTextFieldHostPortCheckbox
+        addObject:[self reportForRequiredKey:PFCManifestKeyRequiredPort manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: RequiredPort
+    [reportTextFieldHostPortCheckbox addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];                         // Key: Title
+    return [reportTextFieldHostPortCheckbox copy];
+}
 
-    // FIXME - Finish these tests
-    return [reportTextFieldCheckbox copy];
+- (NSArray *)reportForCellTypeTextFieldNumber:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextFieldNumber = [[NSMutableArray alloc] init];
+    [reportTextFieldNumber addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                manifestContentDict:manifestContentDict
+                                                           manifest:manifest
+                                                      parentKeyPath:parentKeyPath
+                                                       allowedTypes:@[ PFCValueTypeInteger, PFCValueTypeFloat ]]];                   // Key: DefaultValue
+    [reportTextFieldNumber addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+    [reportTextFieldNumber addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportTextFieldNumber addObject:[self reportForUnit:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];        // Key: Unit
+    [reportTextFieldNumber addObject:[self reportForMaxValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MinValue
+    [reportTextFieldNumber addObject:[self reportForMinValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MaxValue
+    return [reportTextFieldNumber copy];
+}
+
+- (NSArray *)reportForCellTypeTextFieldNumberLeft:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextFieldNumberLeft = [[NSMutableArray alloc] init];
+    [reportTextFieldNumberLeft addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                                    manifestContentDict:manifestContentDict
+                                                               manifest:manifest
+                                                          parentKeyPath:parentKeyPath
+                                                           allowedTypes:@[ PFCValueTypeInteger, PFCValueTypeFloat ]]];                   // Key: DefaultValue
+    [reportTextFieldNumberLeft addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+    [reportTextFieldNumberLeft addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    [reportTextFieldNumberLeft addObject:[self reportForMaxValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MinValue
+    [reportTextFieldNumberLeft addObject:[self reportForMinValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];    // Key: MaxValue
+    return [reportTextFieldNumberLeft copy];
+}
+
+- (NSArray *)reportForCellTypeTextView:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTextView = [[NSMutableArray alloc] init];
+    [reportTextView addObject:[self reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                         manifestContentDict:manifestContentDict
+                                                    manifest:manifest
+                                               parentKeyPath:parentKeyPath
+                                                allowedTypes:@[ PFCValueTypeString ]]];                                       // Key: DefaultValue
+    [reportTextView addObject:[self reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]]; // Key: Description
+    [reportTextView addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
+    /*
+    [reportTextView
+        addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKey manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath optional:NO ignored:NO]]; // Key: PayloadKey
+    [reportTextView addObject:[self reportForPayloadTypeKey:PFCManifestKeyPayloadType
+                                        manifestContentDict:manifestContentDict
+                                                   manifest:manifest
+                                              parentKeyPath:parentKeyPath
+                                                   optional:NO
+                                                    ignored:NO]]; // Key: PayloadType
+    [reportTextView addObject:[self reportForPayloadValueTypeKey:PFCManifestKeyPayloadType
+                                             manifestContentDict:manifestContentDict
+                                                        manifest:manifest
+                                                   parentKeyPath:parentKeyPath
+                                                        optional:YES
+                                                    allowedTypes:@[ PFCValueTypeString ]]]; // Key: PayloadValueType
+    [reportTextView addObject:[self reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValue
+                                             manifestContentDict:manifestContentDict
+                                                        manifest:manifest
+                                                   parentKeyPath:parentKeyPath
+                                                    allowedTypes:@[ PFCValueTypeString ]]]; // Key: PlaceholderValue
+     */
+    return [reportTextView copy];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1221,11 +1693,15 @@
 - (NSArray *)reportForAvailability:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
     NSMutableArray *reportAvailability = [[NSMutableArray alloc] init];
     NSString *keyPath = [NSString stringWithFormat:@"%@:%@", parentKeyPath, PFCManifestKeyAvailability];
-    __block NSString *arrayKeyPath;
-    [manifestContentDict[PFCManifestKeyAvailability] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull availabilityDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
-      arrayKeyPath = [NSString stringWithFormat:@"%@:%lu", keyPath, (unsigned long)idx];
-      [reportAvailability addObject:[self reportForAvailabilityKey:availabilityDict manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:arrayKeyPath]];
-    }];
+    if (manifestContentDict[PFCManifestKeyAvailability] != nil) {
+        [_manifestContentDictKeys addObject:PFCManifestKeyAvailability];
+
+        __block NSString *arrayKeyPath;
+        [manifestContentDict[PFCManifestKeyAvailability] ?: @[] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull availabilityDict, NSUInteger idx, BOOL *_Nonnull __unused stop) {
+          arrayKeyPath = [NSString stringWithFormat:@"%@:%lu", keyPath, (unsigned long)idx];
+          [reportAvailability addObject:[self reportForAvailabilityKey:availabilityDict manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:arrayKeyPath]];
+        }];
+    }
     return [reportAvailability copy];
 }
 
@@ -1234,22 +1710,16 @@
                                   manifest:(NSDictionary *)manifest
                              parentKeyPath:(NSString *)parentKeyPath {
     if (availabilityDict[@"AvailabilityKey"] != nil) {
-        if ([manifestContentDict[@"AvailabilityKey"] length] == 0) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:@"AvailabilityKey"
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[@"AvailabilityKey"]
-                                              manifest:manifest
-                                             overrides:nil];
+        [_manifestContentDictKeys addObject:@"AvailabilityKey"];
+
+        if ([availabilityDict[@"AvailabilityKey"] length] == 0) {
+            return
+                [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:@"AvailabilityKey" keyPath:parentKeyPath value:availabilityDict[@"AvailabilityKey"] manifest:manifest overrides:nil];
         }
 
-        if (![[manifestContentDict allKeys] containsObject:manifestContentDict[@"AvailabilityKey"]]) {
-            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
-                                                   key:@"AvailabilityKey"
-                                               keyPath:parentKeyPath
-                                                 value:manifestContentDict[@"AvailabilityKey"]
-                                              manifest:manifest
-                                             overrides:nil];
+        if (![[manifestContentDict allKeys] containsObject:availabilityDict[@"AvailabilityKey"]] && ![availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
+            return
+                [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:@"AvailabilityKey" keyPath:parentKeyPath value:availabilityDict[@"AvailabilityKey"] manifest:manifest overrides:nil];
         }
     } else {
         return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:@"AvailabilityKey" keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];

@@ -377,6 +377,7 @@
 		534324DA1C80E75D00893351 /* Menu-17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Menu-17.png"; path = "../Supporting Files/Graphics/UI/Menu-17.png"; sourceTree = "<group>"; };
 		53473FC21C88C60000D4C7CF /* PFCAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCAvailability.h; path = "Manifest Classes/PFCAvailability.h"; sourceTree = "<group>"; };
 		53473FC31C88C60000D4C7CF /* PFCAvailability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCAvailability.m; path = "Manifest Classes/PFCAvailability.m"; sourceTree = "<group>"; };
+		534852EA1C9D7D9C00E7AC47 /* PFCCellTypeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeProtocol.h; path = CellTypes/PFCCellTypeProtocol.h; sourceTree = "<group>"; };
 		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.plist"; sourceTree = "<group>"; };
 		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestParser.h; path = "Manifest Classes/PFCManifestParser.h"; sourceTree = "<group>"; };
 		53597D8A1C5268C50062AADC /* PFCManifestParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestParser.m; path = "Manifest Classes/PFCManifestParser.m"; sourceTree = "<group>"; };
@@ -625,6 +626,7 @@
 		536888FB1C7E47A600759E68 /* CellTypes */ = {
 			isa = PBXGroup;
 			children = (
+				534852EA1C9D7D9C00E7AC47 /* PFCCellTypeProtocol.h */,
 				5306D9D11C7EF5300010191F /* PFCCellTypes.h */,
 				5306D9D21C7EF5300010191F /* PFCCellTypes.m */,
 				5306D9E31C7EFED60010191F /* PFCCellTypeCheckbox.h */,

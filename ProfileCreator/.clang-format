@@ -1,4 +1,5 @@
 BasedOnStyle: LLVM
+AllowAllParametersOfDeclarationOnNextLine: true
 IndentWidth: 4
 ColumnLimit: 200
 ObjCSpaceAfterProperty: true

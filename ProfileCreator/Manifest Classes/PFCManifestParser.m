@@ -504,8 +504,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings {
-    NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
 
+    NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{};
+    if ([plistDict count] == 0) {
+        return plistDict;
+    }
+
+    NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
     // ---------------------------------------------------------------------
     //  Create Manifest Root
     // ---------------------------------------------------------------------
@@ -514,12 +519,12 @@
     // ---------------------------------------------------------------------
     //  Create Manifest Content
     // ---------------------------------------------------------------------
-    manifestDict[PFCManifestKeyManifestContent] = [self manifestContentFromPlistAtURL:fileURL settings:settings];
+    manifestDict[PFCManifestKeyManifestContent] = [self manifestContentFromDict:plistDict settingsDict:settings];
 
     // ---------------------------------------------------------------------
     //  Add path to source plist
     // ---------------------------------------------------------------------
-    manifestDict[PFCRuntimeKeyPlistPath] = [fileURL path];
+    manifestDict[PFCRuntimeKeyPath] = [fileURL path];
     return [manifestDict copy];
 } // manifestForPlistAtURL
 
@@ -544,7 +549,7 @@
             // ---------------------------------------------------------------------
             //  Add path to source plist
             // ---------------------------------------------------------------------
-            manifestDict[PFCRuntimeKeyPlistPath] = [fileURL path];
+            manifestDict[PFCRuntimeKeyPath] = [fileURL path];
             return [manifestDict copy];
         } else {
             DDLogError(@"MCX manifest at path: %@ was empty", [fileURL path]);
@@ -667,10 +672,6 @@
 #pragma mark Create Manifest Content
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
-
-- (NSArray *)manifestContentFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings {
-    return [self manifestContentFromDict:[NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{} settingsDict:settings];
-} // manifestContentFromPlistAtURL:settingsDict
 
 - (NSArray *)manifestContentFromDict:(NSDictionary *)dict settingsDict:(NSMutableDictionary *)settingsDict {
     NSMutableArray *manifestArray = [[NSMutableArray alloc] init];

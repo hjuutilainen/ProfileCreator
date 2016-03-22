@@ -564,6 +564,7 @@
 } // updateManifestLibraryUserLibrary
 
 - (void)updateManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
+    /*
     NSError *error = nil;
     [_arrayLibraryMCX removeAllObjects];
     NSArray *libraryMCXManifests = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
@@ -584,6 +585,7 @@
         DDLogError(@"No manifests returned for library mcx");
         DDLogError(@"%@", [error localizedDescription]);
     }
+     */
 } // updateManifestLibraryMCX
 
 - (void)sortArrayProfile {
@@ -725,7 +727,7 @@
     //  Remove this menu item unless runtime key 'PlistPath' is set in the manifest
     // -------------------------------------------------------------------------------
     NSMenuItem *menuItemShowSourceInFinder = [menu itemWithTitle:@"Show Source In Finder"];
-    if ([manifestDict[PFCRuntimeKeyPlistPath] length] != 0) {
+    if ([manifestDict[PFCRuntimeKeyPath] length] != 0) {
         [menuItemShowSourceInFinder setEnabled:YES];
     } else {
         [menu removeItem:menuItemShowSourceInFinder];
@@ -747,15 +749,12 @@
     // ----------------------------------------------------------------------------------------
     //  If key 'PlistPath' is set, check if it's a valid path. If it is, open it in Finder
     // ----------------------------------------------------------------------------------------
-    if ([manifestDict[PFCRuntimeKeyPlistPath] length] != 0) {
-        NSError *error = nil;
-        NSString *filePath = manifestDict[PFCRuntimeKeyPlistPath] ?: @"";
-        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-        if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
-        } else {
-            DDLogError(@"%@", [error localizedDescription]);
-        }
+    NSError *error = nil;
+    NSURL *fileURL = [NSURL fileURLWithPath:manifestDict[PFCRuntimeKeyPath] ?: @""];
+    if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
+    } else {
+        DDLogError(@"%@", [error localizedDescription]);
     }
 } // menuItemShowInFinder
 

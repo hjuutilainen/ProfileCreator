@@ -127,6 +127,10 @@ extern NSString *const PFCManifestKeyMinValueOffsetDays;
 extern NSString *const PFCManifestKeyMinValueOffsetHours;
 extern NSString *const PFCManifestKeyMinValueOffsetMinutes;
 extern NSString *const PFCManifestKeyOptional;
+extern NSString *const PFCManifestKeyOptionalCheckbox;
+extern NSString *const PFCManifestKeyOptionalPort;
+extern NSString *const PFCManifestKeyOptionalHost;
+extern NSString *const PFCManifestKeyOptionalTextField;
 extern NSString *const PFCManifestKeyParentKey;
 extern NSString *const PFCManifestKeyPayloadDescription;
 extern NSString *const PFCManifestKeyPayloadDisplayName;
@@ -146,11 +150,17 @@ extern NSString *const PFCManifestKeyPayloadParentValueType;
 extern NSString *const PFCManifestKeyPayloadScope;
 extern NSString *const PFCManifestKeyPayloadTabTitle;
 extern NSString *const PFCManifestKeyPayloadType;
+extern NSString *const PFCManifestKeyPayloadTypeHost;
+extern NSString *const PFCManifestKeyPayloadTypePort;
 extern NSString *const PFCManifestKeyPayloadTypes;
 extern NSString *const PFCManifestKeyPayloadTypeCheckbox;
 extern NSString *const PFCManifestKeyPayloadTypeTextField;
 extern NSString *const PFCManifestKeyPayloadUUID;
 extern NSString *const PFCManifestKeyPayloadValueType;
+extern NSString *const PFCManifestKeyPayloadValueTypeCheckbox;
+extern NSString *const PFCManifestKeyPayloadValueTypeHost;
+extern NSString *const PFCManifestKeyPayloadValueTypePort;
+extern NSString *const PFCManifestKeyPayloadValueTypeTextField;
 extern NSString *const PFCManifestKeyPayloadValue;
 extern NSString *const PFCManifestKeyPayloadVersion;
 extern NSString *const PFCManifestKeyPlaceholderValue;
@@ -158,8 +168,10 @@ extern NSString *const PFCManifestKeyPlaceholderValueHost;
 extern NSString *const PFCManifestKeyPlaceholderValuePort;
 extern NSString *const PFCManifestKeyPlaceholderValueTextField;
 extern NSString *const PFCManifestKeyRequired;
+extern NSString *const PFCManifestKeyRequiredCheckbox;
 extern NSString *const PFCManifestKeyRequiredHost;
 extern NSString *const PFCManifestKeyRequiredPort;
+extern NSString *const PFCManifestKeyRequiredTextField;
 extern NSString *const PFCManifestKeySharedKey;
 extern NSString *const PFCManifestKeyShowDateInterval;
 extern NSString *const PFCManifestKeyShowDateTime;
@@ -221,10 +233,9 @@ extern NSString *const PFCFontWeightBold;
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark RuntimeKeys
 ////////////////////////////////////////////////////////////////////////////////
-extern NSString *const PFCRuntimeKeyPlistPath;
+extern NSString *const PFCRuntimeKeyPath;
 extern NSString *const PFCRuntimeKeyProfileEditor;
 extern NSString *const PFCRuntimeKeyProfileExporter;
-extern NSString *const PFCRuntimeKeyPath;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark MCXManifestKeys

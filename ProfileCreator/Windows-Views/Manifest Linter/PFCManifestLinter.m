@@ -155,6 +155,58 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
     });
 }
 
+- (void)menuNeedsUpdate:(NSMenu *)menu {
+    NSInteger clickedRow = [_tableViewReport clickedRow];
+
+    if (-1 < clickedRow) {
+
+        NSMenu *rowMenu = [self menuForRow:clickedRow];
+        [menu removeAllItems];
+        NSArray *itemarr = [NSArray arrayWithArray:[rowMenu itemArray]];
+        for (NSMenuItem *item in itemarr) {
+            [rowMenu removeItem:item];
+            [menu addItem:item];
+        }
+    }
+}
+
+- (void)showSouceInFinder:(NSMenuItem *)menuItem {
+    NSInteger clickedRow = [menuItem tag] ?: -1;
+    if (-1 < clickedRow) {
+        NSDictionary *lintDict = _arrayReport[clickedRow];
+        NSURL *manifestURL = [NSURL fileURLWithPath:lintDict[@"ManifestPath"] ?: @""];
+        if ([manifestURL checkResourceIsReachableAndReturnError:nil]) {
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ manifestURL ]];
+        }
+    }
+}
+
+- (NSMenu *)menuForRow:(NSInteger)row {
+
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Menu"];
+
+    NSMenuItem *menuItemShowSourceInFinder = [[NSMenuItem alloc] init];
+    [menuItemShowSourceInFinder setTag:row];
+    [menuItemShowSourceInFinder setTarget:self];
+    [menuItemShowSourceInFinder setAction:@selector(showSouceInFinder:)];
+    [menuItemShowSourceInFinder setTitle:@"Show Source in Finder"];
+    [menu addItem:menuItemShowSourceInFinder];
+
+    return menu;
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    NSInteger clickedRow = [menuItem tag] ?: -1;
+    if (-1 < clickedRow) {
+        if ([[menuItem title] isEqualToString:@"Show Source in Finder"]) {
+            NSDictionary *lintDict = _arrayReport[clickedRow];
+            NSURL *manifestURL = [NSURL fileURLWithPath:lintDict[@"ManifestPath"] ?: @""];
+            return [manifestURL checkResourceIsReachableAndReturnError:nil];
+        }
+    }
+    return NO;
+}
+
 - (NSArray *)arrayForSeverity:(PFCLintErrorSeverity)severity {
     if (_onlyShowSelectedSeverity) {
         return [_arrayReportAll filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"LintErrorSeverity", @(severity)]];

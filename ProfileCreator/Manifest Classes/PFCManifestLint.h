@@ -23,4 +23,65 @@
 
 - (NSArray *)reportForManifests:(NSArray *)manifests;
 
+// -----------------------------------------------------------------------------
+//  AvailableValues
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForAvailableValues:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  DefaultValue(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForDefaultValueKey:(NSString *)key
+                       manifestContentDict:(NSDictionary *)manifestContentDict
+                                  manifest:(NSDictionary *)manifest
+                             parentKeyPath:(NSString *)parentKeyPath
+                              allowedTypes:(NSArray *)allowedTypes;
+
+// -----------------------------------------------------------------------------
+//  Description
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  IndentLevel
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForIndentLevel:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  PayloadKey(...)
+// -----------------------------------------------------------------------------
+- (NSArray *)reportForPayloadKeys:(NSArray *)payloadKeys
+              manifestContentDict:(NSDictionary *)manifestContentDict
+                         manifest:(NSDictionary *)manifest
+                    parentKeyPath:(NSString *)parentKeyPath
+                     allowedTypes:(NSArray *)allowedTypes;
+
+// -----------------------------------------------------------------------------
+//  PlaceholderValue(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForPlaceholderValueKey:(NSString *)key
+                           manifestContentDict:(NSDictionary *)manifestContentDict
+                                      manifest:(NSDictionary *)manifest
+                                 parentKeyPath:(NSString *)parentKeyPath
+                                  allowedTypes:(NSArray *)allowedTypes;
+
+// -----------------------------------------------------------------------------
+//  Title
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  ValueKeys
+// -----------------------------------------------------------------------------
+- (NSArray *)reportForValueKeys:(NSDictionary *)manifestContentDict
+                       manifest:(NSDictionary *)manifest
+                  parentKeyPath:(NSString *)parentKeyPath
+                       required:(BOOL)required
+                availableValues:(NSArray *)availableValues;
+
+// -----------------------------------------------------------------------------
+//  ValueKeysShared
+// -----------------------------------------------------------------------------
+- (NSArray *)reportForValueKeysShared:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
 @end

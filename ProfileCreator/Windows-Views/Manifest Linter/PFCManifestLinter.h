@@ -8,6 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PFCManifestLinter : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
+@interface PFCManifestLinter : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate>
 
 @end

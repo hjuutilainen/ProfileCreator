@@ -27,8 +27,6 @@
 		<dict>
 			<key>Identifier</key>
 			<string>43F88A1A-98E7-4B3B-A32C-AE8DF4BD04F2</string>
-			<key>ToolTip</key>
-			<string>The user-visible name for the font. This field is replaced by the actual name of the font after installation.</string>
 			<key>Title</key>
 			<string>Name</string>
 			<key>PayloadType</key>

@@ -97,9 +97,10 @@
         NSPredicate *predicateManifestPlists = [NSPredicate predicateWithFormat:@"self.pathExtension == 'plist'"];
         NSArray *manifestURLs = [dirContents filteredArrayUsingPredicate:predicateManifestPlists];
         for (NSURL *manifestURL in manifestURLs ?: @[]) {
-            NSDictionary *manifestDict = [NSDictionary dictionaryWithContentsOfURL:manifestURL];
+            NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
             if ([manifestDict count] != 0) {
-                [libraryApple addObject:manifestDict];
+                manifestDict[PFCRuntimeKeyPath] = [manifestURL path];
+                [libraryApple addObject:[manifestDict copy]];
             }
         }
 
@@ -251,7 +252,7 @@
     }
 
     case kPFCPayloadLibraryCustom: {
-        DDLogDebug(@"Payload library: Library Preferences");
+        DDLogDebug(@"Payload library: Library Custom");
         manifestLibrary = [self libraryCustom:&error acceptCached:YES];
         break;
     }
@@ -300,8 +301,6 @@
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
             [library addObject:manifest];
             _cachedLocalSettings[manifestDomain] = settings;
-        } else {
-            DDLogDebug(@"Plist at path: %@ did not create a manifest", [plistURL path]);
         }
     }
 
