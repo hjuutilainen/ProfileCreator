@@ -1,5 +1,6 @@
 ##### Important - This application is currently in initial development.
-**Previews, documentation and further information will be available together with the first Alpha release.**
+
+**Previews will be available later this week (w.13).**
 ___
 
 # ProfileCreator
