@@ -23,6 +23,7 @@
 #import "PFCConstants.h"
 #import "PFCError.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestParser.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
@@ -201,6 +202,46 @@
                              payloads:payloads];
 }
 
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString ];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                      required:YES
+                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    return [lintReport copy];
+}
+
 @end
 
 @interface PFCPopUpButtonLeftCellView ()
@@ -296,6 +337,41 @@
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
     return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString ];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                      required:YES
+                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    return [lintReport copy];
 }
 
 @end
@@ -395,6 +471,45 @@
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
     return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString ];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                      required:YES
+                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    return [lintReport copy];
 }
 
 @end

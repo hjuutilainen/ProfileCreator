@@ -22,6 +22,7 @@
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestParser.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
@@ -41,13 +42,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCCheckboxCellView *)populateCellView:(PFCCheckboxCellView *)cellView
-                                 manifest:(NSDictionary *)manifest
-                                 settings:(NSDictionary *)settings
-                            settingsLocal:(NSDictionary *)settingsLocal
-                              displayKeys:(NSDictionary *)displayKeys
-                                      row:(NSInteger)row
-                                   sender:(id)sender {
+- (instancetype)populateCellView:(id)cellView
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -215,6 +216,41 @@
                              payloads:payloads];
 }
 
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean ];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath required:NO availableValues:@[ @"True", @"False" ]]];
+
+    return [lintReport copy];
+}
+
 @end
 
 @interface PFCCheckboxNoDescriptionCellView ()
@@ -230,13 +266,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCCheckboxNoDescriptionCellView *)populateCellView:(PFCCheckboxNoDescriptionCellView *)cellView
-                                              manifest:(NSDictionary *)manifest
-                                              settings:(NSDictionary *)settings
-                                         settingsLocal:(NSDictionary *)settingsLocal
-                                           displayKeys:(NSDictionary *)displayKeys
-                                                   row:(NSInteger)row
-                                                sender:(id)sender {
+- (instancetype)populateCellView:(id)cellView
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -316,6 +352,45 @@
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
     return [PFCCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean ];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  FontWeight
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForFontWeight:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Title
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath required:NO availableValues:@[ @"True", @"False" ]]];
+
+    return [lintReport copy];
 }
 
 @end

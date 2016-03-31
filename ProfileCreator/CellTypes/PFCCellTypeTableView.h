@@ -17,22 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
 
-@interface PFCTableViewCellView : NSTableCellView <NSTableViewDataSource, NSTableViewDelegate>
-
+@interface PFCTableViewCellView : NSTableCellView <NSTableViewDataSource, NSTableViewDelegate, PFCCellType>
 - (IBAction)segmentedControlButton:(id)sender;
 - (void)popUpButtonSelection:(id)sender;
 - (void)checkbox:(NSButton *)checkbox;
-
-- (PFCTableViewCellView *)populateCellView:(PFCTableViewCellView *)cellView
-                                  manifest:(NSDictionary *)manifest
-                                  settings:(NSDictionary *)settings
-                             settingsLocal:(NSDictionary *)settingsLocal
-                               displayKeys:(NSDictionary *)displayKeys
-                                       row:(NSInteger)row
-                                    sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-
 @end

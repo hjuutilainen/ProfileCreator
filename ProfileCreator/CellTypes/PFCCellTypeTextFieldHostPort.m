@@ -24,6 +24,7 @@
 #import "PFCConstants.h"
 #import "PFCError.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 #import "PFCProfileExport.h"
@@ -336,6 +337,42 @@
     } else {
         [*payloads addObject:[payloadDictDict copy]];
     }
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload Keys
+    // -------------------------------------------------------------------------
+    NSArray *payloadKeys = @[
+        @{ @"PayloadKeySuffix" : @"Host",
+           @"AllowedTypes" : @[ PFCValueTypeString ] },
+
+        @{ @"PayloadKeySuffix" : @"Port",
+           @"AllowedTypes" : @[ PFCValueTypeString, PFCValueTypeInteger ] }
+    ];
+    [lintReport
+        addObjectsFromArray:[sender reportForPayloadKeys:payloadKeys manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeString ]]];
+
+    [lintReport addObject:[sender reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValueHost
+                                           manifestContentDict:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                  allowedTypes:@[ PFCValueTypeString ]]];
+    [lintReport addObject:[sender reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValuePort
+                                           manifestContentDict:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                  allowedTypes:@[ PFCValueTypeInteger ]]];
+
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    return [lintReport copy];
 }
 
 - (void)showRequired:(BOOL)show {
@@ -680,6 +717,53 @@
                              payloads:payloads];
 }
 
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValueCheckbox
+                                       manifestContentDict:manifestContentDict
+                                                  manifest:manifest
+                                             parentKeyPath:parentKeyPath
+                                              allowedTypes:@[ PFCValueTypeBoolean ]]];
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValueHost
+                                       manifestContentDict:manifestContentDict
+                                                  manifest:manifest
+                                             parentKeyPath:parentKeyPath
+                                              allowedTypes:@[ PFCValueTypeString ]]];
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValuePort
+                                       manifestContentDict:manifestContentDict
+                                                  manifest:manifest
+                                             parentKeyPath:parentKeyPath
+                                              allowedTypes:@[ PFCValueTypeInteger ]]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload Keys
+    // -------------------------------------------------------------------------
+    NSArray *payloadKeys = @[
+        @{ @"PayloadKeySuffix" : @"Host",
+           @"AllowedTypes" : @[ PFCValueTypeString ] },
+
+        @{ @"PayloadKeySuffix" : @"Port",
+           @"AllowedTypes" : @[ PFCValueTypeInteger ] }
+    ];
+    [lintReport
+        addObjectsFromArray:[sender reportForPayloadKeys:payloadKeys manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeString ]]];
+
+    [lintReport addObject:[sender reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValueHost
+                                           manifestContentDict:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                  allowedTypes:@[ PFCValueTypeString ]]];
+
+    [lintReport addObject:[sender reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValuePort
+                                           manifestContentDict:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                  allowedTypes:@[ PFCValueTypeInteger ]]];
+
+    return [lintReport copy];
+}
 - (void)showRequired:(BOOL)show {
     if (show) {
         [_constraintTextFieldPortTrailing setConstant:34.0];

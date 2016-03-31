@@ -17,35 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
-@class PFCProfileExport;
 
-@interface PFCCheckboxCellView : NSTableCellView
-
-- (PFCCheckboxCellView *)populateCellView:(PFCCheckboxCellView *)cellView
-                                 manifest:(NSDictionary *)manifest
-                                 settings:(NSDictionary *)settings
-                            settingsLocal:(NSDictionary *)settingsLocal
-                              displayKeys:(NSDictionary *)displayKeys
-                                      row:(NSInteger)row
-                                   sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
+@interface PFCCheckboxCellView : NSTableCellView <PFCCellType>
 
 @end
 
-@interface PFCCheckboxNoDescriptionCellView : NSTableCellView
-
-- (PFCCheckboxNoDescriptionCellView *)populateCellView:(PFCCheckboxNoDescriptionCellView *)cellView
-                                              manifest:(NSDictionary *)manifest
-                                              settings:(NSDictionary *)settings
-                                         settingsLocal:(NSDictionary *)settingsLocal
-                                           displayKeys:(NSDictionary *)displayKeys
-                                                   row:(NSInteger)row
-                                                sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
+@interface PFCCheckboxNoDescriptionCellView : NSTableCellView <PFCCellType>
 
 @end

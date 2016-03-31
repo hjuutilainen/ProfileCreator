@@ -24,9 +24,24 @@
 - (NSArray *)reportForManifests:(NSArray *)manifests;
 
 // -----------------------------------------------------------------------------
+//  AllowedFileTypes
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForAllowedFileTypes:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  AllowedFileExtensions
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForAllowedFileExtensions:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
 //  AvailableValues
 // -----------------------------------------------------------------------------
 - (NSDictionary *)reportForAvailableValues:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  ButtonTitle
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForButtonTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
 
 // -----------------------------------------------------------------------------
 //  DefaultValue(...)
@@ -43,9 +58,59 @@
 - (NSDictionary *)reportForDescription:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
 
 // -----------------------------------------------------------------------------
+//  FileInfoProcessor
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForFileInfoProcessor:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  FilePrompt
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForFilePrompt:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  FontWeight
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForFontWeight:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  IndentLeft
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForIndentLeft:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
 //  IndentLevel
 // -----------------------------------------------------------------------------
 - (NSDictionary *)reportForIndentLevel:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  MaxValue
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForMaxValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  MinValue
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForMinValue:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  MinValueOffsetDays
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForMinValueOffsetDays:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  MinValueOffsetHours
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForMinValueOffsetHours:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  MinValueOffsetMinutes
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForMinValueOffsetMinutes:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  Optional(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForOptionalKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
 
 // -----------------------------------------------------------------------------
 //  PayloadKey(...)
@@ -66,9 +131,29 @@
                                   allowedTypes:(NSArray *)allowedTypes;
 
 // -----------------------------------------------------------------------------
+//  Required(...)
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForRequiredKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  ShowDateInterval
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForShowDateInterval:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  ShowDateTime
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForShowDateTime:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
 //  Title
 // -----------------------------------------------------------------------------
 - (NSDictionary *)reportForTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
+//  Unit
+// -----------------------------------------------------------------------------
+- (NSDictionary *)reportForUnit:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
 
 // -----------------------------------------------------------------------------
 //  ValueKeys

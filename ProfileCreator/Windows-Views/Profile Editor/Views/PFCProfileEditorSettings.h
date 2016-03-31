@@ -46,6 +46,7 @@
 
 - (id)initWithProfile:(NSDictionary *)profile profileEditor:(PFCProfileEditor *)profileEditor;
 - (void)selectOSVersion:(NSMenuItem *)menuItem;
+- (void)setupDisplaySettings;
 - (NSDictionary *)displayKeys;
 
 @end

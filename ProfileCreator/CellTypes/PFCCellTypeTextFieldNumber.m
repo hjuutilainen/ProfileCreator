@@ -23,6 +23,7 @@
 #import "PFCConstants.h"
 #import "PFCError.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileExport.h"
 
@@ -255,6 +256,23 @@
     }
 }
 
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue
+                                       manifestContentDict:manifestContentDict
+                                                  manifest:manifest
+                                             parentKeyPath:parentKeyPath
+                                              allowedTypes:@[ PFCValueTypeInteger, PFCValueTypeFloat ]]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForUnit:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMaxValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMinValue:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    return [lintReport copy];
+}
+
 @end
 
 @interface PFCTextFieldNumberLeftCellView ()
@@ -375,6 +393,11 @@
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
     [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+    return [lintReport copy];
 }
 
 @end

@@ -130,6 +130,10 @@
         _library = [[PFCProfileEditorLibrary alloc] initWithProfileEditor:self];
         _manifest = [[PFCProfileEditorManifest alloc] initWithProfileEditor:self];
 
+        // Set up settings after BOTH _settings, and _manifest view controllers have been inialized.
+        // This is to have all bindings in place before setting the values so the UI reflects the current state in all NIBs.
+        [_settings setupDisplaySettings];
+
         _viewStatusSettings = [[PFCStatusView alloc] init];
         _viewStatusInfo = [[PFCStatusView alloc] initWithStatusType:kPFCStatusNoSelection];
 

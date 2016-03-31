@@ -24,6 +24,7 @@
 #import "PFCError.h"
 #import "PFCFileInfoProcessors.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -262,6 +263,42 @@
     }
 
     return nil;
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeData ]; // This is not correct, placeholder.
+
+    // -------------------------------------------------------------------------
+    //  AllowedInput
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForAllowedFileTypes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForAllowedFileExtensions:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Prompts
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForButtonTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForFilePrompt:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  FileInfoProcessor
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForFileInfoProcessor:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    return [lintReport copy];
 }
 
 @end

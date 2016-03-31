@@ -20,6 +20,7 @@
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestParser.h"
 #import "PFCProfileEditor.h"
 #import "PFCProfileExport.h"
@@ -116,6 +117,23 @@
     for (NSString *selection in availableValues) {
         [sender createPayloadFromManifestContent:valueKeys[selection] settings:settings payloads:payloads];
     }
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  AvailableValues/ValueKeys
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
+                                                      manifest:manifest
+                                                 parentKeyPath:parentKeyPath
+                                                      required:YES
+                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
+    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    return [lintReport copy];
 }
 
 @end

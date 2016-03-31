@@ -84,7 +84,6 @@
                                             iOSMin:_popUpButtonPlatformiOSMinVersion
                                             iOSMax:_popUpButtonPlatformiOSMaxVersion
                                             sender:self];
-    [self setupDisplaySettings];
 }
 
 - (void)setupSettings {

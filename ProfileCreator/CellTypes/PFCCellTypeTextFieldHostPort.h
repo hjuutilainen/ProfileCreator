@@ -17,44 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
-@class PFCProfileExport;
 
-@interface PFCTextFieldHostPortCellView : NSTableCellView
-
+@interface PFCTextFieldHostPortCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSTextField *settingTextFieldHost;
 @property (weak) IBOutlet NSTextField *settingTextFieldPort;
-
-- (PFCTextFieldHostPortCellView *)populateCellView:(PFCTextFieldHostPortCellView *)cellView
-                                          manifest:(NSDictionary *)manifest
-                                          settings:(NSDictionary *)settings
-                                     settingsLocal:(NSDictionary *)settingsLocal
-                                       displayKeys:(NSDictionary *)displayKeys
-                                               row:(NSInteger)row
-                                            sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
-
 - (void)showRequired:(BOOL)show;
-
 @end
 
-@interface PFCTextFieldHostPortCheckboxCellView : NSTableCellView
-
+@interface PFCTextFieldHostPortCheckboxCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingTextFieldHost;
 @property (weak) IBOutlet NSTextField *settingTextFieldPort;
-
-- (PFCTextFieldHostPortCheckboxCellView *)populateCellView:(PFCTextFieldHostPortCheckboxCellView *)cellView
-                                                  manifest:(NSDictionary *)manifest
-                                                  settings:(NSDictionary *)settings
-                                             settingsLocal:(NSDictionary *)settingsLocal
-                                               displayKeys:(NSDictionary *)displayKeys
-                                                       row:(NSInteger)row
-                                                    sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
-
 @end

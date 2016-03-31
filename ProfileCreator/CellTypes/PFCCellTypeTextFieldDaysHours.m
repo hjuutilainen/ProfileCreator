@@ -23,6 +23,7 @@
 #import "PFCConstants.h"
 #import "PFCError.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
 
@@ -173,6 +174,11 @@
     }
 
     return nil;
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    // No Checks
+    return @[];
 }
 
 @end

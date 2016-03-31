@@ -22,6 +22,7 @@
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 
@@ -40,13 +41,13 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCDatePickerCellView *)populateCellView:(PFCDatePickerCellView *)cellView
-                                   manifest:(NSDictionary *)manifest
-                                   settings:(NSDictionary *)settings
-                              settingsLocal:(NSDictionary *)settingsLocal
-                                displayKeys:(NSDictionary *)displayKeys
-                                        row:(NSInteger)row
-                                     sender:(id)sender {
+- (instancetype)populateCellView:(id)cellView
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -152,6 +153,49 @@
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     // FIXME - Write verification
     return @{};
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeDate ];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  ValueOffset
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Show Date Input
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    return [lintReport copy];
 }
 
 @end
@@ -265,6 +309,43 @@
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     // FIXME - Write verification
     return @{};
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    NSArray *allowedTypes = @[ PFCValueTypeDate ];
+
+    // -------------------------------------------------------------------------
+    //  DefaultValue
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
+
+    // -------------------------------------------------------------------------
+    //  Indentation
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Payload
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:@[ PFCValueTypeDate ]]];
+
+    // -------------------------------------------------------------------------
+    //  ValueOffset
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForMinValueOffsetDays:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMinValueOffsetHours:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForMinValueOffsetMinutes:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  Show Date Input
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForShowDateInterval:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForShowDateTime:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    return [lintReport copy];
 }
 
 @end

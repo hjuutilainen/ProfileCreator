@@ -17,35 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
-@class PFCProfileExport;
 
-@interface PFCTextFieldNumberCellView : NSTableCellView
-
-- (PFCTextFieldNumberCellView *)populateCellView:(PFCTextFieldNumberCellView *)cellView
-                                        manifest:(NSDictionary *)manifest
-                                        settings:(NSDictionary *)settings
-                                   settingsLocal:(NSDictionary *)settingsLocal
-                                     displayKeys:(NSDictionary *)displayKeys
-                                             row:(NSInteger)row
-                                          sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
-
+@interface PFCTextFieldNumberCellView : NSTableCellView <PFCCellType>
 @end
 
-@interface PFCTextFieldNumberLeftCellView : NSTableCellView
-
-- (PFCTextFieldNumberLeftCellView *)populateCellView:(PFCTextFieldNumberLeftCellView *)cellView
-                                            manifest:(NSDictionary *)manifest
-                                            settings:(NSDictionary *)settings
-                                       settingsLocal:(NSDictionary *)settingsLocal
-                                         displayKeys:(NSDictionary *)displayKeys
-                                                 row:(NSInteger)row
-                                              sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
-
+@interface PFCTextFieldNumberLeftCellView : NSTableCellView <PFCCellType>
 @end

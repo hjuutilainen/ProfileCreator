@@ -17,37 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
 
-@interface PFCDatePickerCellView : NSTableCellView
-
+@interface PFCDatePickerCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
-
-- (PFCDatePickerCellView *)populateCellView:(PFCDatePickerCellView *)cellView
-                                   manifest:(NSDictionary *)manifest
-                                   settings:(NSDictionary *)settings
-                              settingsLocal:(NSDictionary *)settingsLocal
-                                displayKeys:(NSDictionary *)displayKeys
-                                        row:(NSInteger)row
-                                     sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-
 @end
 
-@interface PFCDatePickerNoTitleCellView : NSTableCellView
-
+@interface PFCDatePickerNoTitleCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSDatePicker *settingDatePicker;
 @property (weak) IBOutlet NSTextField *settingDateDescription;
-
-- (PFCDatePickerNoTitleCellView *)populateCellView:(PFCDatePickerNoTitleCellView *)cellView
-                                          manifest:(NSDictionary *)manifest
-                                          settings:(NSDictionary *)settings
-                                     settingsLocal:(NSDictionary *)settingsLocal
-                                       displayKeys:(NSDictionary *)displayKeys
-                                               row:(NSInteger)row
-                                            sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-
 @end
