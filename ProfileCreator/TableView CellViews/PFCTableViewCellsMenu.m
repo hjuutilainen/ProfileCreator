@@ -57,7 +57,11 @@
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ([payloadCount intValue] == 1) ? @"Payload" : @"Payloads"]];
+    if ([manifestDict[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"]) {
+        [[cellView menuDescription] setStringValue:@"Mandatory"];
+    } else {
+        [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ([payloadCount intValue] == 1) ? @"Payload" : @"Payloads"]];
+    }
 
     // -------------------------------------------------------------------------
     //  Icon
