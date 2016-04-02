@@ -160,7 +160,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     //  Setup Groups
     // -------------------------------------------------------------------------
     // FIXME - This should be read from settings, if they are shown or hidden
-    [_arrayGroups addObjectsFromArray:@[ _groupGroups, _groupSmartGroups ]];
+    [_arrayGroups addObjectsFromArray:@[ _groupGroups ]]; // @[ _groupGroups, _groupSmartGroups ]
     [self updateGroups];
 
     // -------------------------------------------------------------------------
