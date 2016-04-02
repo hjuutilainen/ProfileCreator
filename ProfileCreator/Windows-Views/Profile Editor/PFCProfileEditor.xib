@@ -180,12 +180,12 @@ Gw
                                         </constraints>
                                     </customView>
                                     <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="yEZ-hH-ZF6">
-                                        <rect key="frame" x="0.0" y="27" width="190" height="503"/>
+                                        <rect key="frame" x="0.0" y="27" width="190" height="499"/>
                                     </customView>
                                     <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="s5y-w7-ixS">
-                                        <rect key="frame" x="0.0" y="530" width="190" height="20"/>
+                                        <rect key="frame" x="0.0" y="526" width="190" height="24"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="tgO-Wy-yWt"/>
+                                            <constraint firstAttribute="height" constant="24" id="tgO-Wy-yWt"/>
                                         </constraints>
                                     </customView>
                                 </subviews>
