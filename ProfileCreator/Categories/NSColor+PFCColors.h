@@ -21,6 +21,6 @@
 
 @interface NSColor (PFCColors)
 
-+ (NSColor *)localSettingsColor;
++ (NSColor *)pfc_localSettingsColor;
 
 @end

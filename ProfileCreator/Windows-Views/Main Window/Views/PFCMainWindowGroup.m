@@ -538,10 +538,6 @@
     case kPFCProfileSmartGroups:
         return [self profileArrayForSmartGroup:group];
         break;
-
-    default:
-        return @[];
-        break;
     }
 }
 

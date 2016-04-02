@@ -21,7 +21,7 @@
 
 @implementation NSColor (PFCColors)
 
-+ (NSColor *)localSettingsColor {
++ (NSColor *)pfc_localSettingsColor {
     static NSColor *localSettingsColor = nil;
     if (!localSettingsColor)
         localSettingsColor = [NSColor colorWithCalibratedRed:0.2 green:0.2 blue:0.9 alpha:1.0];

@@ -121,8 +121,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Set window background color to white and hide window title
     // -------------------------------------------------------------------------
-    [[self window] setBackgroundColor:[NSColor whiteColor]];
-    [[self window] setTitleVisibility:NSWindowTitleHidden];
+    [self.window setBackgroundColor:[NSColor whiteColor]];
+    [self.window setTitleVisibility:NSWindowTitleHidden];
 
     // -------------------------------------------------------------------------
     //  Add content views to window
@@ -183,7 +183,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 - (void)setFirstResponder {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    [[self window] setInitialFirstResponder:[_groupAll tableViewGroup]];
+    [self.window setInitialFirstResponder:[_groupAll tableViewGroup]];
 } // setFirstResponder
 
 - (void)setupProfileLibrary {

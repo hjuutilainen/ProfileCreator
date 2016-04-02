@@ -90,7 +90,7 @@
         if ([manifest[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
-            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
     if ([valueHostAttributed length] != 0) {
@@ -123,7 +123,7 @@
         if ([manifest[PFCManifestKeyDefaultValuePort] length] != 0) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValuePort] length] != 0) {
-            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
@@ -463,7 +463,7 @@
         if ([manifest[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
-            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
@@ -497,7 +497,7 @@
         if ([manifest[PFCManifestKeyDefaultValuePort] length] != 0) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValuePort] length] != 0) {
-            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 

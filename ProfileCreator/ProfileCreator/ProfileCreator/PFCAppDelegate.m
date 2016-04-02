@@ -48,15 +48,15 @@
     //  Register user defaults
     // --------------------------------------------------------------
     NSError *error;
-    NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
+    NSURL *defaultSettingsPath = [NSBundle.mainBundle URLForResource:@"Defaults" withExtension:@"plist"];
     if ([defaultSettingsPath checkResourceIsReachableAndReturnError:&error]) {
         NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
         if ([defaultSettingsDict count] != 0) {
-            [[NSUserDefaults standardUserDefaults] registerDefaults:defaultSettingsDict];
+            [NSUserDefaults.standardUserDefaults registerDefaults:defaultSettingsDict];
         }
     } else {
         // Use NSLog as CocoaLumberjack isn't available yet
-        NSLog(@"%@", [error localizedDescription]);
+        NSLog(@"%@", error.localizedDescription);
     }
 
     // --------------------------------------------------------------
@@ -82,29 +82,29 @@
     // --------------------------------------------------------------
     //  Show Main Window
     // --------------------------------------------------------------
-    [[_mainWindowController window] makeKeyAndOrderFront:self];
+    [_mainWindowController.window makeKeyAndOrderFront:self];
 
 } // applicationWillFinishLaunching
 
 - (void)menuItemPreferences {
 
     if (!_preferencesController) {
-        _preferencesController = [[PFCPreferences alloc] init];
+        [self setPreferencesController:[[PFCPreferences alloc] init]];
     }
 
     if (_preferencesController) {
-        [[_preferencesController window] makeKeyAndOrderFront:self];
+        [_preferencesController.window makeKeyAndOrderFront:self];
     }
 }
 
 - (void)menuItemManifestLinter {
 
     if (!_manifestLinter) {
-        _manifestLinter = [[PFCManifestLinter alloc] init];
+        [self setManifestLinter:[[PFCManifestLinter alloc] init]];
     }
 
     if (_manifestLinter) {
-        [[_manifestLinter window] makeKeyAndOrderFront:self];
+        [_manifestLinter.window makeKeyAndOrderFront:self];
     }
 }
 
@@ -113,7 +113,7 @@
     // --------------------------------------------------------------
     //  Get Main Menu
     // --------------------------------------------------------------
-    NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
+    NSMenu *mainMenu = NSApplication.sharedApplication.mainMenu;
 
     // --------------------------------------------------------------
     //  Get Main Menu -> ProfileCreator

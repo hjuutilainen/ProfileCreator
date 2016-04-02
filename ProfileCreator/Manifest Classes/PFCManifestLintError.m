@@ -44,10 +44,6 @@
     case kPFCLintErrorSeverityDebug:
         return @"Debug";
         break;
-
-    default:
-        return [@(severity) stringValue];
-        break;
     }
 }
 
@@ -138,9 +134,6 @@
         errorMessage = @"Resource defined in value not be found";
         errorSeverity = @(kPFCLintErrorSeverityInfo);
         errorRecovery = @"Update value or add missing resource";
-        break;
-
-    default:
         break;
     }
 

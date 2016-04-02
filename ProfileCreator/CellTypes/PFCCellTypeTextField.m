@@ -88,7 +88,7 @@
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
@@ -345,7 +345,7 @@
         valueTextField = manifest[PFCManifestKeyDefaultValueTextField];
     } else if ([settingsLocal[PFCSettingsKeyValueTextField] length] != 0) {
         valueTextFieldAttributed =
-            [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueTextField] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueTextField] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
     }
 
     if ([valueTextFieldAttributed length] != 0) {
@@ -744,7 +744,7 @@
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 

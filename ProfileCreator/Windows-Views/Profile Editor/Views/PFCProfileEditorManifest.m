@@ -379,29 +379,29 @@
 }
 
 - (void)allowMultiplePayloads:(BOOL)allowMultiplePayloads {
-    if (allowMultiplePayloads && [_constraintScollViewManifestTop constant] == 0.0f) {
+    if (allowMultiplePayloads && _constraintScollViewManifestTop.constant == 0.0f) {
         [_constraintScollViewManifestTop setConstant:24.0f];
 
-        [[self view] addSubview:_buttonAddTab positioned:NSWindowAbove relativeTo:nil];
+        [self.view addSubview:_buttonAddTab positioned:NSWindowAbove relativeTo:nil];
         [_buttonAddTab setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_buttonAddTab]-0-[_scrollViewManifest]"
-                                                                            options:0
-                                                                            metrics:nil
-                                                                              views:NSDictionaryOfVariableBindings(_buttonAddTab, _scrollViewManifest)]];
-        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_buttonAddTab(24)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonAddTab)]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_buttonAddTab]-0-[_scrollViewManifest]"
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:NSDictionaryOfVariableBindings(_buttonAddTab, _scrollViewManifest)]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_buttonAddTab(24)]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonAddTab)]];
 
-        [[self view] addSubview:_stackViewTabBar positioned:NSWindowAbove relativeTo:nil];
+        [self.view addSubview:_stackViewTabBar positioned:NSWindowAbove relativeTo:nil];
         [_stackViewTabBar setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_stackViewTabBar]-0-[_scrollViewManifest]"
-                                                                            options:0
-                                                                            metrics:nil
-                                                                              views:NSDictionaryOfVariableBindings(_stackViewTabBar, _scrollViewManifest)]];
-        [[self view] addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_stackViewTabBar]-0-[_buttonAddTab]"
-                                                                            options:0
-                                                                            metrics:nil
-                                                                              views:NSDictionaryOfVariableBindings(_stackViewTabBar, _buttonAddTab)]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_stackViewTabBar]-0-[_scrollViewManifest]"
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:NSDictionaryOfVariableBindings(_stackViewTabBar, _scrollViewManifest)]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_stackViewTabBar]-0-[_buttonAddTab]"
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:NSDictionaryOfVariableBindings(_stackViewTabBar, _buttonAddTab)]];
 
-    } else if (!allowMultiplePayloads && [_constraintScollViewManifestTop constant] == 24.0f) {
+    } else if (!allowMultiplePayloads && _constraintScollViewManifestTop.constant == 24.0f) {
         [_constraintScollViewManifestTop setConstant:0.0f];
         [_stackViewTabBar removeFromSuperview];
         [_buttonAddTab removeFromSuperview];

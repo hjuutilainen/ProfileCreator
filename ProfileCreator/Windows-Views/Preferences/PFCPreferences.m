@@ -57,21 +57,21 @@
 }
 
 - (IBAction)toolbarItemGeneral:(id)__unused sender {
-    [[self window] setTitle:@"General"];
+    [self.window setTitle:@"General"];
     [PFCGeneralUtility removeSubviewsFromView:_viewPreferences];
     [self updateWindowSizeForView:[_general view]];
     [PFCGeneralUtility insertSubview:[_general view] inSuperview:_viewPreferences hidden:NO];
 }
 
 - (IBAction)toolbarItemMCX:(id)__unused sender {
-    [[self window] setTitle:@"MCX"];
+    [self.window setTitle:@"MCX"];
     [PFCGeneralUtility removeSubviewsFromView:_viewPreferences];
     [self updateWindowSizeForView:[_mcx view]];
     [PFCGeneralUtility insertSubview:[_mcx view] inSuperview:_viewPreferences hidden:NO];
 }
 
 - (IBAction)toolbarItemLogging:(id)sender {
-    [[self window] setTitle:@"Logging"];
+    [self.window setTitle:@"Logging"];
     [PFCGeneralUtility removeSubviewsFromView:_viewPreferences];
     [self updateWindowSizeForView:[_logging view]];
     [PFCGeneralUtility insertSubview:[_logging view] inSuperview:_viewPreferences hidden:NO];
@@ -79,14 +79,14 @@
 
 - (void)updateWindowSizeForView:(NSView *)view {
 
-    NSRect frame = [[self window] frame];
-    NSRect oldView = [[[self window] contentView] frame];
-    NSRect newView = [view frame];
+    NSRect frame = self.window.frame;
+    NSRect oldView = self.window.contentView.frame;
+    NSRect newView = view.frame;
 
     frame.origin.y = frame.origin.y + (oldView.size.height - newView.size.height);
     frame.size.height = ((frame.size.height - oldView.size.height) + newView.size.height);
 
-    [[self window] setFrame:frame display:YES animate:YES];
+    [self.window setFrame:frame display:YES animate:YES];
 }
 
 @end

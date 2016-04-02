@@ -79,7 +79,7 @@
 } // insertSubview:inSuperview:hidden
 
 + (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView {
-    NSLayoutConstraint *constraint = [scrollView constraintForAttribute:NSLayoutAttributeHeight];
+    NSLayoutConstraint *constraint = [scrollView pfc_constraintForAttribute:NSLayoutAttributeHeight];
     [constraint setConstant:tableHeight];
 } // setTableViewHeight
 

@@ -164,9 +164,9 @@
     //  Set window delegate to self to respond to -(void)windowShouldClose
     //  Also set window background color to white
     // -------------------------------------------------------------------------
-    [[self window] setDelegate:self];
-    [[self window] setBackgroundColor:[NSColor whiteColor]];
-    [[self window] setTitleVisibility:NSWindowTitleHidden];
+    [self.window setDelegate:self];
+    [self.window setBackgroundColor:NSColor.whiteColor];
+    [self.window setTitleVisibility:NSWindowTitleHidden];
 
     // -------------------------------------------------------------------------
     //  Library
@@ -178,17 +178,17 @@
     // -------------------------------------------------------------------------
     //  Manifest
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:[_manifest view] inSuperview:_viewManifestSplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewStatusSettings view] inSuperview:_viewManifestSplitView hidden:YES];
-    [PFCGeneralUtility insertSubview:[_settings view] inSuperview:_viewManifestSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_manifest.view inSuperview:_viewManifestSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewStatusSettings.view inSuperview:_viewManifestSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_settings.view inSuperview:_viewManifestSplitView hidden:YES];
     [_viewControllerDisplaySettings setView:[_manifest viewPopUpDisplaySettings]];
 
     // -------------------------------------------------------------------------
     //  Info
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility insertSubview:[_info view] inSuperview:_viewInfoSplitView hidden:YES];
+    [PFCGeneralUtility insertSubview:_info.view inSuperview:_viewInfoSplitView hidden:YES];
     [PFCGeneralUtility insertSubview:[[_info infoMenu] view] inSuperview:_viewInfoHeaderSplitView hidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewStatusInfo view] inSuperview:_viewInfoSplitView hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewStatusInfo.view inSuperview:_viewInfoSplitView hidden:NO];
 
     // -------------------------------------------------------------------------
     //  Perform Initial Setup
@@ -218,7 +218,7 @@
     // -------------------------------------------------------------------------
     if ([[_settings profileName] isEqualToString:PFCDefaultProfileName]) {
         [self buttonSettings:self];
-        [[self window] setInitialFirstResponder:[_settings textFieldProfileName]];
+        [self.window setInitialFirstResponder:[_settings textFieldProfileName]];
     } else {
 
         // ---------------------------------------------------------------------------
@@ -227,7 +227,7 @@
         // ---------------------------------------------------------------------------
         [[_library tableViewProfile] selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
         [_library selectManifest:[_library tableViewProfile]];
-        [[self window] setInitialFirstResponder:[_library tableViewProfile]];
+        [self.window setInitialFirstResponder:[_library tableViewProfile]];
     }
 } // setFirstResponder
 
@@ -291,7 +291,7 @@
 } // windowShouldClose
 
 - (void)closeWindow {
-    [[self window] performClose:self];
+    [self.window performClose:self];
 } // closeWindow
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -740,11 +740,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (IBAction)buttonCancel:(id)sender {
-    [[self window] performClose:self];
+    [self.window performClose:self];
 } // buttonCancel
 
 - (IBAction)buttonCancelSheetProfileName:(id)sender {
-    [[NSApp mainWindow] endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
+    [NSApp.mainWindow endSheet:_sheetProfileName returnCode:NSModalResponseCancel];
     [_sheetProfileName orderOut:self];
 } // buttonCancelSheetProfileName
 
@@ -855,7 +855,7 @@
      // -------------------------------------------------------------------------
      //  Update window size
      // -------------------------------------------------------------------------
-     NSRect windowFrame = [[self window] frame];
+     NSRect windowFrame = [self.window frame];
      CGFloat minimumSize = 1.0f;
      if ( isCollapsed ) {
 
@@ -865,12 +865,12 @@
      [_splitViewWindow setPosition:minimumSize ofDividerAtIndex:1];
      windowFrame.size.width += minimumSize;
      windowFrame.origin.x -= minimumSize;
-     [[self window] setFrame:windowFrame display:YES animate:NO];
+     [self.window setFrame:windowFrame display:YES animate:NO];
 
      CGFloat expandedWidth = 220;
      windowFrame.size.width += expandedWidth;
      windowFrame.origin.x -= expandedWidth;
-     [[self window] setFrame:windowFrame display:YES animate:YES];
+     [self.window setFrame:windowFrame display:YES animate:YES];
      } else {
 
      // -------------------------------------------------------------------------
@@ -878,7 +878,7 @@
      // -------------------------------------------------------------------------
      windowFrame.size.width -= NSWidth(viewInfo.frame) - minimumSize;
      //windowFrame.origin.x += NSWidth(viewInfo.frame) - minimumSize;
-     [[self window] setFrame:windowFrame display:YES animate:YES];
+     [self.window setFrame:windowFrame display:YES animate:YES];
 
      // -------------------------------------------------------------------------
      //  Collapse it
@@ -886,7 +886,7 @@
      [_splitViewWindow setPosition:0 ofDividerAtIndex:1];
      windowFrame.size.width -= minimumSize;
      //windowFrame.origin.x += minimumSize;
-     [[self window] setFrame:windowFrame display:YES animate:NO];
+     [self.window setFrame:windowFrame display:YES animate:NO];
      }
 
      [_splitViewWindow setHoldingPriority:viewInfoPriority forSubviewAtIndex:2];

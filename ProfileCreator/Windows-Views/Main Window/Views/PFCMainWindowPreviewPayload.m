@@ -34,7 +34,7 @@
 - (id)init {
     self = [super initWithNibName:@"PFCMainWindowPreviewPayload" bundle:nil];
     if (self != nil) {
-        [[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addObserver:self forKeyPath:NSStringFromSelector(@selector(payloadErrorCount)) options:0 context:nil];
         _isCollapsed = YES;
     }
@@ -75,20 +75,20 @@
     if (_isCollapsed) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *_Nonnull context) {
           [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-          self.layoutConstraintDescriptionBottom.animator.constant += ([[self->_scrollViewTableView constraintForAttribute:NSLayoutAttributeHeight] constant] + 7);
-          [[[self view] superview] layoutSubtreeIfNeeded];
+          self.layoutConstraintDescriptionBottom.animator.constant += ([[self->_scrollViewTableView pfc_constraintForAttribute:NSLayoutAttributeHeight] constant] + 7);
+          [self.view.superview layoutSubtreeIfNeeded];
         }
             completionHandler:^{
-              [[self view] removeConstraint:self->_layoutConstraintDescriptionBottom];
+              [self.view removeConstraint:self->_layoutConstraintDescriptionBottom];
               [self setIsCollapsed:NO];
             }];
     } else {
         [_layoutConstraintDescriptionBottom setConstant:(self.view.bounds.size.height - 47.0f)];
-        [[self view] addConstraint:_layoutConstraintDescriptionBottom];
+        [self.view addConstraint:_layoutConstraintDescriptionBottom];
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *_Nonnull context) {
           [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
           [[self->_layoutConstraintDescriptionBottom animator] setConstant:7];
-          [[[self view] superview] layoutSubtreeIfNeeded];
+          [self.view.superview layoutSubtreeIfNeeded];
         }
             completionHandler:^{
               [self setIsCollapsed:YES];

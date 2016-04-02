@@ -33,15 +33,15 @@
 
 @implementation NSView (NSLayoutConstraintFilter)
 
-- (NSArray *)constaintsForAttribute:(NSLayoutAttribute)attribute {
+- (NSArray *)pfc_constaintsForAttribute:(NSLayoutAttribute)attribute {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"firstAttribute = %d", attribute];
-    NSArray *filteredArray = [[self constraints] filteredArrayUsingPredicate:predicate];
+    NSArray *filteredArray = [self.constraints filteredArrayUsingPredicate:predicate];
 
     return filteredArray;
 }
 
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute {
-    NSArray *constraints = [self constaintsForAttribute:attribute];
+- (NSLayoutConstraint *)pfc_constraintForAttribute:(NSLayoutAttribute)attribute {
+    NSArray *constraints = [self pfc_constaintsForAttribute:attribute];
 
     if (constraints.count) {
         return constraints[0];

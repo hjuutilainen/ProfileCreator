@@ -32,6 +32,6 @@
 #import <Cocoa/Cocoa.h>
 
 @interface NSView (NSLayoutConstraintFilter)
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute;
-- (NSArray *)constaintsForAttribute:(NSLayoutAttribute)attribute;
+- (NSLayoutConstraint *)pfc_constraintForAttribute:(NSLayoutAttribute)attribute;
+- (NSArray *)pfc_constaintsForAttribute:(NSLayoutAttribute)attribute;
 @end

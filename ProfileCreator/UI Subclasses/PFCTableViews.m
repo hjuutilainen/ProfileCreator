@@ -44,8 +44,8 @@
 
 - (void)keyDown:(NSEvent *)theEvent {
     if ([self.class eventIsDeleteKeyPressed:theEvent]) {
-        if ([[self delegate] respondsToSelector:@selector(deleteKeyPressedForTableView:)]) {
-            if ([(id<PFCTableViewDelegate>)[self delegate] deleteKeyPressedForTableView:self]) {
+        if ([self.delegate respondsToSelector:@selector(deleteKeyPressedForTableView:)]) {
+            if ([(id<PFCTableViewDelegate>)self.delegate deleteKeyPressedForTableView:self]) {
                 return;
             }
         }
@@ -65,19 +65,19 @@
     // ----------------------------------------------------------------------------------------
     //  Get what table view responded when the user clicked
     // ----------------------------------------------------------------------------------------
-    NSString *tableViewIdentifier = [self identifier];
+    NSString *tableViewIdentifier = self.identifier;
 
     // ----------------------------------------------------------------------------------------
     //  Create an instance of the context menu bound to the TableView's menu outlet
     // ----------------------------------------------------------------------------------------
-    NSMenu *menu = [[self menu] copy];
+    NSMenu *menu = [self.menu copy];
     [menu setAutoenablesItems:YES];
 
     // -----------------------------------------------------------------------------------------------------------
     //  Send menu to delegate for validation to add, enable and disable menu items depending on TableView and row
     // -----------------------------------------------------------------------------------------------------------
-    if ([[self delegate] respondsToSelector:@selector(validateMenu:forTableViewWithIdentifier:row:)]) {
-        [(id<PFCTableViewDelegate>)[self delegate] validateMenu:menu forTableViewWithIdentifier:tableViewIdentifier row:row];
+    if ([self.delegate respondsToSelector:@selector(validateMenu:forTableViewWithIdentifier:row:)]) {
+        [(id<PFCTableViewDelegate>)self.delegate validateMenu:menu forTableViewWithIdentifier:tableViewIdentifier row:row];
     }
 
     return menu;
@@ -92,8 +92,8 @@
     [super mouseDown:theEvent];
 
     if (clickedRow != -1) {
-        if ([[self delegate] respondsToSelector:@selector(didClickRow:)]) {
-            [(id<PFCTableViewDelegate>)[self delegate] didClickRow:clickedRow];
+        if ([self.delegate respondsToSelector:@selector(didClickRow:)]) {
+            [(id<PFCTableViewDelegate>)self.delegate didClickRow:clickedRow];
         }
     }
 }

@@ -79,8 +79,6 @@
         break;
     case kPFCStatusErrorReadingSettings:
         return @"Error Reading Settings";
-    default:
-        return @"";
         break;
     }
 }
@@ -122,15 +120,13 @@
     case kPFCStatusErrorReadingSettings:
         attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:16];
         break;
-    default:
-        break;
     }
     return [[NSAttributedString alloc] initWithString:label attributes:attributes];
 }
 
 - (void)showStatus:(PFCStatus)status {
     [self setStatus:status];
-    [[self view] setHidden:NO];
+    [self.view setHidden:NO];
     [_textFieldStatus setAttributedStringValue:[self attributedStringForStatus:status]];
 }
 

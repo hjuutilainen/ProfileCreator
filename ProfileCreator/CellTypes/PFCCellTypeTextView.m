@@ -84,7 +84,7 @@
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : [NSColor localSettingsColor]}];
+            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
