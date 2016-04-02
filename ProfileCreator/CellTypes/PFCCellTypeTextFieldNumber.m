@@ -370,19 +370,19 @@
     if (_stepperValue == nil) {
         [self setStepperValue:settings[PFCSettingsKeyValue] ?: @0];
     }
-    [[cellView settingTextField] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepper] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [cellView.settingTextField bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [cellView.settingStepper bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
 
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[PFCManifestUtility.sharedUtility toolTipForManifestContentDict:manifest] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView settingTextField] setEnabled:enabled];
-    [[cellView settingStepper] setEnabled:enabled];
+    [cellView.settingTextField setEnabled:enabled];
+    [cellView.settingStepper setEnabled:enabled];
 
     return cellView;
 } // populateCellViewTextField:settings:row
@@ -392,7 +392,7 @@
 }
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+    [self.class createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
