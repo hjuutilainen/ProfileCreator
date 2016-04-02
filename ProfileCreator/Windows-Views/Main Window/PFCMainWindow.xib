@@ -170,13 +170,13 @@
         <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="azA-lO-Z5V">
             <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
             <subviews>
-                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="40" horizontalPageScroll="10" verticalLineScroll="40" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
+                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgS-ch-DaF" customClass="RFOverlayScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Jbc-6O-SzG">
                         <rect key="frame" x="0.0" y="0.0" width="187" height="395"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU" customClass="PFCTableView">
+                            <tableView identifier="TableViewIdentifierProfileLibrary" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" id="Flb-rs-hgU" customClass="PFCTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="184" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -196,22 +196,14 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="CellViewProfile" id="H6P-Et-eRM" userLabel="CellViewMenu" customClass="CellViewProfile">
-                                                <rect key="frame" x="0.0" y="0.0" width="184" height="40"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="184" height="24"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w3z-I9-GAa">
-                                                        <rect key="frame" x="9" y="20" width="173" height="16"/>
+                                                        <rect key="frame" x="9" y="4" width="173" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Title" id="ogQ-Wa-v8N">
                                                             <font key="font" metaFont="systemBold" size="12"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wqp-2r-ceT">
-                                                        <rect key="frame" x="9" y="6" width="173" height="13"/>
-                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="AUE-B0-3CU">
-                                                            <font key="font" metaFont="system" size="10"/>
-                                                            <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
@@ -219,15 +211,10 @@
                                                 <constraints>
                                                     <constraint firstItem="w3z-I9-GAa" firstAttribute="top" secondItem="H6P-Et-eRM" secondAttribute="top" constant="4" id="4eP-at-sFR"/>
                                                     <constraint firstItem="w3z-I9-GAa" firstAttribute="leading" secondItem="H6P-Et-eRM" secondAttribute="leading" constant="11" id="8TD-Pb-iSJ"/>
-                                                    <constraint firstItem="Wqp-2r-ceT" firstAttribute="leading" secondItem="w3z-I9-GAa" secondAttribute="leading" id="Vb3-mf-8O0"/>
+                                                    <constraint firstAttribute="bottom" secondItem="w3z-I9-GAa" secondAttribute="bottom" constant="4" id="Bb5-4K-ola"/>
                                                     <constraint firstAttribute="trailing" secondItem="w3z-I9-GAa" secondAttribute="trailing" constant="4" id="XHE-I2-ms0"/>
-                                                    <constraint firstItem="Wqp-2r-ceT" firstAttribute="width" secondItem="w3z-I9-GAa" secondAttribute="width" id="f5D-Tu-Jza"/>
-                                                    <constraint firstAttribute="bottom" secondItem="Wqp-2r-ceT" secondAttribute="bottom" constant="6" id="nBN-gr-Eex"/>
-                                                    <constraint firstItem="Wqp-2r-ceT" firstAttribute="top" secondItem="w3z-I9-GAa" secondAttribute="bottom" constant="1" id="qcu-Hb-q11"/>
                                                 </constraints>
                                                 <connections>
-                                                    <outlet property="menuDescription" destination="Wqp-2r-ceT" id="tsY-I2-pFt"/>
-                                                    <outlet property="menuTitle" destination="w3z-I9-GAa" id="7qr-Df-ElQ"/>
                                                     <outlet property="textField" destination="w3z-I9-GAa" id="ioN-QC-QPB"/>
                                                 </connections>
                                             </tableCellView>

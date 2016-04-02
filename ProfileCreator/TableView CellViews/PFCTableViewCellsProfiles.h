@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Cocoa/Cocoa.h>
 #import "PFCMainWindowGroupTitle.h"
+#import <Cocoa/Cocoa.h>
 
 @interface PFCTableViewCellsProfiles : NSObject
 @end
@@ -30,9 +30,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface CellViewProfile : NSTableCellView
-@property (weak) IBOutlet NSTextField *menuTitle;
-@property (weak) IBOutlet NSTextField *menuDescription;
-@property (weak) IBOutlet NSImageView *menuIcon;
 - (CellViewProfile *)populateCellViewProfile:(CellViewProfile *)cellView profileDict:(NSDictionary *)profileDict row:(NSInteger)row;
 @end
 
