@@ -138,6 +138,8 @@
 		53C7824B1C85C2E600E731B1 /* PFCPreferencesGeneral.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C782491C85C2E600E731B1 /* PFCPreferencesGeneral.xib */; };
 		53C7824F1C85C32200E731B1 /* PFCPreferencesMCX.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C7824D1C85C32200E731B1 /* PFCPreferencesMCX.m */; };
 		53C782501C85C32200E731B1 /* PFCPreferencesMCX.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C7824E1C85C32200E731B1 /* PFCPreferencesMCX.xib */; };
+		53D4642F1CAFEF34009783A1 /* com.apple.airplay.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */; };
+		53D4643F1CAFF3E3009783A1 /* com.apple.airplay.plist in Copy Manifests */ = {isa = PBXBuildFile; fileRef = 53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */; };
 		53D5A50E1C8E14B60099CD8A /* PFCProfileEditorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D5A50C1C8E14B60099CD8A /* PFCProfileEditorLibrary.m */; };
 		53D5A50F1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53D5A50D1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib */; };
 		53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D795601C4AF865006B19E9 /* RFOverlayScroller.m */; };
@@ -291,6 +293,7 @@
 			dstPath = Manifests;
 			dstSubfolderSpec = 7;
 			files = (
+				53D4643F1CAFF3E3009783A1 /* com.apple.airplay.plist in Copy Manifests */,
 				5379F70F1C999D09003BF7BD /* com.apple.passcode.plist in Copy Manifests */,
 				539616661C823FDB00FE6470 /* com.apple.applicationaccess.plist in Copy Manifests */,
 				53FCF0081C1F556A00E440CB /* com.apple.ldap.plist in Copy Manifests */,
@@ -497,6 +500,7 @@
 		53C7824C1C85C32200E731B1 /* PFCPreferencesMCX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCPreferencesMCX.h; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.h"; sourceTree = "<group>"; };
 		53C7824D1C85C32200E731B1 /* PFCPreferencesMCX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCPreferencesMCX.m; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.m"; sourceTree = "<group>"; };
 		53C7824E1C85C32200E731B1 /* PFCPreferencesMCX.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCPreferencesMCX.xib; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.xib"; sourceTree = "<group>"; };
+		53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airplay.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.airplay.plist"; sourceTree = "<group>"; };
 		53D5A50B1C8E14B60099CD8A /* PFCProfileEditorLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorLibrary.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.h"; sourceTree = "<group>"; };
 		53D5A50C1C8E14B60099CD8A /* PFCProfileEditorLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorLibrary.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.m"; sourceTree = "<group>"; };
 		53D5A50D1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorLibrary.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.xib"; sourceTree = "<group>"; };
@@ -822,6 +826,7 @@
 		539FC5CB1C53A1D00074CEC9 /* Apple */ = {
 			isa = PBXGroup;
 			children = (
+				53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */,
 				532B6C501C17289700297025 /* com.apple.general.plist */,
 				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
 				539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */,
@@ -1274,6 +1279,7 @@
 				53C3E32B1C8B0CA800C15B73 /* PFCStatusView.xib in Resources */,
 				5342D8B91C8C69A80023C1C1 /* PFCProfileEditorSettings.xib in Resources */,
 				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
+				53D4642F1CAFEF34009783A1 /* com.apple.airplay.plist in Resources */,
 				5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */,
 				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
 				537290771C557666003160EA /* Profiles.icns in Resources */,
