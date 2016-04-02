@@ -275,12 +275,12 @@
         NSMutableArray *arrayPayloadLibrarySource;
         if (payloadLibrary == _selectedLibrary) {
             [_arrayLibrary addObject:manifest];
-            [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+            [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
             [self reloadTableView:_tableViewLibrary updateFirstResponder:YES];
         } else {
             arrayPayloadLibrarySource = [self arrayForLibrary:payloadLibrary];
             [arrayPayloadLibrarySource addObject:manifest];
-            [arrayPayloadLibrarySource sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+            [arrayPayloadLibrarySource sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
             [self setArray:arrayPayloadLibrarySource forLibrary:payloadLibrary];
         }
 
@@ -309,7 +309,7 @@
         //  Remove manifest from library
         // ---------------------------------------------------------------------
         [_arrayLibrary removeObjectAtIndex:(NSUInteger)row];
-        [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+        [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
         [self reloadTableView:_tableViewLibrary updateFirstResponder:YES];
 
         // ---------------------------------------------------------------------
@@ -511,7 +511,7 @@
 
     [_arrayLibrary removeAllObjects];
     [self setArrayLibrary:[self arrayForLibrary:_selectedLibrary]];
-    [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+    [_arrayLibrary sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
 
     [self reloadTableView:_tableViewLibrary updateFirstResponder:NO];
 } // updateManifests
@@ -535,7 +535,7 @@
         // ---------------------------------------------------------------------
         //  Sort array
         // ---------------------------------------------------------------------
-        [_arrayLibraryApple sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+        [_arrayLibraryApple sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library Apple");
         DDLogError(@"%@", [error localizedDescription]);
@@ -556,7 +556,7 @@
             }
         }
 
-        [_arrayLibraryUserPreferences sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+        [_arrayLibraryUserPreferences sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library user library preferences");
         DDLogError(@"%@", [error localizedDescription]);
@@ -580,7 +580,7 @@
             }
         }
 
-        [_arrayLibraryMCX sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+        [_arrayLibraryMCX sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library mcx");
         DDLogError(@"%@", [error localizedDescription]);
@@ -589,7 +589,7 @@
 } // updateManifestLibraryMCX
 
 - (void)sortArrayProfile {
-    [_arrayProfile sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"Title" ascending:YES] ]];
+    [_arrayProfile sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
 
     // -------------------------------------------------------------------------------------------
     //  Find index of menu item com.apple.general and move it to the top of array payload profile

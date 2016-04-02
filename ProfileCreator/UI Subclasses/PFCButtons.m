@@ -41,25 +41,19 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-
-    // Drawing code here.
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    NSLog(@"mouseDown");
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
     // Selects here
-    NSLog(@"mouseUp");
 } // mouseUp
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    NSLog(@"mouseEntered");
 } // mouseEntered
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    NSLog(@"mouseExited");
 } // mouseExited
 
 - (void)updateTrackingAreas {

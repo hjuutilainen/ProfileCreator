@@ -67,22 +67,22 @@
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+    [cellView.settingTitle setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
     if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        [cellView.settingTitle setTextColor:NSColor.blackColor];
     } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        [cellView.settingTitle setTextColor:NSColor.grayColor];
     }
 
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [cellView.settingDescription setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Unit
     // ---------------------------------------------------------------------
-    [[cellView settingUnit] setStringValue:manifest[PFCManifestKeyUnit] ?: @""];
+    [cellView.settingUnit setStringValue:manifest[PFCManifestKeyUnit] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Value
@@ -95,52 +95,52 @@
             value = settingsLocal[PFCSettingsKeyValue];
         }
     }
-    [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:[value ?: @0 stringValue]];
-    [[cellView settingTextField] setTag:row];
+    [cellView.settingTextField setDelegate:sender];
+    [cellView.settingTextField setStringValue:[value ?: @0 stringValue]];
+    [cellView.settingTextField setTag:row];
 
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
     if (manifest[PFCManifestKeyPlaceholderValue] != nil) {
-        [[cellView settingTextField] setPlaceholderString:[manifest[PFCManifestKeyPlaceholderValue] stringValue] ?: @""];
+        [cellView.settingTextField setPlaceholderString:[manifest[PFCManifestKeyPlaceholderValue] stringValue] ?: @""];
     } else if (required) {
-        [[cellView settingTextField] setPlaceholderString:@"Required"];
+        [cellView.settingTextField setPlaceholderString:@"Required"];
     } else if (optional) {
-        [[cellView settingTextField] setPlaceholderString:@"Optional"];
+        [cellView.settingTextField setPlaceholderString:@"Optional"];
     } else {
-        [[cellView settingTextField] setPlaceholderString:@""];
+        [cellView.settingTextField setPlaceholderString:@""];
     }
 
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
-    [[cellView settingNumberFormatter] setMinimum:manifest[PFCManifestKeyMinValue] ?: @0];
-    [[cellView settingStepper] setMinValue:[manifest[PFCManifestKeyMinValue] doubleValue] ?: 0.0];
+    [cellView.settingNumberFormatter setMinimum:manifest[PFCManifestKeyMinValue] ?: @0];
+    [cellView.settingStepper setMinValue:[manifest[PFCManifestKeyMinValue] doubleValue] ?: 0.0];
 
-    [[cellView settingNumberFormatter] setMaximum:manifest[PFCManifestKeyMaxValue] ?: @99999];
-    [[cellView settingStepper] setMaxValue:[manifest[PFCManifestKeyMaxValue] doubleValue] ?: 99999.0];
+    [cellView.settingNumberFormatter setMaximum:manifest[PFCManifestKeyMaxValue] ?: @99999];
+    [cellView.settingStepper setMaxValue:[manifest[PFCManifestKeyMaxValue] doubleValue] ?: 99999.0];
 
     // ---------------------------------------------------------------------
     //  Stepper
     // ---------------------------------------------------------------------
-    [[cellView settingStepper] setValueWraps:NO];
+    [cellView.settingStepper setValueWraps:NO];
     if (_stepperValue == nil) {
         [self setStepperValue:value];
     }
-    [[cellView settingTextField] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
-    [[cellView settingStepper] bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [cellView.settingTextField bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
+    [cellView.settingStepper bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
 
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[PFCManifestUtility.sharedUtility toolTipForManifestContentDict:manifest] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView settingTextField] setEnabled:enabled];
-    [[cellView settingStepper] setEnabled:enabled];
+    [cellView.settingTextField setEnabled:enabled];
+    [cellView.settingStepper setEnabled:enabled];
 
     return cellView;
 } // populateCellViewTextField:settings:row
@@ -151,16 +151,16 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
 
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL required = [PFCAvailability.sharedInstance requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if (value == nil) {
         value = contentDictSettings[PFCManifestKeyDefaultValue];
@@ -250,9 +250,9 @@
     //  Save payload to payload array
     // -------------------------------------------------------------------------
     if (index != NSNotFound) {
-        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+        [*payloads replaceObjectAtIndex:index withObject:payloadDictDict.copy];
     } else {
-        [*payloads addObject:[payloadDictDict copy]];
+        [*payloads addObject:payloadDictDict.copy];
     }
 }
 
@@ -337,36 +337,36 @@
             value = settingsLocal[PFCSettingsKeyValue];
         }
     }
-    [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setStringValue:[value ?: @0 stringValue]];
-    [[cellView settingTextField] setTag:row];
+    [cellView.settingTextField setDelegate:sender];
+    [cellView.settingTextField setStringValue:[value ?: @0 stringValue]];
+    [cellView.settingTextField setTag:row];
 
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
     if (manifest[PFCManifestKeyPlaceholderValue] != nil) {
-        [[cellView settingTextField] setPlaceholderString:[manifest[PFCManifestKeyPlaceholderValue] stringValue] ?: @""];
+        [cellView.settingTextField setPlaceholderString:[manifest[PFCManifestKeyPlaceholderValue] stringValue] ?: @""];
     } else if (required) {
-        [[cellView settingTextField] setPlaceholderString:@"Required"];
+        [cellView.settingTextField setPlaceholderString:@"Required"];
     } else if (optional) {
-        [[cellView settingTextField] setPlaceholderString:@"Optional"];
+        [cellView.settingTextField setPlaceholderString:@"Optional"];
     } else {
-        [[cellView settingTextField] setPlaceholderString:@""];
+        [cellView.settingTextField setPlaceholderString:@""];
     }
 
     // ---------------------------------------------------------------------
     //  NumberFormatter Min/Max Value
     // ---------------------------------------------------------------------
-    [[cellView settingNumberFormatter] setMinimum:manifest[PFCManifestKeyMinValue] ?: @0];
-    [[cellView settingStepper] setMinValue:[manifest[PFCManifestKeyMinValue] doubleValue] ?: 0.0];
+    [cellView.settingNumberFormatter setMinimum:manifest[PFCManifestKeyMinValue] ?: @0];
+    [cellView.settingStepper setMinValue:[manifest[PFCManifestKeyMinValue] doubleValue] ?: 0.0];
 
-    [[cellView settingNumberFormatter] setMaximum:manifest[PFCManifestKeyMaxValue] ?: @99999];
-    [[cellView settingStepper] setMaxValue:[manifest[PFCManifestKeyMaxValue] doubleValue] ?: 99999.0];
+    [cellView.settingNumberFormatter setMaximum:manifest[PFCManifestKeyMaxValue] ?: @99999];
+    [cellView.settingStepper setMaxValue:[manifest[PFCManifestKeyMaxValue] doubleValue] ?: 99999.0];
 
     // ---------------------------------------------------------------------
     //  Stepper
     // ---------------------------------------------------------------------
-    [[cellView settingStepper] setValueWraps:NO];
+    [cellView.settingStepper setValueWraps:NO];
     if (_stepperValue == nil) {
         [self setStepperValue:settings[PFCSettingsKeyValue] ?: @0];
     }

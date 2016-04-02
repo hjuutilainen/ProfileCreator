@@ -23,9 +23,9 @@
 
 - (id)init {
     if ((self = [super init])) {
-        threadUnsafeDateFormatter = [[NSDateFormatter alloc] init];
+        _threadUnsafeDateFormatter = [[NSDateFormatter alloc] init];
         NSString *formatString = [NSDateFormatter dateFormatFromTemplate:@"yyyy/MM/dd HH:mm:ss:SSS" options:0 locale:[NSLocale currentLocale]];
-        [threadUnsafeDateFormatter setDateFormat:formatString];
+        [_threadUnsafeDateFormatter setDateFormat:formatString];
     }
     return self;
 }
@@ -50,7 +50,7 @@
         break;
     }
 
-    NSString *dateAndTime = [threadUnsafeDateFormatter stringFromDate:(logMessage->_timestamp)];
+    NSString *dateAndTime = [_threadUnsafeDateFormatter stringFromDate:(logMessage->_timestamp)];
     NSString *logMsg = logMessage->_message;
 
     if (logMessage->_flag == DDLogFlagInfo) {
@@ -61,12 +61,12 @@
 }
 
 - (void)didAddToLogger:(id<DDLogger>)logger {
-    loggerCount++;
-    NSAssert(loggerCount <= 1, @"This logger isn't thread-safe");
+    _loggerCount++;
+    NSAssert(_loggerCount <= 1, @"This logger isn't thread-safe");
 }
 
 - (void)willRemoveFromLogger:(id<DDLogger>)logger {
-    loggerCount--;
+    _loggerCount--;
 }
 
 @end

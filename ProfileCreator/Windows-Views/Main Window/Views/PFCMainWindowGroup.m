@@ -81,9 +81,6 @@
         [self setupGroupTitle];
         [self setupGroupSmartGroup];
         break;
-
-    default:
-        break;
     }
 }
 

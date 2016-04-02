@@ -21,8 +21,8 @@
 #import <Foundation/Foundation.h>
 
 @interface PFCLogFormatter : NSObject <DDLogFormatter> {
-    int loggerCount;
-    NSDateFormatter *threadUnsafeDateFormatter;
+    int _loggerCount;
+    NSDateFormatter *_threadUnsafeDateFormatter;
 }
 
 @end

@@ -17,14 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <CocoaLumberjack/CocoaLumberjack.h>
 #import <Foundation/Foundation.h>
 
-#ifndef NBICreator_NBCLogging_h
-#define NBICreator_NBCLogging_h
-
-#import <CocoaLumberjack/CocoaLumberjack.h>
+#pragma once
 extern DDLogLevel ddLogLevel;
-#endif
 
 @interface PFCLog : NSObject
 
