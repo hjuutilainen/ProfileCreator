@@ -32,7 +32,7 @@
       sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
-} // sharedUtility
+} // sharedInstance
 
 - (BOOL)showSelf:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys {
     BOOL showSelf = YES;

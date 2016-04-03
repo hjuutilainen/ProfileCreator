@@ -38,7 +38,7 @@
       sharedUtility = [[self alloc] init];
     });
     return sharedUtility;
-} // sharedParser
+} // sharedUtility
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
