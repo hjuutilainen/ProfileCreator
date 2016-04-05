@@ -1,4 +1,4 @@
-### Important - This application is currently in initial development.
+## Important - This application is currently in initial development.
 ___
 
 # UI Preview
@@ -6,7 +6,7 @@ ___
 Here is a static preview of how the UI of the application is developing.  
 _As it's still is being developed, this is not the final UI._
 
-## Main Window
+### Main Window
 
 This is the main window for the application:
 
@@ -24,7 +24,7 @@ This is the main window for the application:
  Settings will be expanded further to show a lot more relevant information.  
  Payloads can be unfolded to show a glance of the configured settings, or any error that need to be resolved.
 
-## Profile Editor
+### Profile Editor
 
 This is what the profile editing window will look like:
 
