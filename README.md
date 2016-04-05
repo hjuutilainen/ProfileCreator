@@ -40,7 +40,7 @@ This is what the profile editing window will look like:
  Displays the settings for the currently selected payload.  
  This is where you edit your payload settings.  
 
-4. **Payload Tabs**
+4. **Payload Tabs**  
  You can add multiple payloads using the + button top right. (If the payload supports it)
 
 5. **Payload Content Visibility**  
