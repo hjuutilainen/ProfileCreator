@@ -213,7 +213,7 @@
     [_arrayManifestContent removeAllObjects];
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
     NSArray *manifestContentArray =
-        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[[_profileEditor settings] displayKeys]];
+        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:_profileEditor.settings.displayKeys];
 
     // ------------------------------------------------------------------------------------------
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -246,7 +246,7 @@
     NSMutableArray *manifestContent = [[NSMutableArray alloc] init];
     NSArray *manifestContentAll = manifest[PFCManifestKeyManifestContent] ?: @[];
     [manifestContentAll enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull manifestContentDict, NSUInteger idx, BOOL *_Nonnull stop) {
-      if ([[PFCAvailability sharedInstance] showSelf:manifestContentDict displayKeys:[[_profileEditor settings] displayKeys]]) {
+      if ([[PFCAvailability sharedInstance] showSelf:manifestContentDict displayKeys:_profileEditor.settings.displayKeys]) {
           [manifestContent addObject:manifestContentDict];
       }
     }];
@@ -325,7 +325,7 @@
     // ------------------------------------------------------------------------------------
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
     NSArray *manifestContentArray =
-        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:[[_profileEditor settings] displayKeys]];
+        [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:_profileEditor.settings.displayKeys];
 
     // ------------------------------------------------------------------------------------------
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -346,7 +346,7 @@
             if (manifestTabCount == 1) {
                 NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifest[PFCManifestKeyManifestContent]
                                                                                                        settings:_settingsManifest
-                                                                                                    displayKeys:[[_profileEditor settings] displayKeys]];
+                                                                                                    displayKeys:_profileEditor.settings.displayKeys];
                 NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
                 [self updatePayloadTabErrorCount:errorCount tabIndex:0];
             }
@@ -450,7 +450,7 @@
                 manifestContentDict:manifestContentDict
                 userSettingsDict:_settingsManifest[identifier] ?: @{}
                 localSettingsDict:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
-                displayKeys:[[_profileEditor settings] displayKeys]
+                displayKeys:_profileEditor.settings.displayKeys
                 row:row
                 sender:self];
         }
@@ -697,7 +697,7 @@
     //  Update new tab with errors
     // -------------------------------------------------------------------------
     NSDictionary *settingsError =
-        [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{} displayKeys:[_profileEditor.settings displayKeys]];
+        [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{} displayKeys:_profileEditor.settings.displayKeys];
     NSNumber *errorCount = @(settingsError.allKeys.count) ?: @0;
     [self updatePayloadTabErrorCount:errorCount tabIndex:newIndex];
     [_profileEditor.library reloadManifest:_selectedManifest];
@@ -797,7 +797,7 @@
           DDLogDebug(@"Tab settings: %@", settings);
 
           NSDictionary *verificationReport =
-              [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings displayKeys:[[_profileEditor settings] displayKeys]] ?: @{};
+              [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings displayKeys:_profileEditor.settings.displayKeys] ?: @{};
           [settingsError addObject:verificationReport];
 
           NSNumber *errorCount = @([[verificationReport allKeys] count]) ?: @0;
@@ -1043,7 +1043,7 @@
     //                          Row is withing the count of the array
     //                          The array isn't empty
     // -------------------------------------------------------------------------
-    if (row < 0 || [_arrayManifestContent count] == 0 || [_arrayManifestContent count] < row) {
+    if (row < 0 || _arrayManifestContent.count == 0 || _arrayManifestContent.count < row) {
         DDLogError(@"row error for selected manifest");
         return;
     }
@@ -1052,7 +1052,7 @@
     //  Verify that current manifest content dict has an identifier.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[@"Identifier"];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         DDLogError(@"No Identifier!");
         return;
     }
@@ -1061,7 +1061,13 @@
     //  Create and array of manifest content dicts originating from the current manifest content dict
     //  This means either just the current dict, or any subDicts depending on the current user selection
     // --------------------------------------------------------------------------------------------------
-    NSArray *manifestContentSubset = [[PFCManifestParser sharedParser] arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil];
+    NSMutableArray *manifestContentSubset = [[NSMutableArray alloc] init];
+    for (NSDictionary *resolvedManifestContentDict in
+         [PFCManifestParser.sharedParser arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil]) {
+        if ([[PFCManifestUtility sharedUtility] showManifestContentDict:resolvedManifestContentDict settings:_settingsManifest displayKeys:_profileEditor.settings.displayKeys]) {
+            [manifestContentSubset addObject:resolvedManifestContentDict];
+        }
+    }
 
     if ([manifestContentSubset count] == 0) {
         DDLogError(@"Nothing returned from arrayForManifestContentDict!");
@@ -1136,7 +1142,7 @@
     // -------------------------------------------------------------------------
     //  Make sure it's a settings segmented control
     // -------------------------------------------------------------------------
-    if (![[[segmentedControl superview] class] isSubclassOfClass:[PFCSegmentedControlCellView class]]) {
+    if (![segmentedControl.superview.class isSubclassOfClass:PFCSegmentedControlCellView.class]) {
         DDLogError(@"SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
         return;
     }
@@ -1144,12 +1150,12 @@
     // -------------------------------------------------------------------------
     //  Get segmented control's row in the table view
     // -------------------------------------------------------------------------
-    NSNumber *segmentedControlTag = @([segmentedControl tag]);
+    NSNumber *segmentedControlTag = @(segmentedControl.tag);
     if (segmentedControlTag == nil) {
         DDLogError(@"SegmentedControl: %@ tag is nil", segmentedControl);
         return;
     }
-    NSInteger row = [segmentedControlTag integerValue];
+    NSInteger row = segmentedControlTag.integerValue;
 
     // -----------------------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsSegmentedControl segmented control
@@ -1157,8 +1163,8 @@
     if (segmentedControl == [(PFCSegmentedControlCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
                                 settingSegmentedControl]) {
 
-        NSString *selectedSegment = [segmentedControl labelForSegment:[segmentedControl selectedSegment]];
-        if ([selectedSegment length] == 0) {
+        NSString *selectedSegment = [segmentedControl labelForSegment:segmentedControl.selectedSegment];
+        if (selectedSegment.length == 0) {
             DDLogError(@"SegmentedControl: %@ selected segment is nil", segmentedControl);
             return;
         }
