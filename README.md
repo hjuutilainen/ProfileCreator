@@ -1,7 +1,50 @@
 ##### Important - This application is currently in initial development.
-
-**Previews will be available later this week (w.13).**
 ___
+
+# UI Preview
+
+Here is a static preview of how the UI of the application is developing.  
+_As it's still is being developed a lot is still going to change._
+
+## Main Window
+
+This is the main window for the application:
+
+![MainWindow](https://github.com/ProfileCreator/ProfileCreatorResources/blob/master/Screenshots/readme/MainWindow.png)
+
+1. **Organization Panel**  
+ This sidebar panel organizes all created profiles into groups. 
+ Smart Groups will also be available, as well as shortcuts for local profiles installed or applied through MCX.
+
+2. **Profile List**  
+ This is the list of profiles for the selected group in the organiation panel.
+
+3. **Preview**  
+ This view shows a preview for the selected profile.
+ Settings will be expanded further to show a lot more relevant information.
+ Payloads can be unfolded to show a glance of the configured settings, or what errors areneeds to be resolved.
+
+## Profile Editor
+
+This is what the profile editing window will look like:
+
+![ProfileEditor](https://github.com/ProfileCreator/ProfileCreatorResources/blob/master/Screenshots/readme/ProfileEditor.png)
+
+1. **Profile Payloads**  
+ Top left holds all payloads selected to be included in the profile.
+
+2. **Payload Library**  
+ This is the library of all available payloads to configure.
+ Currently separated by Apple profiles, MCX, local settings (Preferences) and Custom.
+
+3. **Payload View**  
+ Displays the settings for the currently selected payload.
+ This is where you edit your payload settings.
+ You can add multiple payloads in the + button top left.
+
+4. **Payload Content Visibility**  
+ This popover allows you to change what keys are displayed in the payload view.
+ This makes it easier to ignore OS Platforms, versions or specifically hidden keys.
 
 # ProfileCreator
 OS X Application to create configuration profiles.
