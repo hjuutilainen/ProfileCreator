@@ -31,20 +31,20 @@ This is what the profile editing window will look like:
 ![ProfileEditor](https://github.com/ProfileCreator/ProfileCreatorResources/blob/master/Screenshots/readme/ProfileEditor.png)
 
 1. **Profile Payloads**  
- Top left holds all payloads selected to be included in the profile.
+ Top left shows all payloads selected to be included in the profile.
 
 2. **Payload Library**  
  This is the library of all available payloads to configure.  
- Currently separated by Apple profiles, MCX, local settings (Preferences) and Custom.
+ Current selections are: Apple (Profile Manager etc.), MCX, Local Files (Preferences) and Custom.
 
 3. **Payload View**  
  Displays the settings for the currently selected payload.  
  This is where you edit your payload settings.  
- You can add multiple payloads using the + button top right.
+ You can add multiple payloads using the + button top right. (If the payload supports it)
 
 4. **Payload Content Visibility**  
  This popover allows you to change what keys are displayed in the payload view.  
- This makes it easier to ignore OS Platforms, versions or specifically hidden keys.
+ This makes it easier to hide keys by OS Platforms, version, supervision etc.
 
 # ProfileCreator
 OS X Application to create configuration profiles.
