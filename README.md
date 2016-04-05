@@ -40,7 +40,7 @@ This is what the profile editing window will look like:
 3. **Payload View**  
  Displays the settings for the currently selected payload.  
  This is where you edit your payload settings.  
- You can add multiple payloads in the + button top left.
+ You can add multiple payloads using the + button top right.
 
 4. **Payload Content Visibility**  
  This popover allows you to change what keys are displayed in the payload view.  
