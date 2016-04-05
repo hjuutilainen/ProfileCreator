@@ -548,7 +548,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 - (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID inGroup:(PFCProfileGroups)group {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    if ([profileUUIDs count] == 0 || [groupUUID length] == 0) {
+    if (profileUUIDs.count == 0 || groupUUID.length == 0) {
         DDLogError(@"No UUID was passed!");
         return;
     }
@@ -569,6 +569,8 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     default:
         break;
     }
+
+    [self setTableViewProfileLibrarySelectedRows:_tableViewProfileLibrary.selectedRowIndexes];
 } // removeProfilesWithUUIDs
 
 - (void)editSelectedProfile:(id)sender {
@@ -850,7 +852,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     NSIndexSet *selectedRowIndexes = _tableViewProfileLibrary.selectedRowIndexes;
     DDLogDebug(@"Table view profile library selected rows: %@", selectedRowIndexes);
 
-    if ([selectedRowIndexes count] == 0) {
+    if (selectedRowIndexes.count == 0) {
 
         // ---------------------------------------------------------------------
         //  Update the selection properties with the current value
