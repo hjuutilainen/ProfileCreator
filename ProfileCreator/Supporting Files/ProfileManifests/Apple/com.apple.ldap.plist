@@ -7,7 +7,7 @@
 	<key>Domain</key>
 	<string>com.apple.ldap</string>
 	<key>Description</key>
-	<string>Not Configured</string>
+	<string>FIXME</string>
 	<key>Title</key>
 	<string>LDAP</string>
 	<key>IconName</key>
