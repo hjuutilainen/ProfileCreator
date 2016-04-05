@@ -1,5 +1,4 @@
 ## Important - This application is currently in initial development.
-___
 
 # UI Preview
 
@@ -40,9 +39,11 @@ This is what the profile editing window will look like:
 3. **Payload View**  
  Displays the settings for the currently selected payload.  
  This is where you edit your payload settings.  
+
+4. **Payload Tabs**
  You can add multiple payloads using the + button top right. (If the payload supports it)
 
-4. **Payload Content Visibility**  
+5. **Payload Content Visibility**  
  This popover allows you to change what keys are displayed in the payload view.  
  This makes it easier to hide keys by OS Platforms, version, supervision etc.
 
