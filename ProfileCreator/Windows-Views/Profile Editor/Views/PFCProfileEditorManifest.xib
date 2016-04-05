@@ -1539,12 +1539,12 @@
             <connections>
                 <binding destination="-2" name="hidden" keyPath="self.tabBarHidden" id="p8Z-tv-fQP"/>
             </connections>
-            <point key="canvasLocation" x="-186.5" y="-283"/>
+            <point key="canvasLocation" x="-1649.5" y="-1445"/>
         </stackView>
         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nTe-86-tuV">
             <rect key="frame" x="0.0" y="0.0" width="24" height="11"/>
             <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="O0Y-V2-gq1">
-                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                <behavior key="behavior" lightByContents="YES"/>
                 <font key="font" metaFont="system"/>
             </buttonCell>
             <connections>

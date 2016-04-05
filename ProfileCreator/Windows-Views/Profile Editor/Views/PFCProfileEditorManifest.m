@@ -156,7 +156,7 @@
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_stackViewTabBar setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationVertical];
     PFCProfileEditorManifestTab *newTabController = [[PFCProfileEditorManifestTab alloc] init];
-    PFCProfileEditorManifestTabView *newTabView = (PFCProfileEditorManifestTabView *)[newTabController view];
+    PFCProfileEditorManifestTabView *newTabView = (PFCProfileEditorManifestTabView *)newTabController.view;
     [newTabView setDelegate:self];
     [_arrayManifestTabs addObject:newTabView];
     [_stackViewTabBar addView:newTabView inGravity:NSStackViewGravityTrailing];
@@ -164,10 +164,10 @@
 } // setupSettingsTabBar
 
 - (void)updateManifestColumns {
-    for (NSTableColumn *column in [_tableViewManifestContent tableColumns]) {
-        if ([[column identifier] isEqualToString:@"ColumnSettingsEnabled"]) {
+    for (NSTableColumn *column in _tableViewManifestContent.tableColumns) {
+        if ([column.identifier isEqualToString:@"ColumnSettingsEnabled"]) {
             [column setHidden:!_showColumnDisabled];
-        } else if ([[column identifier] isEqualToString:@"ColumnMinOS"]) {
+        } else if ([column.identifier isEqualToString:@"ColumnMinOS"]) {
             [column setHidden:YES];
         }
     }
@@ -176,13 +176,13 @@
 - (void)selectOSVersion:(NSMenuItem *)menuItem {
     NSMenu *menu = [menuItem menu];
     if (menu == [_popUpButtonOSXMinVersion menu]) {
-        [[_profileEditor settings] setOsxMinVersion:[menuItem title]];
+        [_profileEditor.settings setOsxMinVersion:menuItem.title];
     } else if (menu == [_popUpButtonOSXMaxVersion menu]) {
-        [[_profileEditor settings] setOsxMaxVersion:[menuItem title]];
+        [_profileEditor.settings setOsxMaxVersion:menuItem.title];
     } else if (menu == [_popUpButtoniOSMinVersion menu]) {
-        [[_profileEditor settings] setIosMinVersion:[menuItem title]];
+        [_profileEditor.settings setIosMinVersion:menuItem.title];
     } else if (menu == [_popUpButtoniOSMaxVersion menu]) {
-        [[_profileEditor settings] setIosMaxVersion:[menuItem title]];
+        [_profileEditor.settings setIosMaxVersion:menuItem.title];
     }
 } // selectOSVersion
 
@@ -362,6 +362,7 @@
         } else {
             [self setTabBarHidden:NO];
         }
+        [_stackViewTabBar.superview display];
 
         [_profileEditor hideManifestStatus];
 
@@ -402,6 +403,7 @@
                                                                             views:NSDictionaryOfVariableBindings(_stackViewTabBar, _buttonAddTab)]];
 
     } else if (!allowMultiplePayloads && _constraintScollViewManifestTop.constant == 24.0f) {
+        DDLogDebug(@"Remove tab bar to view");
         [_constraintScollViewManifestTop setConstant:0.0f];
         [_stackViewTabBar removeFromSuperview];
         [_buttonAddTab removeFromSuperview];
@@ -638,7 +640,7 @@
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Should save settings: %@", saveSettings ? @"YES" : @"NO");
 
-    if (PFCMaximumPayloadCount <= [_arrayManifestTabs count]) {
+    if (PFCMaximumPayloadCount <= _arrayManifestTabs.count) {
         NSAlert *alert = [NSAlert
             alertWithError:[NSError errorWithDomain:@"com.github.ProfileCreator"
                                                code:100
@@ -649,7 +651,7 @@
                                                                               @"implemented yet.\n\nAdd a feature request if this is something you need to push it up the priority list.",
                                                                               (long)PFCMaximumPayloadCount]
                                            }]];
-        [alert beginSheetModalForWindow:[_profileEditor window]
+        [alert beginSheetModalForWindow:_profileEditor.window
                       completionHandler:^(NSModalResponse returnCode){
 
                       }];
@@ -660,7 +662,7 @@
     //  Create a new view controller and extract the tab view
     // -------------------------------------------------------------------------
     PFCProfileEditorManifestTab *newTabController = [[PFCProfileEditorManifestTab alloc] init];
-    PFCProfileEditorManifestTabView *newTabView = (PFCProfileEditorManifestTabView *)[newTabController view];
+    PFCProfileEditorManifestTabView *newTabView = (PFCProfileEditorManifestTabView *)newTabController.view;
     [newTabView setDelegate:self];
     [newTabView setIsSelected:YES]; // This is when added
 
@@ -673,7 +675,7 @@
     // -------------------------------------------------------------------------
     //  Get index of where to add the new stack view (end of current views)
     // -------------------------------------------------------------------------
-    NSInteger newIndex = [[_stackViewTabBar views] count];
+    NSInteger newIndex = _stackViewTabBar.views.count;
     DDLogDebug(@"New index for tab in stack view: %ld", (long)newIndex);
 
     // -------------------------------------------------------------------------
@@ -695,10 +697,10 @@
     //  Update new tab with errors
     // -------------------------------------------------------------------------
     NSDictionary *settingsError =
-        [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{} displayKeys:[[_profileEditor settings] displayKeys]];
-    NSNumber *errorCount = @([[settingsError allKeys] count]) ?: @0;
+        [[PFCManifestParser sharedParser] settingsErrorForManifestContent:_selectedManifest[PFCManifestKeyManifestContent] settings:@{} displayKeys:[_profileEditor.settings displayKeys]];
+    NSNumber *errorCount = @(settingsError.allKeys.count) ?: @0;
     [self updatePayloadTabErrorCount:errorCount tabIndex:newIndex];
-    [[_profileEditor library] reloadManifest:_selectedManifest];
+    [_profileEditor.library reloadManifest:_selectedManifest];
 
     // -------------------------------------------------------------------------
     //  When adding a view the tab bar should become visible
@@ -717,7 +719,6 @@
 } // updatePayloadTabTitle
 
 - (void)updatePayloadTabErrorCount:(NSNumber *)errorCount tabIndex:(NSUInteger)tabIndex {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     PFCProfileEditorManifestTabView *tab = (PFCProfileEditorManifestTabView *)_arrayManifestTabs[tabIndex];
     [tab updateErrorCount:errorCount ?: @0];
 } // updatePayloadTabErrorCount
@@ -829,7 +830,7 @@
         settingsCount = 1;
     }
 
-    NSUInteger stackViewCount = [[_stackViewTabBar views] count];
+    NSUInteger stackViewCount = _stackViewTabBar.views.count;
     if (settingsCount != stackViewCount) {
 
         DDLogDebug(@"Correcting tab count for manifest with domain: %@", manifestDomain);
@@ -837,13 +838,13 @@
             DDLogDebug(@"Settings count: %ld is less than stack view count: %ld", (long)settingsCount, (long)stackViewCount);
 
             while (settingsCount < stackViewCount) {
-                [_stackViewTabBar removeView:[[_stackViewTabBar views] lastObject]];
-                if (0 < [_arrayManifestTabs count] && stackViewCount == [_arrayManifestTabs count]) {
+                [_stackViewTabBar removeView:_stackViewTabBar.views.lastObject];
+                if (0 < _arrayManifestTabs.count && stackViewCount == _arrayManifestTabs.count) {
                     [_arrayManifestTabs removeObjectAtIndex:(stackViewCount - 1)];
                 } else {
                     DDLogError(@"Array tab view count is not matching stack view, this might cause an inconsistent internal state");
                 }
-                stackViewCount = [[_stackViewTabBar views] count];
+                stackViewCount = _stackViewTabBar.views.count;
             }
 
         } else if (stackViewCount < settingsCount) {
@@ -851,7 +852,7 @@
 
             while (stackViewCount < settingsCount) {
                 [self addTabShouldSaveSettings:NO];
-                stackViewCount = [[_stackViewTabBar views] count];
+                stackViewCount = _stackViewTabBar.views.count;
             }
         }
     }
@@ -889,13 +890,13 @@
     //  Check that manifest array contains correct amount of settings dicts
     //  If some is missing, add empty dicts to get the index matching correct
     // -------------------------------------------------------------------------
-    NSInteger manifestSettingsCount = [manifestSettings count];
+    NSInteger manifestSettingsCount = manifestSettings.count;
     DDLogDebug(@"Current manifest settings count: %ld", (long)manifestSettingsCount);
 
     // -------------------------------------------------------------------------
     //  Get current count of settings tabs
     // -------------------------------------------------------------------------
-    NSInteger manifestTabCount = [_arrayManifestTabs count];
+    NSInteger manifestTabCount = _arrayManifestTabs.count;
     DDLogDebug(@"Current manifest tab count: %ld", (long)manifestTabCount);
 
     // -------------------------------------------------------------------------
@@ -904,7 +905,7 @@
     while (manifestSettingsCount < manifestTabCount) {
         DDLogDebug(@"Adding empty setting to match tab count...");
         [manifestSettings addObject:[[NSMutableDictionary alloc] init]];
-        manifestSettingsCount = [manifestSettings count];
+        manifestSettingsCount = manifestSettings.count;
         DDLogDebug(@"Current manifest settings count: %ld", (long)manifestSettingsCount);
     }
 
@@ -947,7 +948,7 @@
 
     PFCProfileEditorManifestTabView *view = sender;
     if (view != nil) {
-        if ([[_stackViewTabBar views] containsObject:view]) {
+        if ([_stackViewTabBar.views containsObject:view]) {
             DDLogDebug(@"Removing tab view from stack view!");
             [_stackViewTabBar removeView:view];
         } else {
@@ -1018,7 +1019,7 @@
     // ---------------------------------------------------------------------
     //  Hide the tab bar when there's only one payload configured
     // ---------------------------------------------------------------------
-    if ([_arrayManifestTabs count] == 1) {
+    if (_arrayManifestTabs.count == 1) {
 
         // -----------------------------------------------------------------
         //  If there is only one tab remaining in the array, select it
@@ -1032,7 +1033,7 @@
     }
 
     [self updateTabBarTitles];
-    [[_profileEditor library] reloadManifest:_selectedManifest];
+    [_profileEditor.library reloadManifest:_selectedManifest];
 } // tabIndexClose:sender
 
 - (void)updateTableViewSettingsFromManifestContentDict:(NSDictionary *)manifestContentDict atRow:(NSInteger)row {
@@ -1458,7 +1459,7 @@
     }
 
     [self errorForManifest:_selectedManifest updateTabBar:YES];
-    [[_profileEditor library] reloadManifest:_selectedManifest];
+    [_profileEditor.library reloadManifest:_selectedManifest];
 } // controlTextDidChangex
 
 - (void)checkbox:(NSButton *)checkbox {
@@ -1466,17 +1467,17 @@
     // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
     // -------------------------------------------------------------------------
-    NSNumber *buttonTag = @([checkbox tag]);
+    NSNumber *buttonTag = @(checkbox.tag);
     if (buttonTag == nil) {
         DDLogError(@"Checkbox: %@ tag is nil", checkbox);
         return;
     }
-    NSInteger row = [buttonTag integerValue];
+    NSInteger row = buttonTag.integerValue;
 
     // -------------------------------------------------------------------------
     //  Get current checkbox state
     // -------------------------------------------------------------------------
-    BOOL state = [checkbox state];
+    BOOL state = checkbox.state;
 
     // -------------------------------------------------------------------------
     //  Get current cell's key in the settings dict
