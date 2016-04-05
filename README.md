@@ -4,7 +4,7 @@ ___
 # UI Preview
 
 Here is a static preview of how the UI of the application is developing.  
-_As it's still is being developed a lot is still going to change._
+_As it's still is being developed, this is not the final UI._
 
 ## Main Window
 
