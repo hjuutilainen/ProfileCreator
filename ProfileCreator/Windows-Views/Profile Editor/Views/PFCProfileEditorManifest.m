@@ -1069,7 +1069,7 @@
         }
     }
 
-    if ([manifestContentSubset count] == 0) {
+    if (manifestContentSubset.count == 0) {
         DDLogError(@"Nothing returned from arrayForManifestContentDict!");
         return;
     }
@@ -1081,14 +1081,14 @@
     //  Stop at first dict that doesn't match current dict's 'Identifier'.
     //  If row is the last row, just remove that row.
     // ---------------------------------------------------------------------------------------------------
-    if (row == [_arrayManifestContent count]) {
-        [_arrayManifestContent removeObjectAtIndex:[_arrayManifestContent count]];
+    if (row == _arrayManifestContent.count) {
+        [_arrayManifestContent removeObjectAtIndex:_arrayManifestContent.count];
     } else {
 
         // ---------------------------------------------------------------------
         //  Make range starting at dict after current row to end of array
         // ---------------------------------------------------------------------
-        NSRange range = NSMakeRange(row + 1, [_arrayManifestContent count] - (row + 1));
+        NSRange range = NSMakeRange(row + 1, _arrayManifestContent.count - (row + 1));
 
         // -------------------------------------------------------------------------------
         //  Keep count of how many rows matches current dict's 'Identifier' as 'ParentKey'
@@ -1118,7 +1118,7 @@
     // -------------------------------------------------------------------------
     //  Make range starting at current row to count of content dict's to add
     // -------------------------------------------------------------------------
-    NSRange insertRange = NSMakeRange(row, [manifestContentSubset count]);
+    NSRange insertRange = NSMakeRange(row, manifestContentSubset.count);
 
     // -------------------------------------------------------------------------
     //  Insert the current dict and any sub keys depending selection
@@ -1143,7 +1143,7 @@
     //  Make sure it's a settings segmented control
     // -------------------------------------------------------------------------
     if (![segmentedControl.superview.class isSubclassOfClass:PFCSegmentedControlCellView.class]) {
-        DDLogError(@"SegmentedControl: %@ superview class is: %@", segmentedControl, [[segmentedControl superview] class]);
+        DDLogError(@"SegmentedControl: %@ superview class is: %@", segmentedControl, segmentedControl.superview.class);
         return;
     }
 
@@ -1170,7 +1170,7 @@
         }
 
         NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
-        manifestContentDict[PFCSettingsKeyValue] = @([segmentedControl selectedSegment]);
+        manifestContentDict[PFCSettingsKeyValue] = @(segmentedControl.selectedSegment);
         _arrayManifestContent[(NSUInteger)row] = [manifestContentDict copy];
 
         // ---------------------------------------------------------------------

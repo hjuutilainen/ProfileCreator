@@ -52,17 +52,17 @@
             value = settings[@"DefaultValue"] ?: @"";
         }
     }
-    [[cellView textField] setDelegate:sender];
-    [[cellView textField] setStringValue:value];
-    [[cellView textField] setTag:row];
+    [cellView.textField setDelegate:sender];
+    [cellView.textField setStringValue:value];
+    [cellView.textField setTag:row];
 
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
     if ([settings[@"PlaceholderValue"] length] != 0) {
-        [[cellView textField] setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
+        [cellView.textField setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
     } else {
-        [[cellView textField] setPlaceholderString:@""];
+        [cellView.textField setPlaceholderString:@""];
     }
 
     return cellView;
@@ -95,16 +95,16 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [[cellView popUpButton] removeAllItems];
-    [[cellView popUpButton] addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
-    [[cellView popUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
+    [cellView.popUpButton removeAllItems];
+    [cellView.popUpButton addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
+    [cellView.popUpButton selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
 
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
-    [[cellView popUpButton] setAction:@selector(popUpButtonSelection:)];
-    [[cellView popUpButton] setTarget:sender];
-    [[cellView popUpButton] setTag:row];
+    [cellView.popUpButton setAction:@selector(popUpButtonSelection:)];
+    [cellView.popUpButton setTarget:sender];
+    [cellView.popUpButton setTag:row];
 
     return cellView;
 } // populateCellViewPopUp:settings:row

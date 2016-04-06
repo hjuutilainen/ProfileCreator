@@ -131,8 +131,8 @@
 } // viewDidLoad
 
 - (void)viewSetup {
-    [PFCGeneralUtility insertSubview:[_libraryMenu view] inSuperview:_viewLibraryMenu hidden:NO];
-    [PFCGeneralUtility insertSubview:[_viewStatusLibrary view] inSuperview:[self view] hidden:YES];
+    [PFCGeneralUtility insertSubview:_libraryMenu.view inSuperview:_viewLibraryMenu hidden:NO];
+    [PFCGeneralUtility insertSubview:_viewStatusLibrary.view inSuperview:self.view hidden:YES];
 
     [_tableViewProfile setDelegate:self];
     [_tableViewLibrary setDelegate:self];
@@ -147,10 +147,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    if ([[tableView identifier] isEqualToString:@"Profile"]) {
-        return [_arrayProfile count];
-    } else if ([[tableView identifier] isEqualToString:@"Library"]) {
-        return [_arrayLibrary count];
+    if ([tableView.identifier isEqualToString:@"Profile"]) {
+        return _arrayProfile.count;
+    } else if ([tableView.identifier isEqualToString:@"Library"]) {
+        return _arrayLibrary.count;
     }
     return 0;
 } // numberOfRowsInTableView
@@ -173,10 +173,12 @@
         if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"] && [manifestDict[PFCManifestKeyCellType] ?: @"" isEqualToString:PFCCellTypeMenu]) {
             CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
             [cellView setIdentifier:nil];
+            // Using variable here until rewritten
+            NSNumber *payloadCount = @([_profileEditor.profileSettings[manifestDict[PFCManifestKeyDomain]][@"Settings"] ?: @[ @{} ] count]);
             return [cellView populateCellViewMenu:cellView
                                      manifestDict:manifestDict
-                                       errorCount:@([[_profileEditor manifest] errorForManifest:manifestDict updateTabBar:NO])
-                                     payloadCount:@([[_profileEditor profileSettings][manifestDict[PFCManifestKeyDomain]][@"Settings"] ?: @[ @{} ] count])
+                                       errorCount:@([_profileEditor.manifest errorForManifest:manifestDict updateTabBar:NO])
+                                     payloadCount:(0 < payloadCount.intValue) ? payloadCount : @1
                                               row:row];
         } else if ([tableColumnIdentifier isEqualToString:@"ColumnMenuEnabled"]) {
             CellViewMenuEnabled *cellView = [tableView makeViewWithIdentifier:@"CellViewMenuEnabled" owner:self];
@@ -184,7 +186,7 @@
         }
 
     } else if ([[tableView identifier] isEqualToString:@"Library"]) {
-        if ([_arrayLibrary count] <= row || [_arrayLibrary count] == 0) {
+        if (_arrayLibrary.count == 0 || _arrayLibrary.count <= row) {
             return nil;
         }
 
@@ -227,7 +229,7 @@
     // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
     // -------------------------------------------------------------------------
-    NSNumber *buttonTag = @([checkbox tag]);
+    NSNumber *buttonTag = @(checkbox.tag);
     if (buttonTag == nil) {
         DDLogError(@"Checkbox: %@ has no tag", checkbox);
         return;
@@ -322,7 +324,7 @@
         // ---------------------------------------------------------------------
         //  Update settings
         // ---------------------------------------------------------------------
-        NSMutableDictionary *settingsManifestRoot = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *settingsManifestRoot = [_profileEditor.profileSettings[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         settingsManifestRoot[@"Selected"] = @YES;
         settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
         [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
@@ -335,7 +337,7 @@
         [self reloadManifest:manifest];
     }
 
-    if ([_arrayLibrary count] == 0) {
+    if (_arrayLibrary.count == 0) {
         [self showLibraryNoManifests];
     } else {
         [self hideLibraryStatus];
@@ -559,18 +561,17 @@
         [_arrayLibraryUserPreferences sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library user library preferences");
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 } // updateManifestLibraryUserLibrary
 
 - (void)updateManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
-    /*
     NSError *error = nil;
     [_arrayLibraryMCX removeAllObjects];
-    NSArray *libraryMCXManifests = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
+    NSArray *libraryMCXManifests = [PFCManifestLibrary.sharedLibrary libraryMCX:&error acceptCached:YES];
     if ([libraryMCXManifests count] != 0) {
         for (NSDictionary *manifest in libraryMCXManifests) {
-            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
+            if ([PFCAvailability.sharedInstance showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain]) {
                     [_arrayProfile addObject:[manifest copy]];
@@ -583,9 +584,8 @@
         [_arrayLibraryMCX sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library mcx");
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
-     */
 } // updateManifestLibraryMCX
 
 - (void)sortArrayProfile {
@@ -715,7 +715,7 @@
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
-    if (row < 0 || [tableViewArray count] < row) {
+    if (row < 0 || tableViewArray.count < row) {
         menu = nil;
         return;
     }
@@ -752,9 +752,9 @@
     NSError *error = nil;
     NSURL *fileURL = [NSURL fileURLWithPath:manifestDict[PFCRuntimeKeyPath] ?: @""];
     if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
+        [NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[ fileURL ]];
     } else {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 } // menuItemShowInFinder
 
@@ -778,7 +778,6 @@
 } // showButtonLibraryAdd
 
 - (void)hideButtonLibraryAdd {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     [_viewLibrarySearch layoutSubtreeIfNeeded];
     [_constraintSeachFieldLibraryLeading setConstant:5.0f];
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -812,7 +811,7 @@
 } // showSearchNoMatches
 
 - (void)hideLibraryStatus {
-    [[_viewStatusLibrary view] setHidden:YES];
+    [_viewStatusLibrary.view setHidden:YES];
     [_scrollViewLibrary setHidden:NO];
 } // hideSearchNoMatches
 
@@ -832,8 +831,8 @@
         [self setArray:_arrayLibrary forLibrary:_selectedLibrary];
     }
 
-    NSString *searchString = [_searchFieldLibrary stringValue];
-    if (![searchString length]) {
+    NSString *searchString = _searchFieldLibrary.stringValue;
+    if (!searchString.length) {
 
         // ---------------------------------------------------------------------
         //  If user pressed (x) or deleted the search, restore the whole array
@@ -864,9 +863,9 @@
         // ---------------------------------------------------------------------
         //  If no matches were found, show text "No Matches" in payload library
         // ---------------------------------------------------------------------
-        if ([matchedObjects count] == 0) {
+        if (matchedObjects.count == 0) {
             [self showSearchNoMatches];
-        } else if ([matchedObjects count] != 0) {
+        } else if (matchedObjects.count != 0) {
             [self hideLibraryStatus];
         }
     }

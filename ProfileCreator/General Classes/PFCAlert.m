@@ -34,10 +34,10 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleDelete]; // NSAlertSecondButton
-    NSUInteger groupCount = [groupNames count];
+    NSUInteger groupCount = groupNames.count;
     id groupList;
     if (groupCount == 1) {
-        groupList = [NSString stringWithFormat:@"\"%@\"", [groupNames firstObject]];
+        groupList = [NSString stringWithFormat:@"\"%@\"", groupNames.firstObject];
     } else {
         groupList = [[NSMutableString alloc] init];
         for (NSString *groupName in groupNames) {
@@ -47,7 +47,7 @@
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
     [alert setInformativeText:@"No profile will be deleted"];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+    [alert beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                   completionHandler:^(NSInteger returnCode) {
                     [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
@@ -75,7 +75,7 @@
         [alert setInformativeText:[NSString stringWithFormat:@"%@\nThis cannot be undone.", profileList]];
     }
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+    [alert beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                   completionHandler:^(NSInteger returnCode) {
                     [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];

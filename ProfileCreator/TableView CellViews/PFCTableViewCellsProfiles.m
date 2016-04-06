@@ -42,10 +42,10 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:profileSettingsDict[PFCProfileTemplateKeyName] ?: @""];
+    [cellView.textField setStringValue:profileSettingsDict[PFCProfileTemplateKeyName] ?: @""];
 
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellViewProfile:profileDict:row
 
 @end
 
@@ -66,14 +66,14 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:profileDict[@"Config"][PFCProfileGroupKeyName] ?: @""];
+    [cellView.textField setStringValue:profileDict[@"Config"][PFCProfileGroupKeyName] ?: @""];
 
     if (group == kPFCProfileGroupAll) {
-        [[cellView textField] setEditable:NO];
+        [cellView.textField setEditable:NO];
     }
 
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellView:group:profileDict:row
 
 @end
 
@@ -94,9 +94,9 @@
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    [[cellView imageView] setImage:[PFCMainWindowGroupTitle iconForGroup:group]];
+    [cellView.imageView setImage:[PFCMainWindowGroupTitle iconForGroup:group]];
 
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellView:group:profileDict:row
 
 @end

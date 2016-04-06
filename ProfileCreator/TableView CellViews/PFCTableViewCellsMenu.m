@@ -42,37 +42,37 @@
     // -------------------------------------------------------------------------
     //  Error Counter
     // -------------------------------------------------------------------------
-    if (errorCount != nil && 0 < [errorCount integerValue]) {
-        NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:[errorCount stringValue] attributes:@{NSForegroundColorAttributeName : [NSColor redColor]}];
-        [[cellView errorCount] setAttributedStringValue:errorCountString];
+    if (errorCount != nil && 0 < errorCount.integerValue) {
+        NSAttributedString *errorCountString = [[NSAttributedString alloc] initWithString:errorCount.stringValue attributes:@{NSForegroundColorAttributeName : NSColor.redColor}];
+        [cellView.errorCount setAttributedStringValue:errorCountString];
     } else {
-        [[cellView errorCount] setStringValue:@""];
+        [cellView.errorCount setStringValue:@""];
     }
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
+    [cellView.menuTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
 
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
     if ([manifestDict[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"]) {
-        [[cellView menuDescription] setStringValue:@"Mandatory"];
+        [cellView.menuDescription setStringValue:@"Mandatory"];
     } else {
-        [[cellView menuDescription] setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", [payloadCount stringValue], ([payloadCount intValue] == 1) ? @"Payload" : @"Payloads"]];
+        [cellView.menuDescription setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", payloadCount.stringValue, (payloadCount.intValue == 1) ? @"Payload" : @"Payloads"]];
     }
 
     // -------------------------------------------------------------------------
     //  Icon
     // -------------------------------------------------------------------------
-    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
+    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifestDict];
     if (icon) {
-        [[cellView menuIcon] setImage:icon];
+        [cellView.menuIcon setImage:icon];
     }
 
     return cellView;
-} // populateCellViewMenu:manifestDict:row
+} // populateCellViewMenu:manifestDict:errorCount:payloadCount:row
 
 @end
 
@@ -93,19 +93,19 @@
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setState:[manifestDict[PFCSettingsKeyEnabled] boolValue]];
+    [cellView.menuCheckbox setState:[manifestDict[PFCSettingsKeyEnabled] boolValue]];
 
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setHidden:[manifestDict[PFCManifestKeyRequired] boolValue]];
+    [cellView.menuCheckbox setHidden:[manifestDict[PFCManifestKeyRequired] boolValue]];
 
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
-    [[cellView menuCheckbox] setAction:@selector(checkboxMenuEnabled:)];
-    [[cellView menuCheckbox] setTarget:sender];
-    [[cellView menuCheckbox] setTag:row];
+    [cellView.menuCheckbox setAction:@selector(checkboxMenuEnabled:)];
+    [cellView.menuCheckbox setTarget:sender];
+    [cellView.menuCheckbox setTag:row];
 
     return cellView;
 } // populateCellViewEnabled:manifestDict:row
@@ -129,17 +129,17 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView menuTitle] setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
+    [cellView.menuTitle setStringValue:manifestDict[PFCManifestKeyTitle] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
+    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifestDict];
     if (icon) {
-        [[cellView menuIcon] setImage:icon];
+        [cellView.menuIcon setImage:icon];
     }
 
     return cellView;
-} // populateCellViewMenu:manifestDict:row
+} // populateCellViewMenuLibrary:manifestDict:row
 
 @end

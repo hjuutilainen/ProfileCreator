@@ -268,7 +268,7 @@
         [alert setMessageText:@"Unsaved Settings"];
         [alert setInformativeText:@"If you close this window, all unsaved settings will be lost. Are you sure you want to close the window?"];
         [alert setAlertStyle:NSInformationalAlertStyle];
-        [alert beginSheetModalForWindow:[self window]
+        [alert beginSheetModalForWindow:self.window
                       completionHandler:^(NSInteger returnCode) {
 
                         // Save & Close

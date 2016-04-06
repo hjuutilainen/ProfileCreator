@@ -626,10 +626,9 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // openProfileEditorForProfileWithUUID
 
 - (void)closeProfileEditorForProfileWithUUID:(NSString *)uuid {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     DDLogInfo(@"Close profile editor for profile with UUID: %@", uuid);
-    if ([uuid length] == 0) {
+    if (uuid.length == 0) {
         DDLogError(@"No profile uuid was passed for close");
         return;
     }

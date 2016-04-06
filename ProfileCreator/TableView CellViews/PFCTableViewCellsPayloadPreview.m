@@ -36,9 +36,9 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView textField] setStringValue:infoDict[@"Title"] ?: @""];
+    [cellView.textField setStringValue:infoDict[@"Title"] ?: @""];
 
     return cellView;
-} // populateCellViewMenu:menuDict:row
+} // populateCellViewInfoTitle:infoDict:row
 
 @end
