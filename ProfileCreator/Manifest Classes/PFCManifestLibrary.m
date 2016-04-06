@@ -78,8 +78,8 @@
     // ---------------------------------------------------------------------
     //  Get path to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
-    NSURL *profileManifestFolderURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"Manifests"];
-    if (![profileManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
+    NSURL *appleManifestFolderURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"Manifests/Apple"];
+    if (![appleManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
 
@@ -88,8 +88,7 @@
         // ---------------------------------------------------------------------
         //  Put all profile manifest plist URLs in an array
         // ---------------------------------------------------------------------
-        NSArray *dirContents =
-            [[NSFileManager defaultManager] contentsOfDirectoryAtURL:profileManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+        NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:appleManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
 
         // ---------------------------------------------------------------------
         //  Return all manifests matching predicate
@@ -176,6 +175,40 @@
         return _cachedLibraryMCX;
     }
 
+    // ---------------------------------------------------------------------
+    //  Get path to manifest folder inside ProfileCreator.app
+    // ---------------------------------------------------------------------
+    NSURL *mcxManifestFolderURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"Manifests/MCX"];
+    if (![mcxManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
+        return nil;
+    } else {
+
+        NSMutableArray *libraryMCX = [[NSMutableArray alloc] init];
+
+        // ---------------------------------------------------------------------
+        //  Put all profile manifest plist URLs in an array
+        // ---------------------------------------------------------------------
+        NSArray *dirContents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:mcxManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+
+        // ---------------------------------------------------------------------
+        //  Return all manifests matching predicate
+        // ---------------------------------------------------------------------
+        NSPredicate *predicateManifestPlists = [NSPredicate predicateWithFormat:@"self.pathExtension == 'plist'"];
+        NSArray *manifestURLs = [dirContents filteredArrayUsingPredicate:predicateManifestPlists];
+        for (NSURL *manifestURL in manifestURLs ?: @[]) {
+            NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
+            if (manifestDict.count != 0) {
+                manifestDict[PFCRuntimeKeyPath] = manifestURL.path;
+                [libraryMCX addObject:[manifestDict copy]];
+            }
+        }
+
+        _cachedLibraryMCX = [libraryMCX copy];
+        return _cachedLibraryMCX;
+    }
+
+    /*
+
     // -------------------------------------------------------------------------
     //  Get path to core services folder
     // -------------------------------------------------------------------------
@@ -194,6 +227,7 @@
         _cachedLibraryMCX = [self manifestsFromMCXManifestsAtURL:managedClientURL];
         return _cachedLibraryMCX;
     }
+     */
 } // libraryMCX:acceptCached
 
 - (NSArray *)manifestsWithDomains:(NSArray *)domains {

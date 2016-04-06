@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict/>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.mcx.appstore</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Title</key>
+	<string>App Store</string>
+	<key>IconPathBundle</key>
+	<string>/Applications/App Store.app</string>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.appstore</string>
+	</array>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>28BD6F50-D33B-42DA-AD5D-EFC3DCED1F39</string>
+			<key>Title</key>
+			<string>Require Admin to install</string>
+			<key>PayloadType</key>
+			<string>com.apple.appstore</string>
+			<key>PayloadKey</key>
+			<string>restrict-store-require-admin-to-install</string>
+			<key>Description</key>
+			<string>FIXME</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>2156E290-7E49-49BE-AA23-E8AB2634C86F</string>
+			<key>Title</key>
+			<string>Software Update Only</string>
+			<key>PayloadType</key>
+			<string>com.apple.appstore</string>
+			<key>PayloadKey</key>
+			<string>restrict-store-softwareupdate-only</string>
+			<key>Description</key>
+			<string>FIXME</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>ECB77BC0-F07F-4885-A734-72D2FABCD7F7</string>
+			<key>Title</key>
+			<string>Disable App Adoption</string>
+			<key>PayloadType</key>
+			<string>com.apple.appstore</string>
+			<key>PayloadKey</key>
+			<string>restrict-store-disable-app-adoption</string>
+			<key>Description</key>
+			<string>FIXME</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>54DD284F-82CF-442C-B714-5645F6C473C7</string>
+			<key>Title</key>
+			<string>Disable Software Update Notifications</string>
+			<key>PayloadType</key>
+			<string>com.apple.appstore</string>
+			<key>PayloadKey</key>
+			<string>DisableSoftwareUpdateNotifications</string>
+			<key>Description</key>
+			<string>FIXME</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>D1B1551A-49FF-431C-B94A-A9C83F11209C</string>
+			<key>Title</key>
+			<string>mdm-install-softwareupdate-only</string>
+			<key>PayloadType</key>
+			<string>com.apple.appstore</string>
+			<key>PayloadKey</key>
+			<string>restrict-store-mdm-install-softwareupdate-only</string>
+			<key>Description</key>
+			<string>FIXME</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+	</array>
+</dict>
+</plist>
