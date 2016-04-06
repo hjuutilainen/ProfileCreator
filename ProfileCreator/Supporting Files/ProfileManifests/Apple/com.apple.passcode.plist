@@ -14,7 +14,7 @@
 	<string>MenuIconPasscode.png</string>
 	<key>PayloadTypes</key>
 	<array>
-		<string></string>
+		<string>com.apple.mobiledevice.passwordpolicy</string>
 	</array>
 	<key>ManifestContent</key>
 	<array>
