@@ -342,7 +342,7 @@
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
     NSMutableArray *lintReport = [[NSMutableArray alloc] init];
 
-    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString ];
+    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString, PFCValueTypeInteger ];
 
     // -------------------------------------------------------------------------
     //  AvailableValues/ValueKeys
