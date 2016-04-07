@@ -86,7 +86,7 @@
 
 - (void)setupGroupTitle {
     [self setGroupTitle:[[PFCMainWindowGroupTitle alloc] initWithGroup:_group sender:self]];
-    [PFCGeneralUtility insertSubview:[_groupTitle view] inSuperview:_viewGroupTitle hidden:NO];
+    [PFCGeneralUtility insertSubview:_groupTitle.view inSuperview:_viewGroupTitle hidden:NO];
 }
 
 - (void)setupGroupAll {
@@ -98,8 +98,8 @@
     // -------------------------------------------------------------------------
     //  Add the only item "All Profiles" to table view.
     // -------------------------------------------------------------------------
-    [_arrayGroup addObject:@{ @"Config" : @{PFCProfileGroupKeyName : @"All Profiles", PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString]} }];
-
+    [_arrayGroup addObject:@{ @"Config" : @{PFCProfileGroupKeyName : @"All Profiles", PFCProfileGroupKeyUUID : NSUUID.UUID.UUIDString} }];
+    [PFCGeneralUtility setTableViewHeight:24 tableView:_scrollViewGroup];
     [_tableViewGroup reloadData];
 }
 
@@ -146,8 +146,8 @@
     for (NSURL *groupURL in groupURLs ?: @[]) {
         NSMutableDictionary *newGroup = [[NSMutableDictionary alloc] init];
         NSDictionary *group = [NSDictionary dictionaryWithContentsOfURL:groupURL];
-        if ([group count] != 0) {
-            newGroup[PFCRuntimeKeyPath] = [groupURL path];
+        if (group.count != 0) {
+            newGroup[PFCRuntimeKeyPath] = groupURL.path;
             newGroup[@"Config"] = group;
             [self insertProfileGroupInTableView:newGroup];
         }
@@ -156,7 +156,7 @@
     // -------------------------------------------------------------------------
     //  Adjust table view height to content
     // -------------------------------------------------------------------------
-    if (_maxRows < (int)[_arrayGroup count]) {
+    if (_maxRows < (int)_arrayGroup.count) {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
     } else {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
@@ -170,7 +170,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return (NSInteger)[_arrayGroup count];
+    return (NSInteger)_arrayGroup.count;
 } // numberOfRowsInTableView
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {
@@ -183,8 +183,8 @@
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation {
     NSData *draggingData = [[info draggingPasteboard] dataForType:PFCProfileDraggingType];
     NSArray *profileUUIDs = [NSKeyedUnarchiver unarchiveObjectWithData:draggingData];
-    if ([profileUUIDs count] != 0) {
-        [self insertProfileUUIDs:profileUUIDs inTableViewWithIdentifier:[tableView identifier] row:row];
+    if (profileUUIDs.count != 0) {
+        [self insertProfileUUIDs:profileUUIDs inTableViewWithIdentifier:tableView.identifier row:row];
     }
     return YES;
 } // tableView:acceptDrop:row:dropOperation
@@ -196,7 +196,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    NSString *tableColumnIdentifier = [tableColumn identifier];
+    NSString *tableColumnIdentifier = tableColumn.identifier;
     if (![tableColumnIdentifier isEqualToString:@"Padding"]) {
         // ---------------------------------------------------------------------
         //  Verify the profile array isn't empty, if so stop here
@@ -219,8 +219,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)insertProfileGroupInTableView:(NSDictionary *)profileDict {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    NSInteger index = [_tableViewGroup selectedRow];
+    NSInteger index = _tableViewGroup.selectedRow;
     index++;
     [_tableViewGroup beginUpdates];
     [_tableViewGroup insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationEffectNone];
@@ -237,7 +236,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (BOOL)deleteKeyPressedForTableView:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------
     //  Check if any rows are selected, else return here
@@ -252,7 +250,7 @@
     // -------------------------------------------------------------------------
     //  Multiple selections is not enabled for groups, therefor just extract the selected row from the row indexes
     // -------------------------------------------------------------------------
-    NSUInteger selectedRow = [selectedRows firstIndex];
+    NSUInteger selectedRow = selectedRows.firstIndex;
     DDLogDebug(@"Selected row: %ld", (long)selectedRow);
 
     if (selectedRow != NSNotFound) {
@@ -293,16 +291,16 @@
 
     // FIXME -  Should possibly get this somewhere else, but felt nice to get the info form the actual object
     //          The only thing is to get the actual table view, now only groups is available
-    NSInteger row = [_tableViewGroup rowForView:[[notification object] superview]];
+    NSInteger row = [_tableViewGroup rowForView:[notification.object superview]];
 
-    if (row < [_arrayGroup count]) {
+    if (row < _arrayGroup.count) {
         NSMutableDictionary *group = [_arrayGroup[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
 
         NSDictionary *userInfo = [notification userInfo];
         NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
         BOOL reloadTableView = NO;
-        if ([inputText length] == 0) {
+        if (inputText.length == 0) {
             inputText = PFCDefaultProfileGroupName;
             reloadTableView = YES;
         }
@@ -318,7 +316,7 @@
 
         NSError *error = nil;
         if (![self saveGroup:group error:&error]) {
-            [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+            [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                                                    completionHandler:^(NSModalResponse returnCode){
 
                                                    }];
@@ -348,7 +346,7 @@
     _arrayGroup[row] = [group copy];
     NSError *error = nil;
     if (![self saveGroup:[group copy] error:&error]) {
-        [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+        [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                                                completionHandler:^(NSModalResponse returnCode){
 
                                                }];
@@ -378,7 +376,7 @@
 
             NSError *error = nil;
             if (![self saveGroup:group error:&error]) {
-                [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+                [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                                                        completionHandler:^(NSModalResponse returnCode){
 
                                                        }];
@@ -401,7 +399,7 @@
           _arrayGroup[idx] = [group copy];
           NSError *error = nil;
           if (![self saveGroup:group error:&error]) {
-              [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+              [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
                                                      completionHandler:^(NSModalResponse returnCode){
 
                                                      }];
@@ -429,24 +427,24 @@
 - (void)createNewGroupOfType:(PFCProfileGroups)group {
     NSNumber *index = @([self insertProfileGroupInTableView:@{
         PFCRuntimeKeyPath : [PFCGeneralUtility newPathInGroupFolder:[self saveFolder]],
-        @"Config" : @{PFCProfileGroupKeyName : PFCDefaultProfileGroupName, PFCProfileGroupKeyUUID : [[NSUUID UUID] UUIDString]}
+        @"Config" : @{PFCProfileGroupKeyName : PFCDefaultProfileGroupName, PFCProfileGroupKeyUUID : NSUUID.UUID.UUIDString}
     }]);
 
     if (_mainWindow) {
         [_mainWindow updateGroupSelection:group];
     }
 
-    [_tableViewGroup selectRowIndexes:[NSIndexSet indexSetWithIndex:[index unsignedIntegerValue]] byExtendingSelection:NO];
-    [[[_tableViewGroup viewAtColumn:(NSInteger)[[_tableViewGroup tableColumns] indexOfObject:[_tableViewGroup tableColumnWithIdentifier:@"GroupName"]] row:[index integerValue] makeIfNecessary:NO]
+    [_tableViewGroup selectRowIndexes:[NSIndexSet indexSetWithIndex:index.unsignedIntegerValue] byExtendingSelection:NO];
+    [[[_tableViewGroup viewAtColumn:(NSInteger)[_tableViewGroup.tableColumns indexOfObject:[_tableViewGroup tableColumnWithIdentifier:@"GroupName"]] row:[index integerValue] makeIfNecessary:NO]
         textField] selectText:self];
 
     // ---------------------------------------------------------------------
     //  Adjust table view height to content
     // ---------------------------------------------------------------------
-    if (_maxRows < (int)[_arrayGroup count]) {
+    if (_maxRows < (int)_arrayGroup.count) {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
     } else {
-        [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
+        [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_arrayGroup.count) tableView:_scrollViewGroup];
     }
 } // createNewGroupOfType
 
@@ -471,22 +469,22 @@
         // ---------------------------------------------------------------------
         //  Adjust table view height to content
         // ---------------------------------------------------------------------
-        if (_maxRows < (int)[_arrayGroup count]) {
+        if (_maxRows < (int)_arrayGroup.count) {
             [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
         } else {
-            [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
+            [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_arrayGroup.count) tableView:_scrollViewGroup];
         }
     }
 
     NSError *error = nil;
     if ([groupURL checkResourceIsReachableAndReturnError:&error]) {
 
-        DDLogDebug(@"Removing group plist at path: %@", [groupURL path]);
-        if (![[NSFileManager defaultManager] removeItemAtURL:groupURL error:&error]) {
-            DDLogError(@"%@", [error localizedDescription]);
+        DDLogDebug(@"Removing group plist at path: %@", groupURL.path);
+        if (![NSFileManager.defaultManager removeItemAtURL:groupURL error:&error]) {
+            DDLogError(@"%@", error.localizedDescription);
         }
     } else {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 }
 
@@ -510,9 +508,9 @@
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     NSURL *groupSaveFolder = [PFCGeneralUtility profileCreatorFolder:[self saveFolder]];
-    DDLogDebug(@"Group save folder: %@", [groupSaveFolder path]);
+    DDLogDebug(@"Group save folder: %@", groupSaveFolder.path);
     if (![groupSaveFolder checkResourceIsReachableAndReturnError:nil]) {
-        if (![[NSFileManager defaultManager] createDirectoryAtURL:groupSaveFolder withIntermediateDirectories:YES attributes:nil error:error]) {
+        if (![NSFileManager.defaultManager createDirectoryAtURL:groupSaveFolder withIntermediateDirectories:YES attributes:nil error:error]) {
             return NO;
         }
     }
@@ -528,7 +526,7 @@
 - (NSArray *)profileArrayForGroup:(NSDictionary *)group {
     switch (_group) {
     case kPFCProfileGroupAll:
-        return [[PFCProfileUtility sharedUtility] allProfileUUIDs] ?: @[];
+        return [PFCProfileUtility.sharedUtility allProfileUUIDs] ?: @[];
         break;
 
     case kPFCProfileGroups:
@@ -554,10 +552,10 @@
 - (IBAction)selectGroup:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
-    NSInteger selectedRow = [_tableViewGroup selectedRow];
+    NSInteger selectedRow = _tableViewGroup.selectedRow;
     DDLogDebug(@"Table view groups selected row: %ld", (long)selectedRow);
 
-    if ([_arrayGroup count] <= selectedRow) {
+    if (_arrayGroup.count <= selectedRow) {
         return;
     }
 
