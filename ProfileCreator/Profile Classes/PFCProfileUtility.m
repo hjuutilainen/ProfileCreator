@@ -56,16 +56,14 @@
 } // sharedUtility
 
 - (id)init {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     self = [super init];
     if (self) {
         _profilesDict = [[NSMutableDictionary alloc] init];
         _arraySavedProfiles = [[NSMutableArray alloc] init];
         _arrayUnsavedProfiles = [[NSMutableArray alloc] init];
-        _savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
         _dictSavedProfiles = [[NSMutableDictionary alloc] init];
         _dictUnsavedProfiles = [[NSMutableDictionary alloc] init];
+        _savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
     }
     return self;
 } // init
@@ -77,17 +75,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)savedProfileURLs {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (!_savedProfilesFolderURL) {
         [self setSavedProfilesFolderURL:[PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles]];
     }
 
     if (![_savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil]) {
-        return nil;
+        return @[];
     } else {
         NSArray *savedProfilesContent =
-            [[NSFileManager defaultManager] contentsOfDirectoryAtURL:_savedProfilesFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+            [NSFileManager.defaultManager contentsOfDirectoryAtURL:_savedProfilesFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
 
         return [savedProfilesContent filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"pathExtension == '%@'", PFCProfileTemplateExtension]]];
     }
@@ -100,8 +96,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSArray *)profiles {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (![self shouldUpdateProfileCache]) {
         return [self allProfiles];
     } else {
@@ -116,12 +110,11 @@
     }
 
     NSError *error = nil;
-
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_savedProfilesFolderURL path] ?: @"" error:&error];
-    if ([attributes count] != 0) {
+    NSDictionary *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:_savedProfilesFolderURL.path ?: @"" error:&error];
+    if (attributes.count != 0) {
         return (NSDate *)attributes[NSFileModificationDate];
     } else {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
     return nil;
 }
@@ -140,6 +133,8 @@
                 DDLogDebug(@"Profile save folder have changed, reloading saved profiles from disk...");
             }
         }
+    } else {
+        DDLogDebug(@"It's Here!");
     }
     return YES;
 }
@@ -182,7 +177,7 @@
         [self updateProfileCache];
     }
     NSMutableArray *names = [[NSMutableArray alloc] init];
-    [[_profilesDict allKeys] enumerateObjectsUsingBlock:^(NSString *_Nonnull uuid, NSUInteger idx, BOOL *_Nonnull stop) {
+    [_profilesDict.allKeys enumerateObjectsUsingBlock:^(NSString *_Nonnull uuid, NSUInteger idx, BOOL *_Nonnull stop) {
       if (![profileUUID isEqualToString:uuid]) {
           NSDictionary *profile = _profilesDict[uuid] ?: @{};
           [names addObject:profile[@"Config"][PFCProfileTemplateKeyName] ?: @""];
@@ -190,11 +185,9 @@
     }];
     [names removeObject:@""];
     return [names copy];
-} // allProfileNames
+} // allProfileNamesExceptProfileWithUUID
 
 - (void)updateProfileCache {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     NSDate *modificationDate = [self savedProfilesFolderModificationDate];
     if (modificationDate) {
         DDLogDebug(@"Updating profile save folder modification date to: %@", modificationDate);
@@ -211,16 +204,16 @@
     for (NSURL *profileURL in [self savedProfileURLs] ?: @[]) {
 
         NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
-        if ([profileDict count] == 0) {
-            DDLogError(@"Couldn't read profile at path: %@", [profileURL path]);
+        if (profileDict.count == 0) {
+            DDLogError(@"Couldn't read profile at path: %@", profileURL.path);
             continue;
         }
 
         // FIXME - Add sanity checking to see if this actually is a profile save
 
         NSString *name = profileDict[PFCProfileTemplateKeyName];
-        if ([name length] == 0) {
-            DDLogError(@"Couldn't read profile name for profile at path: %@", [profileURL path]);
+        if (name.length == 0) {
+            DDLogError(@"Couldn't read profile name for profile at path: %@", profileURL.path);
             continue;
         }
 
@@ -228,19 +221,20 @@
         //  If profile was saved, remove it from unsaved profiles
         // ---------------------------------------------------------------------
         NSString *uuid = profileDict[PFCProfileTemplateKeyUUID];
-        if ([uuid length] != 0) {
+        if (uuid.length != 0) {
             if ([_arrayUnsavedProfiles containsObject:uuid]) {
                 [_arrayUnsavedProfiles removeObject:uuid];
             }
         }
 
-        NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : [profileURL path], @"Config" : profileDict };
+        NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : profileURL.path, @"Config" : profileDict };
 
         [_arraySavedProfiles addObject:savedProfileDict];
         _dictSavedProfiles[uuid] = savedProfileDict;
     }
 
     [_profilesDict addEntriesFromDictionary:_dictSavedProfiles];
+    [_profilesDict addEntriesFromDictionary:_dictUnsavedProfiles];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,17 +265,14 @@
 } // profileWithUUID
 
 - (BOOL)deleteProfileWithUUID:(NSString *)uuid error:(NSError **)error {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogDebug(@"Profile UUID: %@", uuid);
-
+    DDLogDebug(@"Deleting profile with UUID: %@", uuid);
     NSDictionary *profile = [self profileWithUUID:uuid];
-
     NSString *profilePath = profile[PFCProfileTemplateKeyPath] ?: @"";
     NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
     if ([profileURL checkResourceIsReachableAndReturnError:nil]) {
-        return [[NSFileManager defaultManager] removeItemAtURL:profileURL error:error];
+        return [NSFileManager.defaultManager removeItemAtURL:profileURL error:error];
     }
     return YES;
-}
+} // deleteProfileWithUUID:error
 
 @end
