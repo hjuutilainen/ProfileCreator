@@ -74,8 +74,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 ////////////////////////////////////////////////////////////////////////////////
 
 - (id)init {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     self = [super initWithWindowNibName:@"PFCMainWindow"];
     if (self != nil) {
 
@@ -103,10 +101,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     return self;
 } // init
 
-- (void)dealloc {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-} // dealloc
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark NSWindowController Methods
@@ -114,8 +108,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)windowDidLoad {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     [super windowDidLoad];
 
     // -------------------------------------------------------------------------
@@ -149,8 +141,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)initialSetup {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Initialize PFCProfileUtility and update profile cache
     // -------------------------------------------------------------------------
@@ -181,7 +171,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // initialSetup
 
 - (void)setupProfileLibrary {
-    [self setTableViewProfileLibrarySelectedRows:[NSIndexSet indexSet]];
+    [self setTableViewProfileLibrarySelectedRows:NSIndexSet.indexSet];
 
     [_tableViewProfileLibrary setTarget:self];
     [_tableViewProfileLibrary setDoubleAction:@selector(editSelectedProfile:)];
@@ -219,7 +209,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Add separator
     // -------------------------------------------------------------------------
-    [menu addItem:[NSMenuItem separatorItem]];
+    [menu addItem:NSMenuItem.separatorItem];
 
     // -------------------------------------------------------------------------
     //  Add item: "Show In Finder"
@@ -314,7 +304,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     //  Stop user from empty selections
     //  Empty selection is still needed as there are multiple table views and they need to feel as one
     // ------------------------------------------------------------------------------------------------
-    if ([[tableView identifier] isEqualToString:_selectedTableViewIdentifier] && [proposedSelectionIndexes count] == 0) {
+    if ([tableView.identifier isEqualToString:_selectedTableViewIdentifier] && proposedSelectionIndexes.count == 0) {
         return [NSIndexSet indexSetWithIndex:(NSUInteger)tableView.selectedRow];
     }
     return proposedSelectionIndexes;
@@ -345,7 +335,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 }
 
 - (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(nonnull NSIndexSet *)rowIndexes toPasteboard:(nonnull NSPasteboard *)pboard {
-    if ([[tableView identifier] isEqualToString:PFCTableViewIdentifierProfileLibrary]) {
+    if ([tableView.identifier isEqualToString:PFCTableViewIdentifierProfileLibrary]) {
         NSMutableArray *selectedProfileUUIDs = [[NSMutableArray alloc] init];
         NSArray *selectedProfiles = [_arrayProfileLibrary objectsAtIndexes:rowIndexes];
         for (NSString *profileUUID in selectedProfiles) {
@@ -367,7 +357,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)validateMenu:(NSMenu *)menu forTableViewWithIdentifier:(NSString *)tableViewIdentifier row:(NSInteger)row {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     DDLogDebug(@"Validate menu for row: %ld in table view with identifier: %@", (long)row, tableViewIdentifier);
 
     // ---------------------------------------------------------------------
@@ -383,7 +372,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
-    if (row < 0 || [_arrayProfileLibrary count] < row) {
+    if (row < 0 || _arrayProfileLibrary.count < row) {
 
         DDLogDebug(@"Disable: \"Show In Finder\"");
         [menuItemShowInFinder setEnabled:NO];
@@ -409,7 +398,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     NSIndexSet *selectedRows = [sender selectedRowIndexes];
     DDLogDebug(@"Selected rows: %@", selectedRows);
 
-    if ([selectedRows count] == 0) {
+    if (selectedRows.count == 0) {
         return NO;
     }
 
@@ -510,8 +499,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // removeProfilesAtIndexes
 
 - (void)deleteProfilesWithUUIDs:(NSArray *)profileUUIDs {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (profileUUIDs.count == 0) {
         DDLogError(@"No UUID was passed!");
         return;
@@ -522,7 +509,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [profileUUIDs enumerateObjectsUsingBlock:^(NSString *_Nonnull uuid, NSUInteger idx, BOOL *_Nonnull stop) {
       DDLogInfo(@"Deleting profile with UUID: %@", uuid);
       if (![PFCProfileUtility.sharedUtility deleteProfileWithUUID:uuid error:&error]) {
-          DDLogError(@"%@", [error localizedDescription]);
+          DDLogError(@"%@", error.localizedDescription);
       }
 
       [_arrayProfileLibrary removeObject:uuid];
@@ -546,8 +533,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // deleteProfilesWithUUIDs
 
 - (void)removeProfilesWithUUIDs:(NSArray *)profileUUIDs fromGroupWithUUID:(NSString *)groupUUID inGroup:(PFCProfileGroups)group {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (profileUUIDs.count == 0 || groupUUID.length == 0) {
         DDLogError(@"No UUID was passed!");
         return;
@@ -574,8 +559,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // removeProfilesWithUUIDs
 
 - (void)editSelectedProfile:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Verify table view is profile library
     // -------------------------------------------------------------------------
@@ -676,7 +659,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         }
     };
 
-    [[PFCProfileUtility sharedUtility] addUnsavedProfile:profileDict];
+    [PFCProfileUtility.sharedUtility addUnsavedProfile:profileDict];
 
     PFCProfileEditor *editor = [[PFCProfileEditor alloc] initWithProfileDict:profileDict mainWindow:self];
     if (editor) {
@@ -693,10 +676,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // createNewProfile
 
 - (void)updateProfileWithUUID:(NSString *)uuid {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogDebug(@"Profile UUID: %@", uuid);
-
-    DDLogDebug(@"Selected group: %ld", (long)_selectedGroupType);
     NSUInteger selectedIndex = NSNotFound;
     if (_selectedGroupType == kPFCProfileGroupAll) {
         if ([_arrayProfileLibrary containsObject:uuid]) {
@@ -720,7 +699,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     DDLogDebug(@"Selected profile UUID: %@", _selectedProfileUUID);
     if ([_selectedProfileUUID isEqualToString:uuid]) {
         NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
-        if ([profileDict count] != 0) {
+        if (profileDict.count != 0) {
             [_preview updatePreviewWithProfileDict:profileDict];
         }
     }
@@ -733,8 +712,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)deleteGroupWithUUID:(NSString *)uuid inGroup:(PFCProfileGroups)group {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (uuid.length == 0) {
         DDLogError(@"No UUID was passed!");
         return;
@@ -755,8 +732,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // deleteGroupWithUUID:inGroup
 
 - (void)selectGroup:(NSDictionary *)groupDict groupType:(PFCProfileGroups)group profileArray:(NSArray *)profileArray {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     [self setSelectedGroup:groupDict];
     [self updateGroupSelection:group];
 
@@ -765,10 +740,10 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [_tableViewProfileLibrary beginUpdates];
     [_arrayProfileLibrary removeAllObjects];
 
-    if (1 <= [profileArray count]) {
+    if (1 <= profileArray.count) {
         [_arrayProfileLibrary addObjectsFromArray:profileArray];
 
-        if ([_selectedProfileUUID length] != 0) {
+        if (_selectedProfileUUID.length != 0) {
             NSUInteger index = [_arrayProfileLibrary indexOfObject:_selectedProfileUUID];
 
             if (index != NSNotFound) {
@@ -786,14 +761,12 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [_tableViewProfileLibrary reloadData];
     [_tableViewProfileLibrary endUpdates];
 
-    if ([rowIndexes count]) {
+    if (rowIndexes.count) {
         [_tableViewProfileLibrary selectRowIndexes:rowIndexes byExtendingSelection:NO];
     }
 }
 
 - (void)updateGroups {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     NSView *groupView = _groupAll.viewGroup;
     NSView *previousGroupView = groupView;
 
@@ -830,10 +803,9 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 }
 
 - (void)updateGroupSelection:(PFCProfileGroups)group {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     [self setSelectedGroupType:group];
     for (PFCMainWindowGroup *groupView in [_arrayGroups arrayByAddingObject:_groupAll]) {
-        if (group != [groupView group]) {
+        if (group != groupView.group) {
             [groupView.tableViewGroup deselectAll:self];
         }
     }
@@ -953,7 +925,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         NSString *profileUUID = profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @"";
         DDLogDebug(@"Selected profile UUID: %@", profileUUID);
 
-        if ([profileUUID length] == 0) {
+        if (profileUUID.length == 0) {
             [_preview showProfilePreviewError];
             return;
         }
@@ -979,8 +951,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 }
 
 - (void)exportProfileWithUUID:(NSString *)uuid {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     if (_tableViewProfileLibrarySelectedRows.count == 0) {
         if (_tableViewProfileLibrary.selectedRowIndexes.count == 0) {
             return;
@@ -990,7 +960,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     }
 
     if ([uuid length] == 0) {
-        uuid = _arrayProfileLibrary[[_tableViewProfileLibrarySelectedRows firstIndex]];
+        uuid = _arrayProfileLibrary[_tableViewProfileLibrarySelectedRows.firstIndex];
     }
 
     NSDictionary *settingsProfile = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
@@ -1027,7 +997,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         [panel setTitle:@"Export Profile"];
         [panel setPrompt:@"Export"];
         [panel setNameFieldStringValue:profileName];
-        [panel beginSheetModalForWindow:[self window]
+        [panel beginSheetModalForWindow:self.window
                       completionHandler:^(NSInteger result) {
                         if (result == NSFileHandlingPanelOKButton) {
                             NSURL *saveURL = panel.URL;
@@ -1038,8 +1008,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 }
 
 - (void)menuItemShowInFinder:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
@@ -1069,7 +1037,6 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // menuItemNewProfile
 
 - (void)menuItemEditProfile {
-    DDLogDebug(@"menuItemEditProfile");
     if (_clickedTableViewRow != NSNotFound) {
         if (_clickedTableViewRow < _arrayProfileLibrary.count) {
             [self openProfileEditorForProfileWithUUID:_arrayProfileLibrary[_clickedTableViewRow] ?: @""];
@@ -1077,7 +1044,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     } else {
         DDLogError(@"CLicked table view row not set");
     }
-}
+} // menuItemEditProfile
 
 - (void)menuItemNewGroup {
     [_groupGroups createNewGroupOfType:kPFCProfileGroups];

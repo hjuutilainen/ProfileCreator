@@ -154,16 +154,16 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
 
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL required = [PFCAvailability.sharedInstance requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if (value == nil) {
         value = contentDictSettings[PFCManifestKeyDefaultValue];

@@ -55,10 +55,6 @@
     return self;
 } // initWithProfileSettings:mainWindow
 
-- (void)dealloc {
-
-} // dealloc
-
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Export Methods
@@ -66,8 +62,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)exportProfileToURL:(NSURL *)url manifests:(NSArray *)manifests settings:(NSDictionary *)settings {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Create profile root from profile settings
     // -------------------------------------------------------------------------
@@ -92,7 +86,7 @@
         }
     }
 
-    if ([payloadArray count] == 0) {
+    if (payloadArray.count == 0) {
         DDLogError(@"No payload array returned");
         // FIXME - Add user error message
         return;
@@ -136,7 +130,7 @@
             // -------------------------------------------------------------------------
             [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ url ]];
         } else {
-            DDLogError(@"%@", [error localizedDescription]);
+            DDLogError(@"%@", error.localizedDescription);
             // FIXME - Add user error message
         }
     }
@@ -149,8 +143,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSDictionary *)profileRootKeysFromSettings:(NSDictionary *)settings {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogVerbose(@"%@", settings);
     NSMutableDictionary *profileRoot = [[NSMutableDictionary alloc] init];
 
     // -------------------------------------------------------------------------
@@ -174,7 +166,6 @@
 } // profileRootKeysFromSettings
 
 - (NSDictionary *)profileRootKeysFromGeneralPayload:(NSMutableDictionary *)profileRootKeys {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     [profileRootKeys removeObjectForKey:@"PayloadType"];
     [profileRootKeys removeObjectForKey:@"PayloadIdentifier"];
     [profileRootKeys removeObjectForKey:@"PayloadUUID"];
@@ -190,16 +181,16 @@
 
 - (NSMutableDictionary *)payloadRootFromManifest:(NSDictionary *)manifest settings:(NSDictionary *)settings payloadType:(NSString *)payloadType payloadUUID:(NSString *)payloadUUID {
 
-    if (payloadType == nil || [payloadType length] == 0) {
+    if (payloadType == nil || payloadType.length == 0) {
         payloadType = manifest[PFCManifestKeyPayloadType];
     }
 
-    if (payloadUUID == nil || [payloadUUID length] == 0) {
+    if (payloadUUID == nil || payloadUUID.length == 0) {
         if ([settings[payloadType][@"UUID"] length] != 0) {
             payloadUUID = settings[payloadType][@"UUID"];
         } else {
             DDLogWarn(@"No UUID found for payload type: %@", payloadType);
-            payloadUUID = [[NSUUID UUID] UUIDString];
+            payloadUUID = NSUUID.UUID.UUIDString;
         }
     }
 
@@ -272,7 +263,7 @@
     // -------------------------------------------------------------------------
     if (availableValues == nil) {
         return;
-    } else if ([availableValues count] == 0) {
+    } else if (availableValues.count == 0) {
         return;
     } else if (![availableValues containsObject:selectedValue]) {
         DDLogWarn(@"Selection does not exist in available values");
@@ -285,7 +276,7 @@
     //  Check that selected value exist among value keys
     // -------------------------------------------------------------------------
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
-    if ([valueKeys count] == 0) {
+    if (valueKeys.count == 0) {
         DDLogError(@"ValueKeys is empty, please update the manifest to handle all selections");
         return;
     } else if (!valueKeys[selectedValue]) {
@@ -333,26 +324,26 @@
         // -------------------------------------------------------------------------
         //  Check if custom PayloadType was passed, else use standard "PayloadType"
         // -------------------------------------------------------------------------
-        if (payloadType == nil || [payloadType length] == 0) {
+        if (payloadType == nil || payloadType.length == 0) {
             payloadType = manifestContentDict[PFCManifestKeyPayloadType];
         }
 
         // -------------------------------------------------------------------------
         //  Check if custom PayloadUUID was passed, else use standard "PayloadUUID"
         // -------------------------------------------------------------------------
-        if (payloadUUID == nil || [payloadUUID length] == 0) {
+        if (payloadUUID == nil || payloadUUID.length == 0) {
             if ([settings[payloadType][@"UUID"] length] != 0) {
                 payloadUUID = settings[payloadType][@"UUID"];
             } else {
                 DDLogWarn(@"No UUID found for payload type: %@", payloadType);
-                payloadUUID = [[NSUUID UUID] UUIDString];
+                payloadUUID = NSUUID.UUID.UUIDString;
             }
         }
 
         // -----------------------------------------------------------------------
         //  Check if custom PayloadKey was passed, else use standard "PayloadKey"
         // -----------------------------------------------------------------------
-        if (payloadKey == nil || [payloadKey length] == 0) {
+        if (payloadKey == nil || payloadKey.length == 0) {
             payloadKey = manifestContentDict[PFCManifestKeyPayloadKey];
         }
 
@@ -422,16 +413,15 @@
         if (value == nil) {
             DDLogError(@"SharedKey was empty");
             return;
-        } else if (![[value class] isSubclassOfClass:[NSString class]]) {
-            return
-                [self payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
+        } else if (![[value class] isSubclassOfClass:NSString.class]) {
+            return [self payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass(NSString.class) ]];
         } else {
 
             // -----------------------------------------------------------------
             //  Get the ValueKeysShared array
             // -----------------------------------------------------------------
             NSDictionary *valueKeysShared = manifestContentDict[PFCManifestKeyValueKeysShared] ?: @{};
-            if ([valueKeysShared count] == 0) {
+            if (valueKeysShared.count == 0) {
                 DDLogError(@"ValueKeysShared was empty");
                 return;
             } else if (!valueKeysShared[value]) {
@@ -451,7 +441,7 @@
     // -----------------------------------------------------------------------------------------
     //  If any more dicts are in the array, pass them as manifestContent to be added to payload
     // -----------------------------------------------------------------------------------------
-    if ([selectedValueArray count] != 0) {
+    if (selectedValueArray.count != 0) {
         [self createPayloadFromManifestContent:selectedValueArray settings:settings payloads:payloads];
     }
 } // createPayloadFromValueKey:availableValues:manifestContentDict:settings:payloadKey:payloadType:payloadUUID:payloads

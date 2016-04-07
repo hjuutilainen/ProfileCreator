@@ -1347,7 +1347,7 @@
         // ---------------------------------------------------------------------
         //  Save selection
         // ---------------------------------------------------------------------
-        NSDate *datePickerDate = [datePicker dateValue];
+        NSDate *datePickerDate = datePicker.dateValue;
 
         NSDateComponents *components = [calendarUS components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:datePickerDate];
         NSDate *date = [calendarUS dateFromComponents:components];
@@ -1384,11 +1384,11 @@
     //  Get text field's row in the table view
     // -------------------------------------------------------------------------
     NSTextField *textField = [sender object];
-    NSNumber *textFieldTag = @([textField tag]);
+    NSNumber *textFieldTag = @(textField.tag);
     if (textFieldTag == nil) {
         return;
     }
-    NSInteger row = [textFieldTag integerValue];
+    NSInteger row = textFieldTag.integerValue;
 
     // -------------------------------------------------------------------------
     //  Get current cell identifier in the manifest dict
@@ -1397,7 +1397,7 @@
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     NSMutableDictionary *settingsDict;
-    if ([identifier length] != 0) {
+    if (identifier.length != 0) {
         settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     } else {
         DDLogError(@"No key returned from manifest dict!");
@@ -1407,7 +1407,7 @@
     // -------------------------------------------------------------------------
     //  Another verification of text field type
     // -------------------------------------------------------------------------
-    if ([[[textField superview] class] isSubclassOfClass:[PFCTextFieldHostPortCellView class]] || [[[textField superview] class] isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]) {
+    if ([textField.superview.class isSubclassOfClass:PFCTextFieldHostPortCellView.class] || [textField.superview.class isSubclassOfClass:PFCTextFieldHostPortCheckboxCellView.class]) {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldHost]) {
             settingsDict[@"ValueHost"] = [inputText copy];
         } else if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldPort]) {
@@ -1416,7 +1416,7 @@
             return;
         }
 
-        if ([[textField superview] respondsToSelector:@selector(showRequired:)]) {
+        if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
             BOOL showRequired = NO;
             BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
             BOOL requiredHost = [manifestContentDict[PFCManifestKeyRequiredHost] boolValue];
@@ -1435,10 +1435,10 @@
                     showRequired = YES;
                 }
 
-                [(PFCTextFieldHostPortCellView *)[textField superview] showRequired:showRequired];
+                [(PFCTextFieldHostPortCellView *)textField.superview showRequired:showRequired];
             }
         }
-    } else if ([[[textField superview] class] isSubclassOfClass:[PFCTextFieldCheckboxCellView class]]) {
+    } else if ([textField.superview.class isSubclassOfClass:[PFCTextFieldCheckboxCellView class]]) {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
             settingsDict[PFCSettingsKeyValueTextField] = [inputText copy];
         } else {
@@ -1447,7 +1447,7 @@
     } else {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
             settingsDict[PFCSettingsKeyValue] = [inputText copy];
-            if ([[textField superview] respondsToSelector:@selector(showRequired:)]) {
+            if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
                 if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && [inputText length] == 0) {
                     [(PFCTextFieldCellView *)[textField superview] showRequired:YES];
                 } else if ([manifestContentDict[PFCManifestKeyRequired] boolValue]) {

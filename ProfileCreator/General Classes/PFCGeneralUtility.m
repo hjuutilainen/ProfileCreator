@@ -25,16 +25,13 @@
 @implementation PFCGeneralUtility
 
 + (NSURL *)profileCreatorFolder:(NSInteger)folder {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    DDLogDebug(@"Folder: %ld", (long)folder);
-
     if (folder == NSNotFound) {
         return nil;
     }
 
     switch (folder) {
     case kPFCFolderUserApplicationSupport: {
-        NSURL *userApplicationSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+        NSURL *userApplicationSupport = [NSFileManager.defaultManager URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
 
         return [userApplicationSupport URLByAppendingPathComponent:@"ProfileCreator"];
     } break;
@@ -57,19 +54,18 @@
 }
 
 + (NSString *)newProfilePath {
-    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", [[NSUUID UUID] UUIDString]];
+    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", NSUUID.UUID.UUIDString];
     NSURL *profileURL = [[self.class profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
-    return [profileURL path];
+    return profileURL.path;
 }
 
 + (NSString *)newPathInGroupFolder:(PFCFolders)groupFolder {
-    NSString *profileGroupFileName = [NSString stringWithFormat:@"%@.pfcgrp", [[NSUUID UUID] UUIDString]];
+    NSString *profileGroupFileName = [NSString stringWithFormat:@"%@.pfcgrp", NSUUID.UUID.UUIDString];
     NSURL *profileGroupURL = [[self.class profileCreatorFolder:groupFolder] URLByAppendingPathComponent:profileGroupFileName];
-    return [profileGroupURL path];
+    return profileGroupURL.path;
 }
 
 + (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     [superview addSubview:subview positioned:NSWindowAbove relativeTo:nil];
     [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
     [superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
@@ -84,7 +80,7 @@
 } // setTableViewHeight
 
 + (void)removeSubviewsFromView:(NSView *)superview {
-    for (NSView *view in [superview subviews]) {
+    for (NSView *view in superview.subviews) {
         [view removeFromSuperview];
     }
 }
@@ -143,7 +139,6 @@
 } // dateIntervalFromNowToDate
 
 + (void)setupOSVersionsButtonOSXMin:(NSPopUpButton *)osxMinVersion osxMax:(NSPopUpButton *)osxMaxVersion iOSMin:(NSPopUpButton *)iosMinVersion iOSMax:(NSPopUpButton *)iosMaxVersion sender:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------
     //  Create base menu
@@ -170,14 +165,14 @@
     // -------------------------------------------------------------------------
     // FIXME - This should be a downloadable setting, read from appsupport first
     NSError *error = nil;
-    NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
+    NSURL *osVersionsPlistURL = [NSBundle.mainBundle URLForResource:@"OSVersions" withExtension:@"plist"];
     if (![osVersionsPlistURL checkResourceIsReachableAndReturnError:&error]) {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
         return;
     }
 
     NSDictionary *osVersions = [NSDictionary dictionaryWithContentsOfURL:osVersionsPlistURL];
-    if ([osVersions count] == 0) {
+    if (osVersions.count == 0) {
         DDLogError(@"OS Versions dict was empty!");
         return;
     }
@@ -221,7 +216,7 @@
     //  Create iOS versions menu and add to popUpButtons for iOS
     // -------------------------------------------------------------------------
     NSArray *osVersionsiOS = osVersions[@"iOS"] ?: @[];
-    if ([osVersionsiOS count] == 0) {
+    if (osVersionsiOS.count == 0) {
         DDLogError(@"OS Versions array for iOS is empty!");
     } else {
 
@@ -237,7 +232,7 @@
             //  Add separator if major version of OS changed
             // -----------------------------------------------------------------
             iosVersionArray = [iosVersion componentsSeparatedByString:@"."];
-            if (1 <= [iosVersionArray count]) {
+            if (1 <= iosVersionArray.count) {
                 int majorVersion = [(NSString *)iosVersionArray[0] intValue];
                 if (lastMajorVersion != majorVersion) {
                     [menuiOS addItem:[NSMenuItem separatorItem]];

@@ -117,6 +117,7 @@
     [manifestReportRoot addObject:[self reportForManifestRootDomain:manifest]];                 // Key: Domain
     [manifestReportRoot addObjectsFromArray:[self reportForManifestRootIcon:manifest]];         // Key: IconName, IconPath, IconBundlePath
     [manifestReportRoot addObject:[self reportForManifestRootManifestContent:manifest]];        // Key: ManifestContent
+    [manifestReportRoot addObject:[self reportForManifestRootPayloadLibrary:manifest]];         // Key: PayloadLibrary
     [manifestReportRoot addObject:[self reportForManifestRootPayloadTabTitle:manifest]];        // Key: PayloadTabTitle
     [manifestReportRoot addObject:[self reportForManifestRootPayloadTypes:manifest]];           // Key: PayloadTypes
     [manifestReportRoot addObject:[self reportForManifestRootRequired:manifest]];               // Key: Required
@@ -306,6 +307,16 @@
         }
     } else {
         return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyManifestContent keyPath:nil value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+- (NSDictionary *)reportForManifestRootPayloadLibrary:(NSDictionary *)manifest {
+    if (manifest[PFCRuntimeKeyPayloadLibrary] != nil) {
+        // Could also check that the library is valid.
+        [_manifestRootKeys addObject:PFCRuntimeKeyPayloadLibrary];
+    } else {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCRuntimeKeyPayloadLibrary keyPath:nil value:nil manifest:manifest overrides:nil];
     }
     return @{};
 }
@@ -927,8 +938,6 @@
                          parentKeyPath:(NSString *)parentKeyPath
                           allowedTypes:(NSArray *)allowedTypes {
 
-    DDLogDebug(@"%s", __PRETTY_FUNCTION__);
-
     NSMutableArray *reportPayloadKeySuffix = [[NSMutableArray alloc] init];
     NSDictionary *payloadKeySuffixDict;
     if ([suffix isEqualToString:@"Checkbox"]) {
@@ -1280,17 +1289,13 @@
                                    manifest:(NSDictionary *)manifest
                               parentKeyPath:(NSString *)parentKeyPath {
     if (availabilityDict[@"AvailabilityKey"] != nil) {
-        DDLogDebug(@"AvailabilityKey=%@", availabilityDict[@"AvailabilityKey"]);
         [_manifestContentDictKeys addObject:@"AvailabilityKey"];
-
         if ([availabilityDict[@"AvailabilityKey"] length] == 0) {
             return
                 [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid key:@"AvailabilityKey" keyPath:parentKeyPath value:availabilityDict[@"AvailabilityKey"] manifest:manifest overrides:nil];
         }
 
-        DDLogDebug(@"manifestContentDict contains availability key: %@", ([[manifestContentDict allKeys] containsObject:availabilityDict[@"AvailabilityKey"]]) ? @"YES" : @"NO");
-
-        if (![[manifestContentDict allKeys] containsObject:availabilityDict[@"AvailabilityKey"]] && ![availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
+        if (![manifestContentDict.allKeys containsObject:availabilityDict[@"AvailabilityKey"]] && ![availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
             // If the availability key is any one of these, let it pass. This needs definition.
             return [PFCManifestLintError errorWithCode:kPFCLintErrorKeySuggestedNotFound
                                                    key:@"AvailabilityKey"
