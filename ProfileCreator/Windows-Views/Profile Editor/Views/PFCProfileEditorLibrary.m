@@ -162,12 +162,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    if ([[tableView identifier] isEqualToString:@"Profile"]) {
-        if ([_arrayProfile count] <= row || [_arrayProfile count] == 0) {
+    if ([tableView.identifier isEqualToString:@"Profile"]) {
+        if (_arrayProfile.count == 0 || _arrayProfile.count <= row) {
             return nil;
         }
 
-        NSString *tableColumnIdentifier = [tableColumn identifier];
+        NSString *tableColumnIdentifier = tableColumn.identifier;
         NSDictionary *manifestDict = _arrayProfile[(NSUInteger)row];
 
         if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"] && [manifestDict[PFCManifestKeyCellType] ?: @"" isEqualToString:PFCCellTypeMenu]) {
@@ -185,7 +185,7 @@
             return [cellView populateCellViewEnabled:cellView manifestDict:manifestDict row:row sender:self];
         }
 
-    } else if ([[tableView identifier] isEqualToString:@"Library"]) {
+    } else if ([tableView.identifier isEqualToString:@"Library"]) {
         if (_arrayLibrary.count == 0 || _arrayLibrary.count <= row) {
             return nil;
         }
@@ -205,13 +205,13 @@
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
-    // FIXME - Don't remember why I added this
+    // FIXME - Don't remember why I added this, but there was a reason.
     if (tableView == _tableViewProfile) {
-        if (row < [_arrayProfile count]) {
+        if (row < _arrayProfile.count) {
             [self selectManifest:_arrayProfile[row]];
         }
     } else if (tableView == _tableViewLibrary) {
-        if (row < [_arrayLibrary count]) {
+        if (row < _arrayLibrary.count) {
             [self selectManifest:_arrayLibrary[row]];
         }
     }
@@ -234,12 +234,12 @@
         DDLogError(@"Checkbox: %@ has no tag", checkbox);
         return;
     }
-    NSUInteger row = [buttonTag integerValue];
+    NSUInteger row = buttonTag.integerValue;
 
     // -------------------------------------------------------------------------
     //  Check if checkbox is in table view profile
     // -------------------------------------------------------------------------
-    if ((row < [_arrayProfile count]) &&
+    if ((row < _arrayProfile.count) &&
         checkbox == [(CellViewMenuEnabled *)[_tableViewProfile viewAtColumn:[_tableViewProfile columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
 
         // ---------------------------------------------------------------------
@@ -250,7 +250,7 @@
         NSString *manifestDomain = manifest[PFCManifestKeyDomain];
         DDLogInfo(@"Removing manifest with domain: %@ from table view profile", manifestDomain);
 
-        NSMutableDictionary *manifestSettings = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *manifestSettings = [_profileEditor.profileSettings[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
 
         // ---------------------------------------------------------------------
         //  Get manifest's originating library
@@ -296,7 +296,7 @@
         // ---------------------------------------------------------------------
         //  Check if checkbox is in table view payload library
         // ---------------------------------------------------------------------
-    } else if ((row < [_arrayLibrary count]) &&
+    } else if ((row < _arrayLibrary.count) &&
                checkbox == [(CellViewMenuEnabled *)[_tableViewLibrary viewAtColumn:[_tableViewLibrary columnWithIdentifier:@"ColumnMenuEnabled"] row:row makeIfNecessary:NO] menuCheckbox]) {
 
         // ---------------------------------------------------------------------
@@ -327,13 +327,13 @@
         NSMutableDictionary *settingsManifestRoot = [_profileEditor.profileSettings[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         settingsManifestRoot[@"Selected"] = @YES;
         settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
-        [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
+        _profileEditor.profileSettings[manifestDomain] = [settingsManifestRoot mutableCopy];
         DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
 
         // ---------------------------------------------------------------------
         //  Update errors for manifest
         // ---------------------------------------------------------------------
-        [[_profileEditor manifest] errorForManifest:manifest updateTabBar:YES];
+        [_profileEditor.manifest errorForManifest:manifest updateTabBar:YES];
         [self reloadManifest:manifest];
     }
 
@@ -346,7 +346,7 @@
 
 - (IBAction)selectManifest:(id)sender {
 
-    if (![sender isKindOfClass:[NSTableView class]]) {
+    if (![sender isKindOfClass:NSTableView.class]) {
         DDLogError(@"Class %@ is not allowed to select manifest!", [sender class]);
         return;
     }
@@ -355,13 +355,13 @@
     DDLogDebug(@"Selected row: %ld", selectedRow);
 
     if (sender == _tableViewLibrary) {
-        if (0 <= selectedRow && selectedRow < [_arrayLibrary count]) {
+        if (0 <= selectedRow && selectedRow < _arrayLibrary.count) {
             [self setSelectedManifest:_arrayLibrary[selectedRow]];
         } else {
             return;
         }
     } else if (sender == _tableViewProfile) {
-        if (0 <= selectedRow && selectedRow < [_arrayProfile count]) {
+        if (0 <= selectedRow && selectedRow < _arrayProfile.count) {
             [self setSelectedManifest:_arrayProfile[selectedRow]];
         } else {
             return;
@@ -371,7 +371,7 @@
         return;
     }
 
-    [[_profileEditor manifest] selectManifest:_selectedManifest inTableView:[sender identifier]];
+    [_profileEditor.manifest selectManifest:_selectedManifest inTableView:[sender identifier]];
 }
 
 - (void)selectLibrary:(PFCPayloadLibrary)library {
@@ -393,9 +393,9 @@
     // --------------------------------------------------------------------------
     //  If the selected library can add items, show button add, else hide button
     // --------------------------------------------------------------------------
-    if (library == kPFCPayloadLibraryCustom && [_buttonLibraryAdd isHidden]) {
+    if (library == kPFCPayloadLibraryCustom && _buttonLibraryAdd.isHidden) {
         [self showButtonLibraryAdd];
-    } else if (library != kPFCPayloadLibraryCustom && ![_buttonLibraryAdd isHidden]) {
+    } else if (library != kPFCPayloadLibraryCustom && !_buttonLibraryAdd.isHidden) {
         [self hideButtonLibraryAdd];
     }
 
@@ -441,7 +441,7 @@
     // -------------------------------------------------------------------------
     //  If the manifest library array is empty, show "No Manifests"
     // -------------------------------------------------------------------------
-    if ([_arrayLibrary count] == 0) {
+    if (_arrayLibrary.count == 0) {
         [self showLibraryNoManifests];
     } else {
         [self hideLibraryStatus];
@@ -473,7 +473,7 @@
     if (selectedManifestIndex != NSNotFound) {
         [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedManifestIndex] byExtendingSelection:NO];
         if (updateFirstResponder) {
-            [[_profileEditor window] makeFirstResponder:tableView];
+            [_profileEditor.window makeFirstResponder:tableView];
         }
     }
 }
@@ -484,15 +484,15 @@
     }];
 
     if (index != NSNotFound) {
-        NSRange allColumns = NSMakeRange(0, [[_tableViewProfile tableColumns] count]);
+        NSRange allColumns = NSMakeRange(0, _tableViewProfile.tableColumns.count);
         [_tableViewProfile reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
     }
 } // reloadManifest
 
 - (NSArray *)enabledDomains {
     NSMutableArray *enabledDomains = [[NSMutableArray alloc] init];
-    for (NSString *domain in [[_profileEditor profileSettings] allKeys]) {
-        NSDictionary *settingsManifest = [_profileEditor profileSettings][domain];
+    for (NSString *domain in _profileEditor.profileSettings.allKeys) {
+        NSDictionary *settingsManifest = _profileEditor.profileSettings[domain];
         if ([settingsManifest[PFCSettingsKeySelected] boolValue]) {
             [enabledDomains addObject:domain];
         }
@@ -522,9 +522,9 @@
     NSError *error = nil;
     [_arrayLibraryApple removeAllObjects];
     NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
-    if ([libraryAppleManifests count] != 0) {
+    if (libraryAppleManifests.count != 0) {
         for (NSDictionary *manifest in libraryAppleManifests) {
-            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:[[_profileEditor settings] displayKeys]]) {
+            if ([PFCAvailability.sharedInstance showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
                     [_arrayProfile addObject:[manifest copy]];
@@ -540,7 +540,7 @@
         [_arrayLibraryApple sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:PFCManifestKeyTitle ascending:YES] ]];
     } else {
         DDLogError(@"No manifests returned for library Apple");
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 } // updateManifestLibraryApple
 
@@ -548,7 +548,7 @@
     NSError *error = nil;
     [_arrayLibraryUserPreferences removeAllObjects];
     NSArray *libraryUserPreferencesManifests = [[PFCManifestLibrary sharedLibrary] libraryUserLibraryPreferencesLocal:&error acceptCached:YES];
-    if ([libraryUserPreferencesManifests count] != 0) {
+    if (libraryUserPreferencesManifests.count != 0) {
         for (NSDictionary *manifest in libraryUserPreferencesManifests) {
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
             if ([enabledPayloadDomains containsObject:manifestDomain]) {

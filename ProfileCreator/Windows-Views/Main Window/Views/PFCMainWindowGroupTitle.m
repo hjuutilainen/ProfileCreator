@@ -73,9 +73,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[(PFCMainWindowGroupTitleView *)[self view] textFieldTitle] setStringValue:[self nameForGroup:_group]];
-    [(PFCMainWindowGroupTitleView *)[self view] setDelegate:_sender];
-    [(PFCMainWindowGroupTitleView *)[self view] setGroup:_group];
+    [[(PFCMainWindowGroupTitleView *)self.view textFieldTitle] setStringValue:[self nameForGroup:_group]];
+    [(PFCMainWindowGroupTitleView *)self.view setDelegate:_sender];
+    [(PFCMainWindowGroupTitleView *)self.view setGroup:_group];
     //[(PFCMainWindowGroupTitleView *)[self view] setTranslatesAutoresizingMaskIntoConstraints:NO];
 } // viewDidLoad
 
@@ -113,7 +113,7 @@
     }
 
     NSUInteger opts = (NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways);
-    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:[self bounds] options:opts owner:self userInfo:nil]];
+    [self setTrackingArea:[[NSTrackingArea alloc] initWithRect:self.bounds options:opts owner:self userInfo:nil]];
     [self addTrackingArea:_trackingArea];
 } // updateTrackingAreas
 

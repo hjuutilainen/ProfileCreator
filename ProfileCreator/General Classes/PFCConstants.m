@@ -203,6 +203,7 @@ NSString *const PFCFontWeightBold = @"Bold";
 #pragma mark RuntimeKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCRuntimeKeyPath = @"Path";
+NSString *const PFCRuntimeKeyPayloadLibrary = @"PayloadLibrary";
 NSString *const PFCRuntimeKeyProfileEditor = @"ProfileEditor";
 NSString *const PFCRuntimeKeyProfileExporter = @"ProfileExporter";
 

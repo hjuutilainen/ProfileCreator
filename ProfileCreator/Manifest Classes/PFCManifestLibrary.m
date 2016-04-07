@@ -78,7 +78,7 @@
     // ---------------------------------------------------------------------
     //  Get path to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
-    NSURL *appleManifestFolderURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"Manifests/Apple"];
+    NSURL *appleManifestFolderURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"Manifests/Apple"];
     if (![appleManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
@@ -88,7 +88,7 @@
         // ---------------------------------------------------------------------
         //  Put all profile manifest plist URLs in an array
         // ---------------------------------------------------------------------
-        NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:appleManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+        NSArray *dirContents = [NSFileManager.defaultManager contentsOfDirectoryAtURL:appleManifestFolderURL includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
 
         // ---------------------------------------------------------------------
         //  Return all manifests matching predicate
@@ -97,8 +97,9 @@
         NSArray *manifestURLs = [dirContents filteredArrayUsingPredicate:predicateManifestPlists];
         for (NSURL *manifestURL in manifestURLs ?: @[]) {
             NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
-            if ([manifestDict count] != 0) {
-                manifestDict[PFCRuntimeKeyPath] = [manifestURL path];
+            if (manifestDict.count != 0) {
+                manifestDict[PFCRuntimeKeyPath] = manifestURL.path;
+                manifestDict[PFCRuntimeKeyPayloadLibrary] = @(kPFCPayloadLibraryApple);
                 [libraryApple addObject:[manifestDict copy]];
             }
         }
@@ -199,6 +200,7 @@
             NSMutableDictionary *manifestDict = [[NSDictionary dictionaryWithContentsOfURL:manifestURL] mutableCopy];
             if (manifestDict.count != 0) {
                 manifestDict[PFCRuntimeKeyPath] = manifestURL.path;
+                manifestDict[PFCRuntimeKeyPayloadLibrary] = @(kPFCPayloadLibraryMCX);
                 [libraryMCX addObject:[manifestDict copy]];
             }
         }
@@ -234,7 +236,7 @@
 
     NSError *error = nil;
     NSArray *manifestLibrary = [self libraryAll:&error acceptCached:YES];
-    if ([manifestLibrary count] == 0) {
+    if (manifestLibrary.count == 0) {
         DDLogError(@"%@", [error localizedDescription]);
         return @[];
     }
@@ -330,8 +332,8 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
     for (NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate]) {
         settings = [[NSMutableDictionary alloc] init];
-        NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromPlistAtURL:plistURL settings:settings];
-        if ([manifest count] != 0) {
+        NSDictionary *manifest = [PFCManifestParser.sharedParser manifestFromPlistAtURL:plistURL settings:settings];
+        if (manifest.count != 0) {
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
             [library addObject:manifest];
             _cachedLocalSettings[manifestDomain] = settings;
@@ -351,18 +353,18 @@
                                             includingPropertiesForKeys:@[ NSURLIsDirectoryKey ]
                                                                options:NSDirectoryEnumerationSkipsHiddenFiles
                                                           errorHandler:^BOOL(NSURL *_Nonnull url, NSError *_Nonnull error) {
-                                                            DDLogDebug(@"Enumerator Error: %@", [error localizedDescription]);
+                                                            DDLogDebug(@"Enumerator Error: %@", error.localizedDescription);
                                                             return YES;
                                                           }];
 
     NSURL *file;
     NSMutableArray *mcxManifestFiles = [[NSMutableArray alloc] init];
-    while ((file = [dirEnum nextObject])) {
+    while ((file = dirEnum.nextObject)) {
         NSNumber *isDirectory;
         BOOL success = [file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-        if (success && ![isDirectory boolValue] && [[file pathExtension] isEqualToString:@"manifest"]) {
-            NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromMCXManifestAtURL:file];
-            if ([manifest count] != 0) {
+        if (success && !isDirectory.boolValue && [file.pathExtension isEqualToString:@"manifest"]) {
+            NSDictionary *manifest = [PFCManifestParser.sharedParser manifestFromMCXManifestAtURL:file];
+            if (manifest.count != 0) {
                 [mcxManifestFiles addObject:manifest];
             }
         }

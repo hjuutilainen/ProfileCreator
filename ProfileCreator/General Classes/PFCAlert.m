@@ -57,7 +57,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleDelete]; // NSAlertSecondButton
-    NSUInteger profileCount = [profileNames count];
+    NSUInteger profileCount = profileNames.count;
     id profileList;
     if (profileCount == 1) {
         profileList = [NSString stringWithFormat:@"\"%@\"", [profileNames firstObject]];
@@ -85,10 +85,10 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:PFCButtonTitleCancel]; // NSAlertFirstButton
     [alert addButtonWithTitle:PFCButtonTitleRemove]; // NSAlertSecondButton
-    NSUInteger profileCount = [profileNames count];
+    NSUInteger profileCount = profileNames.count;
     id profileList;
     if (profileCount == 1) {
-        profileList = [NSString stringWithFormat:@"\"%@\"", [profileNames firstObject]];
+        profileList = [NSString stringWithFormat:@"\"%@\"", profileNames.firstObject];
     } else {
         profileList = [[NSMutableString alloc] init];
         for (NSString *profileName in profileNames) {

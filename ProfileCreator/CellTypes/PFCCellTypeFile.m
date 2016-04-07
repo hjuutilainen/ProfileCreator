@@ -64,7 +64,7 @@
     //  Retrieve file info from the processor
     // ---------------------------------------------------------------------
     NSDictionary *fileInfo = [_fileInfoProcessor fileInfo];
-    if ([fileInfo count] != 0) {
+    if (fileInfo.count != 0) {
         [_settingFileTitle setStringValue:fileInfo[PFCFileInfoTitle] ?: [fileURL lastPathComponent]];
 
         if (fileInfo[PFCFileInfoDescriptionTop] != nil) {
@@ -224,12 +224,12 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
 

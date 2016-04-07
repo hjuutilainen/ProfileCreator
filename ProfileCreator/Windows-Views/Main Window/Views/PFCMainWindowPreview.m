@@ -205,10 +205,10 @@
             DDLogDebug(@"Payload library: %ld", (long)payloadLibrary);
 
             NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:payloadLibrary withDomain:domain];
-            if ([manifest count] != 0) {
+            if (manifest.count != 0) {
                 PFCMainWindowPreviewPayload *preview = [self previewForMainfest:manifest domain:domain settings:domainSettings];
                 [_arrayStackViewPreview addObject:preview];
-                [_stackViewPreview addView:[preview view] inGravity:NSStackViewGravityTop];
+                [_stackViewPreview addView:preview.view inGravity:NSStackViewGravityTop];
             } else {
                 DDLogError(@"No manifest returned from payload library: %ld with domain: %@", (long)payloadLibrary, domain);
             }
@@ -221,7 +221,7 @@
     //  Payload Count
     // -------------------------------------------------------------------------
     // FIXME - This is incorrect when multiple payloads are selected from the same manifest
-    [_textFieldPayloadCount setStringValue:[NSString stringWithFormat:@"%lu %@", (unsigned long)[selectedDomains count], ([selectedDomains count] == 1) ? @"Payload" : @"Payloads"]];
+    [_textFieldPayloadCount setStringValue:[NSString stringWithFormat:@"%lu %@", (unsigned long)selectedDomains.count, (selectedDomains.count == 1) ? @"Payload" : @"Payloads"]];
 
     if ([selectedDomains count] <= 1) {
         [_textFieldExportError setStringValue:@"No Payload Selected"];
@@ -229,9 +229,9 @@
         return;
     }
 
-    if (0 < [_payloadErrorCount integerValue]) {
+    if (0 < _payloadErrorCount.integerValue) {
         [_textFieldExportError
-            setStringValue:[NSString stringWithFormat:@"%ld Payload %@ Need To Be Resolved", (long)[_payloadErrorCount integerValue], ([_payloadErrorCount integerValue] == 1) ? @"Error" : @"Errors"]];
+            setStringValue:[NSString stringWithFormat:@"%ld Payload %@ Need To Be Resolved", (long)_payloadErrorCount.integerValue, (_payloadErrorCount.integerValue == 1) ? @"Error" : @"Errors"]];
         [_buttonProfileExport setEnabled:NO];
         return;
     }
@@ -252,10 +252,10 @@
     // -------------------------------------------------------------------------
     NSArray *settingsError = settings[@"SettingsError"] ?: @[];
     __block NSInteger errorCount = 0;
-    if ([settingsError count] != 0) {
+    if (settingsError.count != 0) {
 
         [settingsError enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
-          errorCount += [[dict allKeys] count] ?: 0;
+          errorCount += dict.allKeys.count ?: 0;
         }];
     }
 
@@ -264,7 +264,7 @@
     DDLogDebug(@"Setting Payload Error Count: %@", [@(errorCount) stringValue]);
     [preview setPayloadErrorCount:[@(errorCount) stringValue]];
 
-    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
+    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifest];
     if (icon) {
         [preview setPayloadIcon:icon];
     }

@@ -46,28 +46,28 @@
     // ---------------------------------------------------------------------
     //  Reset Segmented Control
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setSegmentCount:0];
+    [cellView.settingSegmentedControl setSegmentCount:0];
 
     // ---------------------------------------------------------------------
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
     NSArray *availableSelections = manifest[PFCManifestKeyAvailableValues] ?: @[];
-    [[cellView settingSegmentedControl] setSegmentCount:(NSInteger)[availableSelections count]];
+    [cellView.settingSegmentedControl setSegmentCount:(NSInteger)availableSelections.count];
     [availableSelections enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-      [[cellView settingSegmentedControl] setLabel:obj forSegment:(NSInteger)idx];
+      [cellView.settingSegmentedControl setLabel:obj forSegment:(NSInteger)idx];
     }];
 
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setSelected:YES forSegment:[manifest[PFCSettingsKeyValue] integerValue] ?: 0];
+    [cellView.settingSegmentedControl setSelected:YES forSegment:[manifest[PFCSettingsKeyValue] integerValue] ?: 0];
 
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
-    [[cellView settingSegmentedControl] setAction:@selector(segmentedControl:)];
-    [[cellView settingSegmentedControl] setTarget:sender];
-    [[cellView settingSegmentedControl] setTag:row];
+    [cellView.settingSegmentedControl setAction:@selector(segmentedControl:)];
+    [cellView.settingSegmentedControl setTarget:sender];
+    [cellView.settingSegmentedControl setTag:row];
 
     return cellView;
 } // populateCellViewSettingsSegmentedControl:manifest:row:sender
@@ -77,7 +77,7 @@
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys];
     for (NSString *selection in manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]) {
         NSDictionary *settingsError = [[PFCManifestParser sharedParser] settingsErrorForManifestContent:valueKeys[selection] settings:settings displayKeys:displayKeys];
-        if ([settingsError count] != 0) {
+        if (settingsError.count != 0) {
             [report addEntriesFromDictionary:settingsError];
         }
     }
@@ -97,7 +97,7 @@
     //  Verify AvailableValues isn't empty
     // -------------------------------------------------------------------------
     NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
-    if ([availableValues count] == 0) {
+    if (availableValues.count == 0) {
         DDLogError(@"AvailableValues is empty");
         return;
     }
@@ -106,7 +106,7 @@
     //  Verify ValueKeys isn't empty
     // -------------------------------------------------------------------------
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
-    if ([valueKeys count] == 0) {
+    if (valueKeys.count == 0) {
         DDLogError(@"ValueKeys is empty");
         return;
     }

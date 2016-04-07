@@ -48,11 +48,11 @@
         BOOL error = ([_payloadErrorCount integerValue] == 0);
         [_textFieldPayloadErrorCount setHidden:error];
         if (error) {
-            [_textFieldPayloadName setTextColor:[NSColor labelColor]];
-            [_textFieldPayloadDescription setTextColor:[NSColor secondaryLabelColor]];
+            [_textFieldPayloadName setTextColor:NSColor.labelColor];
+            [_textFieldPayloadDescription setTextColor:NSColor.secondaryLabelColor];
         } else {
-            [_textFieldPayloadName setTextColor:[NSColor redColor]];
-            [_textFieldPayloadDescription setTextColor:[NSColor redColor]];
+            [_textFieldPayloadName setTextColor:NSColor.redColor];
+            [_textFieldPayloadDescription setTextColor:NSColor.redColor];
         }
     }
 }
@@ -103,7 +103,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return (NSInteger)[_arrayPayloadInfo count];
+    return (NSInteger)_arrayPayloadInfo.count;
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {

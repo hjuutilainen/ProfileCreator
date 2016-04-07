@@ -234,6 +234,7 @@ extern NSString *const PFCFontWeightBold;
 #pragma mark RuntimeKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCRuntimeKeyPath;
+extern NSString *const PFCRuntimeKeyPayloadLibrary;
 extern NSString *const PFCRuntimeKeyProfileEditor;
 extern NSString *const PFCRuntimeKeyProfileExporter;
 

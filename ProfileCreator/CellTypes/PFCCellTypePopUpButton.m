@@ -93,7 +93,7 @@
 
     if ([selectedItem length] != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
-    } else if ([[[cellView settingPopUpButton] itemArray] count] != 0) {
+    } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];
     }
 
@@ -307,7 +307,7 @@
 
     if ([selectedItem length] != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
-    } else if ([[[cellView settingPopUpButton] itemArray] count] != 0) {
+    } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];
     }
 
@@ -429,7 +429,7 @@
 
     if ([selectedItem length] != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
-    } else if ([[[cellView settingPopUpButton] itemArray] count] != 0) {
+    } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];
     }
 

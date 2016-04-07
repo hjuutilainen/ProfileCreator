@@ -51,7 +51,7 @@
     NSURL *defaultSettingsPath = [NSBundle.mainBundle URLForResource:@"Defaults" withExtension:@"plist"];
     if ([defaultSettingsPath checkResourceIsReachableAndReturnError:&error]) {
         NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
-        if ([defaultSettingsDict count] != 0) {
+        if (defaultSettingsDict.count != 0) {
             [NSUserDefaults.standardUserDefaults registerDefaults:defaultSettingsDict];
         }
     } else {

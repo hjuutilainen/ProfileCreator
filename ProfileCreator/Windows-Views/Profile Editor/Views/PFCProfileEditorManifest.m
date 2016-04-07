@@ -1185,12 +1185,12 @@
     // -------------------------------------------------------------------------
     //  Get button's row in the table view
     // -------------------------------------------------------------------------
-    NSNumber *buttonTag = @([button tag]);
+    NSNumber *buttonTag = @(button.tag);
     if (buttonTag == nil) {
         DDLogError(@"Button: %@ has no tag", button);
         return;
     }
-    NSInteger row = [buttonTag integerValue];
+    NSInteger row = buttonTag.integerValue;
 
     NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
