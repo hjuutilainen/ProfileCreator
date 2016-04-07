@@ -255,9 +255,9 @@
         // ---------------------------------------------------------------------
         //  Get manifest's originating library
         // ---------------------------------------------------------------------
-        NSInteger payloadLibrary;
-        if (manifestSettings[PFCSettingsKeyPayloadLibrary] != nil) {
-            payloadLibrary = [manifestSettings[PFCSettingsKeyPayloadLibrary] integerValue];
+        PFCPayloadLibrary payloadLibrary;
+        if (manifest[PFCRuntimeKeyPayloadLibrary] != nil) {
+            payloadLibrary = [manifest[PFCRuntimeKeyPayloadLibrary] integerValue];
         } else {
             DDLogError(@"Manifest settings is missing required information about originating library");
             payloadLibrary = 2;
@@ -290,7 +290,6 @@
         //  Update settings
         // ---------------------------------------------------------------------
         [manifestSettings removeObjectForKey:@"Selected"];
-        [manifestSettings removeObjectForKey:@"PayloadLibrary"];
         [_profileEditor profileSettings][manifestDomain] = [manifestSettings mutableCopy];
 
         // ---------------------------------------------------------------------
@@ -326,9 +325,7 @@
         // ---------------------------------------------------------------------
         NSMutableDictionary *settingsManifestRoot = [_profileEditor.profileSettings[manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         settingsManifestRoot[@"Selected"] = @YES;
-        settingsManifestRoot[@"PayloadLibrary"] = @(_selectedLibrary);
         _profileEditor.profileSettings[manifestDomain] = [settingsManifestRoot mutableCopy];
-        DDLogVerbose(@"Updated settings for clicked manifest: %@", settingsManifestRoot);
 
         // ---------------------------------------------------------------------
         //  Update errors for manifest

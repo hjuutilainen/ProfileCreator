@@ -302,7 +302,6 @@ extern NSString *const PFCProfileGroupExtension;
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCSettingsKeyEnabled;
 extern NSString *const PFCSettingsKeyFilePath;
-extern NSString *const PFCSettingsKeyPayloadLibrary;
 extern NSString *const PFCSettingsKeySelected;
 extern NSString *const PFCSettingsKeyTableViewContent;
 extern NSString *const PFCSettingsKeyValue;

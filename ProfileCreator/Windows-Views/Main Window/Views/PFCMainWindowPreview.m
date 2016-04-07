@@ -199,18 +199,17 @@
             continue;
         }
 
-        if ([domain isEqualToString:@"com.apple.general"] || ([domainSettings[PFCSettingsKeySelected] boolValue] && domainSettings[@"PayloadLibrary"] != nil)) {
+        if ([domain isEqualToString:@"com.apple.general"] || [domainSettings[PFCSettingsKeySelected] boolValue]) {
             [selectedDomains addObject:domain];
-            NSInteger payloadLibrary = [domainSettings[@"PayloadLibrary"] integerValue] ?: 0;
-            DDLogDebug(@"Payload library: %ld", (long)payloadLibrary);
 
-            NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:payloadLibrary withDomain:domain];
+            // FIXME - This is inelegant and error prone. Shouldn't rely on the moanifest domain as it MAY be duplicated from the generated manifests. Possibly use UUID instead.
+            NSDictionary *manifest = [PFCManifestLibrary.sharedLibrary manifestFromLibrary:kPFCPayloadLibraryAll withDomain:domain];
             if (manifest.count != 0) {
                 PFCMainWindowPreviewPayload *preview = [self previewForMainfest:manifest domain:domain settings:domainSettings];
                 [_arrayStackViewPreview addObject:preview];
                 [_stackViewPreview addView:preview.view inGravity:NSStackViewGravityTop];
             } else {
-                DDLogError(@"No manifest returned from payload library: %ld with domain: %@", (long)payloadLibrary, domain);
+                DDLogError(@"No manifest returned for domain: %@", domain);
             }
         } else {
             DDLogError(@"Payload is selected but doesn't contain a \"PayloadLibrary\"");

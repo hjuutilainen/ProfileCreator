@@ -130,7 +130,7 @@
     if (![userLibraryPreferencesURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
-        _cachedLibraryUserLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:userLibraryPreferencesURL];
+        _cachedLibraryUserLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:userLibraryPreferencesURL library:kPFCPayloadLibraryUserPreferences];
         return _cachedLibraryUserLibraryPreferencesLocal;
     }
 } // libraryUserLibraryPreferencesLocal:settingsLocal
@@ -156,7 +156,7 @@
     if (![libraryPreferencesURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
-        _cachedLibraryLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:libraryPreferencesURL];
+        _cachedLibraryLibraryPreferencesLocal = [self manifestsFromPlistsAtURL:libraryPreferencesURL library:kPFCPayloadLibraryLibraryPreferences];
         return _cachedLibraryLibraryPreferencesLocal;
     }
 } // libraryLibraryPreferencesLocal:settingsLocal
@@ -317,7 +317,7 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)manifestsFromPlistsAtURL:(NSURL *)folderURL {
+- (NSArray *)manifestsFromPlistsAtURL:(NSURL *)folderURL library:(PFCPayloadLibrary)library {
 
     // ---------------------------------------------------------------------
     //  Get all contents of user library preferences folder
@@ -327,15 +327,16 @@
     // ---------------------------------------------------------------------
     //  Create a manifest for all files ending with .plist
     // ---------------------------------------------------------------------
-    NSMutableArray *library = [[NSMutableArray alloc] init];
+    NSMutableArray *manifestLibrary = [[NSMutableArray alloc] init];
     NSMutableDictionary *settings;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
     for (NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate]) {
         settings = [[NSMutableDictionary alloc] init];
-        NSDictionary *manifest = [PFCManifestParser.sharedParser manifestFromPlistAtURL:plistURL settings:settings];
+        NSMutableDictionary *manifest = [[PFCManifestParser.sharedParser manifestFromPlistAtURL:plistURL settings:settings] mutableCopy];
         if (manifest.count != 0) {
+            manifest[PFCRuntimeKeyPayloadLibrary] = @(library);
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-            [library addObject:manifest];
+            [manifestLibrary addObject:manifest];
             _cachedLocalSettings[manifestDomain] = settings;
         }
     }
@@ -343,7 +344,7 @@
     // ---------------------------------------------------------------------
     //  Return all non-empty created manifests
     // ---------------------------------------------------------------------
-    return [library copy];
+    return [manifestLibrary copy];
 } // manifestsAtURL:settingsLocal
 
 - (NSArray *)manifestsFromMCXManifestsAtURL:(NSURL *)folderURL {
