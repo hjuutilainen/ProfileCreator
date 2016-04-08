@@ -65,7 +65,7 @@
     // -------------------------------------------------------------------------
     //  Create profile root from profile settings
     // -------------------------------------------------------------------------
-    NSMutableDictionary *profile = [NSMutableDictionary dictionary];
+    NSMutableDictionary *profile = [[NSMutableDictionary alloc] init];
     [profile addEntriesFromDictionary:[self profileRootKeysFromSettings:_settingsProfile] ?: @{}];
 
     // -------------------------------------------------------------------------

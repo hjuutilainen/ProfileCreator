@@ -47,14 +47,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant {
-    CGFloat indentationBaseValue = [baseConstant floatValue] ?: 8.0f;
+    CGFloat indentationBaseValue = baseConstant.floatValue ?: 8.0f;
     CGFloat indentationMultiplier;
-    if ([indentationLevel floatValue] < 1.0f) {
+    if (indentationLevel.floatValue < 1.0f) {
         return indentationBaseValue;
-    } else if (5.0f < [indentationLevel floatValue]) {
+    } else if (5.0f < indentationLevel.floatValue) {
         indentationMultiplier = 5.0f;
     } else {
-        indentationMultiplier = [indentationLevel floatValue];
+        indentationMultiplier = indentationLevel.floatValue;
     }
 
     return (indentationBaseValue + (indentationBaseValue * indentationMultiplier));
@@ -62,7 +62,7 @@
 
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
 
-    NSImage *icon = [[NSBundle mainBundle] imageForResource:manifest[PFCManifestKeyIconName]];
+    NSImage *icon = [NSBundle.mainBundle imageForResource:manifest[PFCManifestKeyIconName]];
     if (icon) {
         return icon;
     }
@@ -77,7 +77,7 @@
 
     iconURL = [NSURL fileURLWithPath:manifest[PFCManifestKeyIconPathBundle] ?: @""];
     if ([iconURL checkResourceIsReachableAndReturnError:nil]) {
-        icon = [[NSWorkspace sharedWorkspace] iconForFile:[iconURL path]];
+        icon = [[NSWorkspace sharedWorkspace] iconForFile:iconURL.path];
         if (icon) {
             return icon;
         }

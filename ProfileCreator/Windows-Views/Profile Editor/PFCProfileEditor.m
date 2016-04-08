@@ -574,8 +574,6 @@
 } // settingsSaved
 
 - (BOOL)saveProfile:(NSError **)error {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Save the selected manifest settings before saving the profile template
     // -------------------------------------------------------------------------
@@ -585,7 +583,6 @@
     //  Create the profile template save folder if it does not exist
     // -------------------------------------------------------------------------
     NSURL *savedProfilesFolderURL = [PFCGeneralUtility profileCreatorFolder:kPFCFolderSavedProfiles];
-    DDLogDebug(@"Profiles save folder: %@", [savedProfilesFolderURL path]);
     if (![savedProfilesFolderURL checkResourceIsReachableAndReturnError:nil]) {
         if (![[NSFileManager defaultManager] createDirectoryAtURL:savedProfilesFolderURL withIntermediateDirectories:YES attributes:nil error:error]) {
             return NO;
@@ -596,11 +593,12 @@
     //  Get the path to this profile template, or if never saved create a new path
     // ----------------------------------------------------------------------------
     NSString *profilePath = _profileDict[PFCRuntimeKeyPath];
-    if ([profilePath length] == 0) {
-        profilePath = [PFCGeneralUtility newProfilePath];
+    DDLogDebug(@"Profile runtime path: %@", profilePath);
+    if (profilePath.length == 0) {
+        profilePath = [PFCGeneralUtility newProfilePathForUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
     }
     NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
-    DDLogDebug(@"Profile save path: %@", [profileURL path]);
+    DDLogDebug(@"Profile save path: %@", profileURL.path);
 
     NSMutableDictionary *profileDict = [_profileDict mutableCopy] ?: [[NSMutableDictionary alloc] init];
     NSMutableDictionary *configurationDict = [_profileDict[@"Config"] mutableCopy] ?: [[NSMutableDictionary alloc] init];
@@ -621,7 +619,7 @@
             } else {
                 for (NSString *payloadType in manifest[PFCManifestKeyPayloadTypes] ?: @[]) {
                     if ([settingsMutable[payloadType] count] == 0) {
-                        settingsMutable[payloadType] = @{ PFCManifestKeyPayloadVersion : @1, @"UUID" : [[NSUUID UUID] UUIDString] };
+                        settingsMutable[payloadType] = @{ PFCManifestKeyPayloadVersion : @1, @"UUID" : [NSUUID UUID].UUIDString };
                     }
                 }
             }
@@ -632,11 +630,11 @@
     }
 
     [self setProfileSettings:[settingsProfile mutableCopy]];
-    configurationDict[PFCProfileTemplateKeyName] = [_settings profileName] ?: @"";
-    configurationDict[PFCProfileTemplateKeyIdentifier] = [_settings profileIdentifier] ?: @"";
-    configurationDict[PFCProfileTemplateKeySign] = @([_settings signProfile]);
-    configurationDict[PFCProfileTemplateKeyEncrypt] = @([_settings encryptProfile]);
-    configurationDict[PFCProfileTemplateKeyIdentifierFormat] = [_settings profileIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat;
+    configurationDict[PFCProfileTemplateKeyName] = _settings.profileName ?: @"";
+    configurationDict[PFCProfileTemplateKeyIdentifier] = _settings.profileIdentifier ?: @"";
+    configurationDict[PFCProfileTemplateKeySign] = @(_settings.signProfile);
+    configurationDict[PFCProfileTemplateKeyEncrypt] = @(_settings.encryptProfile);
+    configurationDict[PFCProfileTemplateKeyIdentifierFormat] = _settings.profileIdentifierFormat ?: PFCDefaultProfileIdentifierFormat;
     configurationDict[PFCProfileTemplateKeySettings] = [settingsProfile copy];
     configurationDict[PFCProfileTemplateKeyDisplaySettings] = [self currentDisplaySettings] ?: @{};
 
@@ -662,15 +660,15 @@
 - (NSDictionary *)currentDisplaySettings {
     NSMutableDictionary *displaySettings = [[NSMutableDictionary alloc] init];
 
-    displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @([_settings showAdvancedSettings]);
-    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @([_settings showKeysSupervised]);
+    displaySettings[PFCProfileDisplaySettingsKeyAdvancedSettings] = @(_settings.showAdvancedSettings);
+    displaySettings[PFCProfileDisplaySettingsKeySupervised] = @(_settings.showKeysSupervised);
     displaySettings[PFCProfileDisplaySettingsKeyPlatform] = @{
-        PFCProfileDisplaySettingsKeyPlatformOSX : @([_settings includePlatformOSX]),
-        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : [_settings osxMaxVersion] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : [_settings osxMinVersion] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOS : @([_settings includePlatformiOS]),
-        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : [_settings iosMaxVersion] ?: @"",
-        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : [_settings iosMinVersion] ?: @""
+        PFCProfileDisplaySettingsKeyPlatformOSX : @(_settings.includePlatformOSX),
+        PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion : _settings.osxMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformOSXMinVersion : _settings.osxMinVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOS : @(_settings.includePlatformiOS),
+        PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _settings.iosMaxVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _settings.iosMinVersion ?: @""
     };
     return [displaySettings copy];
 }
@@ -683,54 +681,54 @@
 
 - (void)showLibrarySearch {
     [self setLibrarySplitViewCollapsed:NO];
-    [[_library viewLibrarySearch] setHidden:NO];
-    [PFCGeneralUtility insertSubview:[[_library libraryMenu] view] inSuperview:[_library viewLibraryMenu] hidden:NO];
+    [_library.viewLibrarySearch setHidden:NO];
+    [PFCGeneralUtility insertSubview:[[_library libraryMenu] view] inSuperview:_library.viewLibraryMenu hidden:NO];
 } // showLibrarySearch
 
 - (void)hideLibrarySearch {
     [self setLibrarySplitViewCollapsed:YES];
-    [[_library viewLibrarySearch] setHidden:YES];
+    [_library.viewLibrarySearch setHidden:YES];
     [PFCGeneralUtility insertSubview:[[_library libraryMenu] view] inSuperview:_viewLibraryFooterSuperview hidden:NO];
 } // hideLibrarySearch
 
 - (void)showSettings {
-    [[_settings view] setHidden:NO];
-    [[_manifest view] setHidden:YES];
-    [[_viewStatusSettings view] setHidden:YES];
+    [_settings.view setHidden:NO];
+    [_manifest.view setHidden:YES];
+    [_viewStatusSettings.view setHidden:YES];
 } // showSettings
 
 - (void)showManifest {
-    [[_manifest view] setHidden:NO];
-    if (![[_settings view] isHidden]) {
-        [[_settings view] setHidden:YES];
+    [_manifest.view setHidden:NO];
+    if (![_settings.view isHidden]) {
+        [_settings.view setHidden:YES];
     }
-    [[_viewStatusSettings view] setHidden:YES];
+    [_viewStatusSettings.view setHidden:YES];
 } // showManifest
 
 - (void)showManifestLoading {
     [_viewStatusSettings showStatus:kPFCStatusLoadingSettings];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:YES];
-    [[_viewStatusSettings view] setHidden:NO];
+    [_settings.view setHidden:YES];
+    [_manifest.view setHidden:YES];
+    [_viewStatusSettings.view setHidden:NO];
 } // showManifestLoading
 
 - (void)showManifestError {
     [_viewStatusSettings showStatus:kPFCStatusErrorReadingSettings];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:YES];
-    [[_viewStatusSettings view] setHidden:NO];
+    [_settings.view setHidden:YES];
+    [_manifest.view setHidden:YES];
+    [_viewStatusSettings.view setHidden:NO];
 } // showManifestError
 
 - (void)showManifestNoSettings {
     [_viewStatusSettings showStatus:kPFCStatusNoSettings];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:YES];
+    [_settings.view setHidden:YES];
+    [_manifest.view setHidden:YES];
 } // showManifestNoSettings
 
 - (void)hideManifestStatus {
-    [[_viewStatusSettings view] setHidden:YES];
-    [[_settings view] setHidden:YES];
-    [[_manifest view] setHidden:NO];
+    [_viewStatusSettings.view setHidden:YES];
+    [_settings.view setHidden:YES];
+    [_manifest.view setHidden:NO];
 } // hideManifestStatus
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -754,12 +752,12 @@
 
 - (IBAction)buttonSave:(id)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-    if ([[_settings profileName] hasPrefix:@"Untitled Profile"]) {
+    if ([_settings.profileName hasPrefix:@"Untitled Profile"]) {
 
         [_buttonSaveSheetProfileName setEnabled:NO];
         [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
         [_textFieldSheetProfileNameMessage setStringValue:@"You have to choose a name for your profile."];
-        [_textFieldSheetProfileName setStringValue:[_settings profileName] ?: PFCDefaultProfileName];
+        [_textFieldSheetProfileName setStringValue:_settings.profileName ?: PFCDefaultProfileName];
 
         [[NSApp mainWindow] beginSheet:_sheetProfileName
                      completionHandler:^(NSModalResponse returnCode) {
@@ -769,7 +767,7 @@
                            [self setWindowShouldClose:NO];
                        }
                      }];
-    } else if ([[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:[_settings profileUUID]] containsObject:[_settings profileName]]) {
+    } else if ([[[PFCProfileUtility sharedUtility] allProfileNamesExceptProfileWithUUID:_settings.profileUUID] containsObject:_settings.profileName]) {
 
         [_buttonSaveSheetProfileName setEnabled:NO];
         [_textFieldSheetProfileNameTitle setStringValue:@"Invalid Name"];
@@ -806,7 +804,7 @@
     // -------------------------------------------------------------------------
     //  Get new name from text filed in sheet
     // -------------------------------------------------------------------------
-    NSString *newName = [_textFieldSheetProfileName stringValue] ?: @"";
+    NSString *newName = _textFieldSheetProfileName.stringValue ?: @"";
 
     // -----------------------------------------------------------------------------
     //  Update the profile dict stored in this window controller with the same name
@@ -836,8 +834,6 @@
 } // buttonSaveSheetProfileName
 
 - (IBAction)buttonToggleInfo:(id)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     /*
      BOOL isCollapsed = [_splitViewWindow isSubviewCollapsed:[_splitViewWindow subviews][2]];
      DDLogDebug(@"View info is collapsed: %@", isCollapsed ? @"YES" : @"NO");
@@ -902,9 +898,9 @@
 
 - (void)updateTableViewSelection:(NSString *)tableViewIdentifier {
     if ([tableViewIdentifier isEqualToString:@"Profile"]) {
-        [[_library tableViewLibrary] deselectAll:self];
+        [_library.tableViewLibrary deselectAll:self];
     } else if ([tableViewIdentifier isEqualToString:@"Library"]) {
-        [[_library tableViewProfile] deselectAll:self];
+        [_library.tableViewProfile deselectAll:self];
     }
 }
 
@@ -912,7 +908,7 @@
     [_manifest updateToolbarWithTitle:@"Profile Settings" icon:[[NSWorkspace sharedWorkspace] iconForFileType:@"com.apple.mobileconfig"]];
     [_manifest saveSelectedManifest];
     [self showSettings];
-    [[_library tableViewLibrary] deselectAll:self];
-    [[_library tableViewProfile] deselectAll:self];
+    [_library.tableViewLibrary deselectAll:self];
+    [_library.tableViewProfile deselectAll:self];
 }
 @end

@@ -235,6 +235,8 @@
 
     [_profilesDict addEntriesFromDictionary:_dictSavedProfiles];
     [_profilesDict addEntriesFromDictionary:_dictUnsavedProfiles];
+
+    NSLog(@"_profilesDict=%@", _profilesDict);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

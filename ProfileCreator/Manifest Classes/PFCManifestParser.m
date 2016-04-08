@@ -68,7 +68,7 @@
     // -------------------------------------------------------------------------
     for (NSDictionary *manifestContentDict in manifestContent) {
         for (NSDictionary *resolvedManifestContentDict in [self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]) {
-            if ([[PFCManifestUtility sharedUtility] showManifestContentDict:resolvedManifestContentDict settings:settings displayKeys:displayKeys]) {
+            if ([PFCManifestUtility.sharedUtility showManifestContentDict:resolvedManifestContentDict settings:settings displayKeys:displayKeys]) {
                 [array addObject:resolvedManifestContentDict];
             }
         }
@@ -238,7 +238,7 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return @[ manifestContentDict ];
     }
 
@@ -275,7 +275,7 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return @[ manifestContentDict ];
     }
 
@@ -296,7 +296,7 @@
     //  If not, select first item in 'AvailableValues'
     // -------------------------------------------------------------------------
     NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
-    if ([selectedItem length] == 0 || ![availableValues containsObject:selectedItem]) {
+    if (selectedItem.length == 0 || ![availableValues containsObject:selectedItem]) {
         DDLogWarn(@"PopUpButton selection is invalid, selecting first available item");
         selectedItem = [availableValues firstObject];
     }
@@ -325,7 +325,7 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return @[ manifestContentDict ];
     }
 
@@ -344,8 +344,8 @@
     NSString *selectedSegmentString;
     NSArray *availableValues = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     if (selectedSegment == nil) {
-        selectedSegmentString = [availableValues firstObject];
-    } else if ([selectedSegment intValue] <= [availableValues count]) {
+        selectedSegmentString = availableValues.firstObject;
+    } else if (selectedSegment.intValue <= availableValues.count) {
         selectedSegmentString = availableValues[[selectedSegment unsignedIntegerValue]];
     } else {
         return @[ manifestContentDict ];
@@ -375,7 +375,7 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return @[ manifestContentDict ];
     }
 
@@ -414,12 +414,12 @@
     NSMutableArray *array = [[NSMutableArray alloc] init];
 
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
-    if ([valueKeys count] != 0) {
+    if (valueKeys.count != 0) {
 
         // ---------------------------------------------------------------------------
         //  If selected object (valueString) in dict valueKeys is not an array, stop.
         // ---------------------------------------------------------------------------
-        if (![[valueKeys[value] class] isSubclassOfClass:[NSArray class]]) {
+        if (![[valueKeys[value] class] isSubclassOfClass:NSArray.class]) {
             /*
              DDLogDebug(@"Selected value is: %@", value);
              DDLogDebug(@"Selected value class is: %@", [valueKeys[value] class]);
@@ -433,7 +433,7 @@
         //  The identifier is required to be able to remove the dicts when the user changes selection
         // ---------------------------------------------------------------------
         NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier] ?: @"";
-        if ([identifier length] == 0) {
+        if (identifier.length == 0) {
             return @[];
         }
 
@@ -442,7 +442,7 @@
         // ---------------------------------------------------------------------
         NSArray *valueKeyArray = [valueKeys[value] mutableCopy] ?: @[];
         for (NSDictionary *valueDict in valueKeyArray) {
-            if ([valueDict count] == 0) {
+            if (valueDict.count == 0) {
                 continue;
             }
 
@@ -457,7 +457,7 @@
                 // ---------------------------------------------------------------
                 NSString *sharedKey = valueDict[PFCManifestKeySharedKey];
                 NSDictionary *valueKeysShared = manifestContentDict[PFCManifestKeyValueKeysShared];
-                if ([valueKeysShared count] != 0) {
+                if (valueKeysShared.count != 0) {
                     mutableValueDict = valueKeysShared[sharedKey];
                 } else {
                     DDLogError(@"Shared Key is defined, but no ValueKeysShared dict was found!");

@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, PFCFolders) { kPFCFolderUserApplicationSupport = 0, k
 
 @interface PFCGeneralUtility : NSObject
 
-+ (NSString *)newProfilePath;
++ (NSString *)newProfilePathForUUID:(NSString *)uuid;
 + (NSString *)newPathInGroupFolder:(PFCFolders)groupFolder;
 + (NSURL *)profileCreatorFolder:(NSInteger)folder;
 + (void)insertSubview:(NSView *)subview inSuperview:(NSView *)superview hidden:(BOOL)hidden;

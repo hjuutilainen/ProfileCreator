@@ -53,8 +53,9 @@
     }
 }
 
-+ (NSString *)newProfilePath {
-    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", NSUUID.UUID.UUIDString];
++ (NSString *)newProfilePathForUUID:(NSString *)uuid {
+    NSAssert((uuid.length != 0), @"uuid was empty, this shouldn't happen.");
+    NSString *profileFileName = [NSString stringWithFormat:@"%@.pfcconf", uuid];
     NSURL *profileURL = [[self.class profileCreatorFolder:kPFCFolderSavedProfiles] URLByAppendingPathComponent:profileFileName];
     return profileURL.path;
 }

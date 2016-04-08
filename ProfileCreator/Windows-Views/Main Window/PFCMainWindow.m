@@ -642,12 +642,11 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // closeProfileEditorForProfileWithUUID
 
 - (void)createNewProfile {
-
     NSString *uuid = NSUUID.UUID.UUIDString;
     DDLogDebug(@"New profile uuid: %@", uuid);
 
     NSDictionary *profileDict = @{
-        PFCRuntimeKeyPath : [PFCGeneralUtility newProfilePath],
+        PFCRuntimeKeyPath : [PFCGeneralUtility newProfilePathForUUID:uuid],
         @"Config" : @{
             PFCProfileTemplateKeyName : PFCDefaultProfileName,
             PFCProfileTemplateKeyIdentifierFormat : PFCDefaultProfileIdentifierFormat,
@@ -676,6 +675,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // createNewProfile
 
 - (void)updateProfileWithUUID:(NSString *)uuid {
+    DDLogDebug(@"updateProfileWithUUID=%@", uuid);
     NSUInteger selectedIndex = NSNotFound;
     if (_selectedGroupType == kPFCProfileGroupAll) {
         if ([_arrayProfileLibrary containsObject:uuid]) {

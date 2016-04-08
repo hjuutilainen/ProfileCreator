@@ -75,7 +75,7 @@
         [alert setInformativeText:[NSString stringWithFormat:@"%@\nThis cannot be undone.", profileList]];
     }
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+    [alert beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                   completionHandler:^(NSInteger returnCode) {
                     [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
