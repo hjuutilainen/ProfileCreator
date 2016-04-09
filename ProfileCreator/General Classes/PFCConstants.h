@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, PFCStatus) {
     kPFCStatusNoProfileSelected,
     kPFCStatusNoSelection,
     kPFCStatusNoSettings,
+    kPFCStatusNotImplemented,
     kPFCStatusMultipleProfilesSelected,
     kPFCStatusErrorReadingSettings,
 };

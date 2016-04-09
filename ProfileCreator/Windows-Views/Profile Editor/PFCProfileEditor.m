@@ -135,7 +135,7 @@
         [_settings setupDisplaySettings];
 
         _viewStatusSettings = [[PFCStatusView alloc] init];
-        _viewStatusInfo = [[PFCStatusView alloc] initWithStatusType:kPFCStatusNoSelection];
+        _viewStatusInfo = [[PFCStatusView alloc] initWithStatusType:kPFCStatusNotImplemented]; // FIXME <- Change when implemented
 
         // FIXME - Not done yet
         _info = [[PFCProfileEditorInfo alloc] initWithDelegate:self];

@@ -74,6 +74,9 @@
     case kPFCStatusNoSettings:
         return @"No Settings Available";
         break;
+    case kPFCStatusNotImplemented:
+        return @"Not Implemented Yet";
+        break;
     case kPFCStatusMultipleProfilesSelected:
         return @"Profiles Selected";
         break;
@@ -112,6 +115,8 @@
         break;
     case kPFCStatusNoSettings:
         attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:16];
+        break;
+    case kPFCStatusNotImplemented:
         break;
     case kPFCStatusMultipleProfilesSelected:
         attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:14];

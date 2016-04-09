@@ -47,22 +47,22 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
 }
 
 - (void)updateInfoForManifestContentDict:(NSDictionary *)manifestContentDict {
-    if ([manifestContentDict count] == 0) {
+    if (manifestContentDict.count == 0) {
         return;
     }
 
-    [PFCGeneralUtility removeSubviewsFromView:[self view]];
-    [PFCGeneralUtility insertSubview:_viewManifestContent inSuperview:[self view] hidden:NO];
+    [PFCGeneralUtility removeSubviewsFromView:self.view];
+    [PFCGeneralUtility insertSubview:_viewManifestContent inSuperview:self.view hidden:NO];
     [self updateInfoForCellType:manifestContentDict[PFCManifestKeyCellType] ?: @"Unknown" manifestContentDict:manifestContentDict];
 }
 
 - (void)updateInfoForManifestDict:(NSDictionary *)manifestDict {
-    if ([manifestDict count] == 0) {
+    if (manifestDict.count == 0) {
         return;
     }
 
-    [PFCGeneralUtility removeSubviewsFromView:[self view]];
-    [PFCGeneralUtility insertSubview:_viewManifestContent inSuperview:[self view] hidden:NO];
+    [PFCGeneralUtility removeSubviewsFromView:self.view];
+    [PFCGeneralUtility insertSubview:_viewManifestContent inSuperview:self.view hidden:NO];
 }
 
 - (void)updatePayloadInfoForManifestContentDict:(NSDictionary *)manifestContentDict {
@@ -103,7 +103,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
     // -------------------------------------------------------------------------
     //  If current manifest doesn't define any payload, add ino
     // -------------------------------------------------------------------------
-    if ([_arrayPayloadInfo count] == 0) {
+    if (_arrayPayloadInfo.count == 0) {
         [_arrayPayloadInfo addObject:@{ @"Title" : @"No Payload Info" }];
     }
 
@@ -115,11 +115,10 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
     // -------------------------------------------------------------------------
     //  Adjust table view height to content
     // -------------------------------------------------------------------------
-    [PFCGeneralUtility setTableViewHeight:PFCTableViewPayloadInfoRowHeight * (int)[_arrayPayloadInfo count] tableView:_scrollViewPayloadInfo];
+    [PFCGeneralUtility setTableViewHeight:PFCTableViewPayloadInfoRowHeight * (int)_arrayPayloadInfo.count tableView:_scrollViewPayloadInfo];
 }
 
 - (void)updateInfoForCellType:(NSString *)cellType manifestContentDict:(NSDictionary *)manifestContentDict {
-
     [self updatePayloadInfoForManifestContentDict:manifestContentDict];
 }
 
@@ -127,7 +126,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return (NSInteger)[_arrayPayloadInfo count];
+    return (NSInteger)_arrayPayloadInfo.count;
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -135,7 +134,7 @@ int const PFCTableViewPayloadInfoRowHeight = 17;
     // ---------------------------------------------------------------------
     //  Verify the info array isn't empty, if so stop here
     // ---------------------------------------------------------------------
-    if ([_arrayPayloadInfo count] == 0 || [_arrayPayloadInfo count] < row) {
+    if (_arrayPayloadInfo.count == 0 || _arrayPayloadInfo.count < row) {
         return nil;
     }
 
