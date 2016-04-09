@@ -147,8 +147,8 @@
 } // addUnsavedProfile
 
 - (void)removeUnsavedProfileWithUUID:(NSString *)uuid {
-    NSUInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
-      return [dict[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
+    NSUInteger index = [_arrayUnsavedProfiles indexOfObjectPassingTest:^BOOL(NSDictionary *_Nonnull profile, NSUInteger idx, BOOL *_Nonnull stop) {
+      return [profile[@"Config"][PFCProfileTemplateKeyUUID] isEqualToString:uuid];
     }];
 
     if (index != NSNotFound) {
@@ -222,9 +222,7 @@
         // ---------------------------------------------------------------------
         NSString *uuid = profileDict[PFCProfileTemplateKeyUUID];
         if (uuid.length != 0) {
-            if ([_arrayUnsavedProfiles containsObject:uuid]) {
-                [_arrayUnsavedProfiles removeObject:uuid];
-            }
+            [self removeUnsavedProfileWithUUID:uuid];
         }
 
         NSDictionary *savedProfileDict = @{ PFCRuntimeKeyPath : profileURL.path, @"Config" : profileDict };
@@ -235,8 +233,6 @@
 
     [_profilesDict addEntriesFromDictionary:_dictSavedProfiles];
     [_profilesDict addEntriesFromDictionary:_dictUnsavedProfiles];
-
-    NSLog(@"_profilesDict=%@", _profilesDict);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

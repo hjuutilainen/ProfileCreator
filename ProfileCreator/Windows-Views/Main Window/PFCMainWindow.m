@@ -675,7 +675,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 } // createNewProfile
 
 - (void)updateProfileWithUUID:(NSString *)uuid {
-    DDLogDebug(@"updateProfileWithUUID=%@", uuid);
+    DDLogDebug(@"Updating profile with uuid: %@ in main window", uuid);
     NSUInteger selectedIndex = NSNotFound;
     if (_selectedGroupType == kPFCProfileGroupAll) {
         if ([_arrayProfileLibrary containsObject:uuid]) {

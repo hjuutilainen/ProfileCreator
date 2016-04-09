@@ -595,7 +595,7 @@
     NSString *profilePath = _profileDict[PFCRuntimeKeyPath];
     DDLogDebug(@"Profile runtime path: %@", profilePath);
     if (profilePath.length == 0) {
-        profilePath = [PFCGeneralUtility newProfilePathForUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID]];
+        profilePath = [PFCGeneralUtility newProfilePathForUUID:_profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""];
     }
     NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
     DDLogDebug(@"Profile save path: %@", profileURL.path);

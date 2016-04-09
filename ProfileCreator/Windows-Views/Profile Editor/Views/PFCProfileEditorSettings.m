@@ -211,7 +211,6 @@
 } // setupDisplaySettings
 
 - (NSString *)expandVariablesInString:(NSString *)string overrideValues:(NSDictionary *)overrideValues {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     if (overrideValues[@"%NAME%"] != nil) {
         string = [string stringByReplacingOccurrencesOfString:@"%NAME%" withString:overrideValues[@"%NAME%"]];
     } else {
@@ -226,7 +225,7 @@
 
     string = [string stringByReplacingOccurrencesOfString:@" " withString:@"-"];
 
-    DDLogDebug(@"Returning string: %@", string);
+    DDLogVerbose(@"Returning string: %@", string);
     return string;
 } // expandVariables:overrideValues
 
