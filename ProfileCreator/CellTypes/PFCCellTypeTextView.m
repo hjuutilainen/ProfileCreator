@@ -59,15 +59,16 @@
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        [[cellView settingTitle] setTextColor:NSColor.blackColor];
     } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        [[cellView settingTitle] setTextColor:NSColor.grayColor];
     }
 
     // -------------------------------------------------------------------------

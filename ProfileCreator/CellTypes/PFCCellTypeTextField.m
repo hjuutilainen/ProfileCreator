@@ -63,11 +63,12 @@
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -310,11 +311,12 @@
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // ---------------------------------------------------------------------
     //  Title (of the Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
 
     // -------------------------------------------------------------------------
     //  Description
@@ -729,11 +731,12 @@
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [[cellView settingDescription] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Value

@@ -174,7 +174,7 @@
     // -------------------------------------------------------------------------
     [self setIncludePlatformOSX:[platform[PFCProfileDisplaySettingsKeyPlatformOSX] boolValue]];
     NSString *osxMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion] ?: @"";
-    if ([osxMaxVersion length] != 0 && [[_popUpButtonPlatformOSXMaxVersion itemTitles] containsObject:osxMaxVersion]) {
+    if (osxMaxVersion.length != 0 && [_popUpButtonPlatformOSXMaxVersion.itemTitles containsObject:osxMaxVersion]) {
         [self setOsxMaxVersion:osxMaxVersion];
     } else {
         [self setOsxMaxVersion:@"Latest"];
@@ -182,7 +182,7 @@
     [_popUpButtonPlatformOSXMaxVersion selectItemWithTitle:_osxMaxVersion];
 
     NSString *osxMinVersion = platform[PFCProfileDisplaySettingsKeyPlatformOSXMinVersion] ?: @"";
-    if ([osxMinVersion length] != 0 && [[_popUpButtonPlatformOSXMinVersion itemTitles] containsObject:osxMinVersion]) {
+    if (osxMinVersion.length != 0 && [_popUpButtonPlatformOSXMinVersion.itemTitles containsObject:osxMinVersion]) {
         [self setOsxMinVersion:osxMinVersion];
     } else {
         [self setOsxMinVersion:@"10.7"];
@@ -194,7 +194,7 @@
     // -------------------------------------------------------------------------
     [self setIncludePlatformiOS:[platform[PFCProfileDisplaySettingsKeyPlatformiOS] boolValue]];
     NSString *iosMaxVersion = platform[PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion] ?: @"";
-    if ([iosMaxVersion length] != 0 && [[_popUpButtonPlatformiOSMaxVersion itemTitles] containsObject:iosMaxVersion]) {
+    if (iosMaxVersion.length != 0 && [_popUpButtonPlatformiOSMaxVersion.itemTitles containsObject:iosMaxVersion]) {
         [self setIosMaxVersion:iosMaxVersion];
     } else {
         [self setIosMaxVersion:@"Latest"];

@@ -65,11 +65,12 @@
     }
 
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -90,7 +91,8 @@
         if ([manifest[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
-            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
+            valueHostAttributed =
+                [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
     if ([valueHostAttributed length] != 0) {
@@ -123,7 +125,8 @@
         if ([manifest[PFCManifestKeyDefaultValuePort] length] != 0) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValuePort] length] != 0) {
-            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
+            valuePortAttributed =
+                [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
@@ -423,11 +426,12 @@
     }
 
     BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
+    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
 
     // ---------------------------------------------------------------------
     //  Title (Checkbox)
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:manifest[PFCManifestKeyTitle] ?: @""];
+    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Description
@@ -463,7 +467,8 @@
         if ([manifest[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
-            valueHostAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
+            valueHostAttributed =
+                [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
@@ -497,7 +502,8 @@
         if ([manifest[PFCManifestKeyDefaultValuePort] length] != 0) {
             valuePort = manifest[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValuePort] length] != 0) {
-            valuePortAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
+            valuePortAttributed =
+                [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 

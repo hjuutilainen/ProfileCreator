@@ -120,7 +120,7 @@
         break;
     case kPFCStatusMultipleProfilesSelected:
         attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:14];
-        label = [NSString stringWithFormat:@"%@ %@", [_counter stringValue], label];
+        label = [NSString stringWithFormat:@"%@ %@", _counter.stringValue, label];
         break;
     case kPFCStatusErrorReadingSettings:
         attributes[NSFontAttributeName] = [NSFont boldSystemFontOfSize:16];
