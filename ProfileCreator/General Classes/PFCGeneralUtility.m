@@ -166,7 +166,7 @@
     // -------------------------------------------------------------------------
     // FIXME - This should be a downloadable setting, read from appsupport first
     NSError *error = nil;
-    NSURL *osVersionsPlistURL = [NSBundle.mainBundle URLForResource:@"OSVersions" withExtension:@"plist"];
+    NSURL *osVersionsPlistURL = [[NSBundle mainBundle] URLForResource:@"OSVersions" withExtension:@"plist"];
     if (![osVersionsPlistURL checkResourceIsReachableAndReturnError:&error]) {
         DDLogError(@"%@", error.localizedDescription);
         return;
@@ -182,7 +182,7 @@
     //  Create OS X versions menu and add to popUpButtons for OS X
     // -------------------------------------------------------------------------
     NSArray *osVersionsOSX = osVersions[@"OS X"] ?: @[];
-    if ([osVersionsOSX count] == 0) {
+    if (osVersionsOSX.count == 0) {
         DDLogError(@"OS Versions array for OS X is empty!");
     } else {
 
@@ -198,7 +198,7 @@
             //  Add separator if major version of OS changed
             // -----------------------------------------------------------------
             osxVersionArray = [osxVersion componentsSeparatedByString:@"."];
-            if (2 <= [osxVersionArray count]) {
+            if (2 <= osxVersionArray.count) {
                 int majorVersion = [(NSString *)osxVersionArray[1] intValue];
                 if (lastMajorVersion != majorVersion) {
                     [menuOSX addItem:[NSMenuItem separatorItem]];

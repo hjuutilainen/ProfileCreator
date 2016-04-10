@@ -62,7 +62,7 @@
 
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
 
-    NSImage *icon = [NSBundle.mainBundle imageForResource:manifest[PFCManifestKeyIconName]];
+    NSImage *icon = [[NSBundle mainBundle] imageForResource:manifest[PFCManifestKeyIconName]];
     if (icon) {
         return icon;
     }

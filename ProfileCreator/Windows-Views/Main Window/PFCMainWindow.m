@@ -913,8 +913,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         // ---------------------------------------------------------------------
         //  Verify the profile has any content
         // ---------------------------------------------------------------------
-        if ([profileDict count] == 0) {
-
+        if (profileDict.count == 0) {
             [_preview showProfilePreviewError];
             return;
         }
@@ -984,7 +983,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
     // FIXME - HERE DO VERIFICATION!
 
-    if ([settings count] != 0) {
+    if (settings.count != 0) {
         PFCProfileExport *export = [[PFCProfileExport alloc] initWithProfileSettings:settingsProfile mainWindow:self];
 
         NSString *profileName = settingsProfile[@"Config"][PFCProfileTemplateKeyName] ?: @"";

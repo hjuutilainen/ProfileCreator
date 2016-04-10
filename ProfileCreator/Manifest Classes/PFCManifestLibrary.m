@@ -78,7 +78,7 @@
     // ---------------------------------------------------------------------
     //  Get path to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
-    NSURL *appleManifestFolderURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"Manifests/Apple"];
+    NSURL *appleManifestFolderURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"Manifests/Apple"];
     if (![appleManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
@@ -179,7 +179,7 @@
     // ---------------------------------------------------------------------
     //  Get path to manifest folder inside ProfileCreator.app
     // ---------------------------------------------------------------------
-    NSURL *mcxManifestFolderURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"Manifests/MCX"];
+    NSURL *mcxManifestFolderURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"Manifests/MCX"];
     if (![mcxManifestFolderURL checkResourceIsReachableAndReturnError:error]) {
         return nil;
     } else {
@@ -297,7 +297,7 @@
         break;
     }
 
-    if ([manifestLibrary count] == 0) {
+    if (manifestLibrary.count == 0) {
         DDLogError(@"%@", [error localizedDescription]);
         return @{};
     }

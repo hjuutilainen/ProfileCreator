@@ -142,12 +142,12 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
 
@@ -412,22 +412,22 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
 
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSString *value = contentDictSettings[PFCSettingsKeyValueTextField];
-    if ([value length] == 0) {
+    if (value.length == 0) {
         value = contentDictSettings[PFCManifestKeyDefaultValueTextField];
     }
 
-    if (required && [value length] == 0) {
+    if (required && value.length == 0) {
         return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
 

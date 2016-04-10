@@ -566,7 +566,7 @@
     NSError *error = nil;
     [_arrayLibraryMCX removeAllObjects];
     NSArray *libraryMCXManifests = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
-    if ([libraryMCXManifests count] != 0) {
+    if (libraryMCXManifests.count != 0) {
         for (NSDictionary *manifest in libraryMCXManifests) {
             if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
@@ -737,7 +737,7 @@
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
-    if (_clickedPayloadTableViewRow < 0 || [tableViewArray count] < _clickedPayloadTableViewRow) {
+    if (_clickedPayloadTableViewRow < 0 || tableViewArray.count < _clickedPayloadTableViewRow) {
         return;
     }
 

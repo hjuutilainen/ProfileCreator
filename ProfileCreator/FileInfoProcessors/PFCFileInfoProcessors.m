@@ -88,12 +88,12 @@
     fileInfoDict[PFCFileInfoDescriptionTop] = [_fileURL path] ?: @"";
 
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[_fileURL path] error:&error];
-    if ([fileAttributes count] != 0) {
+    if (fileAttributes.count != 0) {
         NSString *fileSize = [NSByteCountFormatter stringFromByteCount:(long long)[fileAttributes fileSize] countStyle:NSByteCountFormatterCountStyleFile];
         fileInfoDict[PFCFileInfoLabelMiddle] = @"Size:";
         fileInfoDict[PFCFileInfoDescriptionMiddle] = fileSize ?: @"";
     } else {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 
     return [fileInfoDict copy];
@@ -147,12 +147,12 @@
         fileInfoDict[PFCFileInfoDescriptionMiddle] = version ?: @"";
 
         NSArray *publishers = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemPublishers));
-        if ([publishers count] != 0) {
+        if (publishers.count != 0) {
             fileInfoDict[PFCFileInfoLabelBottom] = @"Publisher:";
             fileInfoDict[PFCFileInfoDescriptionBottom] = [publishers componentsJoinedByString:@", "];
         } else {
             NSString *creator = CFBridgingRelease(MDItemCopyAttribute(fontMDItem, kMDItemCreator));
-            if ([creator length] != 0) {
+            if (creator.length != 0) {
                 fileInfoDict[PFCFileInfoLabelBottom] = @"Creator:";
                 fileInfoDict[PFCFileInfoDescriptionBottom] = creator;
             }

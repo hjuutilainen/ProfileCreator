@@ -47,13 +47,13 @@
     [_progressIndicatorTestOD startAnimation:self];
 
     void (^odConnectionStatusAndNodes)(NSError *, NSArray *) = ^void(NSError *error, NSArray *nodes) {
-      if (error != nil || [nodes count] == 0) {
+      if (error != nil || nodes.count == 0) {
           [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
           [[NSAlert alertWithError:error] beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
                                                  completionHandler:^(NSModalResponse returnCode){
 
                                                  }];
-      } else if ([nodes count] != 0) {
+      } else if (nodes.count != 0) {
           [[NSUserDefaults standardUserDefaults] setObject:nodes forKey:@"ODNodes"];
           DDLogDebug(@"Nodes returned from Open Directory: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"ODNodes"]);
       }

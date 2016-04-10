@@ -222,7 +222,7 @@
     // FIXME - This is incorrect when multiple payloads are selected from the same manifest
     [_textFieldPayloadCount setStringValue:[NSString stringWithFormat:@"%lu %@", (unsigned long)selectedDomains.count, (selectedDomains.count == 1) ? @"Payload" : @"Payloads"]];
 
-    if ([selectedDomains count] <= 1) {
+    if (selectedDomains.count <= 1) {
         [_textFieldExportError setStringValue:@"No Payload Selected"];
         [_buttonProfileExport setEnabled:NO];
         return;

@@ -111,17 +111,17 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 
       NSError *error = nil;
       NSArray *manifests = [[PFCManifestLibrary sharedLibrary] libraryAll:&error acceptCached:NO];
-      if ([manifests count] != 0) {
+      if (manifests.count != 0) {
           dispatch_async(dispatch_get_main_queue(), ^{
-            [self setManifestCount:@([manifests count])];
+            [self setManifestCount:@(manifests.count)];
           });
-          DDLogInfo(@"Found %lu manifests...", (unsigned long)[manifests count]);
+          DDLogInfo(@"Found %lu manifests...", (unsigned long)manifests.count);
 
           PFCManifestLint *linter = [[PFCManifestLint alloc] init];
           [self setArrayReportAll:[linter reportForManifests:manifests]];
           // DDLogDebug(@"Lint Report: %@", _arrayReportAll);
 
-          if ([_arrayReportAll count] != 0) {
+          if (_arrayReportAll.count != 0) {
               dispatch_async(dispatch_get_main_queue(), ^{
                 [_tableViewReport beginUpdates];
                 [_arrayReport removeAllObjects];
@@ -156,7 +156,7 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu {
-    NSInteger clickedRow = [_tableViewReport clickedRow];
+    NSInteger clickedRow = _tableViewReport.clickedRow;
 
     if (-1 < clickedRow) {
 
@@ -171,7 +171,7 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 }
 
 - (void)showSouceInFinder:(NSMenuItem *)menuItem {
-    NSInteger clickedRow = [menuItem tag] ?: -1;
+    NSInteger clickedRow = menuItem.tag ?: -1;
     if (-1 < clickedRow) {
         NSDictionary *lintDict = _arrayReport[clickedRow];
         NSURL *manifestURL = [NSURL fileURLWithPath:lintDict[@"ManifestPath"] ?: @""];
@@ -196,9 +196,9 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    NSInteger clickedRow = [menuItem tag] ?: -1;
+    NSInteger clickedRow = menuItem.tag ?: -1;
     if (-1 < clickedRow) {
-        if ([[menuItem title] isEqualToString:@"Show Source in Finder"]) {
+        if ([menuItem.title isEqualToString:@"Show Source in Finder"]) {
             NSDictionary *lintDict = _arrayReport[clickedRow];
             NSURL *manifestURL = [NSURL fileURLWithPath:lintDict[@"ManifestPath"] ?: @""];
             return [manifestURL checkResourceIsReachableAndReturnError:nil];
@@ -222,7 +222,7 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_arrayReport count];
+    return _arrayReport.count;
 } // numberOfRowsInTableView
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ static NSParagraphStyle *paragraphStyle(NSTextAlignment textAlignment) {
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSDictionary *lintDict = _arrayReport[row];
-    NSString *identifier = [tableColumn identifier];
+    NSString *identifier = tableColumn.identifier;
     if ([@[ @"ManifestDomain", @"ManifestKey", @"ManifestKeyPath", @"LintErrorMessage", @"LintErrorSuggestedRecovery" ] containsObject:identifier]) {
         NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"Text" owner:self];
         [[cellView textField] setStringValue:lintDict[identifier]];

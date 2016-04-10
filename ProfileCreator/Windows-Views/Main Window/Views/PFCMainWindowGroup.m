@@ -159,7 +159,7 @@
     if (_maxRows < (int)_arrayGroup.count) {
         [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_maxRows) tableView:_scrollViewGroup];
     } else {
-        [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)[_arrayGroup count]) tableView:_scrollViewGroup];
+        [PFCGeneralUtility setTableViewHeight:(PFCTableViewGroupRowHeight * (int)_arrayGroup.count) tableView:_scrollViewGroup];
     }
 }
 
@@ -201,7 +201,7 @@
         // ---------------------------------------------------------------------
         //  Verify the profile array isn't empty, if so stop here
         // ---------------------------------------------------------------------
-        if ([_arrayGroup count] == 0 || [_arrayGroup count] < row) {
+        if (_arrayGroup.count == 0 || _arrayGroup.count < row) {
             return nil;
         }
 
@@ -243,7 +243,7 @@
     NSIndexSet *selectedRows = [sender selectedRowIndexes];
     DDLogDebug(@"Selected rows: %@", selectedRows);
 
-    if ([selectedRows count] == 0) {
+    if (selectedRows.count == 0) {
         return NO;
     }
 
@@ -364,7 +364,7 @@
     if (index != NSNotFound) {
         NSMutableDictionary *group = [_arrayGroup[index] mutableCopy];
         NSMutableDictionary *groupConfig = [group[@"Config"] mutableCopy];
-        if ([groupConfig count] != 0) {
+        if (groupConfig.count != 0) {
             NSMutableArray *profiles = [groupConfig[PFCProfileGroupKeyProfiles] mutableCopy];
             [profiles removeObjectsInArray:profileUUIDs];
             groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];
@@ -391,7 +391,7 @@
     [[_arrayGroup copy] enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
       NSMutableDictionary *group = [dict mutableCopy] ?: @{};
       NSMutableDictionary *groupConfig = [dict[@"Config"] mutableCopy];
-      if ([groupConfig count] != 0) {
+      if (groupConfig.count != 0) {
           NSMutableArray *profiles = [groupConfig[PFCProfileGroupKeyProfiles] mutableCopy] ?: [[NSMutableArray alloc] init];
           [profiles removeObjectsInArray:profileUUIDs];
           groupConfig[PFCProfileGroupKeyProfiles] = [profiles copy];

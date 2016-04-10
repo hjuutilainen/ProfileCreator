@@ -192,7 +192,7 @@
     NSError *error = nil;
     NSURL *fileURL = [NSURL fileURLWithPath:settings[PFCSettingsKeyFilePath]];
     if (![fileURL checkResourceIsReachableAndReturnError:&error]) {
-        DDLogError(@"%@", [error localizedDescription]);
+        DDLogError(@"%@", error.localizedDescription);
     }
 
     // ---------------------------------------------------------------------
@@ -244,7 +244,7 @@
     }
 
     NSArray *allowedFileTypes = manifestContentDict[PFCManifestKeyAllowedFileTypes];
-    if ([allowedFileTypes count] != 0) {
+    if (allowedFileTypes.count != 0) {
         NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
         NSString *fileType;
         if ([fileURL getResourceValue:&fileType forKey:NSURLTypeIdentifierKey error:&error]) {
@@ -260,7 +260,7 @@
                 return @{ identifier : @[ [PFCError verificationReportWithMessage:@"Invalid File Type" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
             }
         } else {
-            DDLogError(@"%@", [error localizedDescription]);
+            DDLogError(@"%@", error.localizedDescription);
         }
     }
 

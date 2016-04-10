@@ -22,6 +22,7 @@
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
+#import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
 #import "PFCTableViewCellsSettingsTableView.h"
@@ -92,7 +93,7 @@
 } // controlTextDidChange
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return (NSInteger)[_tableViewContent count];
+    return (NSInteger)_tableViewContent.count;
 } // numberOfRowsInTableView
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -100,7 +101,7 @@
     // ---------------------------------------------------------------------
     //  Verify the table view content array isn't empty, if so stop here
     // ---------------------------------------------------------------------
-    if ([_tableViewContent count] < row || [_tableViewContent count] == 0) {
+    if (_tableViewContent.count < row || _tableViewContent.count == 0) {
         return nil;
     }
 
@@ -364,7 +365,7 @@
     // ---------------------------------------------------------------------
     //  If only one column, remove header view
     // ---------------------------------------------------------------------
-    if ([tableColumnsArray count] <= 1) {
+    if (tableColumnsArray.count <= 1) {
         [[cellView settingTableView] setHeaderView:nil];
     } else {
         [[cellView settingTableView] setHeaderView:[[NSTableHeaderView alloc] init]];
@@ -399,6 +400,12 @@
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
     NSMutableArray *lintReport = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  Title/Description
+    // -------------------------------------------------------------------------
+    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
 
     return [lintReport copy];
 }

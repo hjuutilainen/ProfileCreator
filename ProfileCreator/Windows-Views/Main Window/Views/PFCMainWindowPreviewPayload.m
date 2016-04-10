@@ -111,7 +111,7 @@
     // ---------------------------------------------------------------------
     //  Verify the info array isn't empty, if so stop here
     // ---------------------------------------------------------------------
-    if ([_arrayPayloadInfo count] == 0 || [_arrayPayloadInfo count] < row) {
+    if (_arrayPayloadInfo.count == 0 || _arrayPayloadInfo.count < row) {
         return nil;
     }
 

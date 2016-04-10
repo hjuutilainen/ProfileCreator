@@ -532,7 +532,7 @@
     //  Check that all settings in the template on disk math the current settings
     // ---------------------------------------------------------------------------
     NSDictionary *profileDict = [NSDictionary dictionaryWithContentsOfURL:profileURL];
-    if ([profileDict count] == 0) {
+    if (profileDict.count == 0) {
         return NO;
     } else {
         [_manifest saveSelectedManifest];
@@ -540,25 +540,25 @@
         // FIXME - Maybe check all before returning for logging purposes?
 
         DDLogDebug(@"Saved 'Name': %@", profileDict[PFCProfileTemplateKeyName]);
-        DDLogDebug(@"Current 'Name': %@", [_settings profileName]);
+        DDLogDebug(@"Current 'Name': %@", _settings.profileName);
 
-        if (![profileDict[PFCProfileTemplateKeyName] isEqualToString:[_settings profileName]]) {
+        if (![profileDict[PFCProfileTemplateKeyName] isEqualToString:_settings.profileName]) {
             return NO;
         }
 
         DDLogDebug(@"Saved 'UUID': %@", profileDict[PFCProfileTemplateKeyUUID]);
-        DDLogDebug(@"Current 'UUID': %@", [_settings profileUUID]);
+        DDLogDebug(@"Current 'UUID': %@", _settings.profileUUID);
 
-        if (![profileDict[PFCProfileTemplateKeyUUID] isEqualToString:[_settings profileUUID]]) {
+        if (![profileDict[PFCProfileTemplateKeyUUID] isEqualToString:_settings.profileUUID]) {
             return NO;
         }
 
         // FIXME - Should this be a single dict, or is this ok? Should I be rewrite how settings are handled.
 
         DDLogDebug(@"Saved 'DisplaySettings': %@", profileDict[PFCProfileTemplateKeyDisplaySettings]);
-        DDLogDebug(@"Current 'DisplaySettings': %@", [self currentDisplaySettings]);
+        DDLogDebug(@"Current 'DisplaySettings': %@", self.currentDisplaySettings);
 
-        if (![profileDict[PFCProfileTemplateKeyDisplaySettings] isEqualToDictionary:[self currentDisplaySettings] ?: @{}]) {
+        if (![profileDict[PFCProfileTemplateKeyDisplaySettings] isEqualToDictionary:self.currentDisplaySettings ?: @{}]) {
             return NO;
         }
 

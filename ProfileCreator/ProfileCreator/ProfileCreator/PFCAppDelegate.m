@@ -48,7 +48,7 @@
     //  Register user defaults
     // --------------------------------------------------------------
     NSError *error;
-    NSURL *defaultSettingsPath = [NSBundle.mainBundle URLForResource:@"Defaults" withExtension:@"plist"];
+    NSURL *defaultSettingsPath = [[NSBundle mainBundle] URLForResource:@"Defaults" withExtension:@"plist"];
     if ([defaultSettingsPath checkResourceIsReachableAndReturnError:&error]) {
         NSDictionary *defaultSettingsDict = [NSDictionary dictionaryWithContentsOfURL:defaultSettingsPath];
         if (defaultSettingsDict.count != 0) {

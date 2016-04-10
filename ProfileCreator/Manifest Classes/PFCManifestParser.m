@@ -506,7 +506,7 @@
 - (NSDictionary *)manifestFromPlistAtURL:(NSURL *)fileURL settings:(NSMutableDictionary *)settings {
 
     NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:fileURL] ?: @{};
-    if ([plistDict count] == 0) {
+    if (plistDict.count == 0) {
         return plistDict;
     }
 
@@ -534,7 +534,7 @@
     NSError *error = nil;
     if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
         NSDictionary *mcxManifest = [NSDictionary dictionaryWithContentsOfURL:fileURL];
-        if ([mcxManifest count] != 0) {
+        if (mcxManifest.count != 0) {
 
             // ---------------------------------------------------------------------
             //  Create Manifest Root
@@ -1027,7 +1027,7 @@
         //  Verify the current manifest dict, and add all errors and warnings to the verification report
         // ----------------------------------------------------------------------------------------------
         NSDictionary *settingsError = [self settingsErrorForManifestContentDict:manifestContentDict settings:settings displayKeys:displayKeys];
-        if ([settingsError count] != 0) {
+        if (settingsError.count != 0) {
             [report addEntriesFromDictionary:settingsError];
         }
     }

@@ -40,7 +40,7 @@
         ODNode *node = [ODNode nodeWithSession:session type:kODNodeTypeAuthentication error:&error];
         if (node != nil) {
             NSArray *subnodes = [node subnodeNamesAndReturnError:&error];
-            if ([subnodes count] != 0) {
+            if (subnodes.count != 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                   self.odConnectionStatusAndNodes(nil, subnodes);
                 });

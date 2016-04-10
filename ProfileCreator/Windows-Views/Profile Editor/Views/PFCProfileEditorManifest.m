@@ -219,7 +219,7 @@
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
     //          This is not optimal, should add those after the content was calculated
     // ------------------------------------------------------------------------------------------
-    if (3 <= [manifestContentArray count]) {
+    if (3 <= manifestContentArray.count) {
         [_arrayManifestContent addObjectsFromArray:manifestContentArray];
         [self updateToolbarWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
         [_profileEditor hideManifestStatus];
@@ -235,7 +235,7 @@
 } // buttonAddPayload
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
-    if (row < [_arrayManifestContent count]) {
+    if (row < _arrayManifestContent.count) {
         NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row] ?: @{};
         return [[PFCCellTypes sharedInstance] rowHeightForCellType:manifestContentDict[PFCManifestKeyCellType]];
     }
@@ -251,7 +251,7 @@
       }
     }];
 
-    if ([manifestContent count] != 0) {
+    if (manifestContent.count != 0) {
 
         // ---------------------------------------------------------------------
         //  Add padding row to top of table view
@@ -331,7 +331,7 @@
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
     //          This is not optimal, should add those after the content was calculated
     // ------------------------------------------------------------------------------------------
-    if (3 <= [manifestContentArray count]) {
+    if (3 <= manifestContentArray.count) {
         [_arrayManifestContent addObjectsFromArray:[manifestContentArray copy]];
         [self updateToolbarWithTitle:manifest[PFCManifestKeyTitle] ?: @"" icon:[[PFCManifestUtility sharedUtility] iconForManifest:manifest]];
         [_profileEditor showManifest];
@@ -417,7 +417,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [_arrayManifestContent count];
+    return _arrayManifestContent.count;
 } // numberOfRowsInTableView
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -428,11 +428,11 @@
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 
-    if ([_arrayManifestContent count] < row || [_arrayManifestContent count] == 0) {
+    if (_arrayManifestContent.count < row || _arrayManifestContent.count == 0) {
         return nil;
     }
 
-    NSString *tableColumnIdentifier = [tableColumn identifier];
+    NSString *tableColumnIdentifier = tableColumn.identifier;
     NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
@@ -479,7 +479,7 @@
     // ---------------------------------------------------------------------
     //  Verify the settings array isn't empty, if so stop here
     // ---------------------------------------------------------------------
-    if ([_arrayManifestContent count] <= 0) {
+    if (_arrayManifestContent.count <= 0) {
         return;
     }
 
@@ -490,7 +490,7 @@
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     if (![cellType isEqualToString:PFCCellTypePadding]) {
         NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-        if ([identifier length] == 0) {
+        if (identifier.length == 0) {
             return;
         }
 
@@ -610,20 +610,18 @@
 } // tabIndexSelected:sender
 
 - (NSMutableDictionary *)settingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Check that manifest array contains any settings dict, else return new
     // -------------------------------------------------------------------------
     NSArray *manifestSettings = [_profileEditor profileSettings][manifestDomain][@"Settings"] ?: @[];
-    if ([manifestSettings count] == 0) {
+    if (manifestSettings.count == 0) {
         return [[NSMutableDictionary alloc] init];
     }
 
     // -------------------------------------------------------------------------
     //  Check that selected index exist in settings, else return new
     // -------------------------------------------------------------------------
-    if ([manifestSettings count] <= manifestTabIndex) {
+    if (manifestSettings.count <= manifestTabIndex) {
         return [[NSMutableDictionary alloc] init];
     }
 
@@ -735,13 +733,13 @@
     NSString *payloadTabTitleIndex = _selectedManifest[PFCManifestKeyPayloadTabTitle] ?: @"";
     DDLogDebug(@"Manifest tab title uuid: %@", payloadTabTitleIndex);
 
-    if ([payloadTabTitleIndex length] != 0) {
+    if (payloadTabTitleIndex.length != 0) {
         manifestSettings = [_profileEditor profileSettings][manifestDomain][@"Settings"];
     }
 
-    if ([_arrayManifestTabs count] != 0) {
+    if (_arrayManifestTabs.count != 0) {
         [_arrayManifestTabs enumerateObjectsUsingBlock:^(id _Nonnull __unused obj, NSUInteger idx, BOOL *_Nonnull __unused stop) {
-          if (idx < [manifestSettings count]) {
+          if (idx < manifestSettings.count) {
               NSDictionary *settings = manifestSettings[idx][payloadTabTitleIndex] ?: @{};
 
               // FIXME - Should specify what key should be used in the dict, now just use "Value" for testing
@@ -780,11 +778,11 @@
 
     NSMutableArray *settingsError = [[NSMutableArray alloc] init];
 
-    DDLogDebug(@"Enumerating all manifest settings (%lu) for manifest domain: %@ and updating errors", (unsigned long)[manifestSettings count], manifestDomain);
+    DDLogDebug(@"Enumerating all manifest settings (%lu) for manifest domain: %@ and updating errors", (unsigned long)manifestSettings.count, manifestDomain);
     [manifestSettings enumerateObjectsUsingBlock:^(id _Nonnull __unused obj, NSUInteger idx, BOOL *_Nonnull __unused stop) {
 
       DDLogDebug(@"Tab index: %lu", (unsigned long)idx);
-      if (idx < [manifestSettings count]) {
+      if (idx < manifestSettings.count) {
 
           NSDictionary *settings;
           if ([manifest isEqualToDictionary:_selectedManifest] && idx == _selectedTab) {
@@ -800,16 +798,16 @@
               [[PFCManifestParser sharedParser] settingsErrorForManifestContent:manifestContent settings:settings displayKeys:_profileEditor.settings.displayKeys] ?: @{};
           [settingsError addObject:verificationReport];
 
-          NSNumber *errorCount = @([[verificationReport allKeys] count]) ?: @0;
-          DDLogDebug(@"Tab errors: %ld", (long)[errorCount integerValue]);
+          NSNumber *errorCount = @(verificationReport.allKeys.count) ?: @0;
+          DDLogDebug(@"Tab errors: %ld", (long)errorCount.integerValue);
 
           combinedErrors += [errorCount integerValue];
           DDLogDebug(@"Manifest errors: %ld", (long)combinedErrors);
 
-          if (updateTabBar && idx < [_arrayManifestTabs count]) {
+          if (updateTabBar && idx < _arrayManifestTabs.count) {
               [self updatePayloadTabErrorCount:errorCount tabIndex:idx];
           }
-      } else if (updateTabBar && idx < [_arrayManifestTabs count]) {
+      } else if (updateTabBar && idx < _arrayManifestTabs.count) {
           [self updatePayloadTabErrorCount:@0 tabIndex:idx];
       }
     }];
@@ -861,22 +859,18 @@
 } // updateTabCountForManifestDomain
 
 - (void)saveTabIndexSelected:(NSUInteger)tabIndexSelected forManifestDomain:(NSString *)manifestDomain {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     NSMutableDictionary *settingsManifestRoot = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     settingsManifestRoot[@"SelectedTab"] = @(tabIndexSelected);
     [_profileEditor profileSettings][manifestDomain] = [settingsManifestRoot mutableCopy];
 } // saveTabIndexSelected:forManifestDomain
 
 - (void)saveSelectedManifest {
-    if ([_selectedManifest count] != 0) {
+    if (_selectedManifest.count != 0) {
         [self saveSettingsForManifestWithDomain:_selectedManifest[PFCManifestKeyDomain] settings:_settingsManifest manifestTabIndex:_selectedTab];
     }
 }
 
 - (void)saveSettingsForManifestWithDomain:(NSString *)manifestDomain settings:(NSMutableDictionary *)settings manifestTabIndex:(NSInteger)manifestTabIndex {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     DDLogDebug(@"Saving settings for manifest domain: %@", manifestDomain);
     DDLogDebug(@"Settings to save: %@", settings);
 
@@ -960,7 +954,7 @@
     // -------------------------------------------------------------------------
     //  Sanity check the array of views so the selection is valid
     // -------------------------------------------------------------------------
-    if ([_arrayManifestTabs count] <= 1 || [_arrayManifestTabs count] < tabIndex) {
+    if (_arrayManifestTabs.count <= 1 || _arrayManifestTabs.count < tabIndex) {
         return;
     }
 
@@ -982,7 +976,7 @@
     if (tabIndex == _selectedTab) {
         DDLogVerbose(@"Currently selected tab was closed");
 
-        if (tabIndex == [_arrayManifestTabs count]) {
+        if (tabIndex == _arrayManifestTabs.count) {
 
             // --------------------------------------------------------------------
             //  If the closed tab was last in the view, select the "new" last view
@@ -1237,17 +1231,17 @@
         [openPanel setCanCreateDirectories:NO];
         [openPanel setAllowsMultipleSelection:NO];
 
-        if ([allowedFileTypes count] != 0) {
+        if (allowedFileTypes.count != 0) {
             [openPanel setAllowedFileTypes:allowedFileTypes];
         }
 
-        [openPanel beginSheetModalForWindow:[_profileEditor window]
+        [openPanel beginSheetModalForWindow:_profileEditor.window
                           completionHandler:^(NSInteger result) {
                             if (result == NSModalResponseOK) {
-                                NSArray *selectedURLs = [openPanel URLs];
-                                NSURL *fileURL = [selectedURLs firstObject];
+                                NSArray *selectedURLs = openPanel.URLs;
+                                NSURL *fileURL = selectedURLs.firstObject;
 
-                                settingsDict[PFCSettingsKeyFilePath] = [fileURL path];
+                                settingsDict[PFCSettingsKeyFilePath] = fileURL.path;
                                 _settingsManifest[identifier] = [settingsDict copy];
 
                                 [_tableViewManifestContent beginUpdates];
@@ -1545,7 +1539,7 @@
     // -------------------------------------------------------------------------
     NSMutableDictionary *manifestDomainSettings = [[_profileEditor profileSettings][manifestDomain] mutableCopy] ?: [[NSMutableDictionary alloc] init];
     NSMutableArray *manifestSettings = [manifestDomainSettings[@"Settings"] mutableCopy] ?: [[NSMutableArray alloc] init];
-    if ([manifestSettings count] != 0 || manifestTabIndex < [manifestSettings count]) {
+    if (manifestSettings.count != 0 || manifestTabIndex < manifestSettings.count) {
         [manifestSettings removeObjectAtIndex:manifestTabIndex];
         manifestDomainSettings[@"Settings"] = [manifestSettings mutableCopy];
         [_profileEditor profileSettings][manifestDomain] = [manifestDomainSettings mutableCopy];
@@ -1555,7 +1549,7 @@
     //  Remove 'SettingsError'
     // -------------------------------------------------------------------------
     NSMutableArray *manifestSettingsError = [manifestDomainSettings[@"SettingsError"] mutableCopy] ?: [[NSMutableArray alloc] init];
-    if ([manifestSettingsError count] != 0 || manifestTabIndex < [manifestSettingsError count]) {
+    if (manifestSettingsError.count != 0 || manifestTabIndex < manifestSettingsError.count) {
         [manifestSettingsError removeObjectAtIndex:manifestTabIndex];
         manifestDomainSettings[@"SettingsError"] = [manifestSettingsError mutableCopy];
         [_profileEditor profileSettings][manifestDomain] = [manifestDomainSettings mutableCopy];
@@ -1568,7 +1562,7 @@
     // ----------------------------------------------------------------------------------------
     //  Sanity check so that row isn't less than 0 and that it's within the count of the array
     // ----------------------------------------------------------------------------------------
-    if (row < 0 || [_arrayManifestContent count] < row) {
+    if (row < 0 || _arrayManifestContent.count < row) {
         return;
     }
 

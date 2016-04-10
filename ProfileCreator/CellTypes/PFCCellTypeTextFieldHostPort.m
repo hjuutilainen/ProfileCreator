@@ -180,12 +180,12 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
     // Host
@@ -194,11 +194,11 @@
     BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     NSString *valueHost = contentDictSettings[PFCSettingsKeyValueHost];
-    if ([valueHost length] == 0) {
+    if (valueHost.length == 0) {
         valueHost = contentDictSettings[PFCManifestKeyDefaultValueHost];
     }
 
-    if (requiredHost && [valueHost length] == 0) {
+    if (requiredHost && valueHost.length == 0) {
         [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
 
@@ -206,15 +206,15 @@
     BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     NSString *valuePort = contentDictSettings[PFCSettingsKeyValuePort];
-    if ([valuePort length] == 0) {
+    if (valuePort.length == 0) {
         valuePort = contentDictSettings[PFCManifestKeyDefaultValuePort];
     }
 
-    if (requiredPort && [valuePort length] == 0) {
+    if (requiredPort && valuePort.length == 0) {
         [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
 
-    if ([array count] != 0) {
+    if (array.count != 0) {
         return @{identifier : [array copy]};
     }
 
@@ -565,12 +565,12 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSDictionary *contentDictSettings = settings[identifier];
-    if ([contentDictSettings count] == 0) {
+    if (contentDictSettings.count == 0) {
         DDLogDebug(@"No settings!");
     }
     // Host
@@ -579,11 +579,11 @@
     BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     NSString *valueHost = contentDictSettings[PFCSettingsKeyValueHost];
-    if ([valueHost length] == 0) {
+    if (valueHost.length == 0) {
         valueHost = contentDictSettings[PFCManifestKeyDefaultValueHost];
     }
 
-    if (requiredHost && [valueHost length] == 0) {
+    if (requiredHost && valueHost.length == 0) {
         [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
 
@@ -599,7 +599,7 @@
         [array addObject:[PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict]];
     }
 
-    if ([array count] != 0) {
+    if (array.count != 0) {
         return @{identifier : [array copy]};
     }
 
