@@ -521,7 +521,7 @@
     NSArray *libraryAppleManifests = [[PFCManifestLibrary sharedLibrary] libraryApple:&error acceptCached:YES];
     if (libraryAppleManifests.count != 0) {
         for (NSDictionary *manifest in libraryAppleManifests) {
-            if ([PFCAvailability.sharedInstance showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
+            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
                     [_arrayProfile addObject:[manifest copy]];
@@ -565,10 +565,10 @@
 - (void)updateManifestLibraryMCX:(NSArray *)enabledPayloadDomains {
     NSError *error = nil;
     [_arrayLibraryMCX removeAllObjects];
-    NSArray *libraryMCXManifests = [PFCManifestLibrary.sharedLibrary libraryMCX:&error acceptCached:YES];
+    NSArray *libraryMCXManifests = [[PFCManifestLibrary sharedLibrary] libraryMCX:&error acceptCached:YES];
     if ([libraryMCXManifests count] != 0) {
         for (NSDictionary *manifest in libraryMCXManifests) {
-            if ([PFCAvailability.sharedInstance showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
+            if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
                 if ([enabledPayloadDomains containsObject:manifestDomain]) {
                     [_arrayProfile addObject:[manifest copy]];
@@ -749,7 +749,7 @@
     NSError *error = nil;
     NSURL *fileURL = [NSURL fileURLWithPath:manifestDict[PFCRuntimeKeyPath] ?: @""];
     if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
-        [NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[ fileURL ]];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
     } else {
         DDLogError(@"%@", error.localizedDescription);
     }

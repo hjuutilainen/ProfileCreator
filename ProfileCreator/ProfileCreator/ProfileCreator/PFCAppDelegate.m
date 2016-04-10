@@ -113,7 +113,7 @@
     // --------------------------------------------------------------
     //  Get Main Menu
     // --------------------------------------------------------------
-    NSMenu *mainMenu = NSApplication.sharedApplication.mainMenu;
+    NSMenu *mainMenu = [NSApplication sharedApplication].mainMenu;
 
     // --------------------------------------------------------------
     //  Get Main Menu -> ProfileCreator

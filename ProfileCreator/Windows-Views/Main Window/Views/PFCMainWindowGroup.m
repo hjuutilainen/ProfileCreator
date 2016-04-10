@@ -316,7 +316,7 @@
 
         NSError *error = nil;
         if (![self saveGroup:group error:&error]) {
-            [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+            [[NSAlert alertWithError:error] beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                                                    completionHandler:^(NSModalResponse returnCode){
 
                                                    }];
@@ -346,7 +346,7 @@
     _arrayGroup[row] = [group copy];
     NSError *error = nil;
     if (![self saveGroup:[group copy] error:&error]) {
-        [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+        [[NSAlert alertWithError:error] beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                                                completionHandler:^(NSModalResponse returnCode){
 
                                                }];
@@ -376,7 +376,7 @@
 
             NSError *error = nil;
             if (![self saveGroup:group error:&error]) {
-                [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+                [[NSAlert alertWithError:error] beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                                                        completionHandler:^(NSModalResponse returnCode){
 
                                                        }];
@@ -399,7 +399,7 @@
           _arrayGroup[idx] = [group copy];
           NSError *error = nil;
           if (![self saveGroup:group error:&error]) {
-              [[NSAlert alertWithError:error] beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+              [[NSAlert alertWithError:error] beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                                                      completionHandler:^(NSModalResponse returnCode){
 
                                                      }];
@@ -526,7 +526,7 @@
 - (NSArray *)profileArrayForGroup:(NSDictionary *)group {
     switch (_group) {
     case kPFCProfileGroupAll:
-        return [PFCProfileUtility.sharedUtility allProfileUUIDs] ?: @[];
+        return [[PFCProfileUtility sharedUtility] allProfileUUIDs] ?: @[];
         break;
 
     case kPFCProfileGroups:

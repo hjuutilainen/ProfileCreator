@@ -1063,7 +1063,7 @@
     // --------------------------------------------------------------------------------------------------
     NSMutableArray *manifestContentSubset = [[NSMutableArray alloc] init];
     for (NSDictionary *resolvedManifestContentDict in
-         [PFCManifestParser.sharedParser arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil]) {
+         [[PFCManifestParser sharedParser] arrayFromManifestContentDict:manifestContentDict settings:_settingsManifest settingsLocal:_settingsLocalManifest parentKeys:nil]) {
         if ([[PFCManifestUtility sharedUtility] showManifestContentDict:resolvedManifestContentDict settings:_settingsManifest displayKeys:_profileEditor.settings.displayKeys]) {
             [manifestContentSubset addObject:resolvedManifestContentDict];
         }

@@ -135,7 +135,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[PFCManifestUtility.sharedUtility toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled
@@ -161,7 +161,7 @@
         DDLogDebug(@"No settings!");
     }
 
-    BOOL required = [PFCAvailability.sharedInstance requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if (value == nil) {
         value = contentDictSettings[PFCManifestKeyDefaultValue];
@@ -378,7 +378,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[PFCManifestUtility.sharedUtility toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled

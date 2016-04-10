@@ -66,7 +66,7 @@
     // -------------------------------------------------------------------------
     //  Icon
     // -------------------------------------------------------------------------
-    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifestDict];
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
     if (icon) {
         [cellView.menuIcon setImage:icon];
     }
@@ -134,7 +134,7 @@
     // ---------------------------------------------------------------------
     //  Icon
     // ---------------------------------------------------------------------
-    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifestDict];
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifestDict];
     if (icon) {
         [cellView.menuIcon setImage:icon];
     }

@@ -332,7 +332,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"pathExtension='plist'"];
     for (NSURL *plistURL in [dirContents filteredArrayUsingPredicate:predicate]) {
         settings = [[NSMutableDictionary alloc] init];
-        NSMutableDictionary *manifest = [[PFCManifestParser.sharedParser manifestFromPlistAtURL:plistURL settings:settings] mutableCopy];
+        NSMutableDictionary *manifest = [[[PFCManifestParser sharedParser] manifestFromPlistAtURL:plistURL settings:settings] mutableCopy];
         if (manifest.count != 0) {
             manifest[PFCRuntimeKeyPayloadLibrary] = @(library);
             NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
@@ -364,7 +364,7 @@
         NSNumber *isDirectory;
         BOOL success = [file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
         if (success && !isDirectory.boolValue && [file.pathExtension isEqualToString:@"manifest"]) {
-            NSDictionary *manifest = [PFCManifestParser.sharedParser manifestFromMCXManifestAtURL:file];
+            NSDictionary *manifest = [[PFCManifestParser sharedParser] manifestFromMCXManifestAtURL:file];
             if (manifest.count != 0) {
                 [mcxManifestFiles addObject:manifest];
             }

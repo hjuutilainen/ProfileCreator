@@ -47,7 +47,7 @@
     [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete %@ %@ %@", (groupCount == 1) ? @"the group" : @"these groups:\n\n", groupList, (groupCount == 1) ? @"?" : @""]];
     [alert setInformativeText:@"No profile will be deleted"];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert beginSheetModalForWindow:NSApplication.sharedApplication.mainWindow
+    [alert beginSheetModalForWindow:[NSApplication sharedApplication].mainWindow
                   completionHandler:^(NSInteger returnCode) {
                     [self->_delegate alertReturnCode:returnCode alertInfo:alertInfo];
                   }];
@@ -60,7 +60,7 @@
     NSUInteger profileCount = profileNames.count;
     id profileList;
     if (profileCount == 1) {
-        profileList = [NSString stringWithFormat:@"\"%@\"", [profileNames firstObject]];
+        profileList = [NSString stringWithFormat:@"\"%@\"", profileNames.firstObject];
     } else {
         profileList = [[NSMutableString alloc] init];
         for (NSString *profileName in profileNames) {

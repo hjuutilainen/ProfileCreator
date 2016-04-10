@@ -163,7 +163,7 @@
         DDLogDebug(@"No settings!");
     }
 
-    BOOL required = [PFCAvailability.sharedInstance requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSNumber *value = contentDictSettings[PFCSettingsKeyValue];
     if (value == nil) {
         value = contentDictSettings[PFCManifestKeyDefaultValue];

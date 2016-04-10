@@ -203,7 +203,7 @@
             [selectedDomains addObject:domain];
 
             // FIXME - This is inelegant and error prone. Shouldn't rely on the moanifest domain as it MAY be duplicated from the generated manifests. Possibly use UUID instead.
-            NSDictionary *manifest = [PFCManifestLibrary.sharedLibrary manifestFromLibrary:kPFCPayloadLibraryAll withDomain:domain];
+            NSDictionary *manifest = [[PFCManifestLibrary sharedLibrary] manifestFromLibrary:kPFCPayloadLibraryAll withDomain:domain];
             if (manifest.count != 0) {
                 PFCMainWindowPreviewPayload *preview = [self previewForMainfest:manifest domain:domain settings:domainSettings];
                 [_arrayStackViewPreview addObject:preview];
@@ -263,7 +263,7 @@
     DDLogDebug(@"Setting Payload Error Count: %@", [@(errorCount) stringValue]);
     [preview setPayloadErrorCount:[@(errorCount) stringValue]];
 
-    NSImage *icon = [PFCManifestUtility.sharedUtility iconForManifest:manifest];
+    NSImage *icon = [[PFCManifestUtility sharedUtility] iconForManifest:manifest];
     if (icon) {
         [preview setPayloadIcon:icon];
     }

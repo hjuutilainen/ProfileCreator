@@ -144,7 +144,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     // -------------------------------------------------------------------------
     //  Initialize PFCProfileUtility and update profile cache
     // -------------------------------------------------------------------------
-    [PFCProfileUtility.sharedUtility updateProfileCache];
+    [[PFCProfileUtility sharedUtility] updateProfileCache];
 
     // -------------------------------------------------------------------------
     //  Setup Groups
@@ -323,7 +323,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
         CellViewProfile *cellView = [tableView makeViewWithIdentifier:@"CellViewProfile" owner:self];
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellViewProfile:cellView profileDict:[PFCProfileUtility.sharedUtility profileWithUUID:_arrayProfileLibrary[(NSUInteger)row]] row:row];
+        return [cellView populateCellViewProfile:cellView profileDict:[[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[(NSUInteger)row]] row:row];
     }
     return nil;
 } // tableView:viewForTableColumn:row
@@ -380,7 +380,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         return;
     }
 
-    NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:_arrayProfileLibrary[(NSUInteger)row] ?: @""];
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[(NSUInteger)row] ?: @""];
 
     // -------------------------------------------------------------------------------
     //  MenuItem - "Show In Finder"
@@ -470,7 +470,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     if ([_selectedGroup[@"Config"][PFCProfileGroupKeyName] isEqualToString:@"All Profiles"]) {
 
         for (NSString *profileUUID in selectedProfiles) {
-            NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:profileUUID];
+            NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:profileUUID];
             [profileNames addObject:profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @""];
             [profileUUIDs addObject:profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""];
         }
@@ -478,7 +478,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         [alert showAlertDeleteProfiles:profileNames alertInfo:@{PFCAlertTagKey : PFCAlertTagDeleteProfiles, PFCProfileTemplateKeyUUID : [profileUUIDs copy]}];
     } else {
         for (NSString *profileUUID in selectedProfiles) {
-            NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:profileUUID];
+            NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:profileUUID];
             [profileNames addObject:profileDict[@"Config"][PFCProfileTemplateKeyName] ?: @""];
             [profileUUIDs addObject:profileDict[@"Config"][PFCProfileTemplateKeyUUID] ?: @""];
         }
@@ -508,7 +508,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     __block NSError *error = nil;
     [profileUUIDs enumerateObjectsUsingBlock:^(NSString *_Nonnull uuid, NSUInteger idx, BOOL *_Nonnull stop) {
       DDLogInfo(@"Deleting profile with UUID: %@", uuid);
-      if (![PFCProfileUtility.sharedUtility deleteProfileWithUUID:uuid error:&error]) {
+      if (![[PFCProfileUtility sharedUtility] deleteProfileWithUUID:uuid error:&error]) {
           DDLogError(@"%@", error.localizedDescription);
       }
 
@@ -523,7 +523,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         [_preview showProfilePreviewNoSelection];
     }
 
-    [PFCProfileUtility.sharedUtility updateProfileCache];
+    [[PFCProfileUtility sharedUtility] updateProfileCache];
 
     [_tableViewProfileLibrary beginUpdates];
     [_tableViewProfileLibrary reloadData];
@@ -592,7 +592,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     if (profileRuntimeKeys[PFCRuntimeKeyProfileEditor] != nil) {
         editor = profileRuntimeKeys[PFCRuntimeKeyProfileEditor];
     } else {
-        NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
+        NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
         if (profileDict.count != 0) {
             editor = [[PFCProfileEditor alloc] initWithProfileDict:profileDict mainWindow:self];
             if (editor) {
@@ -625,13 +625,13 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         _profileRuntimeKeys[uuid] = profileRuntimeKeys;
     }
 
-    NSDictionary *profile = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
+    NSDictionary *profile = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
 
     NSString *profilePath = profile[PFCProfileTemplateKeyPath] ?: @"";
     NSURL *profileURL = [NSURL fileURLWithPath:profilePath];
     if (![profileURL checkResourceIsReachableAndReturnError:nil]) {
         DDLogWarn(@"No profile exist at profile save path, will remove from tableview");
-        [PFCProfileUtility.sharedUtility removeUnsavedProfileWithUUID:uuid];
+        [[PFCProfileUtility sharedUtility] removeUnsavedProfileWithUUID:uuid];
 
         if (_selectedGroupType == kPFCProfileGroupAll) {
             [_groupAll selectGroup:self];
@@ -658,7 +658,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         }
     };
 
-    [PFCProfileUtility.sharedUtility addUnsavedProfile:profileDict];
+    [[PFCProfileUtility sharedUtility] addUnsavedProfile:profileDict];
 
     PFCProfileEditor *editor = [[PFCProfileEditor alloc] initWithProfileDict:profileDict mainWindow:self];
     if (editor) {
@@ -698,7 +698,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 
     DDLogDebug(@"Selected profile UUID: %@", _selectedProfileUUID);
     if ([_selectedProfileUUID isEqualToString:uuid]) {
-        NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
+        NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
         if (profileDict.count != 0) {
             [_preview updatePreviewWithProfileDict:profileDict];
         }
@@ -908,7 +908,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         // ---------------------------------------------------------------------
         //  Load the current profile from the array
         // ---------------------------------------------------------------------
-        NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:_arrayProfileLibrary[row] ?: @""];
+        NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[row] ?: @""];
 
         // ---------------------------------------------------------------------
         //  Verify the profile has any content
@@ -963,7 +963,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         uuid = _arrayProfileLibrary[_tableViewProfileLibrarySelectedRows.firstIndex];
     }
 
-    NSDictionary *settingsProfile = [PFCProfileUtility.sharedUtility profileWithUUID:uuid];
+    NSDictionary *settingsProfile = [[PFCProfileUtility sharedUtility] profileWithUUID:uuid];
 
     // -------------------------------------------------------------------------
     //  Get only settings and domains for selected payloads.
@@ -980,7 +980,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         settings[domain] = settingsAll[domain];
     }
     NSArray *selectedDomains = settings.allKeys;
-    NSArray *selectedManifests = [PFCManifestLibrary.sharedLibrary manifestsWithDomains:selectedDomains];
+    NSArray *selectedManifests = [[PFCManifestLibrary sharedLibrary] manifestsWithDomains:selectedDomains];
 
     // FIXME - HERE DO VERIFICATION!
 
@@ -1015,7 +1015,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         return;
     }
 
-    NSDictionary *profileDict = [PFCProfileUtility.sharedUtility profileWithUUID:_arrayProfileLibrary[_clickedTableViewRow] ?: @""];
+    NSDictionary *profileDict = [[PFCProfileUtility sharedUtility] profileWithUUID:_arrayProfileLibrary[_clickedTableViewRow] ?: @""];
 
     // ----------------------------------------------------------------------------------------
     //  If key 'Path' is set, check if it's a valid path. If it is, open it in Finder
@@ -1025,7 +1025,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         NSString *filePath = profileDict[PFCRuntimeKeyPath] ?: @"";
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         if ([fileURL checkResourceIsReachableAndReturnError:&error]) {
-            [NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[ fileURL ]];
+            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ fileURL ]];
         } else {
             DDLogError(@"%@", error.localizedDescription);
         }

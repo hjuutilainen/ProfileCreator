@@ -68,7 +68,7 @@
     // -------------------------------------------------------------------------
     for (NSDictionary *manifestContentDict in manifestContent) {
         for (NSDictionary *resolvedManifestContentDict in [self arrayFromManifestContentDict:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:nil]) {
-            if ([PFCManifestUtility.sharedUtility showManifestContentDict:resolvedManifestContentDict settings:settings displayKeys:displayKeys]) {
+            if ([[PFCManifestUtility sharedUtility] showManifestContentDict:resolvedManifestContentDict settings:settings displayKeys:displayKeys]) {
                 [array addObject:resolvedManifestContentDict];
             }
         }
