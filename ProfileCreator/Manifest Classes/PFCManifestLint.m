@@ -1031,8 +1031,12 @@
 
 - (NSDictionary *)reportForPayloadTypeKey:(NSString *)key manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
 
-    if (key != PFCManifestKeyPayloadType && [manifestContentDict[PFCManifestKeyPayloadType] length] != 0) {
-        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+    if (![key isEqualToString:PFCManifestKeyPayloadType]) {
+        if (manifestContentDict[key] == nil) {
+            return @{};
+        } else if ([manifestContentDict[PFCManifestKeyPayloadType] length] != 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored key:key keyPath:parentKeyPath value:nil manifest:manifest overrides:nil];
+        }
     }
 
     if (manifestContentDict[key] != nil) {
