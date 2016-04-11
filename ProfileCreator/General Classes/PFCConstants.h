@@ -84,6 +84,7 @@ extern NSString *const PFCCellTypeTextView;
 #pragma mark TableView CellType
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCTableViewCellTypeCheckbox;
+extern NSString *const PFCTableViewCellTypePopUpButton;
 extern NSString *const PFCTableViewCellTypeTextField;
 extern NSString *const PFCTableViewCellTypeTextFieldNumber;
 

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
-		5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */; };
 		5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9D21C7EF5300010191F /* PFCCellTypes.m */; };
 		5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E41C7EFED60010191F /* PFCCellTypeCheckbox.m */; };
 		5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E71C7F05CD0010191F /* PFCCellTypeDatePicker.m */; };
@@ -151,6 +150,7 @@
 		53F08F921CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F911CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m */; };
 		53F08F951CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */; };
 		53F08F981CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F971CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m */; };
+		53F08F9B1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F9A1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m */; };
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */; };
 		53F4E0741C85E4B200DE3B1F /* PFCPreferencesLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0721C85E4B200DE3B1F /* PFCPreferencesLogging.m */; };
@@ -341,8 +341,6 @@
 
 /* Begin PBXFileReference section */
 		5304B24D1C1E02C50085559C /* com.apple.vpn.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.vpn.plist"; sourceTree = "<group>"; };
-		5304B2511C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsSettingsTableView.h; path = "TableView CellViews/PFCTableViewCellsSettingsTableView.h"; sourceTree = "<group>"; };
-		5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsSettingsTableView.m; path = "TableView CellViews/PFCTableViewCellsSettingsTableView.m"; sourceTree = "<group>"; };
 		5306D9D11C7EF5300010191F /* PFCCellTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypes.h; path = CellTypes/PFCCellTypes.h; sourceTree = "<group>"; };
 		5306D9D21C7EF5300010191F /* PFCCellTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypes.m; path = CellTypes/PFCCellTypes.m; sourceTree = "<group>"; };
 		5306D9E31C7EFED60010191F /* PFCCellTypeCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeCheckbox.h; path = CellTypes/PFCCellTypeCheckbox.h; sourceTree = "<group>"; };
@@ -537,6 +535,8 @@
 		53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCTableViewCellTypeTextField.m; sourceTree = "<group>"; };
 		53F08F961CBC169900B99A8E /* PFCTableViewCellTypeTextFieldNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellTypeTextFieldNumber.h; path = CellTypesTableView/PFCTableViewCellTypeTextFieldNumber.h; sourceTree = "<group>"; };
 		53F08F971CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypeTextFieldNumber.m; path = CellTypesTableView/PFCTableViewCellTypeTextFieldNumber.m; sourceTree = "<group>"; };
+		53F08F991CBC188600B99A8E /* PFCTableViewCellTypePopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellTypePopUpButton.h; path = CellTypesTableView/PFCTableViewCellTypePopUpButton.h; sourceTree = "<group>"; };
+		53F08F9A1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypePopUpButton.m; path = CellTypesTableView/PFCTableViewCellTypePopUpButton.m; sourceTree = "<group>"; };
 		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.passcode.plist"; sourceTree = "<group>"; };
 		53F4E05F1C85CF7A00DE3B1F /* PFCODManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCODManager.h; path = "General Classes/PFCODManager.h"; sourceTree = SOURCE_ROOT; };
 		53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCODManager.m; path = "General Classes/PFCODManager.m"; sourceTree = SOURCE_ROOT; };
@@ -607,8 +607,6 @@
 				53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */,
 				53351E331C16048A00A6FC08 /* PFCTableViewCellsSettings.h */,
 				53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */,
-				5304B2511C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.h */,
-				5304B2521C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m */,
 				53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */,
 				53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */,
 				534181891C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.h */,
@@ -1063,6 +1061,8 @@
 				53F08F8E1CBC045400B99A8E /* PFCTableViewCellTypes.m */,
 				53F08F901CBC063800B99A8E /* PFCTableViewCellTypeCheckbox.h */,
 				53F08F911CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m */,
+				53F08F991CBC188600B99A8E /* PFCTableViewCellTypePopUpButton.h */,
+				53F08F9A1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m */,
 				53F08F931CBC0FAF00B99A8E /* PFCTableViewCellTypeTextField.h */,
 				53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */,
 				53F08F961CBC169900B99A8E /* PFCTableViewCellTypeTextFieldNumber.h */,
@@ -1353,6 +1353,7 @@
 				5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */,
 				53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */,
 				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
+				53F08F9B1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m in Sources */,
 				53ADF6231C7F951B005BA0FC /* PFCCellTypeTextFieldHostPort.m in Sources */,
 				53F08F951CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m in Sources */,
 				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
@@ -1377,7 +1378,6 @@
 				53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */,
 				538B392C1C67F60F0076E09E /* PFCProfileUtility.m in Sources */,
 				5333C7261C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.m in Sources */,
-				5304B2531C1E0FEB0085559C /* PFCTableViewCellsSettingsTableView.m in Sources */,
 				537564D21C903862007F8829 /* PFCProfileEditorManifest.m in Sources */,
 				53ADF6261C7F9792005BA0FC /* PFCCellTypeTextFieldNumber.m in Sources */,
 				539272051C9596FF00C15343 /* PFCManifestLint.m in Sources */,

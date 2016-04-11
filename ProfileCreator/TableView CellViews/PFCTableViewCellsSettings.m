@@ -24,7 +24,6 @@
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
 #import "PFCTableViewCellsSettings.h"
-#import "PFCTableViewCellsSettingsTableView.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -

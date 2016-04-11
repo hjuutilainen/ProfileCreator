@@ -26,10 +26,10 @@
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
 #import "PFCTableViewCellTypeCheckbox.h"
+#import "PFCTableViewCellTypePopUpButton.h"
 #import "PFCTableViewCellTypeProtocol.h"
 #import "PFCTableViewCellTypeTextField.h"
 #import "PFCTableViewCellTypes.h"
-#import "PFCTableViewCellsSettingsTableView.h"
 
 @interface PFCTableViewCellView ()
 
@@ -109,43 +109,16 @@
         return nil;
     }
 
-    NSDictionary *settings = _tableViewContent[(NSUInteger)row];
-    NSString *tableColumnIdentifier = [tableColumn identifier];
-    NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnIdentifier];
-    NSString *cellType = tableColumnCellViewDict[@"CellType"];
-
-    if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
-        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
-                                                                          tableView:tableView
-                                                                           settings:settings[tableColumnIdentifier]
-                                                                   columnIdentifier:tableColumn.identifier
-                                                                                row:row
-                                                                             sender:self];
-    } else if ([cellType isEqualToString:@"PopUpButton"]) {
-        CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
-        [cellView setIdentifier:nil];
-        return [cellView populateCellViewPopUpButton:cellView settings:settings[tableColumnIdentifier] columnIdentifier:tableColumn.identifier row:row sender:self];
-    } else if ([cellType isEqualToString:PFCTableViewCellTypeCheckbox]) {
-        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
-                                                                          tableView:tableView
-                                                                           settings:settings[tableColumnIdentifier]
-                                                                   columnIdentifier:tableColumn.identifier
-                                                                                row:row
-                                                                             sender:self];
-    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextFieldNumber]) {
-        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
-                                                                          tableView:tableView
-                                                                           settings:settings[tableColumnIdentifier]
-                                                                   columnIdentifier:tableColumn.identifier
-                                                                                row:row
-                                                                             sender:self];
-    }
-
-    return nil;
+    return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:_tableViewColumnCellViews[tableColumn.identifier][@"CellType"]
+                                                                      tableView:tableView
+                                                                       settings:_tableViewContent[(NSUInteger)row][tableColumn.identifier]
+                                                               columnIdentifier:tableColumn.identifier
+                                                                            row:row
+                                                                         sender:self];
 } // tableView:viewForTableColumn:row
 
 - (NSInteger)insertRowInTableView:(NSDictionary *)rowDict {
-    NSInteger index = [_settingTableView selectedRow];
+    NSInteger index = _settingTableView.selectedRow;
     index++;
     [_settingTableView beginUpdates];
     [_settingTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)index] withAnimation:NSTableViewAnimationSlideDown];
@@ -215,7 +188,7 @@
     // ---------------------------------------------------------------------
     //  Make sure it's a settings popup button
     // ---------------------------------------------------------------------
-    if (![[[popUpButton superview] class] isSubclassOfClass:[CellViewPopUpButton class]]) {
+    if (![[[popUpButton superview] class] isSubclassOfClass:[PFCTableViewPopUpButtonCellView class]]) {
         DDLogError(@"PopUpButton: %@ superview class is: %@", popUpButton, [[popUpButton superview] class]);
         return;
     }
@@ -230,12 +203,12 @@
     }
     NSInteger row = popUpButtonTag.integerValue;
 
-    NSString *columnIdentifier = [(CellViewPopUpButton *)[popUpButton superview] columnIdentifier];
+    NSString *columnIdentifier = [(PFCTableViewPopUpButtonCellView *)[popUpButton superview] columnIdentifier];
 
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsPopUp popup button
     // ---------------------------------------------------------------------
-    if (popUpButton == [(CellViewPopUpButton *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] popUpButton]) {
+    if (popUpButton == [(PFCTableViewPopUpButtonCellView *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] popUpButton]) {
 
         // ---------------------------------------------------------------------
         //  Save selection
@@ -262,12 +235,12 @@
     // ---------------------------------------------------------------------
     //  Get checkbox's row in the table view
     // ---------------------------------------------------------------------
-    NSNumber *buttonTag = @([checkbox tag]);
+    NSNumber *buttonTag = @(checkbox.tag);
     if (buttonTag == nil) {
         DDLogError(@"Checkbox: %@ has no tag", checkbox);
         return;
     }
-    NSInteger row = [buttonTag integerValue];
+    NSInteger row = buttonTag.integerValue;
     NSString *columnIdentifier = [(PFCTableViewCheckboxCellView *)[checkbox superview] columnIdentifier];
 
     // ---------------------------------------------------------------------
@@ -278,7 +251,7 @@
         // ---------------------------------------------------------------------
         //  Save selection
         // ---------------------------------------------------------------------
-        BOOL state = (BOOL)[checkbox state];
+        BOOL state = (BOOL)checkbox.state;
         NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
         columnDict[PFCSettingsKeyValue] = @(state);

@@ -35,7 +35,6 @@
 #import "PFCProfileEditor.h"
 #import "PFCProfileEditorManifest.h"
 #import "PFCTableViewCellsSettings.h"
-#import "PFCTableViewCellsSettingsTableView.h"
 
 @interface PFCProfileEditorManifest ()
 

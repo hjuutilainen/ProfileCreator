@@ -1,5 +1,5 @@
 //
-//  PFCTableViewCellsSettingsTableView.m
+//  PFCTableViewCellTypePopUpButton.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -17,30 +17,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "PFCCellTypeTableView.h"
 #import "PFCConstants.h"
-#import "PFCTableViewCellsSettings.h"
-#import "PFCTableViewCellsSettingsTableView.h"
+#import "PFCTableViewCellTypePopUpButton.h"
 
-@implementation PFCTableViewCellsSettingsTableView
+@interface PFCTableViewPopUpButtonCellView ()
+@property (readwrite) NSString *columnIdentifier;
 @end
 
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewPopUpButton
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewPopUpButton
+@implementation PFCTableViewPopUpButtonCellView
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (CellViewPopUpButton *)populateCellViewPopUpButton:(CellViewPopUpButton *)cellView
-                                            settings:(NSDictionary *)settings
-                                    columnIdentifier:(NSString *)columnIdentifier
-                                                 row:(NSInteger)row
-                                              sender:(id)sender {
+- (instancetype)populateTableViewCellView:(id)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
 
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
@@ -50,17 +40,18 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    [cellView.popUpButton removeAllItems];
-    [cellView.popUpButton addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
-    [cellView.popUpButton selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
+    [[cellView popUpButton] removeAllItems];
+    [[cellView popUpButton] addItemsWithTitles:settings[@"AvailableValues"] ?: @[]];
+    [[cellView popUpButton] selectItemWithTitle:settings[PFCSettingsKeyValue] ?: settings[@"DefaultValue"]];
 
     // ---------------------------------------------------------------------
     //  Target Action
     // ---------------------------------------------------------------------
-    [cellView.popUpButton setAction:@selector(popUpButtonSelection:)];
-    [cellView.popUpButton setTarget:sender];
-    [cellView.popUpButton setTag:row];
+    [[cellView popUpButton] setAction:@selector(popUpButtonSelection:)];
+    [[cellView popUpButton] setTarget:sender];
+    [[cellView popUpButton] setTag:row];
 
     return cellView;
-} // populateCellViewPopUp:settings:row
+}
+
 @end
