@@ -49,17 +49,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewCheckbox
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@interface CellViewCheckbox : NSTableCellView
-@property NSString *columnIdentifier;
-@property (weak) IBOutlet NSButton *checkbox;
-- (CellViewCheckbox *)populateCellViewCheckbox:(CellViewCheckbox *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark CellViewTextFieldNumber
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////

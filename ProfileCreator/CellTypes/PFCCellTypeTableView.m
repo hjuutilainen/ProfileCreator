@@ -25,6 +25,9 @@
 #import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
+#import "PFCTableViewCellTypeCheckbox.h"
+#import "PFCTableViewCellTypeProtocol.h"
+#import "PFCTableViewCellTypes.h"
 #import "PFCTableViewCellsSettingsTableView.h"
 
 @interface PFCTableViewCellView ()
@@ -117,11 +120,14 @@
     } else if ([cellType isEqualToString:@"PopUpButton"]) {
         CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
         [cellView setIdentifier:nil];
-        return [cellView populateCellViewPopUpButton:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
-    } else if ([cellType isEqualToString:@"Checkbox"]) {
-        CellViewCheckbox *cellView = [tableView makeViewWithIdentifier:@"CellViewCheckbox" owner:self];
-        [cellView setIdentifier:nil];
-        return [cellView populateCellViewCheckbox:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+        return [cellView populateCellViewPopUpButton:cellView settings:settings[tableColumnIdentifier] columnIdentifier:tableColumn.identifier row:row sender:self];
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeCheckbox]) {
+        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
+                                                                          tableView:tableView
+                                                                           settings:settings[tableColumnIdentifier]
+                                                                   columnIdentifier:tableColumn.identifier
+                                                                                row:row
+                                                                             sender:self];
     } else if ([cellType isEqualToString:@"TextFieldNumber"]) {
         CellViewTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewTextFieldNumber" owner:self];
         [cellView setIdentifier:nil];
@@ -255,12 +261,12 @@
         return;
     }
     NSInteger row = [buttonTag integerValue];
-    NSString *columnIdentifier = [(CellViewCheckbox *)[checkbox superview] columnIdentifier];
+    NSString *columnIdentifier = [(PFCTableViewCheckboxCellView *)[checkbox superview] columnIdentifier];
 
     // ---------------------------------------------------------------------
     //  Another verification this is a CellViewSettingsPopUp popup button
     // ---------------------------------------------------------------------
-    if (checkbox == [(CellViewCheckbox *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] checkbox]) {
+    if (checkbox == [(PFCTableViewCheckboxCellView *)[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] checkbox]) {
 
         // ---------------------------------------------------------------------
         //  Save selection
@@ -406,6 +412,14 @@
     // -------------------------------------------------------------------------
     [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
     [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+    // -------------------------------------------------------------------------
+    //  TableView
+    // -------------------------------------------------------------------------
+    [lintReport addObjectsFromArray:[sender reportForTableViewColumns:manifestContentDict[PFCManifestKeyTableViewColumns] ?: @[]
+                                                  manifestContentDict:manifestContentDict
+                                                             manifest:manifest
+                                                        parentKeyPath:parentKeyPath]];
 
     return [lintReport copy];
 }

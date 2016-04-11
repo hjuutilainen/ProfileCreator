@@ -1140,7 +1140,7 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="CellViewTextField" id="o5H-HO-uES" customClass="CellViewTextField">
-                                                                                    <rect key="frame" x="1" y="1" width="131" height="23"/>
+                                                                                    <rect key="frame" x="1" y="1" width="130.5" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="GN4-h9-lrg">
@@ -1163,7 +1163,7 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="CellViewPopUpButton" id="DnQ-pb-BWe" customClass="CellViewPopUpButton">
-                                                                                    <rect key="frame" x="1" y="26" width="131" height="23"/>
+                                                                                    <rect key="frame" x="1" y="26" width="130.5" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7qM-4e-vEs">
@@ -1185,39 +1185,8 @@
                                                                                         <outlet property="popUpButton" destination="7qM-4e-vEs" id="62q-Ng-MaE"/>
                                                                                     </connections>
                                                                                 </tableCellView>
-                                                                                <tableCellView identifier="CellViewCheckbox" id="ilh-iY-1yF" customClass="CellViewCheckbox">
-                                                                                    <rect key="frame" x="1" y="51" width="131" height="43"/>
-                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                                    <subviews>
-                                                                                        <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ebh-de-PFe">
-                                                                                            <rect key="frame" x="59" y="15" width="14" height="14"/>
-                                                                                            <subviews>
-                                                                                                <button translatesAutoresizingMaskIntoConstraints="NO" id="hKT-KV-U6x">
-                                                                                                    <rect key="frame" x="-2" y="-2" width="18" height="18"/>
-                                                                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="only" state="on" inset="2" id="tws-bQ-bK1">
-                                                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                                        <font key="font" metaFont="system"/>
-                                                                                                    </buttonCell>
-                                                                                                </button>
-                                                                                            </subviews>
-                                                                                            <visibilityPriorities>
-                                                                                                <integer value="1000"/>
-                                                                                            </visibilityPriorities>
-                                                                                            <customSpacing>
-                                                                                                <real value="3.4028234663852886e+38"/>
-                                                                                            </customSpacing>
-                                                                                        </stackView>
-                                                                                    </subviews>
-                                                                                    <constraints>
-                                                                                        <constraint firstItem="ebh-de-PFe" firstAttribute="centerX" secondItem="ilh-iY-1yF" secondAttribute="centerX" id="GYs-ZA-42c"/>
-                                                                                        <constraint firstItem="ebh-de-PFe" firstAttribute="centerY" secondItem="ilh-iY-1yF" secondAttribute="centerY" id="tEs-Ic-bhi"/>
-                                                                                    </constraints>
-                                                                                    <connections>
-                                                                                        <outlet property="checkbox" destination="hKT-KV-U6x" id="Z7h-eG-Q3U"/>
-                                                                                    </connections>
-                                                                                </tableCellView>
                                                                                 <tableCellView identifier="CellViewTextFieldNumber" id="uYP-YY-35g" customClass="CellViewTextFieldNumber">
-                                                                                    <rect key="frame" x="1" y="96" width="131" height="23"/>
+                                                                                    <rect key="frame" x="1" y="51" width="130.5" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KHp-9w-3WK">
@@ -1239,6 +1208,26 @@
                                                                                     <connections>
                                                                                         <outlet property="settingNumberFormatter" destination="rgK-gw-YG0" id="CIQ-1A-lNj"/>
                                                                                         <outlet property="textField" destination="KHp-9w-3WK" id="LxK-5c-bwP"/>
+                                                                                    </connections>
+                                                                                </tableCellView>
+                                                                                <tableCellView identifier="TableViewCheckbox" id="ilh-iY-1yF" customClass="PFCTableViewCheckboxCellView">
+                                                                                    <rect key="frame" x="1" y="76" width="130.5" height="23"/>
+                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                                    <subviews>
+                                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="hKT-KV-U6x">
+                                                                                            <rect key="frame" x="56" y="3" width="18" height="18"/>
+                                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="only" state="on" inset="2" id="tws-bQ-bK1">
+                                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                                <font key="font" metaFont="system"/>
+                                                                                            </buttonCell>
+                                                                                        </button>
+                                                                                    </subviews>
+                                                                                    <constraints>
+                                                                                        <constraint firstItem="hKT-KV-U6x" firstAttribute="centerY" secondItem="ilh-iY-1yF" secondAttribute="centerY" id="1vy-eH-fCR"/>
+                                                                                        <constraint firstItem="hKT-KV-U6x" firstAttribute="centerX" secondItem="ilh-iY-1yF" secondAttribute="centerX" id="PKH-kO-nsl"/>
+                                                                                    </constraints>
+                                                                                    <connections>
+                                                                                        <outlet property="checkbox" destination="hKT-KV-U6x" id="Z7h-eG-Q3U"/>
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                             </prototypeCellViews>

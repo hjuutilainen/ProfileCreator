@@ -112,47 +112,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewCheckbox
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewCheckbox
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (CellViewCheckbox *)populateCellViewCheckbox:(CellViewCheckbox *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
-
-    // ---------------------------------------------------------------------
-    //  ColumnIdentifier
-    // ---------------------------------------------------------------------
-    [cellView setColumnIdentifier:columnIdentifier];
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
-    } else if (settings[@"DefaultValue"]) {
-        checkboxState = [settings[@"DefaultValue"] boolValue];
-    }
-    [[cellView checkbox] setState:checkboxState];
-
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView checkbox] setAction:@selector(checkbox:)];
-    [[cellView checkbox] setTarget:sender];
-    [[cellView checkbox] setTag:row];
-
-    return cellView;
-} // populateCellViewCheckbox:settings:row
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark CellViewTextFieldNumber
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
