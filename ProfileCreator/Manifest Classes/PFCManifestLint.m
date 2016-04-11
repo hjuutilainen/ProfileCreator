@@ -23,6 +23,7 @@
 #import "PFCCellTypePopUpButton.h"
 #import "PFCCellTypeProtocol.h"
 #import "PFCCellTypeSegmentedControl.h"
+#import "PFCCellTypeTableView.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
 #import "PFCCellTypeTextFieldNumber.h"
@@ -50,6 +51,9 @@
 @property NSMutableArray *manifestContentDictAvailableValues;
 @property NSMutableArray *manifestContentDictValueKeysShared;
 
+@property NSMutableArray *tableViewColumnKeys;
+@property NSMutableArray *tableViewColumnTitles;
+
 @end
 
 @implementation PFCManifestLint
@@ -68,6 +72,8 @@
         _manifestContentDictKeys = [[NSMutableArray alloc] init];
         _manifestContentDictAvailableValues = [[NSMutableArray alloc] init];
         _manifestContentDictValueKeysShared = [[NSMutableArray alloc] init];
+
+        _tableViewColumnKeys = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -432,7 +438,7 @@
         [reportContentDict addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyCellType keyPath:parentKeyPath value:nil manifest:manifest overrides:nil]];
     }
 
-    for (NSString *key in [manifestContentDict allKeys]) {
+    for (NSString *key in manifestContentDict.allKeys) {
         if (![_manifestContentDictKeys containsObject:key]) {
             [reportContentDict
                 addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyIncompatible key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil]];
@@ -1078,6 +1084,98 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark TableViewColumns
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (NSArray *)reportForTableViewColumns:(NSArray *)tableViewColumns manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath {
+
+    if (tableViewColumns.count == 0) {
+        return @[ [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyTableViewColumns keyPath:nil value:nil manifest:manifest overrides:nil] ];
+    }
+
+    NSMutableArray *reportTableView = [[NSMutableArray alloc] init];
+    for (NSDictionary *tableViewColumn in tableViewColumns) {
+        [_tableViewColumnKeys removeAllObjects];
+        [reportTableView addObject:[self reportForTableViewColumnTitle:tableViewColumn manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
+
+        for (NSString *key in tableViewColumn.allKeys) {
+            if (![_tableViewColumnKeys containsObject:key]) {
+                [reportTableView
+                    addObject:[PFCManifestLintError errorWithCode:kPFCLintErrorKeyIncompatible key:key keyPath:parentKeyPath value:manifestContentDict[key] manifest:manifest overrides:nil]];
+            }
+        }
+    }
+
+    return [reportTableView copy];
+}
+
+- (NSDictionary *)reportForTableViewColumnTitle:(NSDictionary *)tableViewColumnDict
+                            manifestContentDict:(NSDictionary *)manifestContentDict
+                                       manifest:(NSDictionary *)manifest
+                                  parentKeyPath:(NSString *)parentKeyPath {
+
+    if (tableViewColumnDict[PFCManifestKeyTableViewColumnTitle] != nil) {
+        [_tableViewColumnKeys addObject:PFCManifestKeyTableViewColumnTitle];
+
+        if ([manifest[PFCManifestKeyTableViewColumnTitle] length] == 0) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorValueInvalid
+                                                   key:PFCManifestKeyTitle
+                                               keyPath:parentKeyPath
+                                                 value:tableViewColumnDict[PFCManifestKeyTableViewColumnTitle]
+                                              manifest:manifest
+                                             overrides:nil];
+        }
+
+        if ([_tableViewColumnTitles containsObject:manifest[PFCManifestKeyTableViewColumnTitle]]) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorDuplicate
+                                                   key:PFCManifestKeyTableViewColumnTitle
+                                               keyPath:parentKeyPath
+                                                 value:tableViewColumnDict[PFCManifestKeyTableViewColumnTitle]
+                                              manifest:manifest
+                                             overrides:nil];
+        } else {
+            [_tableViewColumnTitles addObject:manifest[PFCManifestKeyTableViewColumnTitle]];
+        }
+
+        if ([manifestContentDict[PFCManifestKeyTableViewColumns] count] == 1) {
+            return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyIgnored
+                                                   key:PFCManifestKeyTableViewColumnTitle
+                                               keyPath:parentKeyPath
+                                                 value:tableViewColumnDict[PFCManifestKeyTableViewColumnTitle]
+                                              manifest:manifest
+                                             overrides:@{
+                                                 @"ErrorMessage" : @"Title will not be shown, header view is hidden for single column table views",
+                                                 @"ErrorSeverity" : @(kPFCLintErrorSeverityDebug)
+                                             }];
+        }
+    } else {
+        return [PFCManifestLintError errorWithCode:kPFCLintErrorKeyRequiredNotFound key:PFCManifestKeyTitle keyPath:nil value:nil manifest:manifest overrides:nil];
+    }
+    return @{};
+}
+
+- (NSArray *)reportForTableViewColumnCellType:(NSString *)cellType
+                          tableViewColumnDict:(NSDictionary *)tableViewColumnDict
+                          manifestContentDict:(NSDictionary *)manifestContentDict
+                                     manifest:(NSDictionary *)manifest
+                                parentKeyPath:(NSString *)parentKeyPath {
+    NSMutableArray *reportTableViewColumnCellType = [[NSMutableArray alloc] init];
+
+    if ([cellType isEqualToString:@"Checkbox"]) {
+
+    } else if ([cellType isEqualToString:@"PopUpButton"]) {
+
+    } else if ([cellType isEqualToString:@"TextField"]) {
+
+    } else if ([cellType isEqualToString:@"TextFieldNumber"]) {
+    }
+
+    return [reportTableViewColumnCellType copy];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark CellType Keys
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
@@ -1149,6 +1247,7 @@
         //  TableView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
+        [reportCellType addObjectsFromArray:[PFCTableViewCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
 
         // ---------------------------------------------------------------------
         //  TextField
@@ -1245,7 +1344,8 @@
     [reportTextView addObject:[self reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];       // Key: Title
     /*
     [reportTextView
-        addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKey manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath optional:NO ignored:NO]]; // Key: PayloadKey
+        addObject:[self reportForPayloadKey:PFCManifestKeyPayloadKey manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath optional:NO ignored:NO]]; // Key:
+    PayloadKey
     [reportTextView addObject:[self reportForPayloadTypeKey:PFCManifestKeyPayloadType
                                         manifestContentDict:manifestContentDict
                                                    manifest:manifest

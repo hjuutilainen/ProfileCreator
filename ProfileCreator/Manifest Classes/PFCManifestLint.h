@@ -146,6 +146,11 @@
 - (NSDictionary *)reportForShowDateTime:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
 
 // -----------------------------------------------------------------------------
+//  TableViewColumns
+// -----------------------------------------------------------------------------
+- (NSArray *)reportForTableViewColumns:(NSArray *)tableViewColumns manifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
+
+// -----------------------------------------------------------------------------
 //  Title
 // -----------------------------------------------------------------------------
 - (NSDictionary *)reportForTitle:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath;
