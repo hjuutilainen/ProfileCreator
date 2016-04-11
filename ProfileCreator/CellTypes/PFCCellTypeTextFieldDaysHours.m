@@ -47,7 +47,7 @@
 } // dealloc
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)__unused change context:(void *)__unused context {
-    if ((_sender != nil && [_cellIdentifier length] != 0) &&
+    if ((_sender != nil && _cellIdentifier.length != 0) &&
         ([keyPath isEqualToString:NSStringFromSelector(@selector(stepperValueRemovalIntervalDays))] || [keyPath isEqualToString:NSStringFromSelector(@selector(stepperValueRemovalIntervalHours))])) {
         int seconds = (([_stepperValueRemovalIntervalDays intValue] * 86400) + ([_stepperValueRemovalIntervalHours intValue] * 60));
         NSMutableDictionary *settingsDict = [[(PFCProfileEditorManifest *)_sender settingsManifest] mutableCopy];

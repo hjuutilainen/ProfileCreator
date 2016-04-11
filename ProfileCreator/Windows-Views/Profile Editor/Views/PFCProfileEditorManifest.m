@@ -1532,8 +1532,6 @@
 } // checkbox
 
 - (void)removeSettingsForManifestWithDomain:(NSString *)manifestDomain manifestTabIndex:(NSInteger)manifestTabIndex {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Remove 'Settings'
     // -------------------------------------------------------------------------

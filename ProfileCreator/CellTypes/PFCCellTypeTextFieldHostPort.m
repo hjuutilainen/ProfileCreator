@@ -87,7 +87,7 @@
     // ---------------------------------------------------------------------
     NSString *valueHost = settings[PFCSettingsKeyValueHost] ?: @"";
     NSAttributedString *valueHostAttributed = nil;
-    if ([valueHost length] == 0) {
+    if (valueHost.length == 0) {
         if ([manifest[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifest[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
@@ -95,7 +95,7 @@
                 [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
-    if ([valueHostAttributed length] != 0) {
+    if (valueHostAttributed.length != 0) {
         [[cellView settingTextFieldHost] setAttributedStringValue:valueHostAttributed];
     } else {
         [[cellView settingTextFieldHost] setStringValue:valueHost];

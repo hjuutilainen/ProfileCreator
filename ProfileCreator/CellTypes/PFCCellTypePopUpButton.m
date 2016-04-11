@@ -93,7 +93,7 @@
         selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
 
-    if ([selectedItem length] != 0) {
+    if (selectedItem.length != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
     } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];
@@ -137,16 +137,16 @@
     //  Verify this manifest content dict contains an 'Identifier'. Else stop.
     // -------------------------------------------------------------------------
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
-    if ([identifier length] == 0) {
+    if (identifier.length == 0) {
         return nil;
     }
 
     NSString *selectedItem = settings[PFCSettingsKeyValue];
-    if ([selectedItem length] == 0) {
+    if (selectedItem.length == 0) {
         selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
     }
 
-    if ([selectedItem length] == 0) {
+    if (selectedItem.length == 0) {
         return @{ identifier : @[ [PFCError verificationReportWithMessage:@"No Selection" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
 
@@ -309,7 +309,7 @@
         selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
 
-    if ([selectedItem length] != 0) {
+    if (selectedItem.length != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
     } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];
@@ -431,7 +431,7 @@
         selectedItem = settingsLocal[PFCSettingsKeyValue];
     }
 
-    if ([selectedItem length] != 0) {
+    if (selectedItem.length != 0) {
         [[cellView settingPopUpButton] selectItemWithTitle:selectedItem];
     } else if (cellView.settingPopUpButton.itemArray.count != 0) {
         [[cellView settingPopUpButton] selectItemAtIndex:0];

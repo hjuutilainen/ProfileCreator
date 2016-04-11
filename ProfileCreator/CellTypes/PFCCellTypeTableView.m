@@ -143,7 +143,7 @@
 } // insertRowInTableView
 
 - (void)updateTableViewSavedContent {
-    if (_sender && [_senderIdentifier length] != 0) {
+    if (_sender && _senderIdentifier.length != 0) {
         NSMutableDictionary *settings = [[(PFCProfileEditorManifest *)_sender settingsManifest][_senderIdentifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
         settings[PFCSettingsKeyTableViewContent] = [_tableViewContent copy];
         [(PFCProfileEditorManifest *)_sender settingsManifest][_senderIdentifier] = [settings mutableCopy];

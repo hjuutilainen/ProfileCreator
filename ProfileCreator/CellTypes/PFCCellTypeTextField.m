@@ -85,7 +85,7 @@
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
-    if ([value length] == 0) {
+    if (value.length == 0) {
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
@@ -93,7 +93,7 @@
         }
     }
 
-    if ([valueAttributed length] != 0) {
+    if (valueAttributed.length != 0) {
         [[cellView settingTextField] setAttributedStringValue:valueAttributed];
     } else {
         [[cellView settingTextField] setStringValue:value];
@@ -127,7 +127,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if (required && [value length] == 0) {
+    if (required && value.length == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
@@ -153,11 +153,11 @@
 
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     NSString *value = contentDictSettings[PFCSettingsKeyValue];
-    if ([value length] == 0) {
+    if (value.length == 0) {
         value = contentDictSettings[PFCManifestKeyDefaultValue];
     }
 
-    if (required && [value length] == 0) {
+    if (required && value.length == 0) {
         return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
     }
 
@@ -350,7 +350,7 @@
             [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueTextField] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
     }
 
-    if ([valueTextFieldAttributed length] != 0) {
+    if (valueTextFieldAttributed.length != 0) {
         [[cellView settingTextField] setAttributedStringValue:valueTextFieldAttributed];
     } else {
         [[cellView settingTextField] setStringValue:valueTextField ?: @""];
@@ -397,7 +397,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if (required && [valueTextField length] == 0) {
+    if (required && valueTextField.length == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
@@ -743,7 +743,7 @@
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
-    if ([value length] == 0) {
+    if (value.length == 0) {
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
@@ -751,7 +751,7 @@
         }
     }
 
-    if ([valueAttributed length] != 0) {
+    if (valueAttributed.length != 0) {
         [[cellView settingTextField] setAttributedStringValue:valueAttributed];
     } else {
         [[cellView settingTextField] setStringValue:value];
@@ -797,7 +797,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if (required && [value length] == 0) {
+    if (required && value.length == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
