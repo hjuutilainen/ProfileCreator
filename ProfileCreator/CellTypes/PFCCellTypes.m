@@ -17,14 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
 #import "PFCLog.h"
-
-// CellTypes
-#import "PFCCellTypeCheckbox.h"
-#import "PFCCellTypeTextView.h"
 
 @implementation PFCCellTypes
 
