@@ -1,5 +1,5 @@
 //
-//  PFCTableViewCellTypeTextField.m
+//  PFCTableViewCellTypeTextFieldNumber.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -18,13 +18,14 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
-#import "PFCTableViewCellTypeTextField.h"
+#import "PFCTableViewCellTypeTextFieldNumber.h"
 
-@interface PFCTableViewTextFieldCellView ()
+@interface PFCTableViewTextFieldNumberCellView ()
 @property (readwrite) NSString *columnIdentifier;
+@property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
 @end
 
-@implementation PFCTableViewTextFieldCellView
+@implementation PFCTableViewTextFieldNumberCellView
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -40,15 +41,37 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
-    if ([value length] == 0) {
-        if ([settings[@"DefaultValue"] length] != 0) {
-            value = settings[@"DefaultValue"] ?: @"";
+    NSString *value;
+    if (settings[PFCSettingsKeyValue] != nil) {
+        if ([[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[NSString class]]) {
+            value = settings[PFCSettingsKeyValue] ?: @"";
+        } else if ([[settings[PFCSettingsKeyValue] class] isSubclassOfClass:[@(0) class]]) {
+            value = [settings[PFCSettingsKeyValue] stringValue] ?: @"";
         }
     }
+
+    if (value.length == 0) {
+        if (settings[@"DefaultValue"] != nil) {
+            if ([[settings[@"DefaultValue"] class] isSubclassOfClass:[NSString class]]) {
+                value = settings[@"DefaultValue"] ?: @"";
+            } else if ([[settings[@"DefaultValue"] class] isSubclassOfClass:[@(0) class]]) {
+                value = [settings[@"DefaultValue"] stringValue] ?: @"";
+            }
+        }
+    }
+
     [[cellView textField] setDelegate:sender];
-    [[cellView textField] setStringValue:value];
+    [[cellView textField] setStringValue:value ?: @""];
     [[cellView textField] setTag:row];
+
+    // ---------------------------------------------------------------------
+    //  NumberFormatter Min/Max Value
+    // ---------------------------------------------------------------------
+    //[[cellView settingNumberFormatter] setMinimum:manifest[@"MinValue"] ?: @0];
+    //[[cellView settingStepper] setMinValue:[manifest[@"MinValue"] doubleValue] ?: 0.0];
+
+    //[[cellView settingNumberFormatter] setMaximum:manifest[@"MaxValue"] ?: @99999];
+    //[[cellView settingStepper] setMaxValue:[manifest[@"MinValue"] doubleValue] ?: 99999.0];
 
     // ---------------------------------------------------------------------
     //  Placeholder Value

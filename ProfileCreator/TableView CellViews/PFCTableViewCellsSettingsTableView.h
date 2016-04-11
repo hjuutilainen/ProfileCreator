@@ -36,18 +36,3 @@
                                                  row:(NSInteger)row
                                               sender:(id)sender;
 @end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark CellViewTextFieldNumber
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@interface CellViewTextFieldNumber : NSTableCellView
-@property NSString *columnIdentifier;
-@property (weak) IBOutlet NSNumberFormatter *settingNumberFormatter;
-- (CellViewTextFieldNumber *)populateCellViewTextFieldNumber:(CellViewTextFieldNumber *)cellView
-                                                    settings:(NSDictionary *)settings
-                                            columnIdentifier:(NSString *)columnIdentifier
-                                                         row:(NSInteger)row
-                                                      sender:(id)sender;
-@end

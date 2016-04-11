@@ -1,5 +1,5 @@
 //
-//  PFCTableViewCellTypeTextField.h
+//  PFCTableViewCellTypeTextFieldNumber.h
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -20,6 +20,6 @@
 #import "PFCTableViewCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
 
-@interface PFCTableViewTextFieldCellView : NSTableCellView <PFCTableViewCellType>
+@interface PFCTableViewTextFieldNumberCellView : NSTableCellView <PFCTableViewCellType>
 @property (readonly) NSString *columnIdentifier;
 @end

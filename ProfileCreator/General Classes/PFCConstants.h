@@ -85,6 +85,7 @@ extern NSString *const PFCCellTypeTextView;
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCTableViewCellTypeCheckbox;
 extern NSString *const PFCTableViewCellTypeTextField;
+extern NSString *const PFCTableViewCellTypeTextFieldNumber;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ValueType

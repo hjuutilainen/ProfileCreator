@@ -70,7 +70,7 @@
     }
     NSInteger row = [textFieldTag integerValue];
 
-    NSString *columnIdentifier = [(PFCTableViewTextfieldCellView *)[textField superview] columnIdentifier];
+    NSString *columnIdentifier = [(PFCTableViewTextFieldCellView *)[textField superview] columnIdentifier];
 
     // ---------------------------------------------------------------------
     //  Get current text and current cell dict
@@ -82,7 +82,7 @@
     // ---------------------------------------------------------------------
     //  Another verification of text field type
     // ---------------------------------------------------------------------
-    if ([[[textField superview] class] isSubclassOfClass:[PFCTableViewTextfieldCellView class]]) {
+    if ([[[textField superview] class] isSubclassOfClass:[PFCTableViewTextFieldCellView class]]) {
         if (textField == [[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] textField]) {
             NSMutableDictionary *columnDict = cellDict[columnIdentifier];
             columnDict[PFCSettingsKeyValue] = [inputText copy];
@@ -132,10 +132,13 @@
                                                                    columnIdentifier:tableColumn.identifier
                                                                                 row:row
                                                                              sender:self];
-    } else if ([cellType isEqualToString:@"TextFieldNumber"]) {
-        CellViewTextFieldNumber *cellView = [tableView makeViewWithIdentifier:@"CellViewTextFieldNumber" owner:self];
-        [cellView setIdentifier:nil];
-        return [cellView populateCellViewTextFieldNumber:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextFieldNumber]) {
+        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
+                                                                          tableView:tableView
+                                                                           settings:settings[tableColumnIdentifier]
+                                                                   columnIdentifier:tableColumn.identifier
+                                                                                row:row
+                                                                             sender:self];
     }
 
     return nil;
@@ -187,7 +190,7 @@
         NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnKey];
         NSString *cellType = tableColumnCellViewDict[@"CellType"];
 
-        if ([cellType isEqualToString:@"TextField"]) {
+        if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
             tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
         } else if ([cellType isEqualToString:@"PopUpButton"]) {
             tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
@@ -220,12 +223,12 @@
     // ---------------------------------------------------------------------
     //  Get popup button's row in the table view
     // ---------------------------------------------------------------------
-    NSNumber *popUpButtonTag = @([popUpButton tag]);
+    NSNumber *popUpButtonTag = @(popUpButton.tag);
     if (popUpButtonTag == nil) {
         DDLogError(@"PopUpButton: %@ has no tag", popUpButton);
         return;
     }
-    NSInteger row = [popUpButtonTag integerValue];
+    NSInteger row = popUpButtonTag.integerValue;
 
     NSString *columnIdentifier = [(CellViewPopUpButton *)[popUpButton superview] columnIdentifier];
 
