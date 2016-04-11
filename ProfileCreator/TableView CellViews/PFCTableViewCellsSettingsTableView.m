@@ -27,51 +27,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark CellViewTextField
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-@implementation CellViewTextField
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (CellViewTextField *)populateCellViewTextField:(CellViewTextField *)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
-
-    // ---------------------------------------------------------------------
-    //  ColumnIdentifier
-    // ---------------------------------------------------------------------
-    [cellView setColumnIdentifier:columnIdentifier];
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
-    if ([value length] == 0) {
-        if ([settings[@"DefaultValue"] length] != 0) {
-            value = settings[@"DefaultValue"] ?: @"";
-        }
-    }
-    [cellView.textField setDelegate:sender];
-    [cellView.textField setStringValue:value];
-    [cellView.textField setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Placeholder Value
-    // ---------------------------------------------------------------------
-    if ([settings[@"PlaceholderValue"] length] != 0) {
-        [cellView.textField setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
-    } else {
-        [cellView.textField setPlaceholderString:@""];
-    }
-
-    return cellView;
-} // populateCellViewTextField:settings:row
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark CellViewPopUpButton
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////

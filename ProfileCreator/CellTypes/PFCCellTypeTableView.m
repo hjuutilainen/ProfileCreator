@@ -27,6 +27,7 @@
 #import "PFCProfileEditorManifest.h"
 #import "PFCTableViewCellTypeCheckbox.h"
 #import "PFCTableViewCellTypeProtocol.h"
+#import "PFCTableViewCellTypeTextField.h"
 #import "PFCTableViewCellTypes.h"
 #import "PFCTableViewCellsSettingsTableView.h"
 
@@ -69,7 +70,7 @@
     }
     NSInteger row = [textFieldTag integerValue];
 
-    NSString *columnIdentifier = [(CellViewTextField *)[textField superview] columnIdentifier];
+    NSString *columnIdentifier = [(PFCTableViewTextfieldCellView *)[textField superview] columnIdentifier];
 
     // ---------------------------------------------------------------------
     //  Get current text and current cell dict
@@ -81,7 +82,7 @@
     // ---------------------------------------------------------------------
     //  Another verification of text field type
     // ---------------------------------------------------------------------
-    if ([[[textField superview] class] isSubclassOfClass:[CellViewTextField class]]) {
+    if ([[[textField superview] class] isSubclassOfClass:[PFCTableViewTextfieldCellView class]]) {
         if (textField == [[_settingTableView viewAtColumn:[_settingTableView columnWithIdentifier:columnIdentifier] row:row makeIfNecessary:NO] textField]) {
             NSMutableDictionary *columnDict = cellDict[columnIdentifier];
             columnDict[PFCSettingsKeyValue] = [inputText copy];
@@ -113,10 +114,13 @@
     NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnIdentifier];
     NSString *cellType = tableColumnCellViewDict[@"CellType"];
 
-    if ([cellType isEqualToString:@"TextField"]) {
-        CellViewTextField *cellView = [tableView makeViewWithIdentifier:@"CellViewTextField" owner:self];
-        [cellView setIdentifier:nil];
-        return [cellView populateCellViewTextField:cellView settings:settings[tableColumnIdentifier] columnIdentifier:[tableColumn identifier] row:row sender:self];
+    if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
+        return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:cellType
+                                                                          tableView:tableView
+                                                                           settings:settings[tableColumnIdentifier]
+                                                                   columnIdentifier:tableColumn.identifier
+                                                                                row:row
+                                                                             sender:self];
     } else if ([cellType isEqualToString:@"PopUpButton"]) {
         CellViewPopUpButton *cellView = [tableView makeViewWithIdentifier:@"CellViewPopUpButton" owner:self];
         [cellView setIdentifier:nil];

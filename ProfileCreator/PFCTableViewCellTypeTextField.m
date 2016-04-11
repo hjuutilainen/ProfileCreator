@@ -1,5 +1,5 @@
 //
-//  PFCTableViewCellTypeCheckbox.m
+//  PFCTableViewCellTypeTextField.m
 //  ProfileCreator
 //
 //  Created by Erik Berglund.
@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
-#import "PFCTableViewCellTypeCheckbox.h"
+#import "PFCTableViewCellTypeTextField.h"
 
-@interface PFCTableViewCheckboxCellView ()
+@interface PFCTableViewTextfieldCellView ()
 @property (readwrite) NSString *columnIdentifier;
 @end
 
-@implementation PFCTableViewCheckboxCellView
+@implementation PFCTableViewTextfieldCellView
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -40,20 +40,24 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
-    } else if (settings[@"DefaultValue"]) {
-        checkboxState = [settings[@"DefaultValue"] boolValue];
+    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
+    if ([value length] == 0) {
+        if ([settings[@"DefaultValue"] length] != 0) {
+            value = settings[@"DefaultValue"] ?: @"";
+        }
     }
-    [[cellView checkbox] setState:checkboxState];
+    [[cellView textField] setDelegate:sender];
+    [[cellView textField] setStringValue:value];
+    [[cellView textField] setTag:row];
 
     // ---------------------------------------------------------------------
-    //  Target Action
+    //  Placeholder Value
     // ---------------------------------------------------------------------
-    [[cellView checkbox] setAction:@selector(checkbox:)];
-    [[cellView checkbox] setTarget:sender];
-    [[cellView checkbox] setTag:row];
+    if ([settings[@"PlaceholderValue"] length] != 0) {
+        [[cellView textField] setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
+    } else {
+        [[cellView textField] setPlaceholderString:@""];
+    }
 
     return cellView;
 }

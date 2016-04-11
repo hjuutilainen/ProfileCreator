@@ -149,6 +149,7 @@
 		53EF2BB01C4D2F2B0029692E /* PFCManifestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EF2BAF1C4D2F2B0029692E /* PFCManifestUtility.m */; };
 		53F08F8F1CBC045400B99A8E /* PFCTableViewCellTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F8E1CBC045400B99A8E /* PFCTableViewCellTypes.m */; };
 		53F08F921CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F911CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m */; };
+		53F08F951CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */; };
 		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
 		53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */; };
 		53F4E0741C85E4B200DE3B1F /* PFCPreferencesLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0721C85E4B200DE3B1F /* PFCPreferencesLogging.m */; };
@@ -531,6 +532,8 @@
 		53F08F8E1CBC045400B99A8E /* PFCTableViewCellTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypes.m; path = CellTypesTableView/PFCTableViewCellTypes.m; sourceTree = "<group>"; };
 		53F08F901CBC063800B99A8E /* PFCTableViewCellTypeCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellTypeCheckbox.h; path = CellTypesTableView/PFCTableViewCellTypeCheckbox.h; sourceTree = "<group>"; };
 		53F08F911CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypeCheckbox.m; path = CellTypesTableView/PFCTableViewCellTypeCheckbox.m; sourceTree = "<group>"; };
+		53F08F931CBC0FAF00B99A8E /* PFCTableViewCellTypeTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellTypeTextField.h; path = CellTypesTableView/PFCTableViewCellTypeTextField.h; sourceTree = "<group>"; };
+		53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFCTableViewCellTypeTextField.m; sourceTree = "<group>"; };
 		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.passcode.plist"; sourceTree = "<group>"; };
 		53F4E05F1C85CF7A00DE3B1F /* PFCODManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCODManager.h; path = "General Classes/PFCODManager.h"; sourceTree = SOURCE_ROOT; };
 		53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCODManager.m; path = "General Classes/PFCODManager.m"; sourceTree = SOURCE_ROOT; };
@@ -1057,6 +1060,8 @@
 				53F08F8E1CBC045400B99A8E /* PFCTableViewCellTypes.m */,
 				53F08F901CBC063800B99A8E /* PFCTableViewCellTypeCheckbox.h */,
 				53F08F911CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m */,
+				53F08F931CBC0FAF00B99A8E /* PFCTableViewCellTypeTextField.h */,
+				53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */,
 			);
 			name = TableViewCellTypes;
 			sourceTree = "<group>";
@@ -1344,6 +1349,7 @@
 				53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */,
 				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
 				53ADF6231C7F951B005BA0FC /* PFCCellTypeTextFieldHostPort.m in Sources */,
+				53F08F951CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m in Sources */,
 				53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */,
 				53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */,
 				53ADF6081C7F8C77005BA0FC /* PFCCellTypePopUpButton.m in Sources */,

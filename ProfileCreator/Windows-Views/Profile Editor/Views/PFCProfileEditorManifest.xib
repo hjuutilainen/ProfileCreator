@@ -1139,7 +1139,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
-                                                                                <tableCellView identifier="CellViewTextField" id="o5H-HO-uES" customClass="CellViewTextField">
+                                                                                <tableCellView identifier="TableViewTextField" id="o5H-HO-uES" customClass="PFCTableViewTextfieldCellView">
                                                                                     <rect key="frame" x="1" y="1" width="130.5" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>

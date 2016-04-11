@@ -52,6 +52,7 @@ NSString *const PFCCellTypeTextView = @"TextView";
 #pragma mark TableView CellType
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCTableViewCellTypeCheckbox = @"TableViewCheckbox";
+NSString *const PFCTableViewCellTypeTextField = @"TableViewTextField";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ValueType
