@@ -1140,7 +1140,7 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="TableViewTextField" id="o5H-HO-uES" customClass="PFCTableViewTextfieldCellView">
-                                                                                    <rect key="frame" x="1" y="1" width="130.5" height="23"/>
+                                                                                    <rect key="frame" x="1" y="1" width="131" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="GN4-h9-lrg">
@@ -1163,7 +1163,7 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="TableViewPopUpButton" id="DnQ-pb-BWe" customClass="PFCTableViewPopUpButtonCellView">
-                                                                                    <rect key="frame" x="1" y="26" width="130.5" height="23"/>
+                                                                                    <rect key="frame" x="1" y="26" width="131" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7qM-4e-vEs">
@@ -1186,7 +1186,7 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="TableViewTextFieldNumber" id="uYP-YY-35g" customClass="PFCTableViewTextFieldNumberCellView">
-                                                                                    <rect key="frame" x="1" y="51" width="130.5" height="23"/>
+                                                                                    <rect key="frame" x="1" y="51" width="131" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KHp-9w-3WK">
@@ -1211,7 +1211,7 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="TableViewCheckbox" id="ilh-iY-1yF" customClass="PFCTableViewCheckboxCellView">
-                                                                                    <rect key="frame" x="1" y="76" width="130.5" height="23"/>
+                                                                                    <rect key="frame" x="1" y="76" width="131" height="23"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="hKT-KV-U6x">

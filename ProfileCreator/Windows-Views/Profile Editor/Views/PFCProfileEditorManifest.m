@@ -1361,17 +1361,16 @@
 - (void)controlTextDidChange:(NSNotification *)sender {
 
     // -------------------------------------------------------------------------
-    //  Get current entered text
-    // -------------------------------------------------------------------------
-    NSDictionary *userInfo = [sender userInfo];
-    NSString *inputText = [[userInfo valueForKey:@"NSFieldEditor"] string];
-
-    // -------------------------------------------------------------------------
     //  Make sure it's a text field
     // -------------------------------------------------------------------------
     if (![[[sender object] class] isSubclassOfClass:[NSTextField class]]) {
         return;
     }
+
+    // -------------------------------------------------------------------------
+    //  Get current entered text
+    // -------------------------------------------------------------------------
+    NSString *inputText = [[[sender userInfo] valueForKey:@"NSFieldEditor"] string];
 
     // -------------------------------------------------------------------------
     //  Get text field's row in the table view
@@ -1411,11 +1410,12 @@
 
         if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
             BOOL showRequired = NO;
-            BOOL required = [manifestContentDict[PFCManifestKeyRequired] boolValue];
-            BOOL requiredHost = [manifestContentDict[PFCManifestKeyRequiredHost] boolValue];
-            BOOL requiredPort = [manifestContentDict[PFCManifestKeyRequiredPort] boolValue];
+            BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:_profileEditor.settings.displayKeys];
+            BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:_profileEditor.settings.displayKeys];
+            BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:_profileEditor.settings.displayKeys];
 
             if (required || requiredHost || requiredPort) {
+                // FIXME - This should ask the current cellView class, which in turn should check any requirements from the dict. This is just the bare minimum implementation to show an example.
                 if (required && ([settingsDict[PFCSettingsKeyValueHost] length] == 0 || [settingsDict[PFCSettingsKeyValuePort] length] == 0)) {
                     showRequired = YES;
                 }

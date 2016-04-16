@@ -177,9 +177,8 @@
 } // buttonAdd
 
 - (void)buttonRemove {
-    NSIndexSet *indexes = [_settingTableView selectedRowIndexes];
-    [_tableViewContent removeObjectsAtIndexes:indexes];
-    [_settingTableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationSlideDown];
+    [_tableViewContent removeObjectsAtIndexes:_settingTableView.selectedRowIndexes];
+    [_settingTableView removeRowsAtIndexes:_settingTableView.selectedRowIndexes withAnimation:NSTableViewAnimationSlideDown];
     [self updateTableViewSavedContent];
 } // buttonRemove
 
