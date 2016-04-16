@@ -207,6 +207,15 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     [menu addItem:menuItemEditProfile];
 
     // -------------------------------------------------------------------------
+    //  Add item: "Export Profile"
+    // -------------------------------------------------------------------------
+    NSMenuItem *menuItemExportProfile = [[NSMenuItem alloc] init];
+    [menuItemExportProfile setTitle:@"Export Profile"];
+    [menuItemExportProfile setTarget:self];
+    [menuItemExportProfile setAction:@selector(menuItemExportProfile)];
+    [menu addItem:menuItemExportProfile];
+
+    // -------------------------------------------------------------------------
     //  Add separator
     // -------------------------------------------------------------------------
     [menu addItem:NSMenuItem.separatorItem];
@@ -1044,6 +1053,16 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         DDLogError(@"CLicked table view row not set");
     }
 } // menuItemEditProfile
+
+- (void)menuItemExportProfile {
+    if (_clickedTableViewRow != NSNotFound) {
+        if (_clickedTableViewRow < _arrayProfileLibrary.count) {
+            [self exportProfileWithUUID:_arrayProfileLibrary[_clickedTableViewRow] ?: @""];
+        }
+    } else {
+        DDLogError(@"CLicked table view row not set");
+    }
+} // menuItemExportProfile
 
 - (void)menuItemNewGroup {
     [_groupGroups createNewGroupOfType:kPFCProfileGroups];
