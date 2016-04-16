@@ -91,7 +91,7 @@
         // FIXME - Add user error message
         return;
     }
-
+    NSLog(@"payloadArray=%@", payloadArray);
     // -------------------------------------------------------------------------
     //  Add to profile root from "General" settings
     //  Get index of general settings and remove it from manifest array
@@ -101,16 +101,16 @@
     }];
 
     DDLogDebug(@"Profile settings index in payload array: %lu", (unsigned long)index);
+    NSMutableDictionary *profileRootKeys = [[NSMutableDictionary alloc] init];
     if (index == NSNotFound) {
         DDLogError(@"No general settings found in manifest array");
-        // FIXME - Add user error message
-        return;
+        // FIXME - Add user warning message, as these aren't strictly required!?
+        // return;
+    } else {
+        profileRootKeys = [payloadArray[index] mutableCopy];
+        [payloadArray removeObjectAtIndex:index];
     }
-
-    NSMutableDictionary *profileRootKeys = [payloadArray[index] mutableCopy];
-    [payloadArray removeObjectAtIndex:index];
     [profile addEntriesFromDictionary:[self profileRootKeysFromGeneralPayload:profileRootKeys]];
-
     profile[@"PayloadContent"] = [payloadArray copy] ?: @[];
 
     DDLogVerbose(@"Finished profile: %@", profile);
