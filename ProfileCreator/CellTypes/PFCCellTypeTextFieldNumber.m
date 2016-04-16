@@ -27,6 +27,12 @@
 #import "PFCManifestUtility.h"
 #import "PFCProfileExport.h"
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCTextFieldNumberCellView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
 @interface PFCTextFieldNumberCellView ()
 
 @property NSNumber *stepperValue;
@@ -276,6 +282,12 @@
 
 @end
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCTextFieldNumberLeftCellView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
 @interface PFCTextFieldNumberLeftCellView ()
 
 @property NSNumber *stepperValue;
@@ -394,12 +406,12 @@
 }
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    [self.class createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+    [PFCTextFieldNumberCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
-    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
-    return [lintReport copy];
+    // This might not catch all keys, for example the "left" key etc. Either do own implementation or add extra checks.
+    return [PFCTextFieldNumberCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath sender:sender];
 }
 
 @end

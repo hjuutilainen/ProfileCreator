@@ -124,6 +124,7 @@
         // FIXME - Add user error message
     } else {
         if ([url checkResourceIsReachableAndReturnError:&error]) {
+            // FIXME - Here either do callback or update working version and last eport date in profile settings.
 
             // -------------------------------------------------------------------------
             //  Show profile in Finder

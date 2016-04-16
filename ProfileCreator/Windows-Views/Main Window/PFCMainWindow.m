@@ -959,6 +959,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
 }
 
 - (void)exportProfileWithUUID:(NSString *)uuid {
+
     if (_tableViewProfileLibrarySelectedRows.count == 0) {
         if (_tableViewProfileLibrary.selectedRowIndexes.count == 0) {
             return;
@@ -967,7 +968,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         }
     }
 
-    if ([uuid length] == 0) {
+    if (uuid.length == 0) {
         uuid = _arrayProfileLibrary[_tableViewProfileLibrarySelectedRows.firstIndex];
     }
 
@@ -1008,8 +1009,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
         [panel beginSheetModalForWindow:self.window
                       completionHandler:^(NSInteger result) {
                         if (result == NSFileHandlingPanelOKButton) {
-                            NSURL *saveURL = panel.URL;
-                            [export exportProfileToURL:saveURL manifests:selectedManifests settings:settings];
+                            [export exportProfileToURL:panel.URL manifests:selectedManifests settings:settings];
                         }
                       }];
     }

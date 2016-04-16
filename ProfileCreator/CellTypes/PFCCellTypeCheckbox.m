@@ -119,13 +119,11 @@
 } // populateCellViewSettingsCheckbox:manifest:settings:settingsLocal:row:sender
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-
     NSString *checkboxState = [settings[PFCSettingsKeyValue] boolValue] ? @"True" : @"False";
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys];
     if (valueKeys[checkboxState]) {
         return [[PFCManifestParser sharedParser] settingsErrorForManifestContent:valueKeys[checkboxState] settings:settings displayKeys:displayKeys];
     }
-
     return nil;
 }
 
