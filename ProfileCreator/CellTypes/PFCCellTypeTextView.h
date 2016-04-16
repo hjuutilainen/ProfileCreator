@@ -17,20 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCCellTypeProtocol.h"
 #import <Cocoa/Cocoa.h>
 
-@interface PFCTextViewCellView : NSTableCellView
-
-- (PFCTextViewCellView *)populateCellView:(PFCTextViewCellView *)cellView
-                                 manifest:(NSDictionary *)manifest
-                                 settings:(NSDictionary *)settings
-                            settingsLocal:(NSDictionary *)settingsLocal
-                              displayKeys:(NSDictionary *)displayKeys
-                                      row:(NSInteger)row
-                                   sender:(id)sender;
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-
+@interface PFCTextViewCellView : NSTableCellView <PFCCellType>
 - (void)showRequired:(BOOL)show;
-
 @end

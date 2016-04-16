@@ -25,6 +25,12 @@
 #import "PFCConstants.h"
 #import "PFCManifestUtility.h"
 
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark PFCTextViewCellView
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
 @interface PFCTextViewCellView ()
 
 @property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldTrailing;
@@ -134,6 +140,15 @@
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     return [PFCTextFieldCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender {
+    [PFCTextFieldCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+}
+
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
+    // FIXME - Verify this doesn't add any extra thing to validate.
+    return [PFCTextViewCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath sender:sender];
 }
 
 - (void)showRequired:(BOOL)show {
