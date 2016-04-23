@@ -41,6 +41,7 @@
 } // sharedInstance
 
 - (NSView *)cellViewForTableViewCellType:(NSString *)cellType
+                              columnDict:(NSDictionary *)columnDict
                                tableView:(NSTableView *)tableView
                                 settings:(NSDictionary *)settings
                         columnIdentifier:(NSString *)columnIdentifier
@@ -50,7 +51,7 @@
     id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
     if (cellView) {
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateTableViewCellView:cellView settings:settings columnIdentifier:columnIdentifier row:row sender:sender];
+        return [cellView populateTableViewCellView:cellView settings:settings columnDict:columnDict columnIdentifier:columnIdentifier row:row sender:sender];
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }

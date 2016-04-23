@@ -22,7 +22,12 @@
 
 @protocol PFCTableViewCellType
 
-- (instancetype)populateTableViewCellView:(id)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender;
+- (instancetype)populateTableViewCellView:(id)cellView
+                                 settings:(NSDictionary *)settings
+                               columnDict:(NSDictionary *)columnDict
+                         columnIdentifier:(NSString *)columnIdentifier
+                                      row:(NSInteger)row
+                                   sender:(id)sender;
 
 @optional
 

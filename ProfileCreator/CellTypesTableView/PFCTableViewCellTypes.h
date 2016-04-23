@@ -32,6 +32,7 @@
 //- (CGFloat)rowHeightForCellType:(NSString *)cellType;
 
 - (NSView *)cellViewForTableViewCellType:(NSString *)cellType
+                              columnDict:(NSDictionary *)columnDict
                                tableView:(NSTableView *)tableView
                                 settings:(NSDictionary *)settings
                         columnIdentifier:(NSString *)columnIdentifier

@@ -30,7 +30,12 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (instancetype)populateTableViewCellView:(id)cellView settings:(NSDictionary *)settings columnIdentifier:(NSString *)columnIdentifier row:(NSInteger)row sender:(id)sender {
+- (instancetype)populateTableViewCellView:(id)cellView
+                                 settings:(NSDictionary *)settings
+                               columnDict:(NSDictionary *)columnDict
+                         columnIdentifier:(NSString *)columnIdentifier
+                                      row:(NSInteger)row
+                                   sender:(id)sender {
 
     // ---------------------------------------------------------------------
     //  ColumnIdentifier
@@ -53,12 +58,19 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ([settings[@"PlaceholderValue"] length] != 0) {
-        [[cellView textField] setPlaceholderString:settings[@"PlaceholderValue"] ?: @""];
+    if ([columnDict[PFCManifestKeyPlaceholderValue] length] != 0) {
+        [[cellView textField] setPlaceholderString:columnDict[PFCManifestKeyPlaceholderValue] ?: @""];
     } else {
         [[cellView textField] setPlaceholderString:@""];
     }
 
+    /*
+    else if (required) {
+        [[cellView settingTextField] setPlaceholderString:@"Required"];
+    } else if (optional) {
+        [[cellView settingTextField] setPlaceholderString:@"Optional"];
+    }
+*/
     return cellView;
 }
 
