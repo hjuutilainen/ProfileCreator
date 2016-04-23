@@ -163,6 +163,7 @@
 }
 
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'PopUpButton'
     // -------------------------------------------------------------------------
