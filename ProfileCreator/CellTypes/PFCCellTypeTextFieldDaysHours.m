@@ -99,7 +99,8 @@
         }
 
         NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [calendarUS setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0:00"]];
         NSUInteger unitFlags = NSCalendarUnitDay | NSCalendarUnitHour;
 
         NSDate *startDate = [NSDate date];

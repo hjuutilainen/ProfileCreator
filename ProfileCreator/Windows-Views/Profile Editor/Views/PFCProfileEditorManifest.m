@@ -1335,7 +1335,8 @@
         [(PFCDatePickerNoTitleCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingDatePicker]) {
 
         NSCalendar *calendarUS = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [calendarUS setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0:00"]];
 
         // ---------------------------------------------------------------------
         //  Save selection

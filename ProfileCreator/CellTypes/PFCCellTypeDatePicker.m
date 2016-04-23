@@ -21,10 +21,13 @@
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
+#import "PFCError.h"
 #import "PFCGeneralUtility.h"
+#import "PFCLog.h"
 #import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditor.h"
+#import "PFCProfileExport.h"
 
 @interface PFCDatePickerCellView ()
 
@@ -123,12 +126,14 @@
         NSInteger hours = [manifest[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
         NSInteger minutes = [manifest[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
 
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSCalendar *calendarUS = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [calendarUS setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0:00"]];
         NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
         [offsetComponents setDay:days];
         [offsetComponents setHour:hours];
         [offsetComponents setMinute:minutes];
-        NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
+        NSDate *dateTomorrow = [calendarUS dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
         [[cellView settingDatePicker] setMinDate:dateTomorrow];
     }
 
@@ -153,8 +158,112 @@
 } // populateCellViewDatePicker
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    // FIXME - Write verification
-    return @{};
+
+    // -------------------------------------------------------------------------
+    //  Verify this manifest content dict contains an 'Identifier'. Else stop.
+    // -------------------------------------------------------------------------
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if (identifier.length == 0) {
+        return nil;
+    }
+
+    NSDictionary *contentDictSettings = settings[identifier];
+    if (contentDictSettings.count == 0) {
+        DDLogDebug(@"No settings!");
+    }
+
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    NSDate *value = [contentDictSettings[PFCSettingsKeyValue] dateValue];
+    if (value != nil) {
+        value = [contentDictSettings[PFCManifestKeyDefaultValue] dateValue];
+    }
+
+    // FIX Min/Max value check
+    // If value is greater than offset days.
+    // Add both min and max and "hard" value.
+
+    if (required && value == nil) {
+        return @{ identifier : @[ [PFCError verificationReportWithMessage:@"" severity:kPFCSeverityError manifestContentDict:manifestContentDict] ] };
+    }
+
+    return nil;
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    // -------------------------------------------------------------------------
+    //  Verify required keys for CellType: 'DatePicker'
+    // -------------------------------------------------------------------------
+    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Get value for current PayloadKey
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+
+    // This might fail, should probably check some more before using 'dateValue'
+    id value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Verify value is of the expected class type(s)
+    // -------------------------------------------------------------------------
+    if (value == nil || ([[value class] isSubclassOfClass:[NSDate class]] && value == nil)) {
+        DDLogDebug(@"PayloadValue is empty");
+
+        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
+            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
+            return;
+        }
+
+        value = @"";
+    } else if (![[value class] isSubclassOfClass:[NSDate class]]) {
+        return [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSDate class]) ]];
+    } else {
+        DDLogDebug(@"PayloadValue: %@", value);
+    }
+
+    // -------------------------------------------------------------------------
+    //  Resolve any nested payload keys
+    //  FIXME - Need to implement this for nested keys
+    // -------------------------------------------------------------------------
+    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+    // -------------------------------------------------------------------------
+    //  Get index of current payload in payload array
+    // -------------------------------------------------------------------------
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+    }];
+
+    // ----------------------------------------------------------------------------------
+    //  Create mutable version of current payload, or create new payload if none existed
+    // ----------------------------------------------------------------------------------
+    NSMutableDictionary *payloadDictDict;
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
+    } else {
+        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = value;
+
+    // -------------------------------------------------------------------------
+    //  Save payload to payload array
+    // -------------------------------------------------------------------------
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+    } else {
+        [*payloads addObject:[payloadDictDict copy]];
+    }
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
@@ -279,12 +388,14 @@
         NSInteger hours = [manifest[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
         NSInteger minutes = [manifest[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
 
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSCalendar *calendarUS = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [calendarUS setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0:00"]];
         NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
         [offsetComponents setDay:days];
         [offsetComponents setHour:hours];
         [offsetComponents setMinute:minutes];
-        NSDate *dateTomorrow = [gregorian dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
+        NSDate *dateTomorrow = [calendarUS dateByAddingComponents:offsetComponents toDate:[NSDate date] options:0];
         [[cellView settingDatePicker] setMinDate:dateTomorrow];
     }
 
@@ -309,8 +420,11 @@
 } // populateCellViewCheckbox:settings:row
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    // FIXME - Write verification
-    return @{};
+    return [PFCDatePickerCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+    return [PFCDatePickerCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

@@ -18,11 +18,13 @@
 //  limitations under the License.
 
 #import "PFCCellTypeCheckbox.h"
+#import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypePopUpButton.h"
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
 #import "PFCCellTypeTextFieldNumber.h"
+#import "PFCCellTypeTextView.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
@@ -469,11 +471,13 @@
         //  DatePicker
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
+        [PFCDatePickerCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  DatePickerNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle]) {
+        [PFCDatePickerNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  File
@@ -555,6 +559,12 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
         [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+
+        // ---------------------------------------------------------------------
+        //  TextView
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
+        [PFCTextViewCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
