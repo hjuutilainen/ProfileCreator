@@ -74,6 +74,8 @@
 					</array>
 					<key>Title</key>
 					<string>Device Name (iOS)</string>
+					<key>PlaceholderValue</key>
+					<string>Device Name</string>
 					<key>PayloadType</key>
 					<string>com.apple.airplay</string>
 					<key>PayloadKey</key>
@@ -81,7 +83,7 @@
 					<key>PayloadValueType</key>
 					<string>String</string>
 					<key>CellType</key>
-					<string>TextField</string>
+					<string>TableViewTextField</string>
 				</dict>
 				<dict>
 					<key>Availability</key>
@@ -104,7 +106,7 @@
 					<key>PayloadValueType</key>
 					<string>String</string>
 					<key>CellType</key>
-					<string>TextField</string>
+					<string>TableViewTextField</string>
 				</dict>
 				<dict>
 					<key>Title</key>
@@ -116,7 +118,7 @@
 					<key>PayloadValueType</key>
 					<string>String</string>
 					<key>CellType</key>
-					<string>TextField</string>
+					<string>TableViewTextField</string>
 				</dict>
 			</array>
 		</dict>
@@ -153,7 +155,7 @@
 					<key>PayloadValueType</key>
 					<string>String</string>
 					<key>CellType</key>
-					<string>TextField</string>
+					<string>TableViewTextField</string>
 				</dict>
 			</array>
 		</dict>
