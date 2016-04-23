@@ -87,7 +87,7 @@
     // ---------------------------------------------------------------------
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
-    if ([value length] == 0) {
+    if (value.length == 0) {
         if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
             value = manifest[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
@@ -95,7 +95,7 @@
         }
     }
 
-    if ([valueAttributed length] != 0) {
+    if (valueAttributed.length != 0) {
         [[cellView settingTextField] setAttributedStringValue:valueAttributed];
     } else {
         [[cellView settingTextField] setStringValue:value];
@@ -129,7 +129,7 @@
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if (required && [value length] == 0) {
+    if (required && value.length == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
