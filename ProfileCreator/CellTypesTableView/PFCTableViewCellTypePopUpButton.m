@@ -59,4 +59,7 @@
     return cellView;
 }
 
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
+}
+
 @end

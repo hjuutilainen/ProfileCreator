@@ -25,6 +25,7 @@
 #import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
 #import "PFCProfileEditorManifest.h"
+#import "PFCProfileExport.h"
 #import "PFCTableViewCellTypeCheckbox.h"
 #import "PFCTableViewCellTypePopUpButton.h"
 #import "PFCTableViewCellTypeProtocol.h"
@@ -110,6 +111,7 @@
     }
 
     return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:_tableViewColumnCellViews[tableColumn.identifier][@"CellType"]
+                                                                     columnDict:_tableViewColumnCellViews[tableColumn.identifier]
                                                                       tableView:tableView
                                                                        settings:_tableViewContent[(NSUInteger)row][tableColumn.identifier]
                                                                columnIdentifier:tableColumn.identifier
@@ -157,7 +159,7 @@
     }
 
     NSMutableDictionary *newRowDict = [[NSMutableDictionary alloc] init];
-    NSArray *tableColumnKeys = [_tableViewColumnCellViews allKeys];
+    NSArray *tableColumnKeys = _tableViewColumnCellViews.allKeys;
     for (NSString *tableColumnKey in tableColumnKeys) {
         NSMutableDictionary *tableColumnDict = [[NSMutableDictionary alloc] init];
         NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnKey];
@@ -316,9 +318,9 @@
     // -------------------------------------------------------------------------
     [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        [[cellView settingTitle] setTextColor:NSColor.blackColor];
     } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        [[cellView settingTitle] setTextColor:NSColor.grayColor];
     }
 
     // -------------------------------------------------------------------------
@@ -381,6 +383,71 @@
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
     // FIXME - Write verification
     return @{};
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
+
+    // -------------------------------------------------------------------------
+    //  Verify required keys for CellType: 'TableView'
+    // -------------------------------------------------------------------------
+    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey, PFCManifestKeyTableViewColumns ]
+                                   manifestContentDict:manifestContentDict]) {
+        return;
+    }
+
+    // Should probably check this aswell when exporting.
+    NSArray *tableViewColumns = manifestContentDict[PFCManifestKeyTableViewColumns];
+
+    // -------------------------------------------------------------------------
+    //  Get value for current PayloadKey
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    NSArray *tableViewContentArray = contentDictSettings[PFCSettingsKeyTableViewContent] ?: @[];
+
+    // Do some more and better checking here, like if it's required etc.
+    if (tableViewContentArray.count == 0) {
+        DDLogInfo(@"No content for current payload key.");
+        return;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Get index of current payload in payload array
+    // -------------------------------------------------------------------------
+    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+    }];
+
+    // ----------------------------------------------------------------------------------
+    //  Create mutable version of current payload, or create new payload if none existed
+    // ----------------------------------------------------------------------------------
+    NSMutableDictionary *payloadDictDict;
+    if (index != NSNotFound) {
+        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
+    } else {
+        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Create array from TableView settings
+    // -------------------------------------------------------------------------
+    NSMutableArray *tableViewPayload = [[NSMutableArray alloc] init];
+    for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
+        [sender createPayloadFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloads:&tableViewPayload];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = [tableViewPayload copy] ?: @[];
+
+    // -------------------------------------------------------------------------
+    //  Save payload to payload array
+    // -------------------------------------------------------------------------
+    if (index != NSNotFound) {
+        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+    } else {
+        [*payloads addObject:[payloadDictDict copy]];
+    }
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

@@ -18,6 +18,8 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
+#import "PFCLog.h"
+#import "PFCProfileExport.h"
 #import "PFCTableViewCellTypeTextField.h"
 
 @interface PFCTableViewTextFieldCellView ()
@@ -72,6 +74,50 @@
     }
 */
     return cellView;
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
+
+    DDLogDebug(@"settings=%@", settings);
+
+    // -------------------------------------------------------------------------
+    //  Get value for current PayloadKey
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    id value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Verify value is of the expected class type(s)
+    // -------------------------------------------------------------------------
+    if (value == nil || ([[value class] isSubclassOfClass:[NSString class]] && [value length] == 0)) {
+        DDLogDebug(@"PayloadValue is empty");
+
+        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
+            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
+            return;
+        }
+
+        value = @"";
+    } else if (![[value class] isSubclassOfClass:[NSString class]]) {
+        return [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
+    } else {
+        DDLogDebug(@"PayloadValue: %@", value);
+    }
+
+    // -------------------------------------------------------------------------
+    //  Resolve any nested payload keys
+    //  FIXME - Need to implement this for nested keys
+    // -------------------------------------------------------------------------
+    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    NSAssert([[value class] isSubclassOfClass:[NSString class]], @"Value is not subclass of NSString.");
+    [*payloadDict setObject:value forKey:manifestContentDict[PFCManifestKeyPayloadKey]];
 }
 
 @end

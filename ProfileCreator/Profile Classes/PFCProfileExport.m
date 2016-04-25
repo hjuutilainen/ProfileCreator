@@ -21,6 +21,7 @@
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypePopUpButton.h"
 #import "PFCCellTypeSegmentedControl.h"
+#import "PFCCellTypeTableView.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
 #import "PFCCellTypeTextFieldNumber.h"
@@ -29,6 +30,8 @@
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
 #import "PFCProfileExport.h"
+#import "PFCTableViewCellTypeCheckbox.h"
+#import "PFCTableViewCellTypeTextField.h"
 
 @interface PFCProfileExport ()
 
@@ -93,7 +96,7 @@
         // FIXME - Add user error message
         return;
     }
-    NSLog(@"payloadArray=%@", payloadArray);
+
     // -------------------------------------------------------------------------
     //  Add to profile root from "General" settings
     //  Get index of general settings and remove it from manifest array
@@ -203,8 +206,8 @@
         PFCManifestKeyPayloadIdentifier : [NSString stringWithFormat:@"%@.%@.%@", _rootIdentifier, payloadType, payloadUUID],
         PFCManifestKeyPayloadUUID : payloadUUID,
         PFCManifestKeyPayloadDisplayName : @"FIXME",
-        PFCManifestKeyPayloadDescription : @"FIXME",
-        PFCManifestKeyPayloadOrganization : [NSString stringWithFormat:@"%@", _rootOrganization ?: @"FIXME"]
+        PFCManifestKeyPayloadDescription : @"FIXME",                                                         // Optional for payloads
+        PFCManifestKeyPayloadOrganization : [NSString stringWithFormat:@"%@", _rootOrganization ?: @"FIXME"] // Optional for payloads
     }];
 } // payloadRootFromManifest:settings:payloadType:payloadUUID
 
@@ -512,6 +515,7 @@
         //  TableView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
+        [PFCTableViewCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextField
@@ -570,5 +574,52 @@
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }
 } // createPayloadFromManifestContentDict:settings:payloads
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TableView Column Dict Methods
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)createPayloadFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
+    NSMutableDictionary *payloadDict = [[NSMutableDictionary alloc] init];
+    for (NSDictionary *tableViewColumnDict in tableViewColumns) {
+        [self createPayloadFromTableViewColumnDict:tableViewColumnDict settings:settings payloadDict:&payloadDict];
+    }
+    [*payloads addObject:[payloadDict copy]];
+} // createPayloadFromTableViewColumns:settings:payloads
+
+- (void)createPayloadFromTableViewColumnDict:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
+    NSString *cellType = tableViewColumnDict[PFCManifestKeyCellType];
+    DDLogDebug(@"CellType: %@", cellType);
+
+    // -------------------------------------------------------------------------
+    //  TableView Checkbox
+    // -------------------------------------------------------------------------
+    if ([cellType isEqualToString:PFCTableViewCellTypeCheckbox]) {
+        [PFCTableViewCheckboxCellView createPayloadForCellType:tableViewColumnDict settings:settings payloadDict:payloadDict sender:self];
+
+        // -------------------------------------------------------------------------
+        //  TableView PopUp Button
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypePopUpButton]) {
+
+        // -------------------------------------------------------------------------
+        //  TableView TextField
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
+        [PFCTableViewTextFieldCellView createPayloadForCellType:tableViewColumnDict settings:settings payloadDict:payloadDict sender:self];
+
+        // -------------------------------------------------------------------------
+        //  TableView TextFieldNumber
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextFieldNumber]) {
+
+    } else {
+        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
+    }
+}
 
 @end

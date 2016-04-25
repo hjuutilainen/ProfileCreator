@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <Cocoa/Cocoa.h>
+@class PFCProfileExport;
 @class PFCManifestLint;
 
 @protocol PFCTableViewCellType
@@ -28,11 +29,11 @@
                          columnIdentifier:(NSString *)columnIdentifier
                                       row:(NSInteger)row
                                    sender:(id)sender;
++ (void)createPayloadForCellType:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender;
 
 @optional
 
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
-//+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender;
-+ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender;
++ (NSDictionary *)verifyCellType:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
++ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)tableViewColumnDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender;
 
 @end

@@ -18,6 +18,8 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
+#import "PFCLog.h"
+#import "PFCProfileExport.h"
 #import "PFCTableViewCellTypeCheckbox.h"
 
 @interface PFCTableViewCheckboxCellView ()
@@ -61,6 +63,49 @@
     [[cellView checkbox] setTag:row];
 
     return cellView;
+}
+
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
+
+    // -------------------------------------------------------------------------
+    //  Get value for Checkbox
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    id value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Verify CheckboxValue is of the expected class type(s)
+    // -------------------------------------------------------------------------
+    BOOL checkboxState = NO;
+    if (value == nil) {
+        DDLogWarn(@"CheckboxValue is empty");
+
+        if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
+            DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
+            return;
+        }
+    } else if (![[value class] isEqualTo:[@(YES) class]] && ![[value class] isEqualTo:[@(0) class]]) {
+        return [sender payloadErrorForValueClass:NSStringFromClass([value class])
+                                      payloadKey:manifestContentDict[PFCManifestKeyPayloadType]
+                                exptectedClasses:@[ NSStringFromClass([@(YES) class]), NSStringFromClass([@(0) class]) ]];
+    } else {
+        checkboxState = [(NSNumber *)value boolValue];
+        DDLogDebug(@"CheckboxValue: %@", (checkboxState) ? @"YES" : @"NO");
+    }
+
+    // ---------------------------------------------------------------------
+    //  Resolve any nested payload keys
+    //  FIXME - Need to implement this for nested keys
+    // ---------------------------------------------------------------------
+    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+    // -------------------------------------------------------------------------
+    //  Add current key and value to payload
+    // -------------------------------------------------------------------------
+    [*payloadDict setObject:@(checkboxState) forKey:manifestContentDict[PFCManifestKeyPayloadKey]];
 }
 
 @end
