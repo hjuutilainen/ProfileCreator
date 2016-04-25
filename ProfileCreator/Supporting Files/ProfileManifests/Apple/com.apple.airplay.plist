@@ -50,8 +50,6 @@
 			<string>com.apple.airplay</string>
 			<key>PayloadKey</key>
 			<string>Passwords</string>
-			<key>PayloadValueType</key>
-			<string>Array</string>
 			<key>Description</key>
 			<string>Add settings for known devices</string>
 			<key>CellType</key>
@@ -61,6 +59,8 @@
 			<key>TableViewColumns</key>
 			<array>
 				<dict>
+					<key>Identifier</key>
+					<string>2E8D9BBF-D019-4C61-AEE5-7DFC1019CBAE</string>
 					<key>Availability</key>
 					<array>
 						<dict>
@@ -86,6 +86,8 @@
 					<string>TableViewTextField</string>
 				</dict>
 				<dict>
+					<key>Identifier</key>
+					<string>50F0206D-ABA6-4AC2-A521-50F893A2160A</string>
 					<key>Availability</key>
 					<array>
 						<dict>
@@ -109,6 +111,8 @@
 					<string>TableViewTextField</string>
 				</dict>
 				<dict>
+					<key>Identifier</key>
+					<string>FA0003DC-A282-4013-A8F2-6D2B293DF46E</string>
 					<key>Title</key>
 					<string>Password</string>
 					<key>PayloadType</key>
@@ -133,8 +137,6 @@
 			<string>com.apple.airplay</string>
 			<key>PayloadKey</key>
 			<string>Whitelist</string>
-			<key>PayloadValueType</key>
-			<string>Array</string>
 			<key>Description</key>
 			<string>Only destinations with the following DeviceIDs will be available on device</string>
 			<key>SupervisedOnly</key>
@@ -146,6 +148,8 @@
 			<key>TableViewColumns</key>
 			<array>
 				<dict>
+					<key>Identifier</key>
+					<string>787EFDEF-76B0-4D6F-B3DB-D7A8725F4E05</string>
 					<key>Title</key>
 					<string>DeviceID</string>
 					<key>PayloadType</key>
