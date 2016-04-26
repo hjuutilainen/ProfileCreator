@@ -91,7 +91,30 @@
 			<key>Description</key>
 			<string>A message that will be displayed during profile installation</string>
 			<key>CellType</key>
-			<string>TextView</string>
+			<string>TableView</string>
+			<key>TableViewColumns</key>
+			<array>
+				<dict>
+					<key>Identifier</key>
+					<string>9521F473-62B1-4212-8E94-7120341F1C6F</string>
+					<key>Title</key>
+					<string>Language ID</string>
+					<key>DictType</key>
+					<string>Key</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+				</dict>
+				<dict>
+					<key>Identifier</key>
+					<string>8D49A53D-985B-417A-BD64-C600AA9D5867</string>
+					<key>Title</key>
+					<string>Message</string>
+					<key>DictType</key>
+					<string>Value</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+				</dict>
+			</array>
 			<key>ToolTipDescription</key>
 			<string>A message that will be displayed during profile installation</string>
 		</dict>
