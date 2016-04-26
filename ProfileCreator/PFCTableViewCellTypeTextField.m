@@ -63,7 +63,7 @@
     if ([columnDict[PFCManifestKeyPlaceholderValue] length] != 0) {
         [[cellView textField] setPlaceholderString:columnDict[PFCManifestKeyPlaceholderValue] ?: @""];
     } else {
-        [[cellView textField] setPlaceholderString:@""];
+        [[cellView textField] setPlaceholderString:columnDict[PFCManifestKeyTitle] ?: @""];
     }
 
     /*
