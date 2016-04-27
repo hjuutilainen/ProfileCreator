@@ -101,8 +101,8 @@
 					<string>9521F473-62B1-4212-8E94-7120341F1C6F</string>
 					<key>Title</key>
 					<string>Language ID</string>
-					<key>DictType</key>
-					<string>Key</string>
+					<key>DictKey</key>
+					<true/>
 					<key>CellType</key>
 					<string>TableViewTextField</string>
 				</dict>
@@ -111,8 +111,6 @@
 					<string>8D49A53D-985B-417A-BD64-C600AA9D5867</string>
 					<key>Title</key>
 					<string>Message</string>
-					<key>DictType</key>
-					<string>Value</string>
 					<key>CellType</key>
 					<string>TableViewTextField</string>
 				</dict>

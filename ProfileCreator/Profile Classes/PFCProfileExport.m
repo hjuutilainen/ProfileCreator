@@ -587,14 +587,14 @@
     NSString *dictKey;
     id dictValue;
     for (NSDictionary *tableViewColumnDict in tableViewColumns) {
-        if ([tableViewColumnDict[@"DictType"] isEqualToString:@"Key"]) {
+        if (tableViewColumnDict[PFCManifestKeyDictKey] != nil && [tableViewColumnDict[PFCManifestKeyDictKey] boolValue]) {
             id value = [self valueForTableViewColumnDict:tableViewColumnDict settings:settings];
             if (value != nil && [[value class] isSubclassOfClass:[NSString class]]) {
                 dictKey = value;
             } else {
                 DDLogError(@"Key was empty or not NSString!?");
             }
-        } else if ([tableViewColumnDict[@"DictType"] isEqualToString:@"Value"]) {
+        } else if (tableViewColumnDict[PFCManifestKeyDictKey] == nil || (tableViewColumnDict[PFCManifestKeyDictKey] != nil && ![tableViewColumnDict[PFCManifestKeyDictKey] boolValue])) {
             id value = [self valueForTableViewColumnDict:tableViewColumnDict settings:settings];
             if (value != nil) {
                 dictValue = value;
@@ -603,8 +603,7 @@
             }
         }
     }
-    DDLogDebug(@"dictKey=%@", dictKey);
-    DDLogDebug(@"dictValue=%@", dictValue);
+
     if (dictKey.length != 0 && dictValue != nil) {
         [*payloadDict setObject:dictValue forKey:dictKey];
     } else {

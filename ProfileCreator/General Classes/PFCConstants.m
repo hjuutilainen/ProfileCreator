@@ -79,6 +79,7 @@ NSString *const PFCManifestKeyAvailability = @"Availability";
 NSString *const PFCManifestKeyAvailableValues = @"AvailableValues";
 NSString *const PFCManifestKeyButtonTitle = @"ButtonTitle";
 NSString *const PFCManifestKeyCellType = @"CellType";
+NSString *const PFCManifestKeyDictKey = @"DictKey";
 NSString *const PFCManifestKeyDisabled = @"Disabled";
 NSString *const PFCManifestKeyDefaultValue = @"DefaultValue";
 NSString *const PFCManifestKeyDefaultValueCheckbox = @"DefaultValueCheckbox";

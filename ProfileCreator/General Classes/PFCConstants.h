@@ -111,6 +111,7 @@ extern NSString *const PFCManifestKeyAvailability;
 extern NSString *const PFCManifestKeyAvailableValues;
 extern NSString *const PFCManifestKeyButtonTitle;
 extern NSString *const PFCManifestKeyCellType;
+extern NSString *const PFCManifestKeyDictKey;
 extern NSString *const PFCManifestKeyDisabled;
 extern NSString *const PFCManifestKeyDefaultValue;
 extern NSString *const PFCManifestKeyDefaultValueCheckbox;
