@@ -88,6 +88,8 @@
 			<string>com.apple.profile</string>
 			<key>PayloadKey</key>
 			<string>ConsentText</string>
+			<key>PayloadValueType</key>
+			<string>Dict</string>
 			<key>Description</key>
 			<string>A message that will be displayed during profile installation</string>
 			<key>CellType</key>

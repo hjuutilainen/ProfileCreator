@@ -76,9 +76,7 @@
     return cellView;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
-
-    DDLogDebug(@"settings=%@", settings);
++ (id)valueForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Get value for current PayloadKey
@@ -97,27 +95,36 @@
 
         if ([manifestContentDict[PFCManifestKeyOptional] boolValue]) {
             DDLogDebug(@"PayloadKey: %@ is optional, skipping", manifestContentDict[PFCManifestKeyPayloadKey]);
-            return;
+            return nil;
         }
 
         value = @"";
     } else if (![[value class] isSubclassOfClass:[NSString class]]) {
-        return [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
+        [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([NSString class]) ]];
+        return nil;
     } else {
         DDLogDebug(@"PayloadValue: %@", value);
     }
 
-    // -------------------------------------------------------------------------
-    //  Resolve any nested payload keys
-    //  FIXME - Need to implement this for nested keys
-    // -------------------------------------------------------------------------
-    // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+    return value;
+}
 
-    // -------------------------------------------------------------------------
-    //  Add current key and value to payload
-    // -------------------------------------------------------------------------
-    NSAssert([[value class] isSubclassOfClass:[NSString class]], @"Value is not subclass of NSString.");
-    [*payloadDict setObject:value forKey:manifestContentDict[PFCManifestKeyPayloadKey]];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
+
+    id value = [self.class valueForCellType:manifestContentDict settings:settings sender:sender];
+    if (value != nil) {
+        // -------------------------------------------------------------------------
+        //  Resolve any nested payload keys
+        //  FIXME - Need to implement this for nested keys
+        // -------------------------------------------------------------------------
+        // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+        // -------------------------------------------------------------------------
+        //  Add current key and value to payload
+        // -------------------------------------------------------------------------
+        NSAssert([[value class] isSubclassOfClass:[NSString class]], @"Value is not subclass of NSString.");
+        [*payloadDict setObject:value forKey:manifestContentDict[PFCManifestKeyPayloadKey]];
+    }
 }
 
 @end

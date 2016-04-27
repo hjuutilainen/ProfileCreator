@@ -32,7 +32,7 @@
 + (void)createPayloadForCellType:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender;
 
 @optional
-
++ (id)valueForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings sender:(PFCProfileExport *)sender;
 + (NSDictionary *)verifyCellType:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)tableViewColumnDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender;
 

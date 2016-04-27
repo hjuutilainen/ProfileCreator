@@ -67,6 +67,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (void)exportProfileToURL:(NSURL *)url manifests:(NSArray *)manifests settings:(NSDictionary *)settings {
+
     // -------------------------------------------------------------------------
     //  Create profile root from profile settings
     // -------------------------------------------------------------------------
@@ -581,17 +582,78 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (void)createPayloadFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
+- (void)createPayloadDictFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict {
+
+    NSString *dictKey;
+    id dictValue;
+    for (NSDictionary *tableViewColumnDict in tableViewColumns) {
+        if ([tableViewColumnDict[@"DictType"] isEqualToString:@"Key"]) {
+            id value = [self valueForTableViewColumnDict:tableViewColumnDict settings:settings];
+            if (value != nil && [[value class] isSubclassOfClass:[NSString class]]) {
+                dictKey = value;
+            } else {
+                DDLogError(@"Key was empty or not NSString!?");
+            }
+        } else if ([tableViewColumnDict[@"DictType"] isEqualToString:@"Value"]) {
+            id value = [self valueForTableViewColumnDict:tableViewColumnDict settings:settings];
+            if (value != nil) {
+                dictValue = value;
+            } else {
+                DDLogError(@"Value was empty");
+            }
+        }
+    }
+    DDLogDebug(@"dictKey=%@", dictKey);
+    DDLogDebug(@"dictValue=%@", dictValue);
+    if (dictKey.length != 0 && dictValue != nil) {
+        [*payloadDict setObject:dictValue forKey:dictKey];
+    } else {
+        DDLogError(@"Didn't write key/value pair from table view column dict.");
+    }
+} // createPayloadDictFromTableViewColumns:settings:payloads
+
+- (id)valueForTableViewColumnDict:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings {
+    NSString *cellType = tableViewColumnDict[PFCManifestKeyCellType];
+    DDLogDebug(@"CellType: %@", cellType);
+
+    // -------------------------------------------------------------------------
+    //  TableView Checkbox
+    // -------------------------------------------------------------------------
+    if ([cellType isEqualToString:PFCTableViewCellTypeCheckbox]) {
+        return [PFCTableViewCheckboxCellView valueForCellType:tableViewColumnDict settings:settings sender:self];
+
+        // -------------------------------------------------------------------------
+        //  TableView PopUp Button
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypePopUpButton]) {
+
+        // -------------------------------------------------------------------------
+        //  TableView TextField
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
+        return [PFCTableViewTextFieldCellView valueForCellType:tableViewColumnDict settings:settings sender:self];
+
+        // -------------------------------------------------------------------------
+        //  TableView TextFieldNumber
+        // -------------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCTableViewCellTypeTextFieldNumber]) {
+
+    } else {
+        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
+    }
+
+    return nil;
+}
+
+- (void)createPayloadArrayFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
     NSMutableDictionary *payloadDict = [[NSMutableDictionary alloc] init];
     for (NSDictionary *tableViewColumnDict in tableViewColumns) {
         [self createPayloadFromTableViewColumnDict:tableViewColumnDict settings:settings payloadDict:&payloadDict];
     }
     [*payloads addObject:[payloadDict copy]];
-} // createPayloadFromTableViewColumns:settings:payloads
+} // createPayloadArrayFromTableViewColumns:settings:payloads
 
 - (void)createPayloadFromTableViewColumnDict:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
-
     NSString *cellType = tableViewColumnDict[PFCManifestKeyCellType];
     DDLogDebug(@"CellType: %@", cellType);
 

@@ -39,6 +39,7 @@
                          payloads:(NSMutableArray **)payloads;
 - (void)createPayloadFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
 - (BOOL)verifyRequiredManifestContentDictKeys:(NSArray *)manifestContentDictKeys manifestContentDict:(NSDictionary *)manifestContentDict;
-- (void)createPayloadFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
+- (void)createPayloadArrayFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
+- (void)createPayloadDictFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict;
 
 @end

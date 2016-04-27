@@ -64,12 +64,12 @@
     //  Get text field's row in the table view
     // ---------------------------------------------------------------------
     NSTextField *textField = [sender object];
-    NSNumber *textFieldTag = @([textField tag]);
+    NSNumber *textFieldTag = @(textField.tag);
     if (textFieldTag == nil) {
         DDLogError(@"TextField: %@ has no tag", textFieldTag);
         return;
     }
-    NSInteger row = [textFieldTag integerValue];
+    NSInteger row = textFieldTag.integerValue;
 
     NSString *columnIdentifier = [(PFCTableViewTextFieldCellView *)[textField superview] columnIdentifier];
 
@@ -110,7 +110,7 @@
         return nil;
     }
 
-    return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:_tableViewColumnCellViews[tableColumn.identifier][@"CellType"]
+    return [[PFCTableViewCellTypes sharedInstance] cellViewForTableViewCellType:_tableViewColumnCellViews[tableColumn.identifier][PFCManifestKeyCellType]
                                                                      columnDict:_tableViewColumnCellViews[tableColumn.identifier]
                                                                       tableView:tableView
                                                                        settings:_tableViewContent[(NSUInteger)row][tableColumn.identifier]
@@ -159,17 +159,16 @@
     }
 
     NSMutableDictionary *newRowDict = [[NSMutableDictionary alloc] init];
-    NSArray *tableColumnKeys = _tableViewColumnCellViews.allKeys;
-    for (NSString *tableColumnKey in tableColumnKeys) {
+    for (NSString *tableColumnKey in _tableViewColumnCellViews.allKeys ?: @[]) {
         NSMutableDictionary *tableColumnDict = [[NSMutableDictionary alloc] init];
         NSDictionary *tableColumnCellViewDict = _tableViewColumnCellViews[tableColumnKey];
-        NSString *cellType = tableColumnCellViewDict[@"CellType"];
+        NSString *cellType = tableColumnCellViewDict[PFCManifestKeyCellType];
 
         if ([cellType isEqualToString:PFCTableViewCellTypeTextField]) {
-            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
-        } else if ([cellType isEqualToString:@"PopUpButton"]) {
-            tableColumnDict[@"Value"] = tableColumnCellViewDict[@"DefaultValue"] ?: @"";
-            tableColumnDict[@"AvailableValues"] = tableColumnCellViewDict[@"AvailableValues"] ?: @[];
+            tableColumnDict[PFCSettingsKeyValue] = tableColumnCellViewDict[PFCManifestKeyDefaultValue] ?: @"";
+        } else if ([cellType isEqualToString:PFCTableViewCellTypePopUpButton]) {
+            tableColumnDict[PFCSettingsKeyValue] = tableColumnCellViewDict[PFCManifestKeyDefaultValue] ?: @"";
+            tableColumnDict[PFCManifestKeyAvailableValues] = tableColumnCellViewDict[PFCManifestKeyAvailableValues] ?: @[];
         }
         newRowDict[tableColumnKey] = tableColumnDict;
     }
@@ -214,7 +213,7 @@
         // ---------------------------------------------------------------------
         //  Save selection
         // ---------------------------------------------------------------------
-        NSString *selectedTitle = [popUpButton titleOfSelectedItem];
+        NSString *selectedTitle = popUpButton.titleOfSelectedItem;
         NSMutableDictionary *cellDict = [_tableViewContent[(NSUInteger)row] mutableCopy];
         NSMutableDictionary *columnDict = cellDict[columnIdentifier];
         columnDict[PFCSettingsKeyValue] = selectedTitle;
@@ -294,9 +293,9 @@
     // -------------------------------------------------------------------------
     if (!_tableViewContent) {
         if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
-            _tableViewContent = [settings[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init];
+            [self setTableViewContent:[settings[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init]];
         } else {
-            _tableViewContent = [settingsLocal[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init];
+            [self setTableViewContent:[settingsLocal[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init]];
         }
     }
 
@@ -342,10 +341,10 @@
     NSArray *tableColumnsArray = manifest[PFCManifestKeyTableViewColumns] ?: @[];
     for (NSDictionary *tableColumnDict in tableColumnsArray) {
         NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
-        NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnTitle];
+        NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
         [tableColumn setTitle:tableColumnTitle];
         [[cellView settingTableView] addTableColumn:tableColumn];
-        tableColumnsCellViews[tableColumnTitle] = tableColumnDict;
+        tableColumnsCellViews[tableColumnDict[PFCManifestKeyIdentifier]] = tableColumnDict;
     }
     [self setTableViewColumnCellViews:[tableColumnsCellViews copy]];
 
@@ -410,6 +409,24 @@
         return;
     }
 
+    id value;
+    if ([manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Dict"]) {
+        NSMutableDictionary *tableViewPayloadDict = [[NSMutableDictionary alloc] init];
+        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
+            [sender createPayloadDictFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloadDict:&tableViewPayloadDict];
+        }
+        value = [tableViewPayloadDict copy] ?: @{};
+    } else {
+        // -------------------------------------------------------------------------
+        //  Create array from TableView settings
+        // -------------------------------------------------------------------------
+        NSMutableArray *tableViewPayloadArray = [[NSMutableArray alloc] init];
+        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
+            [sender createPayloadArrayFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloads:&tableViewPayloadArray];
+        }
+        value = [tableViewPayloadArray copy] ?: @[];
+    }
+
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
@@ -428,17 +445,9 @@
     }
 
     // -------------------------------------------------------------------------
-    //  Create array from TableView settings
-    // -------------------------------------------------------------------------
-    NSMutableArray *tableViewPayload = [[NSMutableArray alloc] init];
-    for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
-        [sender createPayloadFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloads:&tableViewPayload];
-    }
-
-    // -------------------------------------------------------------------------
     //  Add current key and value to payload
     // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = [tableViewPayload copy] ?: @[];
+    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = value;
 
     // -------------------------------------------------------------------------
     //  Save payload to payload array
