@@ -340,11 +340,13 @@
     NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
     NSArray *tableColumnsArray = manifest[PFCManifestKeyTableViewColumns] ?: @[];
     for (NSDictionary *tableColumnDict in tableColumnsArray) {
-        NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
-        NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
-        [tableColumn setTitle:tableColumnTitle];
-        [[cellView settingTableView] addTableColumn:tableColumn];
-        tableColumnsCellViews[tableColumnDict[PFCManifestKeyIdentifier]] = tableColumnDict;
+        if ([[PFCAvailability sharedInstance] showSelf:tableColumnDict displayKeys:displayKeys]) {
+            NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
+            NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
+            [tableColumn setTitle:tableColumnTitle];
+            [[cellView settingTableView] addTableColumn:tableColumn];
+            tableColumnsCellViews[tableColumnDict[PFCManifestKeyIdentifier]] = tableColumnDict;
+        }
     }
     [self setTableViewColumnCellViews:[tableColumnsCellViews copy]];
 
