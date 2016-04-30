@@ -251,6 +251,41 @@
 			<key>ToolTipDescription</key>
 			<string>Most commonly RPC. If using ‘Web enrollment,’ HTTP.</string>
 		</dict>
+		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Self</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailableFrom</key>
+					<string>10.11</string>
+				</dict>
+			</array>
+			<key>Identifier</key>
+			<string>B68D2A02-3CD1-4B30-AD99-5DA5A268A0AA</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>Keysize</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>Keysize</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
+			<key>Description</key>
+			<string>The RSA key size for the Certificate Signing Request (CSR)</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+			<key>DefaultValue</key>
+			<integer>2048</integer>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+			<key>INFO</key>
+			<string>This should be TextFieldNumberCheckbox that doesn&apos;t exist yet</string>
+		</dict>
 	</array>
 </dict>
 </plist>
