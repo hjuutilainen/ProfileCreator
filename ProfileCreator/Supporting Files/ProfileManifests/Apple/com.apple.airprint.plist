@@ -43,13 +43,13 @@
 			<key>Identifier</key>
 			<string>ADF2FEB1-F6B6-4795-98B9-CEB246C71754</string>
 			<key>Title</key>
-			<string>Printers available on the device</string>
+			<string>Printers</string>
 			<key>PayloadType</key>
 			<string>com.apple.airprint</string>
 			<key>PayloadKey</key>
 			<string>AirPrint</string>
 			<key>Description</key>
-			<string>An array of AirPrint printers that should always be shown.</string>
+			<string>AirPrint printers that should always be shown.</string>
 			<key>CellType</key>
 			<string>TableView</string>
 			<key>ToolTipDescription</key>
