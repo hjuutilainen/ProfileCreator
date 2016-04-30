@@ -534,6 +534,7 @@
                [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))] || [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformOSX))] ||
                [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
+        [[_profileEditor library] updateManifests];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {
         if ([change[NSKeyValueChangeNewKey] boolValue]) {
             [_profileEditor removeObserver:self forKeyPath:NSStringFromSelector(@selector(deallocKVO)) context:nil];

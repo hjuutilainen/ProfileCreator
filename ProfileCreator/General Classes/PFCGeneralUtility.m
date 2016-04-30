@@ -226,7 +226,7 @@
         NSArray *iosVersionArray;
         int lastMajorVersion = 0;
         NSMenuItem *menuItemiOSVersion = [[NSMenuItem alloc] init];
-        [menuItemiOSVersion setTarget:self];
+        [menuItemiOSVersion setTarget:sender];
         [menuItemiOSVersion setAction:@selector(selectOSVersion:)];
         for (NSString *iosVersion in osVersionsiOS) {
 
