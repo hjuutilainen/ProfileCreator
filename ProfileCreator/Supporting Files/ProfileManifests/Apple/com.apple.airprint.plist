@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>OSX</string>
+			<key>AvailableFrom</key>
+			<string>10.10</string>
+		</dict>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>AvailableFrom</key>
+			<string>7.0</string>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.airprint</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Title</key>
+	<string>AirPrint</string>
+	<key>IconName</key>
+	<string>MenuIconAirPrint.png</string>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.airplay</string>
+	</array>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>ADF2FEB1-F6B6-4795-98B9-CEB246C71754</string>
+			<key>Title</key>
+			<string>Printers available on the device</string>
+			<key>PayloadType</key>
+			<string>com.apple.airprint</string>
+			<key>PayloadKey</key>
+			<string>AirPrint</string>
+			<key>Description</key>
+			<string>An array of AirPrint printers that should always be shown.</string>
+			<key>CellType</key>
+			<string>TableView</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+			<key>TableViewColumns</key>
+			<array>
+				<dict>
+					<key>Identifier</key>
+					<string>6E3293A2-7B78-4D44-BCB1-7FB08A57F096</string>
+					<key>Title</key>
+					<string>Hostname or IP Address</string>
+					<key>PayloadType</key>
+					<string>com.apple.airplay</string>
+					<key>PayloadKey</key>
+					<string>IPAddress</string>
+					<key>PayloadValueType</key>
+					<string>String</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+				</dict>
+				<dict>
+					<key>Identifier</key>
+					<string>BDD5BC35-AFBA-40E7-A6EC-ABFC32FD0E38</string>
+					<key>Title</key>
+					<string>Resource path</string>
+					<key>PayloadType</key>
+					<string>com.apple.airplay</string>
+					<key>PayloadKey</key>
+					<string>ResourcePath</string>
+					<key>PayloadValueType</key>
+					<string>String</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+					<key>ToolTipDescription</key>
+					<string>The Resource Path associated with the printer. This corresponds to the rp parameter of the _ipps.tcp Bonjour record. For example:
+printers/Canon_MG5300_series
+printers/Xerox_Phaser_7600
+ipp/print
+Epson_IPP_Printer</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
