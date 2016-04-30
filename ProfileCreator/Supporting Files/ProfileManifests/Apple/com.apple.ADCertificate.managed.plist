@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.ADCertificate.managed</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>AD Certificate</string>
+	<key>IconName</key>
+	<string>MenuIconADCertificate.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.ADCertificate.managed</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<true/>
+	<key>PayloadTabTitle</key>
+	<string>142A27DF-6AD5-44F7-B1B2-6735C52D171C</string>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>22A6513F-65DD-48C8-AB89-D7FCDC9272FA</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Description</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>Description</string>
+			<key>Description</key>
+			<string>User-friendly description of the certification identity</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The description of the certificate request as shown in the certificate selector of other payloads such as VPN and Network</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>0876B806-BF31-4EA5-86E3-15657DCA7420</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Certificate Server</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>CertServer</string>
+			<key>Description</key>
+			<string>Fully qualified host name of the Active Directory issuing CA.</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>The network address of the certificate server</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>142A27DF-6AD5-44F7-B1B2-6735C52D171C</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Certificate Authority</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>CertificateAuthority</string>
+			<key>Description</key>
+			<string>The name of the CA</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>Name of the CA. This value is determined from the Common Name (CN) of the Active Directory entry: CN=&lt;your CA name&gt;, CN=&apos;Certification Authorities&apos;, CN=&apos;Public Key Services&apos;, CN=&apos;Services&apos;, or CN=&apos;Configuration&apos;, &lt;your base Domain Name&gt;</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>3C9F3FFE-CC74-464F-A87F-52F2012AC77A</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Certificate Template</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>CertTemplate</string>
+			<key>Description</key>
+			<string>The name of the certificate template, usually Machine or User</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>Template Name as it appears in the General tab of the template’s object in the Certificate Templates’ Microsoft Management Console snap-in component.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>32E7534D-CA0E-4AB3-A5D7-B4518FAA3E60</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Certificate Expiration Notification Threshold</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>CertificateRenewalTimeInterval</string>
+			<key>PayloadValueType</key>
+			<string>Integer</string>
+			<key>Description</key>
+			<string>The number of days before the certificate xpires at which to start showing the expiration notification</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+			<key>DefaultValue</key>
+			<integer>14</integer>
+			<key>ToolTipDescription</key>
+			<string>Number of days in advance of certificate expiration that the notification center will notify the user.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>CDE49205-9749-4A7F-BB0F-8B979E166C4C</string>
+			<key>Title</key>
+			<string>Prompt for credentials</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>PromptForCredentials</string>
+			<key>Description</key>
+			<string>Prompt the user for credentials. This setting is not supported for pushed profiles</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>This key applies only to user certificates where Manual Download is the chosen method of profile delivery. If true, the user will be prompted for credentials when the profile is installed. Omit this key for computer certificates.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>55EF75E2-3BB6-48B4-A0F2-35F0945E4087</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>User name</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>UserName</string>
+			<key>Description</key>
+			<string>The user name with which to authenticate to the certificate server</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>DE282055-F4AE-4F9E-A21E-EC12ED7E9623</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>Password</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>Password</string>
+			<key>Description</key>
+			<string>The password with which to authenticate to the certificate server</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>602DAB08-AE68-4536-B31C-8425CE23FF61</string>
+			<key>Title</key>
+			<string>Allow access to all apps</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>AllowAllAppsAccess</string>
+			<key>Description</key>
+			<string>Allow all apps to access the certificate in the keychain</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>f true, apps have access to the private key.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>7F59E5CA-AFA9-4E92-B393-344A6EB1D922</string>
+			<key>Title</key>
+			<string>Allow export from keychain</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>KeyIsExtractable</string>
+			<key>Description</key>
+			<string>Allow admin to export private key from keychain</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>If true, the private key can be exported.</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>DD667296-F6F6-4B0D-9ADC-D3E80254C915</string>
+			<key>Title</key>
+			<string>Certificate acquisition mechanism</string>
+			<key>PayloadType</key>
+			<string>com.apple.ADCertificate.managed</string>
+			<key>PayloadKey</key>
+			<string>CertificateAcquisitionMechanism</string>
+			<key>Description</key>
+			<string>Protocol used to acquire certificate</string>
+			<key>DefaultValue</key>
+			<string>RPC</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>RPC</string>
+				<string>HTTP</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>RPC</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<string>RPC</string>
+					</dict>
+				</array>
+				<key>HTTP</key>
+				<array>
+					<dict>
+						<key>PayloadValue</key>
+						<string>HTTP</string>
+					</dict>
+				</array>
+			</dict>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>ToolTipDescription</key>
+			<string>Most commonly RPC. If using ‘Web enrollment,’ HTTP.</string>
+		</dict>
+	</array>
+</dict>
+</plist>

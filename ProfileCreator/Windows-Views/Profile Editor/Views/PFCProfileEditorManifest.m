@@ -522,6 +522,7 @@
 #pragma mark NSKeyValueObserving
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
     if ([keyPath isEqualToString:NSStringFromSelector(@selector(showColumnDisabled))]) {
         [self updateManifestColumns];
