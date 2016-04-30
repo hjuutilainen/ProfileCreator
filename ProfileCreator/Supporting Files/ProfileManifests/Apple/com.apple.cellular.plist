@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>OSX</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>AvailableFrom</key>
+			<string>7.0</string>
+		</dict>
+	</array>
+	<key>CellType</key>
+	<string>Menu</string>
+	<key>Domain</key>
+	<string>com.apple.cellular</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Cellular</string>
+	<key>IconName</key>
+	<string>MenuIconCellular.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.cellular</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>F07B8AFD-8374-48DD-8D8C-DDD586EC4BA4</string>
+			<key>Title</key>
+			<string>Configured APN Types</string>
+			<key>DefaultValue</key>
+			<string>Default APN</string>
+			<key>Description</key>
+			<string>FIXME-Should change to PopUpButton when available</string>
+			<key>CellType</key>
+			<string>PopUpButton</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Default APN</string>
+				<string>Data APN</string>
+				<string>Default and Data APNs</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Default APN</key>
+				<array>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNAuthenticationType</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNUserName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNPassword</string>
+					</dict>
+				</array>
+				<key>Data APN</key>
+				<array>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNAuthenticationType</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNUserName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNPassword</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNProxyServer</string>
+					</dict>
+				</array>
+				<key>Default and Data APNs</key>
+				<array>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNAuthenticationType</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNUserName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DefaultAPNPassword</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNAuthenticationType</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNUserName</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNPassword</string>
+					</dict>
+					<dict>
+						<key>SharedKey</key>
+						<string>DataAPNProxyServer</string>
+					</dict>
+				</array>
+			</dict>
+			<key>ValueKeysShared</key>
+			<dict>
+				<key>DefaultAPNName</key>
+				<dict>
+					<key>Identifier</key>
+					<string>6ED494F0-EF23-4783-8F64-DC0BA1D7BDD9</string>
+					<key>Required</key>
+					<true/>
+					<key>Title</key>
+					<string>Default APN Name</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Name</string>
+					<key>Description</key>
+					<string>Name of the carrier access point</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>The Access Point Name</string>
+				</dict>
+				<key>DefaultAPNAuthenticationType</key>
+				<dict>
+					<key>Identifier</key>
+					<string>FDD05190-E651-47A3-B022-D353B133F7C0</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Default APN Authentication Type</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>AuthenticationType</string>
+					<key>DefaultValue</key>
+					<string>PAP</string>
+					<key>Description</key>
+					<string>Authentication type to use for the connection</string>
+					<key>CellType</key>
+					<string>PopUpButton</string>
+					<key>AvailableValues</key>
+					<array>
+						<string>PAP</string>
+						<string>CHAP</string>
+					</array>
+					<key>ValueKeys</key>
+					<dict>
+						<key>PAP</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>PAP</string>
+							</dict>
+						</array>
+						<key>CHAP</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>CHAP</string>
+							</dict>
+						</array>
+					</dict>
+					<key>ToolTipDescription</key>
+					<string>FIXME</string>
+				</dict>
+				<key>DefaultAPNUserName</key>
+				<dict>
+					<key>Identifier</key>
+					<string>E8CAEB1E-C415-4F3B-8A26-1A04E86CBE71</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Default APN User Name</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Username</string>
+					<key>Description</key>
+					<string>User name for authenticating the connection</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>A user name used for authentication</string>
+				</dict>
+				<key>DefaultAPNPassword</key>
+				<dict>
+					<key>Identifier</key>
+					<string>3CBF937E-9A9C-4C0E-AD63-729BC9D5ABA6</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Default APN Password</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Password</string>
+					<key>Description</key>
+					<string>User name for authenticating the connection</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>A password used for authentication.</string>
+				</dict>
+				<key>DataAPNName</key>
+				<dict>
+					<key>Identifier</key>
+					<string>AE2CC7BE-87B2-4CC9-BEE6-1CA3D5F14D21</string>
+					<key>Required</key>
+					<true/>
+					<key>Title</key>
+					<string>Data APN Name</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Name</string>
+					<key>Description</key>
+					<string>Name of the carrier access point</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>The Access Point Name</string>
+				</dict>
+				<key>DataAPNAuthenticationType</key>
+				<dict>
+					<key>Identifier</key>
+					<string>F05555D1-B872-4474-A568-A39810E95382</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Data APN Authentication Type</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>AuthenticationType</string>
+					<key>DefaultValue</key>
+					<string>PAP</string>
+					<key>Description</key>
+					<string>Authentication type to use for the connection</string>
+					<key>CellType</key>
+					<string>PopUpButton</string>
+					<key>AvailableValues</key>
+					<array>
+						<string>PAP</string>
+						<string>CHAP</string>
+					</array>
+					<key>ValueKeys</key>
+					<dict>
+						<key>PAP</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>PAP</string>
+							</dict>
+						</array>
+						<key>CHAP</key>
+						<array>
+							<dict>
+								<key>PayloadValue</key>
+								<string>CHAP</string>
+							</dict>
+						</array>
+					</dict>
+					<key>ToolTipDescription</key>
+					<string>FIXME</string>
+				</dict>
+				<key>DataAPNUserName</key>
+				<dict>
+					<key>Identifier</key>
+					<string>E9C34624-A914-45B5-B5AA-8AD05E4F2D71</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Data APN User Name</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Username</string>
+					<key>Description</key>
+					<string>User name for authenticating the connection</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>A user name used for authentication</string>
+				</dict>
+				<key>DataAPNPassword</key>
+				<dict>
+					<key>Identifier</key>
+					<string>8EFEDC9F-5EFD-4CCD-BA52-7B3FF117AC58</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Data APN Password</string>
+					<key>PayloadType</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKey</key>
+					<string>Password</string>
+					<key>Description</key>
+					<string>User name for authenticating the connection</string>
+					<key>CellType</key>
+					<string>TextField</string>
+					<key>ToolTipDescription</key>
+					<string>A password used for authentication.</string>
+				</dict>
+				<key>DataAPNProxyServer</key>
+				<dict>
+					<key>Identifier</key>
+					<string>2A535E13-D4F5-4849-B93C-3B135B7B2B70</string>
+					<key>Optional</key>
+					<true/>
+					<key>Title</key>
+					<string>Data APN Proxy Server</string>
+					<key>PayloadTypeHost</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKeyHost</key>
+					<string>ProxyServer</string>
+					<key>PayloadTypePort</key>
+					<string>com.apple.cellular</string>
+					<key>PayloadKeyPort</key>
+					<string>ProxyPort</string>
+					<key>PayloadValueTypePort</key>
+					<string>Integer</string>
+					<key>Description</key>
+					<string>Hostname or IP address, and port number for the proxy server</string>
+					<key>CellType</key>
+					<string>TextFieldHostPort</string>
+					<key>ToolTipDescription</key>
+					<string>A password used for authentication.</string>
+				</dict>
+			</dict>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+	</array>
+</dict>
+</plist>
