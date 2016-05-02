@@ -1465,7 +1465,6 @@
 } // controlTextDidChangex
 
 - (void)checkbox:(NSButton *)checkbox {
-
     // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
     // -------------------------------------------------------------------------
@@ -1514,8 +1513,10 @@
         }
 
     } else if ([[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldCheckboxCellView class]] || [[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]) {
-        if (checkbox ==
-            [(PFCTextFieldCheckboxCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox]) {
+        if (checkbox == [(PFCTextFieldCheckboxCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
+                            settingCheckbox] ||
+            checkbox == [(PFCTextFieldHostPortCheckboxCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
+                            settingCheckbox]) {
             settingsDict[PFCSettingsKeyValueCheckbox] = @(state);
         }
 
@@ -1524,7 +1525,7 @@
             settingsDict[PFCSettingsKeyValue] = @(state);
         }
     }
-
+    NSLog(@"settingsDict=%@", settingsDict);
     _settingsManifest[identifier] = [settingsDict copy];
 
     // -------------------------------------------------------------------------

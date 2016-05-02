@@ -429,8 +429,8 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL requiredHost = [[PFCCellTypes sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
-    BOOL requiredPort = [[PFCCellTypes sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifest displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if ((!requiredHost || !requiredPort) && settings[PFCSettingsKeyEnabled] != nil) {
@@ -453,15 +453,13 @@
     // ---------------------------------------------------------------------
     //  Value Checkbox
     // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
     if (settings[PFCSettingsKeyValueCheckbox] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValueCheckbox] boolValue];
+        [self setCheckboxState:[settings[PFCSettingsKeyValueCheckbox] boolValue]];
     } else if (manifest[PFCManifestKeyDefaultValueCheckbox]) {
-        checkboxState = [manifest[PFCManifestKeyDefaultValueCheckbox] boolValue];
+        [self setCheckboxState:[manifest[PFCManifestKeyDefaultValueCheckbox] boolValue]];
     } else if (settingsLocal[PFCSettingsKeyValueCheckbox]) {
-        checkboxState = [settingsLocal[PFCSettingsKeyValueCheckbox] boolValue];
+        [self setCheckboxState:[settingsLocal[PFCSettingsKeyValueCheckbox] boolValue]];
     }
-    [[cellView settingCheckbox] setState:checkboxState];
 
     // ---------------------------------------------------------------------
     //  Target Action Checkbox
