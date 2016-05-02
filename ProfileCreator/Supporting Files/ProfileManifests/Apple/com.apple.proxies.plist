@@ -12,87 +12,191 @@
 	<string>Proxies</string>
 	<key>IconName</key>
 	<string>MenuIconProxies.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.proxies</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
 	<key>ManifestContent</key>
 	<array>
 		<dict>
+			<key>Identifier</key>
+			<string>8C188037-B4F3-4E5E-AD4A-353A2C630C07</string>
 			<key>Title</key>
 			<string>Enable Web Proxy (HTTP)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>HTTPEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>HTTPProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>HTTPPort</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for web proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>60C8500A-2774-4906-AC50-97E21FE25333</string>
 			<key>Title</key>
 			<string>Enable Secure Web Proxy (HTTPS)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>HTTPSEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>HTTPSProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>HTTPSPort</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for secure web proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>ECC92546-75DD-4F31-8DFB-3DB8538A9013</string>
 			<key>Title</key>
 			<string>Enable FTP Proxy</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>FTPEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>FTPProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>FTPPort</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for FTP proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>A73B2219-C5CC-4023-AC3F-4CD48B247D9F</string>
 			<key>Title</key>
 			<string>Enable SOCKS Proxy</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>SOCKSEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>SOCKSProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>SOCKSPortNumber</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for SOCKS proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>23F15923-8244-48B8-ABD1-FF2930017921</string>
 			<key>Title</key>
 			<string>Enable Streaming Proxy (RTSP)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>RTSPEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>RTSPProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>RTSPPort</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for streaming proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>297C1C5D-FA2F-4C42-8727-708116E0AF1B</string>
 			<key>Title</key>
 			<string>Enable Gopher Proxy</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>GopherEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyHost</key>
+			<string>GopherProxy</string>
+			<key>RequiredHost</key>
+			<true/>
+			<key>PayloadTypeHost</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyPort</key>
+			<string>GopherPort</string>
+			<key>PayloadTypePort</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadValueTypePort</key>
+			<string>Integer</string>
 			<key>Description</key>
 			<string>Hostname or IP address and port number for gopher proxy</string>
 			<key>CellType</key>
 			<string>TextFieldHostPortCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>26AC2CF9-E920-4685-B373-0DEB80989FF2</string>
 			<key>Title</key>
 			<string>Exceptions</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKey</key>
+			<string>Exceptions</string>
+			<key>PayloadType</key>
+			<string>com.apple.proxies</string>
 			<key>Description</key>
 			<string>Bypass proxy settings for thses Hosts &amp; Domains</string>
 			<key>CellType</key>
@@ -100,36 +204,52 @@
 			<key>TableViewColumns</key>
 			<array>
 				<dict>
+					<key>Identifier</key>
+					<string>EA35E45D-6E70-41E1-B927-47FF8AAF3C88</string>
 					<key>CellType</key>
 					<string>TextField</string>
 					<key>DefaultValue</key>
 					<string>localhost</string>
 				</dict>
 			</array>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>62B011A4-FFFD-49AE-B809-4674671FBE67</string>
 			<key>Title</key>
 			<string>Use Passive FTP Mode (PASV)</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKey</key>
+			<string>FTPPassive</string>
+			<key>PayloadType</key>
+			<string>com.apple.proxies</string>
 			<key>CellType</key>
 			<string>CheckboxNoDescription</string>
 			<key>FontWeight</key>
 			<string>Bold</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
+			<key>Identifier</key>
+			<string>34586029-C9D6-41BA-8D02-00C0AB518634</string>
 			<key>Title</key>
 			<string>Enable Automatic Proxy Configuration</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadKeyCheckbox</key>
+			<string>ProxyAutoConfigEnable</string>
+			<key>PayloadTypeCheckbox</key>
+			<string>com.apple.proxies</string>
+			<key>PayloadKeyTextField</key>
+			<string>ProxyAutoConfigURLString</string>
+			<key>PayloadTypeTextField</key>
+			<string>com.apple.proxies</string>
 			<key>Description</key>
 			<string>Automatic Proxy Configuration URL</string>
 			<key>CellType</key>
 			<string>TextFieldCheckbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 	</array>
 </dict>
