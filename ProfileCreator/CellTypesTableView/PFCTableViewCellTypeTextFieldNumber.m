@@ -18,6 +18,8 @@
 //  limitations under the License.
 
 #import "PFCConstants.h"
+#import "PFCLog.h"
+#import "PFCProfileExport.h"
 #import "PFCTableViewCellTypeTextFieldNumber.h"
 
 @interface PFCTableViewTextFieldNumberCellView ()
@@ -90,7 +92,50 @@
     return cellView;
 }
 
++ (id)valueForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings sender:(PFCProfileExport *)sender {
+
+    NSString *payloadValueType = manifestContentDict[PFCManifestKeyPayloadValueType];
+    if (![payloadValueType isEqualToString:@"Integer"] && ![payloadValueType isEqualToString:@"Float"]) {
+        DDLogError(@"Unknown PayloadValueType: %@ for CellType: %@", payloadValueType, PFCCellTypeTextFieldNumber);
+        return nil;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Get value
+    // -------------------------------------------------------------------------
+    NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
+    id value = contentDictSettings[PFCSettingsKeyValue];
+    if (value == nil) {
+        value = manifestContentDict[PFCManifestKeyDefaultValue];
+    }
+
+    if (value == nil) {
+        // FIXME - Value for a number cannot be empty, how to handle this?
+        DDLogError(@"Value is empty");
+        return nil;
+    } else if (![[value class] isSubclassOfClass:[@(0) class]]) {
+        [sender payloadErrorForValueClass:NSStringFromClass([value class]) payloadKey:manifestContentDict[PFCManifestKeyPayloadType] exptectedClasses:@[ NSStringFromClass([@(0) class]) ]];
+        return nil;
+    }
+
+    return value;
+}
+
 + (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict sender:(PFCProfileExport *)sender {
+    id value = [self.class valueForCellType:manifestContentDict settings:settings sender:sender];
+    if (value != nil) {
+        // -------------------------------------------------------------------------
+        //  Resolve any nested payload keys
+        //  FIXME - Need to implement this for nested keys
+        // -------------------------------------------------------------------------
+        // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
+
+        // -------------------------------------------------------------------------
+        //  Add current key and value to payload
+        // -------------------------------------------------------------------------
+        NSAssert([[value class] isSubclassOfClass:[@(0) class]], @"Value is not subclass of NSNumber.");
+        [*payloadDict setObject:value forKey:manifestContentDict[PFCManifestKeyPayloadKey]];
+    }
 }
 
 @end
