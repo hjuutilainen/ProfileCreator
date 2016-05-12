@@ -31,6 +31,11 @@
 	<array>
 		<string>com.apple.configurationprofile.identification</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>ManifestContent</key>
 	<array>
 		<dict>

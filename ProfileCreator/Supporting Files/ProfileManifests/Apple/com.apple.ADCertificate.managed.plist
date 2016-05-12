@@ -27,6 +27,11 @@
 	<array>
 		<string>com.apple.ADCertificate.managed</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<true/>
 	<key>PayloadTabTitle</key>

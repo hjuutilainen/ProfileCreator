@@ -43,10 +43,20 @@
         //  If the current display settings are within the availability dict settings,
         //  return with YES as at all possible manifests should be show, even if only one
         //  of the selected versions can use it.
-        //  The compatibility warnings will be mor clear when exporting.
+        //  The compatibility warnings should be more clear when exporting.
         // -------------------------------------------------------------------------------
         if ([availabilityDict[@"AvailabilityKey"] isEqualToString:@"Self"]) {
             showSelf = NO;
+
+            // Return early to disable profiles that doesn't match the selected PayloadScope.
+            // As this key only is applicable to OS X, and the principle is to show everything even if it's one version of one system that can use it
+            // Then only check further if iOS is not available for this payload
+            if ([availabilityDict[@"AvailabilityOS"] isEqualToString:@"iOS"]) {
+                if (![manifest[PFCProfileDisplaySettingsKeyPayloadScope] ?: @[ PFCProfileDisplaySettingsKeyPayloadScopeUser ]
+                        containsObject:displayKeys[PFCProfileDisplaySettingsKeyPayloadScope] ?: PFCProfileDisplaySettingsKeyPayloadScopeUser]) {
+                    return NO;
+                }
+            }
 
             if ([self availableForOS:availabilityDict[@"AvailabilityOS"] availabilityDict:availabilityDict displayKeys:displayKeys]) {
                 if ([self currentSelectionWithinVersionForOS:availabilityDict[@"AvailabilityOS"] availabilityDict:availabilityDict displayKeys:displayKeys]) {

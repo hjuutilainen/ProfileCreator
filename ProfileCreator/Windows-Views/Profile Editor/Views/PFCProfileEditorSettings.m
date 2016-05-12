@@ -58,7 +58,6 @@
     if (self != nil) {
         _profile = profile;
         _profileEditor = profileEditor;
-
         _showKeysSupervised = NO;
         [self view];
     }
@@ -70,6 +69,7 @@
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(osxMaxVersion))];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion))];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(payloadScope))];
 }
 
 - (void)viewDidLoad {
@@ -78,6 +78,7 @@
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(osxMaxVersion)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(payloadScope)) options:NSKeyValueObservingOptionNew context:nil];
     [self setupSettings];
     [PFCGeneralUtility setupOSVersionsButtonOSXMin:_popUpButtonPlatformOSXMinVersion
                                             osxMax:_popUpButtonPlatformOSXMaxVersion
@@ -160,7 +161,6 @@
 }
 
 - (void)setupDisplaySettings {
-    DDLogDebug(@"%s", __PRETTY_FUNCTION__);
     NSDictionary *displaySettings = _profile[@"Config"][PFCProfileTemplateKeyDisplaySettings] ?: @{};
 
     // -------------------------------------------------------------------------
