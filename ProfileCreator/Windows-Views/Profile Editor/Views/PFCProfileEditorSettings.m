@@ -135,6 +135,7 @@
         PFCProfileDisplaySettingsKeyPlatformiOS : @(_includePlatformiOS),
         PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
+        PFCProfileDisplaySettingsKeyPayloadScope : _payloadScope ?: PFCProfileDisplaySettingsKeyPayloadScopeUser,
         PFCManifestKeyDisabled : @([[_profileEditor manifest] showKeysDisabled]),
         PFCManifestKeyHidden : @([[_profileEditor manifest] showKeysHidden]),
         PFCManifestKeySupervisedOnly : @(_showKeysSupervised)
