@@ -61,6 +61,8 @@
 @property (weak) IBOutlet NSPopUpButton *popUpButtoniOSMinVersion;
 @property (weak) IBOutlet NSPopUpButton *popUpButtoniOSMaxVersion;
 
+@property (weak) IBOutlet NSPopUpButton *popUpButtonProfileScope;
+
 @property BOOL tabBarHidden;
 
 @property NSDictionary *selectedManifest;
@@ -135,12 +137,19 @@
         // -------------------------------------------------------------------------
         //  Bindings
         // -------------------------------------------------------------------------
+
+        // Supervised
         [_checkboxShowKeysSupervised bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:nil];
 
+        // Profile Scope
+        [_popUpButtonProfileScope bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(profileScope)) options:nil];
+
+        // OS X
         [_checkboxOSX bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) options:nil];
         [_popUpButtonOSXMinVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(osxMinVersion)) options:nil];
         [_popUpButtonOSXMaxVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(osxMaxVersion)) options:nil];
 
+        // iOS
         [_checkboxiOS bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformiOS)) options:nil];
         [_popUpButtoniOSMinVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(iosMinVersion)) options:nil];
         [_popUpButtoniOSMaxVersion bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(iosMaxVersion)) options:nil];
@@ -271,7 +280,6 @@
 } // updateToolbarWithTitle:icon
 
 - (void)selectManifest:(NSDictionary *)manifest inTableView:(NSString *)tableViewIdentifier {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -----------------------------------------------------------------------------------
     //  Save the selected manifest settings before changing manifest in the settings view
@@ -532,7 +540,7 @@
         [_tableViewManifestContent endUpdates];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))] ||
                [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))] || [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformOSX))] ||
-               [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))]) {
+               [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))] || [keyPath isEqualToString:NSStringFromSelector(@selector(profileScope))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
         [[_profileEditor library] updateManifests];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {

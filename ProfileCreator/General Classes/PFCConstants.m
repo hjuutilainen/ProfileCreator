@@ -264,6 +264,9 @@ NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMinVersion = @"OSXMinVers
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOS = @"iOS";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion = @"iOSMaxVersion";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMinVersion = @"iOSMinVersion";
+NSString *const PFCProfileDisplaySettingsKeyProfileScope = @"ProfileScope";
+NSString *const PFCProfileDisplaySettingsKeyProfileScopeSystem = @"System";
+NSString *const PFCProfileDisplaySettingsKeyProfileScopeUser = @"User";
 NSString *const PFCProfileDisplaySettingsKeySupervised = @"Supervised";
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -87,6 +87,7 @@
 }
 
 - (void)setupSettings {
+    [self setProfileScope:PFCProfileDisplaySettingsKeyProfileScopeSystem];
     [self setProfileName:_profile[@"Config"][PFCProfileTemplateKeyName] ?: PFCDefaultProfileName];
     [self setProfileUUID:_profile[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
     [self setProfileIdentifierFormat:_profile[@"Config"][PFCProfileTemplateKeyIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat];
@@ -141,7 +142,7 @@
 } // displayKeys
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
-    if ([@[ @"osxMinVersion", @"osxMaxVersion", @"iosMinVersion", @"iosMaxVersion" ] containsObject:keyPath]) {
+    if ([@[ @"osxMinVersion", @"osxMaxVersion", @"iosMinVersion", @"iosMaxVersion", @"profileScope" ] containsObject:keyPath]) {
         [[_profileEditor library] updateManifests];
     }
 }

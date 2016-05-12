@@ -39,6 +39,8 @@
 @property (readwrite) NSString *iosMinVersion;
 @property (readwrite) NSString *iosMaxVersion;
 
+@property (readwrite) NSString *profileScope;
+
 @property BOOL signProfile;
 @property BOOL encryptProfile;
 
