@@ -207,18 +207,18 @@
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hV7-32-Vmw">
                     <rect key="frame" x="127" y="277" width="73" height="22"/>
-                    <popUpButtonCell key="cell" type="push" title="System" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="gf2-9K-6oV" id="uYb-1j-1Pa">
+                    <popUpButtonCell key="cell" type="push" title="User" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="96H-yz-avr" id="uYb-1j-1Pa">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                         <menu key="menu" id="6b8-wY-jCM">
                             <items>
-                                <menuItem title="System" state="on" id="gf2-9K-6oV"/>
-                                <menuItem title="User" id="96H-yz-avr"/>
+                                <menuItem title="User" state="on" id="96H-yz-avr"/>
+                                <menuItem title="System" id="gf2-9K-6oV"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="-2" name="selectedValue" keyPath="self.profileScope" id="xW0-nj-DZW"/>
+                        <binding destination="-2" name="selectedValue" keyPath="self.payloadScope" id="kGa-Jj-G0F"/>
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ztK-jn-MYi">
@@ -367,8 +367,8 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MGS-Mv-L6d">
-                    <rect key="frame" x="35" y="282" width="89" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Profile Scope:" id="HyM-E5-6QH">
+                    <rect key="frame" x="26" y="282" width="98" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Payload Scope:" id="HyM-E5-6QH">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

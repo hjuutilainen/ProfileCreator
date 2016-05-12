@@ -142,7 +142,7 @@
         [_checkboxShowKeysSupervised bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(showKeysSupervised)) options:nil];
 
         // Profile Scope
-        [_popUpButtonProfileScope bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(profileScope)) options:nil];
+        [_popUpButtonProfileScope bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(payloadScope)) options:nil];
 
         // OS X
         [_checkboxOSX bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) options:nil];
@@ -540,7 +540,7 @@
         [_tableViewManifestContent endUpdates];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))] ||
                [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))] || [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformOSX))] ||
-               [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))] || [keyPath isEqualToString:NSStringFromSelector(@selector(profileScope))]) {
+               [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))] || [keyPath isEqualToString:NSStringFromSelector(@selector(payloadScope))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
         [[_profileEditor library] updateManifests];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {

@@ -289,9 +289,9 @@ extern NSString *const PFCProfileTemplateExtension;
 #pragma mark PFCProfileDisplaySettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings;
-extern NSString *const PFCProfileDisplaySettingsKeyProfileScope;
-extern NSString *const PFCProfileDisplaySettingsKeyProfileScopeSystem;
-extern NSString *const PFCProfileDisplaySettingsKeyProfileScopeUser;
+extern NSString *const PFCProfileDisplaySettingsKeyPayloadScope;
+extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeSystem;
+extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeUser;
 extern NSString *const PFCProfileDisplaySettingsKeyPlatform;
 extern NSString *const PFCProfileDisplaySettingsKeyPlatformOSX;
 extern NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion;
