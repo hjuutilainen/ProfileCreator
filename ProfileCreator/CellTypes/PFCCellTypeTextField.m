@@ -338,15 +338,13 @@
     // ---------------------------------------------------------------------
     //  ValueCheckbox
     // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
     if (settings[PFCSettingsKeyValueCheckbox] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValueCheckbox] boolValue];
+        [self setCheckboxState:[settings[PFCSettingsKeyValueCheckbox] boolValue]];
     } else if (manifest[PFCManifestKeyDefaultValueCheckbox]) {
-        checkboxState = [manifest[PFCManifestKeyDefaultValueCheckbox] boolValue];
+        [self setCheckboxState:[manifest[PFCManifestKeyDefaultValueCheckbox] boolValue]];
     } else if (settingsLocal[PFCSettingsKeyValueCheckbox]) {
-        checkboxState = [settingsLocal[PFCSettingsKeyValueCheckbox] boolValue];
+        [self setCheckboxState:[settingsLocal[PFCSettingsKeyValueCheckbox] boolValue]];
     }
-    [[cellView settingCheckbox] setState:checkboxState];
 
     // ---------------------------------------------------------------------
     //  ValueTextField
