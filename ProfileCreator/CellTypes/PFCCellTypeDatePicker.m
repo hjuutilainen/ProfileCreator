@@ -189,7 +189,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------
@@ -423,8 +427,12 @@
     return [PFCDatePickerCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    return [PFCDatePickerCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
+    return [PFCDatePickerCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

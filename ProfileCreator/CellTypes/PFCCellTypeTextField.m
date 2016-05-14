@@ -23,6 +23,7 @@
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCError.h"
+#import "PFCGeneralUtility.h"
 #import "PFCLog.h"
 #import "PFCManifestLint.h"
 #import "PFCManifestUtility.h"
@@ -170,8 +171,14 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray **)payloads
+                          sender:(PFCProfileExport *)sender {
+
+    NSString *payloadKey;
+    id value;
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'TextField'
@@ -181,10 +188,15 @@
     }
 
     // -------------------------------------------------------------------------
+    //  Process any availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *availabilityOverrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:@{}];
+
+    // -------------------------------------------------------------------------
     //  Get value for current PayloadKey
     // -------------------------------------------------------------------------
     NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    id value = contentDictSettings[PFCSettingsKeyValue];
+    value = contentDictSettings[PFCSettingsKeyValue];
     if (value == nil) {
         value = manifestContentDict[PFCManifestKeyDefaultValue];
     }
@@ -213,11 +225,30 @@
     // -------------------------------------------------------------------------
     // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
 
+    NSString *payloadType = manifestContentDict[PFCManifestKeyPayloadType];
+    if ([PFCGeneralUtility isValidUUID:payloadType]) {
+        if (payloadType == manifestContentDict[PFCManifestKeyIdentifier]) {
+            payloadType = value;
+        } else {
+            NSString *resolvedPayloadType = [sender resolvedPayloadTypes][payloadType];
+            if (resolvedPayloadType.length == 0) {
+                payloadType = [sender payloadTypeFromUUID:payloadType manifest:manifest settings:settings];
+                if (payloadType.length == 0) {
+                    DDLogError(@"Unable to resolve PayloadType for manifest content dict!");
+                    return;
+                }
+            } else {
+                payloadType = resolvedPayloadType;
+            }
+        }
+    }
+    DDLogDebug(@"PayloadType: %@", payloadType);
+
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
     NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[payloadType][PFCProfileTemplateKeyUUID] ?: @""];
     }];
 
     // ----------------------------------------------------------------------------------
@@ -227,13 +258,14 @@
     if (index != NSNotFound) {
         payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
-        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadType payloadUUID:nil];
     }
 
     // -------------------------------------------------------------------------
     //  Add current key and value to payload
     // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = value;
+    payloadKey = availabilityOverrides[PFCManifestKeyPayloadKey] ?: manifestContentDict[PFCManifestKeyPayloadKey];
+    payloadDictDict[payloadKey] = value;
 
     // -------------------------------------------------------------------------
     //  Save payload to payload array
@@ -444,7 +476,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray **)payloads
+                          sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'TextFieldCheckbox'
@@ -625,6 +661,7 @@
     [sender createPayloadFromValueKey:(checkboxState) ? @"True" : @"False"
                       availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
                   manifestContentDict:manifestContentDict
+                             manifest:manifest
                              settings:settings
                            payloadKey:manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]
                           payloadType:payloadTypeCheckbox
@@ -826,8 +863,12 @@
     return [PFCTextFieldCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads sender:(PFCProfileExport *)sender {
-    [PFCTextFieldCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray **)payloads
+                          sender:(PFCProfileExport *)sender {
+    [PFCTextFieldCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

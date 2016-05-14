@@ -127,7 +127,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'Checkbox'
     // -------------------------------------------------------------------------
@@ -183,30 +187,37 @@
     NSMutableDictionary *payloadDictDict;
     if (index != NSNotFound) {
         payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
+        DDLogDebug(@"Current Payload Dict: %@", payloadDictDict);
     } else {
         payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+        DDLogDebug(@"Creating NEW Dict for current Payload");
     }
 
     // -------------------------------------------------------------------------
-    //  Add current key and value to payload
+    //  Add current key and value to payload (if PayloadValueType is empty or Boolean)
     // -------------------------------------------------------------------------
-    payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
+    DDLogDebug(@"manifestContentDict[PFCManifestKeyPayloadValueType]=%@", manifestContentDict[PFCManifestKeyPayloadValueType]);
+    if (manifestContentDict[PFCManifestKeyPayloadValueType] == nil || [manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Boolean"]) {
+        DDLogDebug(@"Setting the boolean value of the checkbox as the key value!");
+        payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
 
-    // -------------------------------------------------------------------------
-    //  Save payload to payload array
-    // -------------------------------------------------------------------------
-    if (index != NSNotFound) {
-        [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
-    } else {
-        [*payloads addObject:[payloadDictDict copy]];
+        // -------------------------------------------------------------------------
+        //  Save payload to payload array
+        // -------------------------------------------------------------------------
+        if (index != NSNotFound) {
+            [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+        } else {
+            [*payloads addObject:[payloadDictDict copy]];
+        }
     }
 
     // -------------------------------------------------------------------------
-    //
+    //  Resolve any
     // -------------------------------------------------------------------------
     [sender createPayloadFromValueKey:(checkboxState) ? @"True" : @"False"
-                      availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
+                      availableValues:@[ @"True", @"False" ]
                   manifestContentDict:manifestContentDict
+                             manifest:manifest
                              settings:settings
                            payloadKey:nil
                           payloadType:nil
@@ -348,8 +359,12 @@
     return [PFCCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    return [PFCCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
+    return [PFCCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

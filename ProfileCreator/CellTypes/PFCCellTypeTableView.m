@@ -386,7 +386,11 @@
     return @{};
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'TableView'

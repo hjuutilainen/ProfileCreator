@@ -84,7 +84,11 @@
     return [report copy];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(id)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(id)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'SegmentedControl'
@@ -115,7 +119,7 @@
     //  Loop through all values in "AvailableValues" and add to payloads
     // -------------------------------------------------------------------------
     for (NSString *selection in availableValues) {
-        [sender createPayloadFromManifestContent:valueKeys[selection] settings:settings payloads:payloads];
+        [sender createPayloadFromManifestContent:valueKeys[selection] manifest:manifest settings:settings payloads:payloads];
     }
 }
 

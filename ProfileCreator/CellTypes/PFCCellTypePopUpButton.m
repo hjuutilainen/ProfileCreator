@@ -22,6 +22,7 @@
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCError.h"
+#import "PFCGeneralUtility.h"
 #import "PFCLog.h"
 #import "PFCManifestLint.h"
 #import "PFCManifestParser.h"
@@ -162,7 +163,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'PopUpButton'
@@ -192,15 +197,36 @@
         DDLogDebug(@"Selected title: %@", value);
     }
 
+    NSString *payloadType = manifestContentDict[PFCManifestKeyPayloadType];
+    if ([PFCGeneralUtility isValidUUID:payloadType]) {
+        DDLogDebug(@"payloadType: %@ IS a valid UUID", payloadType);
+        if (payloadType == manifestContentDict[PFCManifestKeyIdentifier]) {
+            payloadType = value;
+        } else {
+            NSString *resolvedPayloadType = [sender resolvedPayloadTypes][payloadType];
+            if (resolvedPayloadType.length == 0) {
+                payloadType = [sender payloadTypeFromUUID:payloadType manifest:manifest settings:settings];
+                if (payloadType.length == 0) {
+                    DDLogError(@"Unable to resolve PayloadType for manifest content dict!");
+                    return;
+                }
+            } else {
+                payloadType = resolvedPayloadType;
+            }
+        }
+    }
+    DDLogDebug(@"PayloadType: %@", payloadType);
+
     // -------------------------------------------------------------------------
     //
     // -------------------------------------------------------------------------
     [sender createPayloadFromValueKey:value
                       availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
                   manifestContentDict:manifestContentDict
+                             manifest:manifest
                              settings:settings
                            payloadKey:nil
-                          payloadType:nil
+                          payloadType:payloadType
                           payloadUUID:nil
                              payloads:payloads];
 }
@@ -340,8 +366,12 @@
     return [PFCPopUpButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
+    return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
@@ -474,8 +504,12 @@
     return [PFCPopUpButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
-    return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
+    return [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
 }
 
 + (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {

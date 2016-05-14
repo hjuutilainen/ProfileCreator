@@ -227,7 +227,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'TextFieldHostPort'
@@ -616,7 +620,11 @@
     return nil;
 }
 
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray *__autoreleasing *)payloads sender:(PFCProfileExport *)sender {
++ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                        payloads:(NSMutableArray *__autoreleasing *)payloads
+                          sender:(PFCProfileExport *)sender {
 
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'TextFieldHostPortCheckbox'
@@ -664,7 +672,7 @@
         // ------------------------------------------------------------------------
         //  All keys are equal to TextFieldHostPort, so use that to add to payload
         // ------------------------------------------------------------------------
-        [PFCTextFieldHostPortCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:sender];
+        [PFCTextFieldHostPortCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
     }
 
     if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyPayloadKeyCheckbox ] manifestContentDict:manifestContentDict]) {
@@ -726,6 +734,7 @@
     [sender createPayloadFromValueKey:(checkboxState) ? @"True" : @"False"
                       availableValues:manifestContentDict[PFCManifestKeyAvailableValues]
                   manifestContentDict:manifestContentDict
+                             manifest:manifest
                              settings:settings
                            payloadKey:manifestContentDict[PFCManifestKeyPayloadKeyCheckbox]
                           payloadType:payloadTypeCheckbox
