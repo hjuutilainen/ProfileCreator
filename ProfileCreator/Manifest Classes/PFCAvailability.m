@@ -171,4 +171,27 @@
     return NO;
 }
 
+- (NSDictionary *)overridesForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
+    NSMutableDictionary *overridesDict = [[NSMutableDictionary alloc] init];
+    for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
+        if (![availabilityDict[PFCManifestKeyAvailabilityKey] ?: @"" isEqualToString:@"Self"] && availabilityDict[PFCManifestKeyAvailabilityValue] != nil) {
+            DDLogDebug(@"AvailabilityKey: %@ is being processed", availabilityDict[PFCManifestKeyAvailabilityKey]);
+
+            // Check AvailabilityIf
+            if ([availabilityDict[PFCManifestKeyAvailableIf] count] != 0) {
+                NSDictionary *availabilityIf = availabilityDict[PFCManifestKeyAvailableIf];
+
+                // Check Selection Comparator
+                NSString *selectionIdentifier = availabilityIf[PFCManifestKeyAvailabilitySelectionIdentifier];
+                if (selectionIdentifier.length != 0 && availabilityIf[PFCManifestKeyAvailabilitySelectionValue] != nil && settings[selectionIdentifier] != nil) {
+                    if ([settings[selectionIdentifier][@"Value"] isEqualTo:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]]) {
+                        overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                    }
+                }
+            }
+        }
+    }
+    return [overridesDict copy];
+}
+
 @end
