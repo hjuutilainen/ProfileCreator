@@ -769,7 +769,7 @@
     //  Loop through all subkeys and create an array of "ManifestContent" dictionaries
     // -----------------------------------------------------------------------------------------
     for (NSDictionary *mcxSubkey in mcxSubkeys) {
-
+        DDLogDebug(@"mcxSubkey: %@", mcxSubkey);
         NSMutableDictionary *manifestDict = [[NSMutableDictionary alloc] init];
 
         // ---------------------------------------------------------------------------------

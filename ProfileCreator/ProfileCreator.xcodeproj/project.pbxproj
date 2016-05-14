@@ -101,6 +101,8 @@
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
+		5382AAB21CE5A6FA00C65B50 /* com.apple.messages.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.plist */; };
+		5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
 		5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5385ADC11C872EF2007C9BD0 /* SidebarSmartFolder.icns */; };
 		538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 538750B61C4C0F4F0003F0EF /* PFCConstants.m */; };
 		53897E2C1C59566500B1D868 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; };
@@ -300,6 +302,8 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
+				5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.plist in Copy Manifests Apple */,
+				5382AAB21CE5A6FA00C65B50 /* com.apple.messages.plist in Copy Manifests Apple */,
 				530562931CD6855C00234C3E /* com.apple.proxies.plist in Copy Manifests Apple */,
 				5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.plist in Copy Manifests Apple */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests Apple */,
