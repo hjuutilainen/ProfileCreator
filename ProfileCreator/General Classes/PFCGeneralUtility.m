@@ -250,4 +250,8 @@
     }
 }
 
++ (BOOL)isValidUUID:(NSString *)uuid {
+    return (BOOL)[[NSUUID alloc] initWithUUIDString:uuid];
+}
+
 @end

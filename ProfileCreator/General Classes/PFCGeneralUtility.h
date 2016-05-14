@@ -32,5 +32,6 @@ typedef NS_ENUM(NSInteger, PFCFolders) { kPFCFolderUserApplicationSupport = 0, k
 + (void)setTableViewHeight:(int)tableHeight tableView:(NSScrollView *)scrollView;
 + (NSString *)dateIntervalFromNowToDate:(NSDate *)futureDate;
 + (void)setupOSVersionsButtonOSXMin:(NSPopUpButton *)osxMinVersion osxMax:(NSPopUpButton *)osxMaxVersion iOSMin:(NSPopUpButton *)iosMinVersion iOSMax:(NSPopUpButton *)iosMaxVersion sender:(id)sender;
++ (BOOL)isValidUUID:(NSString *)uuid;
 
 @end
