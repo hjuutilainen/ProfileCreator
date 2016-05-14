@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
@@ -12,9 +23,42 @@
 	<string>Messages</string>
 	<key>IconName</key>
 	<string>MenuIconMessages.png</string>
+	<key>PayloadType</key>
+	<string>A365BA09-AA43-43A3-B585-273698B2F6E5</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.AIM.account</string>
+		<string>com.apple.jabber.account</string>
+	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<true/>
+	<key>PayloadTabTitle</key>
+	<string>E6D46519-3E86-4B0C-B062-EDB55258B1EF</string>
 	<key>ManifestContent</key>
 	<array>
 		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>PayloadKey</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailabilityValue</key>
+					<string>AIMAccountDescription</string>
+					<key>AvailableIf</key>
+					<dict>
+						<key>SelectionIdentifier</key>
+						<string>A365BA09-AA43-43A3-B585-273698B2F6E5</string>
+						<key>SelectionValue</key>
+						<string>AIM</string>
+					</dict>
+				</dict>
+			</array>
 			<key>Identifier</key>
 			<string>E6D46519-3E86-4B0C-B062-EDB55258B1EF</string>
 			<key>Required</key>
@@ -22,35 +66,25 @@
 			<key>Title</key>
 			<string>Account Description</string>
 			<key>PayloadType</key>
-			<string></string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<string>A365BA09-AA43-43A3-B585-273698B2F6E5</string>
+			<key>PayloadKey</key>
+			<string>JabberAccountDescription</string>
 			<key>Description</key>
 			<string>The display name of the account</string>
 			<key>CellType</key>
 			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
 		</dict>
 		<dict>
-			<key>Title</key>
-			<string>Account Name</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string>String</string>
-			<key>Description</key>
-			<string>The chat username</string>
-			<key>CellType</key>
-			<string>TextField</string>
-		</dict>
-		<dict>
+			<key>Identifier</key>
+			<string>A365BA09-AA43-43A3-B585-273698B2F6E5</string>
 			<key>Title</key>
 			<string>Account Type</string>
-			<key>Key</key>
-			<string></string>
-			<key>Type</key>
-			<string></string>
+			<key>PayloadType</key>
+			<string>A365BA09-AA43-43A3-B585-273698B2F6E5</string>
+			<key>PayloadKey</key>
+			<string>PayloadType</string>
 			<key>Description</key>
 			<string>The chat protocol to use for this configuration</string>
 			<key>CellType</key>
@@ -67,53 +101,56 @@
 				<key>Jabber</key>
 				<array>
 					<dict>
-						<key>Enabled</key>
-						<true/>
-						<key>Title</key>
-						<string>Authentication Type</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
-						<key>Description</key>
-						<string>Authentication used for the account</string>
-						<key>CellType</key>
-						<string>PopUpButton</string>
-						<key>DefaultValue</key>
-						<string>Password</string>
-						<key>AvailableValues</key>
-						<array>
-							<string>Password</string>
-							<string>Kerberos v5</string>
-						</array>
-						<key>ValueKeys</key>
-						<dict>
-							<key>Password</key>
-							<array>
-								<dict>
-									<key>Enabled</key>
-									<true/>
-									<key>Key</key>
-									<string></string>
-									<key>Type</key>
-									<string></string>
-									<key>Description</key>
-									<string>Password for the account</string>
-									<key>CellType</key>
-									<string>TextFieldNoTitle</string>
-								</dict>
-							</array>
-						</dict>
+						<key>PayloadValue</key>
+						<string>com.apple.jabber.account</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
+						<key>Identifier</key>
+						<string>BC38FAE4-1FC8-4B4F-8E35-3889ACCEE2B5</string>
+						<key>Optional</key>
 						<true/>
 						<key>Title</key>
+						<string>Account Name</string>
+						<key>PayloadKey</key>
+						<string>JabberUserName</string>
+						<key>PayloadType</key>
+						<string>com.apple.jabber.account</string>
+						<key>Description</key>
+						<string>The chat user name</string>
+						<key>CellType</key>
+						<string>TextField</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>AD769FD9-4EBB-47A9-AF90-1FF12541C14A</string>
+						<key>Optional</key>
+						<true/>
+						<key>Title</key>
+						<string>Password</string>
+						<key>PayloadKey</key>
+						<string>JabberPassword</string>
+						<key>PayloadType</key>
+						<string>com.apple.jabber.account</string>
+						<key>Description</key>
+						<string>Password for the account</string>
+						<key>CellType</key>
+						<string>TextField</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>9ADD008E-61AE-4BFE-B5CB-2320EA4AE3D2</string>
+						<key>Title</key>
 						<string>Server Address and Port</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
+						<key>PayloadKeyHost</key>
+						<string>JabberHostName</string>
+						<key>PayloadKeyPort</key>
+						<string>JabberPort</string>
+						<key>PayloadType</key>
+						<string>com.apple.jabber.account</string>
 						<key>Description</key>
 						<string>Hostname or IP address, and port number for the server</string>
 						<key>CellType</key>
@@ -122,37 +159,148 @@
 						<string>Auto</string>
 						<key>DefaultValuePort</key>
 						<string>5223</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
 					</dict>
 					<dict>
-						<key>Enabled</key>
-						<true/>
+						<key>Identifier</key>
+						<string>E8D9D1DA-B359-4BCA-B35C-54B680192885</string>
 						<key>Title</key>
 						<string>Use SSL</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
+						<key>PayloadKey</key>
+						<string>JabberUseSSL</string>
+						<key>PayloadType</key>
+						<string>com.apple.jabber.account</string>
 						<key>Description</key>
 						<string>Enable Secure Socket Layer communication with chat server</string>
 						<key>CellType</key>
 						<string>Checkbox</string>
+						<key>DefaultValue</key>
+						<true/>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>573858D4-CFD2-42AF-89A5-DB31D3E11F4B</string>
+						<key>Title</key>
+						<string>Use Kerberos v5</string>
+						<key>PayloadKey</key>
+						<string>JabberAuthentication</string>
+						<key>PayloadType</key>
+						<string>com.apple.jabber.account</string>
+						<key>PayloadValueType</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>Enable Secure Socket Layer communication with chat server</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+						<key>ValueKeys</key>
+						<dict>
+							<key>True</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string>JabberAuthKerberos</string>
+								</dict>
+							</array>
+							<key>False</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string>JabberAuthPassword</string>
+								</dict>
+							</array>
+						</dict>
 					</dict>
 				</array>
 				<key>AIM</key>
 				<array>
 					<dict>
-						<key>Enabled</key>
+						<key>PayloadValue</key>
+						<string>com.apple.AIM.account</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>DF9895BF-355D-4A14-BC47-13820691BBB4</string>
+						<key>Optional</key>
+						<true/>
+						<key>Title</key>
+						<string>Account Name</string>
+						<key>PayloadKey</key>
+						<string>AIMUserName</string>
+						<key>PayloadType</key>
+						<string>com.apple.AIM.account</string>
+						<key>Description</key>
+						<string>The chat user name</string>
+						<key>CellType</key>
+						<string>TextField</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>E5FDDFAB-E92E-430C-8897-4FF248306C12</string>
+						<key>Optional</key>
 						<true/>
 						<key>Title</key>
 						<string>Password</string>
-						<key>Key</key>
-						<string></string>
-						<key>Type</key>
-						<string></string>
+						<key>PayloadKey</key>
+						<string>AIMPassword</string>
+						<key>PayloadType</key>
+						<string>com.apple.AIM.account</string>
 						<key>Description</key>
 						<string>Password for the account</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
 						<key>CellType</key>
 						<string>TextField</string>
+					</dict>
+					<dict>
+						<key>Hidden</key>
+						<true/>
+						<key>Identifier</key>
+						<string>D7A15941-A3D6-4AFE-BF7B-2B4F61CC9B7B</string>
+						<key>Title</key>
+						<string>Server Address and Port</string>
+						<key>PayloadKeyHost</key>
+						<string>AIMHostName</string>
+						<key>PayloadKeyPort</key>
+						<string>AIMPort</string>
+						<key>PayloadType</key>
+						<string>com.apple.AIM.account</string>
+						<key>Description</key>
+						<string>Hostname or IP address, and port number for the server</string>
+						<key>CellType</key>
+						<string>TextFieldHostPort</string>
+						<key>DefaultValueHost</key>
+						<string>slogin.oscar.aol.com</string>
+						<key>DefaultValuePort</key>
+						<string>5190</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Hidden</key>
+						<true/>
+						<key>Identifier</key>
+						<string>A661A504-6E39-4F7A-BC2D-D4181A809B61</string>
+						<key>Title</key>
+						<string>Use SSL</string>
+						<key>PayloadKey</key>
+						<string>AIMUseSSL</string>
+						<key>PayloadType</key>
+						<string>com.apple.AIM.account</string>
+						<key>Description</key>
+						<string>Enable Secure Socket Layer communication with chat server</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>DefaultValue</key>
+						<true/>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
 					</dict>
 				</array>
 			</dict>
