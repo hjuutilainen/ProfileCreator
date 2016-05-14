@@ -165,6 +165,7 @@ NSString *const PFCManifestKeyShowDateTime = @"ShowDateTime";
 NSString *const PFCManifestKeySupervisedOnly = @"SupervisedOnly";
 NSString *const PFCManifestKeyTableViewColumns = @"TableViewColumns";
 NSString *const PFCManifestKeyTableViewColumnTitle = @"Title";
+NSString *const PFCManifestKeyTableViewColumnWidth = @"ColumnWidth";
 NSString *const PFCManifestKeyTitle = @"Title";
 NSString *const PFCManifestKeyToolTipDescription = @"ToolTipDescription";
 NSString *const PFCManifestKeyUnit = @"Unit";

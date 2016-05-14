@@ -197,6 +197,7 @@ extern NSString *const PFCManifestKeyShowDateTime;
 extern NSString *const PFCManifestKeySupervisedOnly;
 extern NSString *const PFCManifestKeyTableViewColumns;
 extern NSString *const PFCManifestKeyTableViewColumnTitle;
+extern NSString *const PFCManifestKeyTableViewColumnWidth;
 extern NSString *const PFCManifestKeyTitle;
 extern NSString *const PFCManifestKeyToolTipDescription;
 extern NSString *const PFCManifestKeyUnit;

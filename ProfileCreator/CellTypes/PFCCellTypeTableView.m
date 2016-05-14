@@ -344,6 +344,10 @@
             NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
             NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
             [tableColumn setTitle:tableColumnTitle];
+            if ([tableColumnDict[PFCManifestKeyTableViewColumnWidth] isKindOfClass:[NSNumber class]]) {
+                [tableColumn setMaxWidth:[tableColumnDict[PFCManifestKeyTableViewColumnWidth] floatValue]];
+                [tableColumn setMinWidth:[tableColumnDict[PFCManifestKeyTableViewColumnWidth] floatValue]];
+            }
             [[cellView settingTableView] addTableColumn:tableColumn];
             tableColumnsCellViews[tableColumnDict[PFCManifestKeyIdentifier]] = tableColumnDict;
         }
