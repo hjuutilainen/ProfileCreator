@@ -412,9 +412,12 @@
         // -------------------------------------------------------------------------
         //  Check if custom PayloadType was passed, else use standard "PayloadType"
         // -------------------------------------------------------------------------
-        if (payloadType == nil || payloadType.length == 0) {
+        if ([manifestContentDict[PFCManifestKeyPayloadKey] isEqualToString:PFCManifestKeyPayloadType]) {
+            payloadType = value;
+        } else if (payloadType == nil || payloadType.length == 0) {
             payloadType = manifestContentDict[PFCManifestKeyPayloadType];
         }
+        DDLogDebug(@"payloadType=%@", payloadType);
 
         // -------------------------------------------------------------------------
         //  Check if custom PayloadUUID was passed, else use standard "PayloadUUID"
