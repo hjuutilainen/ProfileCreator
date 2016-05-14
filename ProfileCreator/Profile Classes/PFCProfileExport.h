@@ -32,14 +32,18 @@
 - (void)createPayloadFromValueKey:(NSString *)selectedValue
                   availableValues:(NSArray *)availableValues
               manifestContentDict:(NSDictionary *)manifestContentDict
+                         manifest:(NSDictionary *)manifest
                          settings:(NSDictionary *)settings
                        payloadKey:(NSString *)payloadKey
                       payloadType:(NSString *)payloadType
                       payloadUUID:(NSString *)payloadUUID
                          payloads:(NSMutableArray **)payloads;
-- (void)createPayloadFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
+- (void)createPayloadFromManifestContent:(NSArray *)manifestContent manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
 - (BOOL)verifyRequiredManifestContentDictKeys:(NSArray *)manifestContentDictKeys manifestContentDict:(NSDictionary *)manifestContentDict;
 - (void)createPayloadArrayFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads;
 - (void)createPayloadDictFromTableViewColumns:(NSArray *)tableViewColumns settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict;
+- (NSString *)payloadTypeFromUUID:(NSString *)uuid manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings;
+
+@property (readonly) NSDictionary *resolvedPayloadTypes;
 
 @end

@@ -27,6 +27,7 @@
 #import "PFCCellTypeTextFieldNumber.h"
 #import "PFCCellTypeTextView.h"
 #import "PFCConstants.h"
+#import "PFCGeneralUtility.h"
 #import "PFCLog.h"
 #import "PFCManifestLibrary.h"
 #import "PFCProfileExport.h"
@@ -40,6 +41,8 @@
 
 @property NSString *rootIdentifier;
 @property NSString *rootOrganization;
+
+@property (readwrite) NSDictionary *resolvedPayloadTypes;
 
 @end
 
@@ -88,7 +91,7 @@
     for (NSDictionary *manifest in manifests) {
         NSDictionary *manifestSettings = settings[manifest[PFCManifestKeyDomain]];
         for (NSDictionary *manifestTabSettings in manifestSettings[@"Settings"]) {
-            [self createPayloadFromManifestContent:manifest[PFCManifestKeyManifestContent] settings:manifestTabSettings payloads:&payloadArray];
+            [self createPayloadFromManifestContent:manifest[PFCManifestKeyManifestContent] manifest:manifest settings:manifestTabSettings payloads:&payloadArray];
         }
     }
 
@@ -187,6 +190,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSMutableDictionary *)payloadRootFromManifest:(NSDictionary *)manifest settings:(NSDictionary *)settings payloadType:(NSString *)payloadType payloadUUID:(NSString *)payloadUUID {
+    DDLogDebug(@"%s", __PRETTY_FUNCTION__);
+    DDLogDebug(@"payloadType=%@", payloadType);
 
     if (payloadType == nil || payloadType.length == 0) {
         payloadType = manifest[PFCManifestKeyPayloadType];
@@ -212,10 +217,10 @@
     }];
 } // payloadRootFromManifest:settings:payloadType:payloadUUID
 
-- (void)createPayloadFromManifestContent:(NSArray *)manifestContent settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
+- (void)createPayloadFromManifestContent:(NSArray *)manifestContent manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     for (NSDictionary *manifestContentDict in manifestContent) {
-        [self createPayloadFromManifestContentDict:manifestContentDict settings:settings payloads:payloads];
+        [self createPayloadFromManifestContentDict:manifestContentDict manifest:manifest settings:settings payloads:payloads];
     }
 } // createPayloadFromManifestContent:settings:payloads
 
@@ -256,21 +261,90 @@
     return verified;
 } // verifyRequiredManifestContentDictKeys:manifestContentDict
 
+- (NSString *)payloadTypeFromUUID:(NSString *)uuid manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings {
+
+    DDLogDebug(@"payloadTypeFromUUID: %@", uuid);
+
+    NSUInteger index = [manifest[PFCManifestKeyManifestContent] indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+      return [item[PFCManifestKeyIdentifier] isEqualToString:uuid];
+    }];
+
+    if (index != NSNotFound) {
+        // Verify PayloadKey == 'PayloadType'
+        NSDictionary *manifestContentDict = manifest[PFCManifestKeyManifestContent][index];
+        if (![manifestContentDict[PFCManifestKeyPayloadKey] isEqualToString:PFCManifestKeyPayloadType]) {
+            return @"";
+        }
+        DDLogDebug(@"ManifestContentDict: %@", manifestContentDict);
+
+        // Verify settings exists
+        NSDictionary *settingsDict = settings[uuid];
+        if (settingsDict.count == 0) {
+            return @"";
+        }
+        DDLogDebug(@"Settings Dict: %@", settingsDict);
+
+        id value = settingsDict[PFCSettingsKeyValue];
+        DDLogDebug(@"Value: %@", value);
+
+        NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+        DDLogDebug(@"CellType: %@", cellType);
+
+        NSArray *availableValues;
+        if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
+            availableValues = @[ @"True", @"False" ];
+        } else {
+            availableValues = manifestContentDict[PFCManifestKeyAvailableValues];
+        }
+        DDLogDebug(@"availableValues=%@", availableValues);
+
+        if (availableValues.count == 0) {
+            DDLogError(@"Available Values was empty!");
+            return @"";
+        } else if (![availableValues containsObject:value]) {
+            DDLogError(@"Value: %@ could not be found among Available Values: %@", value, availableValues);
+            return @"";
+        }
+
+        NSArray *selectionContentArray = manifestContentDict[PFCManifestKeyValueKeys][value] ?: @[];
+        DDLogDebug(@"selectionContentArray=%@", selectionContentArray);
+        for (NSDictionary *contentDict in selectionContentArray) {
+            DDLogDebug(@"");
+            if (contentDict[PFCManifestKeyPayloadValue] != nil) {
+                if (![_resolvedPayloadTypes[uuid] isEqualToString:value]) {
+                    NSMutableDictionary *resolvedPayloadTypes = [NSMutableDictionary dictionaryWithDictionary:_resolvedPayloadTypes] ?: [[NSMutableDictionary alloc] init];
+                    resolvedPayloadTypes[uuid] = contentDict[PFCManifestKeyPayloadValue];
+                    [self setResolvedPayloadTypes:[resolvedPayloadTypes copy]];
+                    return contentDict[PFCManifestKeyPayloadValue];
+                } else {
+                    DDLogWarn(@"This was already resolved, should check before coming here!");
+                }
+            }
+        }
+    }
+
+    return @"";
+}
+
 - (void)createPayloadFromValueKey:(NSString *)selectedValue
                   availableValues:(NSArray *)availableValues
               manifestContentDict:(NSDictionary *)manifestContentDict
+                         manifest:(NSDictionary *)manifest
                          settings:(NSDictionary *)settings
                        payloadKey:(NSString *)payloadKey
                       payloadType:(NSString *)payloadType
                       payloadUUID:(NSString *)payloadUUID
                          payloads:(NSMutableArray **)payloads {
 
+    DDLogDebug(@"createPayloadFromValueKey!");
     // -------------------------------------------------------------------------
     //  Check that selected value exist among available values
     // -------------------------------------------------------------------------
     if (availableValues == nil) {
+        DDLogDebug(@"AvailableValues was nil!");
         return;
     } else if (availableValues.count == 0) {
+        DDLogDebug(@"AvailableValuesArray was empty!");
         return;
     } else if (![availableValues containsObject:selectedValue]) {
         DDLogWarn(@"Selection does not exist in available values");
@@ -278,11 +352,13 @@
         DDLogWarn(@"Available values: %@", availableValues);
         return;
     }
+    DDLogDebug(@"availableValues=%@", availableValues);
 
     // -------------------------------------------------------------------------
     //  Check that selected value exist among value keys
     // -------------------------------------------------------------------------
     NSDictionary *valueKeys = manifestContentDict[PFCManifestKeyValueKeys] ?: @{};
+    DDLogDebug(@"valueKeys=%@", valueKeys);
     if (valueKeys.count == 0) {
         DDLogError(@"ValueKeys is empty, please update the manifest to handle all selections");
         return;
@@ -297,6 +373,7 @@
     //  Check that selected value exist among value keys
     // -------------------------------------------------------------------------
     NSMutableArray *selectedValueArray = [valueKeys[selectedValue] mutableCopy]; // Same as manifestContent
+    DDLogDebug(@"Selected value keys array: %@", selectedValueArray);
 
     // -------------------------------------------------------------------------------------------------
     //  Check if the selectedValueArray contains the actual "Value" for the selecting item's PayloadKey
@@ -310,7 +387,10 @@
     //  If a PayloadValue was found in the array, update the payload
     // -------------------------------------------------------------------------
     if (idxPayloadValue != NSNotFound) {
+        DDLogDebug(@"PayloadValue FOUND!");
+
         NSDictionary *payloadValueDict = selectedValueArray[idxPayloadValue]; // Same as manifestContentDict
+        DDLogDebug(@"payloadValueDict=%@", payloadValueDict);
 
         // ---------------------------------------------------------------------
         //  Remove the PayloadValue from the array
@@ -321,6 +401,7 @@
         //  Get value for selection
         // ---------------------------------------------------------------------
         id value = payloadValueDict[PFCManifestKeyPayloadValue];
+        DDLogDebug(@"Value: %@", value);
         if (value == nil) {
             DDLogError(@"PayloadValue was empty");
             return;
@@ -342,10 +423,11 @@
             if ([settings[payloadType][@"UUID"] length] != 0) {
                 payloadUUID = settings[payloadType][@"UUID"];
             } else {
-                DDLogWarn(@"No UUID found for payload type: %@", payloadType);
+                DDLogWarn(@"No UUID found for payload type_1: %@", payloadType);
                 payloadUUID = NSUUID.UUID.UUIDString;
             }
         }
+        DDLogDebug(@"Payload UUID: %@", payloadUUID);
 
         // -----------------------------------------------------------------------
         //  Check if custom PayloadKey was passed, else use standard "PayloadKey"
@@ -353,6 +435,7 @@
         if (payloadKey == nil || payloadKey.length == 0) {
             payloadKey = manifestContentDict[PFCManifestKeyPayloadKey];
         }
+        DDLogDebug(@"PayloadKey: %@", payloadKey);
 
         // ---------------------------------------------------------------------
         //  Resolve any nested payload keys
@@ -366,25 +449,30 @@
         NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
           return [item[PFCManifestKeyPayloadUUID] isEqualToString:payloadUUID];
         }];
+        DDLogDebug(@"Payload index: %lu", (unsigned long)index);
 
         // ----------------------------------------------------------------------------------
         //  Create mutable version of current payload, or create new payload if none existed
         // ----------------------------------------------------------------------------------
+        DDLogDebug(@"Getting payload dict...");
         NSMutableDictionary *payloadDictDict;
         if (index != NSNotFound) {
             payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
         } else {
             payloadDictDict = [self payloadRootFromManifest:manifestContentDict settings:settings payloadType:payloadType payloadUUID:payloadUUID];
         }
+        DDLogDebug(@"Payload Dict: %@", payloadDictDict);
 
         // ---------------------------------------------------------------------
         //  Add current key and value to payload
         // ---------------------------------------------------------------------
+        DDLogDebug(@"Adding value: %@ to key: %@", value, payloadKey);
         payloadDictDict[payloadKey] = value;
 
         // ---------------------------------------------------------------------
         //  Save payload to payload array
         // ---------------------------------------------------------------------
+        DDLogDebug(@"Saving Payload Dict!");
         if (index != NSNotFound) {
             [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
         } else {
@@ -441,7 +529,7 @@
             // ---------------------------------------------------------------------------
             //  Pass valueKeysShared dict as a manifestContentDict to be added to payload
             // ---------------------------------------------------------------------------
-            [self createPayloadFromManifestContentDict:valueKeysShared[value] settings:settings payloads:payloads];
+            [self createPayloadFromManifestContentDict:valueKeysShared[value] manifest:manifest settings:settings payloads:payloads];
         }
     }
 
@@ -449,11 +537,11 @@
     //  If any more dicts are in the array, pass them as manifestContent to be added to payload
     // -----------------------------------------------------------------------------------------
     if (selectedValueArray.count != 0) {
-        [self createPayloadFromManifestContent:selectedValueArray settings:settings payloads:payloads];
+        [self createPayloadFromManifestContent:selectedValueArray manifest:manifest settings:settings payloads:payloads];
     }
 } // createPayloadFromValueKey:availableValues:manifestContentDict:settings:payloadKey:payloadType:payloadUUID:payloads
 
-- (void)createPayloadFromManifestContentDict:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
+- (void)createPayloadFromManifestContentDict:(NSDictionary *)manifestContentDict manifest:manifest settings:(NSDictionary *)settings payloads:(NSMutableArray **)payloads {
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
@@ -463,25 +551,25 @@
     //  Checkbox
     // -------------------------------------------------------------------------
     if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
-        [PFCCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  CheckboxNoDescription
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        [PFCCheckboxNoDescriptionCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCCheckboxNoDescriptionCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  DatePicker
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
-        [PFCDatePickerCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCDatePickerCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  DatePickerNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle]) {
-        [PFCDatePickerNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCDatePickerNoTitleCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  File
@@ -492,43 +580,43 @@
         //  PopUpButton
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
-        [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  PopUpButtonLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
-        [PFCPopUpButtonLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCPopUpButtonLeftCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  PopUpButtonNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        [PFCPopUpButtonNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCPopUpButtonNoTitleCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  SegmentedControl
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
-        [PFCSegmentedControlCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCSegmentedControlCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TableView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
-        [PFCTableViewCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTableViewCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextField
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
-        [PFCTextFieldCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldCheckbox
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldCheckbox]) {
-        [PFCTextFieldCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldDaysHoursNoTitle
@@ -539,37 +627,37 @@
         //  TextFieldHostPort
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort]) {
-        [PFCTextFieldHostPortCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldHostPortCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldHostPortCheckbox
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
-        [PFCTextFieldHostPortCheckboxCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldHostPortCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldNoTitle
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        [PFCTextFieldNoTitleCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldNoTitleCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumber]) {
-        [PFCTextFieldNumberCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldNumberCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumberLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
-        [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
-        [PFCTextViewCellView createPayloadForCellType:manifestContentDict settings:settings payloads:payloads sender:self];
+        [PFCTextViewCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
