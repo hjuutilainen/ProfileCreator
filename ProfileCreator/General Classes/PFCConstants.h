@@ -205,6 +205,11 @@ extern NSString *const PFCManifestKeyValueKeys;
 extern NSString *const PFCManifestKeyValueKeysShared;
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark ManifestDomains
+////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCManifestDomainGeneral;
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestReportKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCManifestReportTitleKey;
@@ -299,6 +304,9 @@ extern NSString *const PFCProfileTemplateExtension;
 #pragma mark PFCProfileDisplaySettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings;
+extern NSString *const PFCProfileDisplaySettingsKeyInstallMethod;
+extern NSString *const PFCProfileDisplaySettingsKeyInstallMethodManual;
+extern NSString *const PFCProfileDisplaySettingsKeyInstallMethodOTA;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScope;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeSystem;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeUser;

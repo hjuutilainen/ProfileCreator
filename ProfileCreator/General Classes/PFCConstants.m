@@ -173,6 +173,11 @@ NSString *const PFCManifestKeyValueKeys = @"ValueKeys";
 NSString *const PFCManifestKeyValueKeysShared = @"ValueKeysShared";
 
 ////////////////////////////////////////////////////////////////////////////////
+#pragma mark ManifestDomains
+////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCManifestDomainGeneral = @"com.apple.general.manifest";
+
+////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestReportKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCManifestReportTitleKey = @"ReportTitle";
@@ -267,6 +272,9 @@ NSString *const PFCProfileTemplateExtension = @"pfcconf";
 #pragma mark PFCProfileDisplaySettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings = @"AdvancedSettings";
+NSString *const PFCProfileDisplaySettingsKeyInstallMethod = @"InstallMethod";
+NSString *const PFCProfileDisplaySettingsKeyInstallMethodManual = @"Manual";
+NSString *const PFCProfileDisplaySettingsKeyInstallMethodOTA = @"MDM";
 NSString *const PFCProfileDisplaySettingsKeyPlatform = @"Platform";
 NSString *const PFCProfileDisplaySettingsKeyPlatformOSX = @"OSX";
 NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion = @"OSXMaxVersion";
