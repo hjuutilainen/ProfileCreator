@@ -16,7 +16,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.caldav.account</string>
+	<string>com.apple.caldav.account.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

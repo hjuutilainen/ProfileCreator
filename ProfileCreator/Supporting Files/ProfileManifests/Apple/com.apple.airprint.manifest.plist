@@ -22,7 +22,7 @@
 		</dict>
 	</array>
 	<key>Domain</key>
-	<string>com.apple.airprint</string>
+	<string>com.apple.airprint.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>CellType</key>

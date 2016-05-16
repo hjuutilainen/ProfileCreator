@@ -16,7 +16,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.ADCertificate.managed</string>
+	<string>com.apple.ADCertificate.managed.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

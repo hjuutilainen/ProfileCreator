@@ -24,7 +24,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.cellular</string>
+	<string>com.apple.cellular.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

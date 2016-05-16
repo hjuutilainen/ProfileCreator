@@ -16,7 +16,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.messages</string>
+	<string>com.apple.messages.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

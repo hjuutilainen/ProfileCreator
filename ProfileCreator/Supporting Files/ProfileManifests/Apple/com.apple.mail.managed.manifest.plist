@@ -5,7 +5,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.mail.managed</string>
+	<string>com.apple.mail.managed.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>
@@ -27,7 +27,7 @@
 		<dict>
 			<key>Identifier</key>
 			<string>19E60ED2-4867-4B9B-BA87-7EC24DF04304</string>
-			<key>Required</key>
+			<key>Optional</key>
 			<true/>
 			<key>Title</key>
 			<string>Account Description</string>

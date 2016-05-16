@@ -24,7 +24,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.apn.managed</string>
+	<string>com.apple.apn.managed.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

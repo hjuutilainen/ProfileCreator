@@ -5,7 +5,7 @@
 	<key>CellType</key>
 	<string>Menu</string>
 	<key>Domain</key>
-	<string>com.apple.font</string>
+	<string>com.apple.font.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>Title</key>

@@ -22,7 +22,7 @@
 		</dict>
 	</array>
 	<key>Domain</key>
-	<string>com.apple.airplay</string>
+	<string>com.apple.airplay.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
 	<key>CellType</key>
