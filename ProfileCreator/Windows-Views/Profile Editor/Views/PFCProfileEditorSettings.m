@@ -70,6 +70,7 @@
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion))];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion))];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(payloadScope))];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(installMethod))];
 }
 
 - (void)viewDidLoad {
@@ -79,6 +80,7 @@
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMinVersion)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(iosMaxVersion)) options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:NSStringFromSelector(@selector(payloadScope)) options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:NSStringFromSelector(@selector(installMethod)) options:NSKeyValueObservingOptionNew context:nil];
     [self setupSettings];
     [PFCGeneralUtility setupOSVersionsButtonOSXMin:_popUpButtonPlatformOSXMinVersion
                                             osxMax:_popUpButtonPlatformOSXMaxVersion
@@ -88,7 +90,10 @@
 }
 
 - (void)setupSettings {
+    // FIXME - Read/Store this from the settings for current profile
     [self setPayloadScope:PFCProfileDisplaySettingsKeyPayloadScopeUser];
+    [self setInstallMethod:PFCProfileDisplaySettingsKeyInstallMethodManual];
+
     [self setProfileName:_profile[@"Config"][PFCProfileTemplateKeyName] ?: PFCDefaultProfileName];
     [self setProfileUUID:_profile[@"Config"][PFCProfileTemplateKeyUUID] ?: [[NSUUID UUID] UUIDString]];
     [self setProfileIdentifierFormat:_profile[@"Config"][PFCProfileTemplateKeyIdentifierFormat] ?: PFCDefaultProfileIdentifierFormat];
@@ -137,6 +142,7 @@
         PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion : _iosMaxVersion ?: @"",
         PFCProfileDisplaySettingsKeyPlatformiOSMinVersion : _iosMinVersion ?: @"",
         PFCProfileDisplaySettingsKeyPayloadScope : _payloadScope ?: PFCProfileDisplaySettingsKeyPayloadScopeUser,
+        PFCProfileDisplaySettingsKeyInstallMethod : _installMethod ?: PFCProfileDisplaySettingsKeyInstallMethodManual,
         PFCManifestKeyDisabled : @([[_profileEditor manifest] showKeysDisabled]),
         PFCManifestKeyHidden : @([[_profileEditor manifest] showKeysHidden]),
         PFCManifestKeySupervisedOnly : @(_showKeysSupervised)
@@ -144,7 +150,7 @@
 } // displayKeys
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)__unused object change:(NSDictionary *)change context:(void *)__unused context {
-    if ([@[ @"osxMinVersion", @"osxMaxVersion", @"iosMinVersion", @"iosMaxVersion", @"payloadScope" ] containsObject:keyPath]) {
+    if ([@[ @"osxMinVersion", @"osxMaxVersion", @"iosMinVersion", @"iosMaxVersion", @"payloadScope", @"installMethod" ] containsObject:keyPath]) {
         [[_profileEditor library] updateManifests];
     }
 }

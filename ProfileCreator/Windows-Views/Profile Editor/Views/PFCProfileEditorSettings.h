@@ -40,6 +40,7 @@
 @property (readwrite) NSString *iosMaxVersion;
 
 @property (readwrite) NSString *payloadScope;
+@property (readwrite) NSString *installMethod;
 
 @property BOOL signProfile;
 @property BOOL encryptProfile;

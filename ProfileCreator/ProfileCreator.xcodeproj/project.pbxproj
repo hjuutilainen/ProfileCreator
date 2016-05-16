@@ -7,38 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.plist */; };
-		530562931CD6855C00234C3E /* com.apple.proxies.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */; };
+		5304B24E1C1E02C50085559C /* com.apple.vpn.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.manifest.plist */; };
+		530562931CD6855C00234C3E /* com.apple.proxies.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */; };
 		5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9D21C7EF5300010191F /* PFCCellTypes.m */; };
 		5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E41C7EFED60010191F /* PFCCellTypeCheckbox.m */; };
 		5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E71C7F05CD0010191F /* PFCCellTypeDatePicker.m */; };
 		5306D9EB1C7F08750010191F /* PFCCellTypeFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9EA1C7F08750010191F /* PFCCellTypeFile.m */; };
 		5307CD8B1C921EAA000064A6 /* PFCProfileEditorInfoMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5307CD891C921EAA000064A6 /* PFCProfileEditorInfoMenu.m */; };
 		5307CD8C1C921EAA000064A6 /* PFCProfileEditorInfoMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5307CD8A1C921EAA000064A6 /* PFCProfileEditorInfoMenu.xib */; };
-		5308934B1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist */; };
-		5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist */; };
+		5308934B1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist */; };
+		5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist */; };
 		5308935D1CD4CDD6003D10B0 /* MenuIconADCertificate.png in Resources */ = {isa = PBXBuildFile; fileRef = 5308935C1CD4CDD6003D10B0 /* MenuIconADCertificate.png */; };
-		5308935F1CD4D1F2003D10B0 /* com.apple.airprint.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5308935E1CD4D1F2003D10B0 /* com.apple.airprint.plist */; };
+		5308935F1CD4D1F2003D10B0 /* com.apple.airprint.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5308935E1CD4D1F2003D10B0 /* com.apple.airprint.manifest.plist */; };
 		530893611CD4D2FE003D10B0 /* MenuIconAirPrint.png in Resources */ = {isa = PBXBuildFile; fileRef = 530893601CD4D2FE003D10B0 /* MenuIconAirPrint.png */; };
 		530893631CD4D31A003D10B0 /* MenuIconWebClip.png in Resources */ = {isa = PBXBuildFile; fileRef = 530893621CD4D31A003D10B0 /* MenuIconWebClip.png */; };
 		530893651CD4D33A003D10B0 /* MenuIconNotifications.png in Resources */ = {isa = PBXBuildFile; fileRef = 530893641CD4D33A003D10B0 /* MenuIconNotifications.png */; };
-		530893681CD4F8E4003D10B0 /* com.apple.cellular.plist in Resources */ = {isa = PBXBuildFile; fileRef = 530893671CD4F8E4003D10B0 /* com.apple.cellular.plist */; };
+		530893681CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 530893671CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist */; };
 		5314532A1C861D3600A19AFE /* SidebarFolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 531453291C861D3600A19AFE /* SidebarFolder.icns */; };
 		53232F321C5EB130004630F8 /* PFCButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 53232F311C5EB130004630F8 /* PFCButtons.m */; };
 		5327B74D1C4EDB3B0083815C /* PFCProfileEditorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5327B74B1C4EDB3B0083815C /* PFCProfileEditorInfo.m */; };
 		5327B74E1C4EDB3B0083815C /* PFCProfileEditorInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5327B74C1C4EDB3B0083815C /* PFCProfileEditorInfo.xib */; };
-		532B6C511C17289700297025 /* com.apple.general.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
-		532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.plist */; };
-		532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.plist */; };
-		532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
-		532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C601C172FD000297025 /* com.apple.ews.account.plist */; };
-		532B6C671C17311200297025 /* com.apple.font.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C661C17311200297025 /* com.apple.font.plist */; };
-		532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
-		532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */; };
+		532B6C511C17289700297025 /* com.apple.general.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.manifest.plist */; };
+		532B6C531C172A3600297025 /* com.apple.general.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C501C17289700297025 /* com.apple.general.manifest.plist */; };
+		532B6C581C172E0300297025 /* com.apple.caldav.account.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C571C172E0300297025 /* com.apple.caldav.account.manifest.plist */; };
+		532B6C5E1C172F5800297025 /* com.apple.mail.managed.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */; };
+		532B6C611C172FD000297025 /* com.apple.ews.account.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C601C172FD000297025 /* com.apple.ews.account.manifest.plist */; };
+		532B6C671C17311200297025 /* com.apple.font.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C661C17311200297025 /* com.apple.font.manifest.plist */; };
+		532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist */; };
+		532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist */; };
 		53321A741CB3E70D0050A3DD /* com.apple.mcx.appstore.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53321A731CB3E70D0050A3DD /* com.apple.mcx.appstore.plist */; };
 		5333C7261C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 5333C7241C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.m */; };
 		5333C7271C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5333C7251C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.xib */; };
-		5333D9591CD52D5600B810A8 /* com.apple.apn.managed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5333D9581CD52D5600B810A8 /* com.apple.apn.managed.plist */; };
+		5333D9591CD52D5600B810A8 /* com.apple.apn.managed.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5333D9581CD52D5600B810A8 /* com.apple.apn.managed.manifest.plist */; };
 		5333D96A1CD5308100B810A8 /* MenuIconCellular.png in Resources */ = {isa = PBXBuildFile; fileRef = 5333D9691CD5308100B810A8 /* MenuIconCellular.png */; };
 		53351E301C1601FC00A6FC08 /* PFCTableViewCellsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */; };
 		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
@@ -60,11 +60,14 @@
 		534324CA1C80E5EA00893351 /* Home-15.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324C41C80E5EA00893351 /* Home-15.png */; };
 		534324DC1C80E75D00893351 /* Menu-17.png in Resources */ = {isa = PBXBuildFile; fileRef = 534324DA1C80E75D00893351 /* Menu-17.png */; };
 		53473FC41C88C60000D4C7CF /* PFCAvailability.m in Sources */ = {isa = PBXBuildFile; fileRef = 53473FC31C88C60000D4C7CF /* PFCAvailability.m */; };
-		5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.plist */; };
+		5355A97A1CE7AA0C00606C2A /* MenuIconLoginItems.png in Resources */ = {isa = PBXBuildFile; fileRef = 5355A9791CE7AA0C00606C2A /* MenuIconLoginItems.png */; };
+		5355A98B1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */; };
+		5355A98C1CE7AC7800606C2A /* com.apple.loginitems.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */; };
+		5357C0751C1816640056B050 /* com.apple.carddav.account.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5357C0741C1816640056B050 /* com.apple.carddav.account.manifest.plist */; };
 		53597D8B1C5268C50062AADC /* PFCManifestParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 53597D8A1C5268C50062AADC /* PFCManifestParser.m */; };
 		53598C311C81E2C300C6BD2E /* PFCMainWindowGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroup.m */; };
 		53598C321C81E2C300C6BD2E /* PFCMainWindowGroup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53598C301C81E2C300C6BD2E /* PFCMainWindowGroup.xib */; };
-		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */; };
+		5359E2D21C1CC57E00646980 /* com.apple.security.privacy.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D11C1CC57E00646980 /* com.apple.security.privacy.manifest.plist */; };
 		5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */; };
 		536213041C43D1C500C6C8BF /* PFCSplitViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 536213031C43D1C500C6C8BF /* PFCSplitViews.m */; };
 		5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */; };
@@ -76,7 +79,7 @@
 		536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536FC5241C15EEDE00B1D7CF /* MainMenu.xib */; };
 		537290721C554D43003160EA /* OSVersions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 537290711C554D43003160EA /* OSVersions.plist */; };
 		537290771C557666003160EA /* Profiles.icns in Resources */ = {isa = PBXBuildFile; fileRef = 537290761C557666003160EA /* Profiles.icns */; };
-		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */; };
+		53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist */; };
 		53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */; };
 		53751FEB1C1B832D00FF3CB0 /* MenuIconExchange.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */; };
 		53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */ = {isa = PBXBuildFile; fileRef = 53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */; };
@@ -101,8 +104,8 @@
 		537B02261C61449F0072093C /* PFCMainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02241C61449F0072093C /* PFCMainWindow.m */; };
 		537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 537B02251C61449F0072093C /* PFCMainWindow.xib */; };
 		537B02391C614D7A0072093C /* PFCGeneralUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 537B02381C614D7A0072093C /* PFCGeneralUtility.m */; };
-		5382AAB21CE5A6FA00C65B50 /* com.apple.messages.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.plist */; };
-		5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */; };
+		5382AAB21CE5A6FA00C65B50 /* com.apple.messages.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */; };
+		5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */; };
 		5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5385ADC11C872EF2007C9BD0 /* SidebarSmartFolder.icns */; };
 		538750B71C4C0F4F0003F0EF /* PFCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 538750B61C4C0F4F0003F0EF /* PFCConstants.m */; };
 		53897E2C1C59566500B1D868 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53897E0D1C59563C00B1D868 /* CocoaLumberjack.framework */; };
@@ -120,7 +123,7 @@
 		539272171C95A0CC00C15343 /* PFCManifestLintError.m in Sources */ = {isa = PBXBuildFile; fileRef = 539272161C95A0CC00C15343 /* PFCManifestLintError.m */; };
 		5392721C1C95A4BA00C15343 /* PFCManifestLinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5392721A1C95A4BA00C15343 /* PFCManifestLinter.m */; };
 		5392721D1C95A4BA00C15343 /* PFCManifestLinter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5392721B1C95A4BA00C15343 /* PFCManifestLinter.xib */; };
-		539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */; };
+		539616561C823DA400FE6470 /* com.apple.applicationaccess.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 539616551C823DA400FE6470 /* com.apple.applicationaccess.manifest.plist */; };
 		53A47E711C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */; };
 		53A47E751C693CE2000F4035 /* PFCTableViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E741C693CE2000F4035 /* PFCTableViews.m */; };
 		53A47E871C693FEF000F4035 /* PFCAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E861C693FEF000F4035 /* PFCAlert.m */; };
@@ -135,7 +138,7 @@
 		53ADF6291C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6281C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m */; };
 		53C3E32A1C8B0CA800C15B73 /* PFCStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C3E3281C8B0CA800C15B73 /* PFCStatusView.m */; };
 		53C3E32B1C8B0CA800C15B73 /* PFCStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C3E3291C8B0CA800C15B73 /* PFCStatusView.xib */; };
-		53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.plist */; };
+		53C7339C1C1F37E300119C71 /* com.apple.scep.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.manifest.plist */; };
 		53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339E1C1F396800119C71 /* MenuIconSCEP.png */; };
 		53C782441C85C18900E731B1 /* PFCPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C782421C85C18900E731B1 /* PFCPreferences.m */; };
 		53C782451C85C18900E731B1 /* PFCPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C782431C85C18900E731B1 /* PFCPreferences.xib */; };
@@ -143,7 +146,7 @@
 		53C7824B1C85C2E600E731B1 /* PFCPreferencesGeneral.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C782491C85C2E600E731B1 /* PFCPreferencesGeneral.xib */; };
 		53C7824F1C85C32200E731B1 /* PFCPreferencesMCX.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C7824D1C85C32200E731B1 /* PFCPreferencesMCX.m */; };
 		53C782501C85C32200E731B1 /* PFCPreferencesMCX.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C7824E1C85C32200E731B1 /* PFCPreferencesMCX.xib */; };
-		53D4642F1CAFEF34009783A1 /* com.apple.airplay.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */; };
+		53D4642F1CAFEF34009783A1 /* com.apple.airplay.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53D4642E1CAFEF34009783A1 /* com.apple.airplay.manifest.plist */; };
 		53D5A50E1C8E14B60099CD8A /* PFCProfileEditorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D5A50C1C8E14B60099CD8A /* PFCProfileEditorLibrary.m */; };
 		53D5A50F1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53D5A50D1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib */; };
 		53D795631C4AF865006B19E9 /* RFOverlayScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D795601C4AF865006B19E9 /* RFOverlayScroller.m */; };
@@ -155,21 +158,21 @@
 		53F08F951CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F941CBC0FEA00B99A8E /* PFCTableViewCellTypeTextField.m */; };
 		53F08F981CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F971CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m */; };
 		53F08F9B1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F08F9A1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m */; };
-		53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */; };
+		53F1DDE81C20B74B003D3464 /* com.apple.passcode.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F1DDE71C20B74B003D3464 /* com.apple.passcode.manifest.plist */; };
 		53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */; };
 		53F4E0741C85E4B200DE3B1F /* PFCPreferencesLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0721C85E4B200DE3B1F /* PFCPreferencesLogging.m */; };
 		53F4E0751C85E4B200DE3B1F /* PFCPreferencesLogging.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53F4E0731C85E4B200DE3B1F /* PFCPreferencesLogging.xib */; };
 		53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */; };
 		53FC42DB1C79D40B00F3A7AD /* PFCProfileExport.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
-		53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.plist */; };
-		53FCF00A1C1F561900E440CB /* com.apple.messages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.plist */; };
+		53FCF0071C1F539300E440CB /* com.apple.ldap.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0061C1F539300E440CB /* com.apple.ldap.manifest.plist */; };
+		53FCF00A1C1F561900E440CB /* com.apple.messages.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */; };
 		53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00B1C1F567700E440CB /* MenuIconMessages.png */; };
 		53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00D1C1F568B00E440CB /* MenuIconFinder.png */; };
 		53FCF0101C1F569B00E440CB /* MenuIconAccessibility.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF00F1C1F569B00E440CB /* MenuIconAccessibility.png */; };
 		53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0121C1F5D7F00E440CB /* MenuIconPrinting.png */; };
 		53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0141C1F5DA200E440CB /* MenuIconProxies.png */; };
-		53FCF0171C1F5DB500E440CB /* com.apple.proxies.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */; };
+		53FCF0171C1F5DB500E440CB /* com.apple.proxies.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */; };
 		53FEC8021C4E114000C96596 /* PFCViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FEC8011C4E114000C96596 /* PFCViews.m */; };
 /* End PBXBuildFile section */
 
@@ -302,12 +305,13 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
-				5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.plist in Copy Manifests Apple */,
-				5382AAB21CE5A6FA00C65B50 /* com.apple.messages.plist in Copy Manifests Apple */,
-				530562931CD6855C00234C3E /* com.apple.proxies.plist in Copy Manifests Apple */,
-				5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.plist in Copy Manifests Apple */,
-				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.plist in Copy Manifests Apple */,
-				532B6C531C172A3600297025 /* com.apple.general.plist in Copy Manifests Apple */,
+				5355A98C1CE7AC7800606C2A /* com.apple.loginitems.manifest.plist in Copy Manifests Apple */,
+				5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.manifest.plist in Copy Manifests Apple */,
+				5382AAB21CE5A6FA00C65B50 /* com.apple.messages.manifest.plist in Copy Manifests Apple */,
+				530562931CD6855C00234C3E /* com.apple.proxies.manifest.plist in Copy Manifests Apple */,
+				5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.manifest.plist in Copy Manifests Apple */,
+				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.manifest.plist in Copy Manifests Apple */,
+				532B6C531C172A3600297025 /* com.apple.general.manifest.plist in Copy Manifests Apple */,
 			);
 			name = "Copy Manifests Apple";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,7 +341,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5304B24D1C1E02C50085559C /* com.apple.vpn.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.vpn.plist"; sourceTree = "<group>"; };
+		5304B24D1C1E02C50085559C /* com.apple.vpn.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.vpn.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.vpn.manifest.plist"; sourceTree = "<group>"; };
 		5306D9D11C7EF5300010191F /* PFCCellTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypes.h; path = CellTypes/PFCCellTypes.h; sourceTree = "<group>"; };
 		5306D9D21C7EF5300010191F /* PFCCellTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypes.m; path = CellTypes/PFCCellTypes.m; sourceTree = "<group>"; };
 		5306D9E31C7EFED60010191F /* PFCCellTypeCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeCheckbox.h; path = CellTypes/PFCCellTypeCheckbox.h; sourceTree = "<group>"; };
@@ -349,30 +353,30 @@
 		5307CD881C921EAA000064A6 /* PFCProfileEditorInfoMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorInfoMenu.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfoMenu.h"; sourceTree = "<group>"; };
 		5307CD891C921EAA000064A6 /* PFCProfileEditorInfoMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorInfoMenu.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfoMenu.m"; sourceTree = "<group>"; };
 		5307CD8A1C921EAA000064A6 /* PFCProfileEditorInfoMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorInfoMenu.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfoMenu.xib"; sourceTree = "<group>"; };
-		5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ADCertificate.managed.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ADCertificate.managed.plist"; sourceTree = "<group>"; };
+		5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ADCertificate.managed.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ADCertificate.managed.manifest.plist"; sourceTree = "<group>"; };
 		5308935C1CD4CDD6003D10B0 /* MenuIconADCertificate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconADCertificate.png; sourceTree = "<group>"; };
-		5308935E1CD4D1F2003D10B0 /* com.apple.airprint.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airprint.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.airprint.plist"; sourceTree = "<group>"; };
+		5308935E1CD4D1F2003D10B0 /* com.apple.airprint.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airprint.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.airprint.manifest.plist"; sourceTree = "<group>"; };
 		530893601CD4D2FE003D10B0 /* MenuIconAirPrint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconAirPrint.png; sourceTree = "<group>"; };
 		530893621CD4D31A003D10B0 /* MenuIconWebClip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconWebClip.png; sourceTree = "<group>"; };
 		530893641CD4D33A003D10B0 /* MenuIconNotifications.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconNotifications.png; sourceTree = "<group>"; };
-		530893671CD4F8E4003D10B0 /* com.apple.cellular.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.cellular.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.cellular.plist"; sourceTree = "<group>"; };
+		530893671CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.cellular.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.cellular.manifest.plist"; sourceTree = "<group>"; };
 		531453291C861D3600A19AFE /* SidebarFolder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SidebarFolder.icns; path = "../Supporting Files/Graphics/UI/SidebarFolder.icns"; sourceTree = "<group>"; };
 		53232F301C5EB130004630F8 /* PFCButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCButtons.h; path = "UI Subclasses/PFCButtons.h"; sourceTree = "<group>"; };
 		53232F311C5EB130004630F8 /* PFCButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCButtons.m; path = "UI Subclasses/PFCButtons.m"; sourceTree = "<group>"; };
 		5327B74A1C4EDB3B0083815C /* PFCProfileEditorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorInfo.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfo.h"; sourceTree = "<group>"; };
 		5327B74B1C4EDB3B0083815C /* PFCProfileEditorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorInfo.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfo.m"; sourceTree = "<group>"; };
 		5327B74C1C4EDB3B0083815C /* PFCProfileEditorInfo.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorInfo.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorInfo.xib"; sourceTree = "<group>"; };
-		532B6C501C17289700297025 /* com.apple.general.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.general.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.general.plist"; sourceTree = "<group>"; };
-		532B6C571C172E0300297025 /* com.apple.caldav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.caldav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.caldav.account.plist"; sourceTree = "<group>"; };
-		532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mail.managed.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.mail.managed.plist"; sourceTree = "<group>"; };
-		532B6C601C172FD000297025 /* com.apple.ews.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ews.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ews.account.plist"; sourceTree = "<group>"; };
-		532B6C661C17311200297025 /* com.apple.font.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.font.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.font.plist"; sourceTree = "<group>"; };
-		532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.configurationprofile.identification.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.configurationprofile.identification.plist"; sourceTree = "<group>"; };
+		532B6C501C17289700297025 /* com.apple.general.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.general.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.general.manifest.plist"; sourceTree = "<group>"; };
+		532B6C571C172E0300297025 /* com.apple.caldav.account.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.caldav.account.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.caldav.account.manifest.plist"; sourceTree = "<group>"; };
+		532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mail.managed.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.mail.managed.manifest.plist"; sourceTree = "<group>"; };
+		532B6C601C172FD000297025 /* com.apple.ews.account.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ews.account.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ews.account.manifest.plist"; sourceTree = "<group>"; };
+		532B6C661C17311200297025 /* com.apple.font.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.font.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.font.manifest.plist"; sourceTree = "<group>"; };
+		532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.configurationprofile.identification.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.configurationprofile.identification.manifest.plist"; sourceTree = "<group>"; };
 		53321A731CB3E70D0050A3DD /* com.apple.mcx.appstore.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mcx.appstore.plist; path = "Supporting Files/ProfileManifests/MCX/com.apple.mcx.appstore.plist"; sourceTree = "<group>"; };
 		5333C7231C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorManifestTab.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorManifestTab.h"; sourceTree = "<group>"; };
 		5333C7241C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorManifestTab.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorManifestTab.m"; sourceTree = "<group>"; };
 		5333C7251C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorManifestTab.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorManifestTab.xib"; sourceTree = "<group>"; };
-		5333D9581CD52D5600B810A8 /* com.apple.apn.managed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.apn.managed.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.apn.managed.plist"; sourceTree = "<group>"; };
+		5333D9581CD52D5600B810A8 /* com.apple.apn.managed.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.apn.managed.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.apn.managed.manifest.plist"; sourceTree = "<group>"; };
 		5333D9691CD5308100B810A8 /* MenuIconCellular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconCellular.png; sourceTree = "<group>"; };
 		53351E2E1C1601FC00A6FC08 /* PFCTableViewCellsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsMenu.h; path = "TableView CellViews/PFCTableViewCellsMenu.h"; sourceTree = "<group>"; };
 		53351E2F1C1601FC00A6FC08 /* PFCTableViewCellsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsMenu.m; path = "TableView CellViews/PFCTableViewCellsMenu.m"; sourceTree = "<group>"; };
@@ -403,13 +407,15 @@
 		53473FC21C88C60000D4C7CF /* PFCAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCAvailability.h; path = "Manifest Classes/PFCAvailability.h"; sourceTree = "<group>"; };
 		53473FC31C88C60000D4C7CF /* PFCAvailability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCAvailability.m; path = "Manifest Classes/PFCAvailability.m"; sourceTree = "<group>"; };
 		534852EA1C9D7D9C00E7AC47 /* PFCCellTypeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeProtocol.h; path = CellTypes/PFCCellTypeProtocol.h; sourceTree = "<group>"; };
-		5357C0741C1816640056B050 /* com.apple.carddav.account.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.plist"; sourceTree = "<group>"; };
+		5355A9791CE7AA0C00606C2A /* MenuIconLoginItems.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconLoginItems.png; sourceTree = "<group>"; };
+		5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.loginitems.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.loginitems.manifest.plist"; sourceTree = "<group>"; };
+		5357C0741C1816640056B050 /* com.apple.carddav.account.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.carddav.account.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.carddav.account.manifest.plist"; sourceTree = "<group>"; };
 		53597D891C5268C50062AADC /* PFCManifestParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestParser.h; path = "Manifest Classes/PFCManifestParser.h"; sourceTree = "<group>"; };
 		53597D8A1C5268C50062AADC /* PFCManifestParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestParser.m; path = "Manifest Classes/PFCManifestParser.m"; sourceTree = "<group>"; };
 		53598C2E1C81E2C300C6BD2E /* PFCMainWindowGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowGroup.h; path = "Windows-Views/Main Window/Views/PFCMainWindowGroup.h"; sourceTree = "<group>"; };
 		53598C2F1C81E2C300C6BD2E /* PFCMainWindowGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowGroup.m; path = "Windows-Views/Main Window/Views/PFCMainWindowGroup.m"; sourceTree = "<group>"; };
 		53598C301C81E2C300C6BD2E /* PFCMainWindowGroup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowGroup.xib; path = "Windows-Views/Main Window/Views/PFCMainWindowGroup.xib"; sourceTree = "<group>"; };
-		5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.privacy.plist"; sourceTree = "<group>"; };
+		5359E2D11C1CC57E00646980 /* com.apple.security.privacy.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.privacy.manifest.plist"; sourceTree = "<group>"; };
 		5359E2D31C1CC65100646980 /* MenuIconSecurityPrivacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconSecurityPrivacy.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconSecurityPrivacy.png"; sourceTree = "<group>"; };
 		536213021C43D1C500C6C8BF /* PFCSplitViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCSplitViews.h; path = "UI Subclasses/PFCSplitViews.h"; sourceTree = "<group>"; };
 		536213031C43D1C500C6C8BF /* PFCSplitViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCSplitViews.m; path = "UI Subclasses/PFCSplitViews.m"; sourceTree = "<group>"; };
@@ -428,7 +434,7 @@
 		536FC5271C15EEDE00B1D7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Supporting Files/Info.plist"; sourceTree = "<group>"; };
 		537290711C554D43003160EA /* OSVersions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = OSVersions.plist; path = "Supporting Files/Property Lists/OSVersions.plist"; sourceTree = SOURCE_ROOT; };
 		537290761C557666003160EA /* Profiles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Profiles.icns; path = "../Supporting Files/Graphics/Profiles.icns"; sourceTree = "<group>"; };
-		53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.certificate.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.certificate.plist"; sourceTree = "<group>"; };
+		53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.certificate.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.certificate.manifest.plist"; sourceTree = "<group>"; };
 		53751FE81C1B831A00FF3CB0 /* MenuIconAirPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconAirPlay.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconAirPlay.png"; sourceTree = "<group>"; };
 		53751FEA1C1B832D00FF3CB0 /* MenuIconExchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconExchange.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconExchange.png"; sourceTree = "<group>"; };
 		53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconIdentification.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconIdentification.png"; sourceTree = "<group>"; };
@@ -484,7 +490,7 @@
 		539272191C95A4BA00C15343 /* PFCManifestLinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCManifestLinter.h; path = "Windows-Views/Manifest Linter/PFCManifestLinter.h"; sourceTree = "<group>"; };
 		5392721A1C95A4BA00C15343 /* PFCManifestLinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCManifestLinter.m; path = "Windows-Views/Manifest Linter/PFCManifestLinter.m"; sourceTree = "<group>"; };
 		5392721B1C95A4BA00C15343 /* PFCManifestLinter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCManifestLinter.xib; path = "Windows-Views/Manifest Linter/PFCManifestLinter.xib"; sourceTree = "<group>"; };
-		539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.applicationaccess.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.applicationaccess.plist"; sourceTree = "<group>"; };
+		539616551C823DA400FE6470 /* com.apple.applicationaccess.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.applicationaccess.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.applicationaccess.manifest.plist"; sourceTree = "<group>"; };
 		53A47E6F1C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+NSLayoutConstraintFilter.h"; path = "Categories/NSView+NSLayoutConstraintFilter.h"; sourceTree = "<group>"; };
 		53A47E701C692FEC000F4035 /* NSView+NSLayoutConstraintFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+NSLayoutConstraintFilter.m"; path = "Categories/NSView+NSLayoutConstraintFilter.m"; sourceTree = "<group>"; };
 		53A47E731C693CE2000F4035 /* PFCTableViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViews.h; path = "UI Subclasses/PFCTableViews.h"; sourceTree = "<group>"; };
@@ -511,7 +517,7 @@
 		53C3E3271C8B0CA800C15B73 /* PFCStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCStatusView.h; path = "Windows-Views/General ViewControllers/PFCStatusView.h"; sourceTree = "<group>"; };
 		53C3E3281C8B0CA800C15B73 /* PFCStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCStatusView.m; path = "Windows-Views/General ViewControllers/PFCStatusView.m"; sourceTree = "<group>"; };
 		53C3E3291C8B0CA800C15B73 /* PFCStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCStatusView.xib; path = "Windows-Views/General ViewControllers/PFCStatusView.xib"; sourceTree = "<group>"; };
-		53C7339B1C1F37E300119C71 /* com.apple.scep.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.scep.plist"; sourceTree = "<group>"; };
+		53C7339B1C1F37E300119C71 /* com.apple.scep.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.scep.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.scep.manifest.plist"; sourceTree = "<group>"; };
 		53C7339E1C1F396800119C71 /* MenuIconSCEP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconSCEP.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconSCEP.png"; sourceTree = "<group>"; };
 		53C782411C85C18900E731B1 /* PFCPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCPreferences.h; path = "Windows-Views/Preferences/PFCPreferences.h"; sourceTree = "<group>"; };
 		53C782421C85C18900E731B1 /* PFCPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCPreferences.m; path = "Windows-Views/Preferences/PFCPreferences.m"; sourceTree = "<group>"; };
@@ -522,7 +528,7 @@
 		53C7824C1C85C32200E731B1 /* PFCPreferencesMCX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCPreferencesMCX.h; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.h"; sourceTree = "<group>"; };
 		53C7824D1C85C32200E731B1 /* PFCPreferencesMCX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCPreferencesMCX.m; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.m"; sourceTree = "<group>"; };
 		53C7824E1C85C32200E731B1 /* PFCPreferencesMCX.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCPreferencesMCX.xib; path = "Windows-Views/Preferences/Views/PFCPreferencesMCX.xib"; sourceTree = "<group>"; };
-		53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airplay.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.airplay.plist"; sourceTree = "<group>"; };
+		53D4642E1CAFEF34009783A1 /* com.apple.airplay.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.airplay.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.airplay.manifest.plist"; sourceTree = "<group>"; };
 		53D5A50B1C8E14B60099CD8A /* PFCProfileEditorLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorLibrary.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.h"; sourceTree = "<group>"; };
 		53D5A50C1C8E14B60099CD8A /* PFCProfileEditorLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorLibrary.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.m"; sourceTree = "<group>"; };
 		53D5A50D1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorLibrary.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibrary.xib"; sourceTree = "<group>"; };
@@ -543,7 +549,7 @@
 		53F08F971CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypeTextFieldNumber.m; path = CellTypesTableView/PFCTableViewCellTypeTextFieldNumber.m; sourceTree = "<group>"; };
 		53F08F991CBC188600B99A8E /* PFCTableViewCellTypePopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellTypePopUpButton.h; path = CellTypesTableView/PFCTableViewCellTypePopUpButton.h; sourceTree = "<group>"; };
 		53F08F9A1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellTypePopUpButton.m; path = CellTypesTableView/PFCTableViewCellTypePopUpButton.m; sourceTree = "<group>"; };
-		53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.passcode.plist"; sourceTree = "<group>"; };
+		53F1DDE71C20B74B003D3464 /* com.apple.passcode.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.passcode.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.passcode.manifest.plist"; sourceTree = "<group>"; };
 		53F4E05F1C85CF7A00DE3B1F /* PFCODManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCODManager.h; path = "General Classes/PFCODManager.h"; sourceTree = SOURCE_ROOT; };
 		53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCODManager.m; path = "General Classes/PFCODManager.m"; sourceTree = SOURCE_ROOT; };
 		53F4E0711C85E4B200DE3B1F /* PFCPreferencesLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCPreferencesLogging.h; path = "Windows-Views/Preferences/Views/PFCPreferencesLogging.h"; sourceTree = "<group>"; };
@@ -554,14 +560,14 @@
 		53FC42D91C79D40B00F3A7AD /* PFCProfileExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileExport.h; path = "Profile Classes/PFCProfileExport.h"; sourceTree = "<group>"; };
 		53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileExport.m; path = "Profile Classes/PFCProfileExport.m"; sourceTree = "<group>"; };
 		53FCF0041C1F538000E440CB /* MenuIconLDAP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconLDAP.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconLDAP.png"; sourceTree = "<group>"; };
-		53FCF0061C1F539300E440CB /* com.apple.ldap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ldap.plist"; sourceTree = "<group>"; };
-		53FCF0091C1F561900E440CB /* com.apple.messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.messages.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.messages.plist"; sourceTree = "<group>"; };
+		53FCF0061C1F539300E440CB /* com.apple.ldap.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.ldap.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.ldap.manifest.plist"; sourceTree = "<group>"; };
+		53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.messages.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.messages.manifest.plist"; sourceTree = "<group>"; };
 		53FCF00B1C1F567700E440CB /* MenuIconMessages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconMessages.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconMessages.png"; sourceTree = "<group>"; };
 		53FCF00D1C1F568B00E440CB /* MenuIconFinder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconFinder.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconFinder.png"; sourceTree = "<group>"; };
 		53FCF00F1C1F569B00E440CB /* MenuIconAccessibility.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconAccessibility.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconAccessibility.png"; sourceTree = "<group>"; };
 		53FCF0121C1F5D7F00E440CB /* MenuIconPrinting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconPrinting.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconPrinting.png"; sourceTree = "<group>"; };
 		53FCF0141C1F5DA200E440CB /* MenuIconProxies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MenuIconProxies.png; path = "../Supporting Files/Graphics/Manifest Icons/MenuIconProxies.png"; sourceTree = "<group>"; };
-		53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.proxies.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.proxies.plist"; sourceTree = "<group>"; };
+		53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.proxies.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.proxies.manifest.plist"; sourceTree = "<group>"; };
 		53FEC8001C4E114000C96596 /* PFCViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCViews.h; path = "UI Subclasses/PFCViews.h"; sourceTree = "<group>"; };
 		53FEC8011C4E114000C96596 /* PFCViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCViews.m; path = "UI Subclasses/PFCViews.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -779,6 +785,7 @@
 				53751FF81C1B84B600FF3CB0 /* MenuIconGeneral.png */,
 				53751FEC1C1B833900FF3CB0 /* MenuIconIdentification.png */,
 				53FCF0041C1F538000E440CB /* MenuIconLDAP.png */,
+				5355A9791CE7AA0C00606C2A /* MenuIconLoginItems.png */,
 				53FCF00B1C1F567700E440CB /* MenuIconMessages.png */,
 				53751FF41C1B849E00FF3CB0 /* MenuIconMail.png */,
 				537520001C1B869500FF3CB0 /* MenuIconNetwork.png */,
@@ -864,27 +871,28 @@
 		539FC5CB1C53A1D00074CEC9 /* Apple */ = {
 			isa = PBXGroup;
 			children = (
-				5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist */,
-				53D4642E1CAFEF34009783A1 /* com.apple.airplay.plist */,
-				5308935E1CD4D1F2003D10B0 /* com.apple.airprint.plist */,
-				539616551C823DA400FE6470 /* com.apple.applicationaccess.plist */,
-				5333D9581CD52D5600B810A8 /* com.apple.apn.managed.plist */,
-				532B6C571C172E0300297025 /* com.apple.caldav.account.plist */,
-				5357C0741C1816640056B050 /* com.apple.carddav.account.plist */,
-				530893671CD4F8E4003D10B0 /* com.apple.cellular.plist */,
-				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.plist */,
-				532B6C601C172FD000297025 /* com.apple.ews.account.plist */,
-				532B6C661C17311200297025 /* com.apple.font.plist */,
-				532B6C501C17289700297025 /* com.apple.general.plist */,
-				53FCF0061C1F539300E440CB /* com.apple.ldap.plist */,
-				532B6C5D1C172F5800297025 /* com.apple.mail.managed.plist */,
-				53FCF0091C1F561900E440CB /* com.apple.messages.plist */,
-				53F1DDE71C20B74B003D3464 /* com.apple.passcode.plist */,
-				53FCF0161C1F5DB500E440CB /* com.apple.proxies.plist */,
-				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist */,
-				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.plist */,
-				53C7339B1C1F37E300119C71 /* com.apple.scep.plist */,
-				5304B24D1C1E02C50085559C /* com.apple.vpn.plist */,
+				5308934A1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist */,
+				53D4642E1CAFEF34009783A1 /* com.apple.airplay.manifest.plist */,
+				5308935E1CD4D1F2003D10B0 /* com.apple.airprint.manifest.plist */,
+				539616551C823DA400FE6470 /* com.apple.applicationaccess.manifest.plist */,
+				5333D9581CD52D5600B810A8 /* com.apple.apn.managed.manifest.plist */,
+				532B6C571C172E0300297025 /* com.apple.caldav.account.manifest.plist */,
+				5357C0741C1816640056B050 /* com.apple.carddav.account.manifest.plist */,
+				530893671CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist */,
+				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist */,
+				532B6C601C172FD000297025 /* com.apple.ews.account.manifest.plist */,
+				532B6C661C17311200297025 /* com.apple.font.manifest.plist */,
+				532B6C501C17289700297025 /* com.apple.general.manifest.plist */,
+				53FCF0061C1F539300E440CB /* com.apple.ldap.manifest.plist */,
+				5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */,
+				532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */,
+				53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */,
+				53F1DDE71C20B74B003D3464 /* com.apple.passcode.manifest.plist */,
+				53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */,
+				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist */,
+				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.manifest.plist */,
+				53C7339B1C1F37E300119C71 /* com.apple.scep.manifest.plist */,
+				5304B24D1C1E02C50085559C /* com.apple.vpn.manifest.plist */,
 			);
 			name = Apple;
 			sourceTree = "<group>";
@@ -1270,7 +1278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */,
-				532B6C671C17311200297025 /* com.apple.font.plist in Resources */,
+				532B6C671C17311200297025 /* com.apple.font.manifest.plist in Resources */,
 				53D5A50F1C8E14B60099CD8A /* PFCProfileEditorLibrary.xib in Resources */,
 				5327B74E1C4EDB3B0083815C /* PFCProfileEditorInfo.xib in Resources */,
 				537564D31C903862007F8829 /* PFCProfileEditorManifest.xib in Resources */,
@@ -1279,17 +1287,18 @@
 				53C782451C85C18900E731B1 /* PFCPreferences.xib in Resources */,
 				5359E2D41C1CC65100646980 /* MenuIconSecurityPrivacy.png in Resources */,
 				5341D3271C15F3500014F5A7 /* PFCProfileEditor.xib in Resources */,
-				53FCF0071C1F539300E440CB /* com.apple.ldap.plist in Resources */,
+				53FCF0071C1F539300E440CB /* com.apple.ldap.manifest.plist in Resources */,
 				53751FF51C1B849E00FF3CB0 /* MenuIconMail.png in Resources */,
 				53751FFF1C1B865E00FF3CB0 /* MenuIconCalendar.png in Resources */,
 				533C02CB1C817DE5009CE1CD /* PFCMainWindowPreview.xib in Resources */,
-				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.plist in Resources */,
+				532B6C6D1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist in Resources */,
 				534324C61C80E5EA00893351 /* Settings-16.png in Resources */,
-				5304B24E1C1E02C50085559C /* com.apple.vpn.plist in Resources */,
+				5304B24E1C1E02C50085559C /* com.apple.vpn.manifest.plist in Resources */,
 				537290721C554D43003160EA /* OSVersions.plist in Resources */,
-				5357C0751C1816640056B050 /* com.apple.carddav.account.plist in Resources */,
+				5355A97A1CE7AA0C00606C2A /* MenuIconLoginItems.png in Resources */,
+				5357C0751C1816640056B050 /* com.apple.carddav.account.manifest.plist in Resources */,
 				534324C51C80E5EA00893351 /* Settings Filled-16.png in Resources */,
-				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.plist in Resources */,
+				5359E2D21C1CC57E00646980 /* com.apple.security.privacy.manifest.plist in Resources */,
 				534324B51C80E2FB00893351 /* Horizontal Settings Mixer Filled-50.png in Resources */,
 				53F4E0751C85E4B200DE3B1F /* PFCPreferencesLogging.xib in Resources */,
 				537612F91C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib in Resources */,
@@ -1301,47 +1310,48 @@
 				53C782501C85C32200E731B1 /* PFCPreferencesMCX.xib in Resources */,
 				534324B61C80E2FB00893351 /* Horizontal Settings Mixer-50.png in Resources */,
 				534324C91C80E5EA00893351 /* Home Filled-15.png in Resources */,
-				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.plist in Resources */,
+				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist in Resources */,
 				53A5E4791C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.xib in Resources */,
 				53598C321C81E2C300C6BD2E /* PFCMainWindowGroup.xib in Resources */,
-				53F1DDE81C20B74B003D3464 /* com.apple.passcode.plist in Resources */,
+				53F1DDE81C20B74B003D3464 /* com.apple.passcode.manifest.plist in Resources */,
 				534324C81C80E5EA00893351 /* Approval-18.png in Resources */,
 				53FCF00C1C1F567700E440CB /* MenuIconMessages.png in Resources */,
 				537520051C1B86B100FF3CB0 /* MenuIconXsan.png in Resources */,
-				5308935F1CD4D1F2003D10B0 /* com.apple.airprint.plist in Resources */,
+				5308935F1CD4D1F2003D10B0 /* com.apple.airprint.manifest.plist in Resources */,
 				53C7339F1C1F396800119C71 /* MenuIconSCEP.png in Resources */,
+				5355A98B1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist in Resources */,
 				53751FFD1C1B864400FF3CB0 /* MenuIconContacts.png in Resources */,
 				53751FEB1C1B832D00FF3CB0 /* MenuIconExchange.png in Resources */,
 				53751FF71C1B84AA00FF3CB0 /* MenuIconRestriction.png in Resources */,
-				53FCF00A1C1F561900E440CB /* com.apple.messages.plist in Resources */,
+				53FCF00A1C1F561900E440CB /* com.apple.messages.manifest.plist in Resources */,
 				53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */,
 				534324DC1C80E75D00893351 /* Menu-17.png in Resources */,
-				532B6C5E1C172F5800297025 /* com.apple.mail.managed.plist in Resources */,
+				532B6C5E1C172F5800297025 /* com.apple.mail.managed.manifest.plist in Resources */,
 				53897E361C5958F700B1D868 /* Defaults.plist in Resources */,
 				53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */,
 				537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */,
 				530893631CD4D31A003D10B0 /* MenuIconWebClip.png in Resources */,
 				53C7824B1C85C2E600E731B1 /* PFCPreferencesGeneral.xib in Resources */,
-				530893681CD4F8E4003D10B0 /* com.apple.cellular.plist in Resources */,
+				530893681CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist in Resources */,
 				53FCF0101C1F569B00E440CB /* MenuIconAccessibility.png in Resources */,
 				537520071C1B86BF00FF3CB0 /* MenuIconCalendarSubscription.png in Resources */,
-				53C7339C1C1F37E300119C71 /* com.apple.scep.plist in Resources */,
-				5308934B1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.plist in Resources */,
+				53C7339C1C1F37E300119C71 /* com.apple.scep.manifest.plist in Resources */,
+				5308934B1CD3F4AE003D10B0 /* com.apple.ADCertificate.managed.manifest.plist in Resources */,
 				53751FF11C1B848A00FF3CB0 /* MenuIconFont.png in Resources */,
 				534324C71C80E5EA00893351 /* Approval Filled-18.png in Resources */,
 				536E905E1C84EC2300E1D781 /* PFCMainWindowSort.xib in Resources */,
 				537520091C1B86CC00FF3CB0 /* MenuIconDock.png in Resources */,
-				532B6C581C172E0300297025 /* com.apple.caldav.account.plist in Resources */,
-				5333D9591CD52D5600B810A8 /* com.apple.apn.managed.plist in Resources */,
+				532B6C581C172E0300297025 /* com.apple.caldav.account.manifest.plist in Resources */,
+				5333D9591CD52D5600B810A8 /* com.apple.apn.managed.manifest.plist in Resources */,
 				53751FEF1C1B834300FF3CB0 /* MenuIconCertificates.png in Resources */,
 				5392721D1C95A4BA00C15343 /* PFCManifestLinter.xib in Resources */,
-				539616561C823DA400FE6470 /* com.apple.applicationaccess.plist in Resources */,
+				539616561C823DA400FE6470 /* com.apple.applicationaccess.manifest.plist in Resources */,
 				5307CD8C1C921EAA000064A6 /* PFCProfileEditorInfoMenu.xib in Resources */,
 				53321A741CB3E70D0050A3DD /* com.apple.mcx.appstore.plist in Resources */,
-				53FCF0171C1F5DB500E440CB /* com.apple.proxies.plist in Resources */,
+				53FCF0171C1F5DB500E440CB /* com.apple.proxies.manifest.plist in Resources */,
 				5308935D1CD4CDD6003D10B0 /* MenuIconADCertificate.png in Resources */,
 				53751FFB1C1B84C400FF3CB0 /* MenuIconPasscode.png in Resources */,
-				532B6C611C172FD000297025 /* com.apple.ews.account.plist in Resources */,
+				532B6C611C172FD000297025 /* com.apple.ews.account.manifest.plist in Resources */,
 				536FC5261C15EEDE00B1D7CF /* MainMenu.xib in Resources */,
 				537520031C1B86A400FF3CB0 /* MenuIconSoftwareUpdate.png in Resources */,
 				530893611CD4D2FE003D10B0 /* MenuIconAirPrint.png in Resources */,
@@ -1349,9 +1359,9 @@
 				53C3E32B1C8B0CA800C15B73 /* PFCStatusView.xib in Resources */,
 				5342D8B91C8C69A80023C1C1 /* PFCProfileEditorSettings.xib in Resources */,
 				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
-				53D4642F1CAFEF34009783A1 /* com.apple.airplay.plist in Resources */,
+				53D4642F1CAFEF34009783A1 /* com.apple.airplay.manifest.plist in Resources */,
 				5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */,
-				532B6C511C17289700297025 /* com.apple.general.plist in Resources */,
+				532B6C511C17289700297025 /* com.apple.general.manifest.plist in Resources */,
 				530893651CD4D33A003D10B0 /* MenuIconNotifications.png in Resources */,
 				537290771C557666003160EA /* Profiles.icns in Resources */,
 				53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */,
