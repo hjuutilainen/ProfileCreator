@@ -419,24 +419,6 @@
         return;
     }
 
-    id value;
-    if ([manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Dict"]) {
-        NSMutableDictionary *tableViewPayloadDict = [[NSMutableDictionary alloc] init];
-        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
-            [sender createPayloadDictFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloadDict:&tableViewPayloadDict];
-        }
-        value = [tableViewPayloadDict copy] ?: @{};
-    } else {
-        // -------------------------------------------------------------------------
-        //  Create array from TableView settings
-        // -------------------------------------------------------------------------
-        NSMutableArray *tableViewPayloadArray = [[NSMutableArray alloc] init];
-        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
-            [sender createPayloadArrayFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloads:&tableViewPayloadArray];
-        }
-        value = [tableViewPayloadArray copy] ?: @[];
-    }
-
     // -------------------------------------------------------------------------
     //  Get index of current payload in payload array
     // -------------------------------------------------------------------------
@@ -452,6 +434,24 @@
         payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
     } else {
         payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+    }
+
+    id value;
+    if ([manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Dict"]) {
+        NSMutableDictionary *tableViewPayloadDict = [[NSMutableDictionary alloc] init];
+        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
+            [sender createPayloadDictFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloadDict:&tableViewPayloadDict];
+        }
+        value = [tableViewPayloadDict copy] ?: @{};
+    } else {
+        // -------------------------------------------------------------------------
+        //  Create array from TableView settings
+        // -------------------------------------------------------------------------
+        NSMutableArray *tableViewPayloadArray = [payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] mutableCopy] ?: [[NSMutableArray alloc] init];
+        for (NSDictionary *tableViewColumnDict in tableViewContentArray) {
+            [sender createPayloadArrayFromTableViewColumns:tableViewColumns settings:tableViewColumnDict payloads:&tableViewPayloadArray];
+        }
+        value = [tableViewPayloadArray copy] ?: @[];
     }
 
     // -------------------------------------------------------------------------
