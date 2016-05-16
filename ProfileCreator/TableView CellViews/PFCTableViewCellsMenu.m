@@ -57,7 +57,7 @@
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    if ([manifestDict[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"]) {
+    if ([manifestDict[PFCManifestKeyDomain] isEqualToString:PFCManifestDomainGeneral]) {
         [cellView.menuDescription setStringValue:@"Mandatory"];
     } else {
         [cellView.menuDescription setStringValue:[NSString stringWithFormat:@"%@ %@ Configured", payloadCount.stringValue, (payloadCount.intValue == 1) ? @"Payload" : @"Payloads"]];

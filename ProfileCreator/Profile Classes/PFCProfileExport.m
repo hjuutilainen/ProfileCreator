@@ -81,7 +81,7 @@
     //  Extract Root Organization from General settings
     // -------------------------------------------------------------------------
     // FIXME - Possibly dangerous to do this deep extraction like this, could possible get this some other way.
-    [self setRootOrganization:[settings[@"com.apple.general"][@"Settings"] firstObject][@"E2E64509-BDE4-4743-8AE9-D46B76E0CDA8"][@"Value"] ?: @""];
+    [self setRootOrganization:[settings[PFCManifestDomainGeneral][@"Settings"] firstObject][@"E2E64509-BDE4-4743-8AE9-D46B76E0CDA8"][@"Value"] ?: @""];
     DDLogDebug(@"Root Organization: %@", _rootOrganization);
 
     // -------------------------------------------------------------------------

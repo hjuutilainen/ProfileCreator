@@ -499,7 +499,6 @@
 
 - (void)updateManifests {
     NSArray *enabledDomains = [self enabledDomains];
-
     [_arrayProfile removeAllObjects];
     [self updateManifestLibraryApple:enabledDomains];
     [self updateManifestLibraryUserLibrary:enabledDomains];
@@ -523,7 +522,7 @@
         for (NSDictionary *manifest in libraryAppleManifests) {
             if ([[PFCAvailability sharedInstance] showSelf:manifest displayKeys:_profileEditor.settings.displayKeys]) {
                 NSString *manifestDomain = manifest[PFCManifestKeyDomain] ?: @"";
-                if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:@"com.apple.general"]) {
+                if ([enabledPayloadDomains containsObject:manifestDomain] || [manifestDomain isEqualToString:PFCManifestDomainGeneral]) {
                     [_arrayProfile addObject:[manifest copy]];
                 } else {
                     [_arrayLibraryApple addObject:[manifest copy]];
@@ -592,7 +591,7 @@
     //  Find index of menu item com.apple.general and move it to the top of array payload profile
     // -------------------------------------------------------------------------------------------
     NSUInteger index = [_arrayProfile indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"];
+      return [item[PFCManifestKeyDomain] isEqualToString:PFCManifestDomainGeneral];
     }];
 
     if (index != NSNotFound) {
@@ -600,7 +599,7 @@
         [_arrayProfile removeObjectAtIndex:index];
         [_arrayProfile insertObject:generalSettingsDict atIndex:0];
     } else {
-        DDLogError(@"No menu item with domain com.apple.general was found!");
+        DDLogError(@"No menu item with domain: %@ was found!", PFCManifestDomainGeneral);
     }
 } // sortArrayProfile
 

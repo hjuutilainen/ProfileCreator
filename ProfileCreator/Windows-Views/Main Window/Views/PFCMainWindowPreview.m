@@ -195,11 +195,11 @@
         DDLogDebug(@"Payload domain: %@", domain);
 
         NSDictionary *domainSettings = profileSettings[@"Settings"][domain];
-        if (![domain isEqualToString:@"com.apple.general"] && ![domainSettings[PFCSettingsKeySelected] boolValue]) {
+        if (![domain isEqualToString:PFCManifestDomainGeneral] && ![domainSettings[PFCSettingsKeySelected] boolValue]) {
             continue;
         }
 
-        if ([domain isEqualToString:@"com.apple.general"] || [domainSettings[PFCSettingsKeySelected] boolValue]) {
+        if ([domain isEqualToString:PFCManifestDomainGeneral] || [domainSettings[PFCSettingsKeySelected] boolValue]) {
             [selectedDomains addObject:domain];
 
             // FIXME - This is inelegant and error prone. Shouldn't rely on the moanifest domain as it MAY be duplicated from the generated manifests. Possibly use UUID instead.

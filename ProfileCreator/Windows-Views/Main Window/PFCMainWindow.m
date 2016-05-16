@@ -982,7 +982,7 @@ NSString *const PFCTableViewIdentifierProfileSmartGroups = @"TableViewIdentifier
     NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 
     for (NSString *domain in settingsAll.allKeys) {
-        if (![settingsAll[domain][PFCSettingsKeySelected] boolValue] && ![domain isEqualToString:@"com.apple.general"]) {
+        if (![settingsAll[domain][PFCSettingsKeySelected] boolValue] && ![domain isEqualToString:PFCManifestDomainGeneral]) {
             continue;
         }
 

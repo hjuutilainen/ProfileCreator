@@ -361,9 +361,9 @@
 - (NSDictionary *)reportForManifestRootRequired:(NSDictionary *)manifest {
 
     // -------------------------------------------------------------------------
-    //  If manifest isn't com.apple.general
+    //  If manifest isn't com.apple.general.manifest
     // -------------------------------------------------------------------------
-    if (![manifest[PFCManifestKeyDomain] isEqualToString:@"com.apple.general"]) {
+    if (![manifest[PFCManifestKeyDomain] isEqualToString:PFCManifestDomainGeneral]) {
 
         // -------------------------------------------------------------------------
         //  ..and contains key 'Required' at the root, return error
