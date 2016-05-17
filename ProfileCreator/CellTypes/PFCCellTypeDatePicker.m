@@ -57,19 +57,19 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
 
-    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -79,7 +79,7 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Value
@@ -87,8 +87,8 @@
     NSDate *date;
     if (settings[PFCSettingsKeyValue] != nil) {
         date = settings[PFCSettingsKeyValue] ?: [NSDate date];
-    } else if (manifest[PFCManifestKeyDefaultValue]) {
-        date = manifest[PFCManifestKeyDefaultValue] ?: [NSDate date];
+    } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
+        date = manifestContentDict[PFCManifestKeyDefaultValue] ?: [NSDate date];
     } else if (settingsLocal[PFCSettingsKeyValue]) {
         date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
     }
@@ -97,10 +97,10 @@
     // ---------------------------------------------------------------------
     //  Indentation
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyIndentLeft] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:120];
-    } else if (manifest[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifest[PFCManifestKeyIndentLevel] baseConstant:@112];
+    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
+        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@112];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:112];
@@ -109,7 +109,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Target Action
@@ -121,11 +121,12 @@
     // ---------------------------------------------------------------------
     //  Set minimum value selectable by offset from now
     // ---------------------------------------------------------------------
-    if (manifest[PFCManifestKeyMinValueOffsetDays] != nil || manifest[PFCManifestKeyMinValueOffsetHours] != nil || manifest[PFCManifestKeyMinValueOffsetMinutes] != nil) {
+    if (manifestContentDict[PFCManifestKeyMinValueOffsetDays] != nil || manifestContentDict[PFCManifestKeyMinValueOffsetHours] != nil ||
+        manifestContentDict[PFCManifestKeyMinValueOffsetMinutes] != nil) {
 
-        NSInteger days = [manifest[PFCManifestKeyMinValueOffsetDays] integerValue] ?: 0;
-        NSInteger hours = [manifest[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
-        NSInteger minutes = [manifest[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
+        NSInteger days = [manifestContentDict[PFCManifestKeyMinValueOffsetDays] integerValue] ?: 0;
+        NSInteger hours = [manifestContentDict[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
+        NSInteger minutes = [manifestContentDict[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
 
         NSCalendar *calendarUS = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
@@ -141,7 +142,7 @@
     // ---------------------------------------------------------------------
     //  Set date picker elements
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyShowDateTime] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyShowDateTime] boolValue]) {
         [[cellView settingDatePicker] setDatePickerElements:NSYearMonthDayDatePickerElementFlag | NSHourMinuteDatePickerElementFlag];
     } else {
         [[cellView settingDatePicker] setDatePickerElements:NSYearMonthDayDatePickerElementFlag];
@@ -150,7 +151,7 @@
     // ---------------------------------------------------------------------
     //  Date interval between now and selected date in text
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyShowDateInterval] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyShowDateInterval] boolValue]) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
         [[cellView settingDateDescription] setStringValue:[PFCGeneralUtility dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }
@@ -341,7 +342,7 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
@@ -354,8 +355,8 @@
     NSDate *date;
     if (settings[PFCSettingsKeyValue] != nil) {
         date = settings[PFCSettingsKeyValue] ?: [NSDate date];
-    } else if (manifest[PFCManifestKeyDefaultValue]) {
-        date = manifest[PFCManifestKeyDefaultValue] ?: [NSDate date];
+    } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
+        date = manifestContentDict[PFCManifestKeyDefaultValue] ?: [NSDate date];
     } else if (settingsLocal[PFCSettingsKeyValue]) {
         date = settingsLocal[PFCSettingsKeyValue] ?: [NSDate date];
     }
@@ -364,10 +365,10 @@
     // ---------------------------------------------------------------------
     //  Indentation
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyIndentLeft] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:120];
-    } else if (manifest[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifest[PFCManifestKeyIndentLevel] baseConstant:@112];
+    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
+        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@112];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:112];
@@ -376,7 +377,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Target Action
@@ -388,11 +389,12 @@
     // ---------------------------------------------------------------------
     //  Set minimum value selectable by offset from now
     // ---------------------------------------------------------------------
-    if (manifest[PFCManifestKeyMinValueOffsetDays] != nil || manifest[PFCManifestKeyMinValueOffsetHours] != nil || manifest[PFCManifestKeyMinValueOffsetMinutes] != nil) {
+    if (manifestContentDict[PFCManifestKeyMinValueOffsetDays] != nil || manifestContentDict[PFCManifestKeyMinValueOffsetHours] != nil ||
+        manifestContentDict[PFCManifestKeyMinValueOffsetMinutes] != nil) {
 
-        NSInteger days = [manifest[PFCManifestKeyMinValueOffsetDays] integerValue] ?: 0;
-        NSInteger hours = [manifest[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
-        NSInteger minutes = [manifest[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
+        NSInteger days = [manifestContentDict[PFCManifestKeyMinValueOffsetDays] integerValue] ?: 0;
+        NSInteger hours = [manifestContentDict[PFCManifestKeyMinValueOffsetHours] integerValue] ?: 0;
+        NSInteger minutes = [manifestContentDict[PFCManifestKeyMinValueOffsetMinutes] integerValue] ?: 0;
 
         NSCalendar *calendarUS = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         [calendarUS setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
@@ -408,7 +410,7 @@
     // ---------------------------------------------------------------------
     //  Set date picker elements
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyShowDateTime] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyShowDateTime] boolValue]) {
         [[cellView settingDatePicker] setDatePickerElements:NSYearMonthDayDatePickerElementFlag | NSHourMinuteSecondDatePickerElementFlag];
     } else {
         [[cellView settingDatePicker] setDatePickerElements:NSYearMonthDayDatePickerElementFlag];
@@ -417,7 +419,7 @@
     // ---------------------------------------------------------------------
     //  Date interval between now and selected date in text
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyShowDateInterval] boolValue]) {
+    if ([manifestContentDict[PFCManifestKeyShowDateInterval] boolValue]) {
         NSDate *datePickerDate = [[cellView settingDatePicker] dateValue];
         [[cellView settingDateDescription] setStringValue:[PFCGeneralUtility dateIntervalFromNowToDate:datePickerDate] ?: @""];
     }

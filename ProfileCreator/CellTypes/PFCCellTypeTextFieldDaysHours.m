@@ -75,13 +75,13 @@
     //  Set sender and sender properties to be used later
     // -------------------------------------------------------------------------
     [self setSender:sender];
-    [self setCellIdentifier:manifest[PFCManifestKeyIdentifier] ?: @""];
+    [self setCellIdentifier:manifestContentDict[PFCManifestKeyIdentifier] ?: @""];
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
@@ -145,7 +145,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     return cellView;
 } // populateCellViewSettingsTextFieldDaysHoursNoTitle:settingsDict:row

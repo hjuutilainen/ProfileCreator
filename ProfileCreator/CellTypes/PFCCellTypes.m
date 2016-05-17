@@ -87,7 +87,7 @@
         [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
         return [cellView populateCellView:cellView
                       manifestContentDict:manifestContentDict
-                                 manifest:manifestContentDict
+                                 manifest:manifest
                                  settings:userSettingsDict
                             settingsLocal:localSettingsDict
                               displayKeys:(NSDictionary *)displayKeys

@@ -52,7 +52,7 @@
     // ---------------------------------------------------------------------
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
-    NSArray *availableSelections = manifest[PFCManifestKeyAvailableValues] ?: @[];
+    NSArray *availableSelections = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     [cellView.settingSegmentedControl setSegmentCount:(NSInteger)availableSelections.count];
     [availableSelections enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
       [cellView.settingSegmentedControl setLabel:obj forSegment:(NSInteger)idx];
@@ -61,7 +61,7 @@
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [cellView.settingSegmentedControl setSelected:YES forSegment:[manifest[PFCSettingsKeyValue] integerValue] ?: 0];
+    [cellView.settingSegmentedControl setSelected:YES forSegment:[manifestContentDict[PFCSettingsKeyValue] integerValue] ?: 0];
 
     // ---------------------------------------------------------------------
     //  Target Action

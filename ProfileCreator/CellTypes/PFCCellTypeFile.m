@@ -115,19 +115,19 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
 
-    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:[NSColor blackColor]];
     } else {
@@ -137,17 +137,17 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Button Title
     // ---------------------------------------------------------------------
-    NSString *buttonTitle = manifest[PFCManifestKeyButtonTitle] ?: @"Add File...";
+    NSString *buttonTitle = manifestContentDict[PFCManifestKeyButtonTitle] ?: @"Add File...";
     [[cellView settingButtonAdd] setTitle:buttonTitle ?: @"Add File..."];
     [[cellView settingButtonAdd] setEnabled:enabled];
 
@@ -161,7 +161,7 @@
     // ---------------------------------------------------------------------
     //  File View Prompt Message
     // ---------------------------------------------------------------------
-    [[cellView settingFileViewPrompt] setStringValue:manifest[PFCManifestKeyFilePrompt] ?: @""];
+    [[cellView settingFileViewPrompt] setStringValue:manifestContentDict[PFCManifestKeyFilePrompt] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Add Border to file view
@@ -208,7 +208,7 @@
     //  File Info
     // ---------------------------------------------------------------------
     if ([fileURL checkResourceIsReachableAndReturnError:nil]) {
-        [self setInfoForFileAtURL:fileURL withFileInfoProcessor:manifest[PFCManifestKeyFileInfoProcessor]];
+        [self setInfoForFileAtURL:fileURL withFileInfoProcessor:manifestContentDict[PFCManifestKeyFileInfoProcessor]];
     }
 
     // ---------------------------------------------------------------------

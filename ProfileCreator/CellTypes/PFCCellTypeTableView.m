@@ -283,7 +283,7 @@
     //  Set sender and sender properties to be used later
     // -------------------------------------------------------------------------
     [self setSender:sender];
-    [self setSenderIdentifier:manifest[PFCManifestKeyIdentifier] ?: @""];
+    [self setSenderIdentifier:manifestContentDict[PFCManifestKeyIdentifier] ?: @""];
 
     // -------------------------------------------------------------------------
     //  Set TableColumn DataSource and Delegate to self
@@ -299,13 +299,13 @@
             if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
                 [self setTableViewContent:[settings[PFCSettingsKeyTableViewContent] mutableCopy]];
             } else {
-                [self setTableViewContent:[manifest[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
+                [self setTableViewContent:[manifestContentDict[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
             }
         } else {
             if ([settingsLocal[PFCSettingsKeyTableViewContent] count] != 0) {
                 [self setTableViewContent:[settingsLocal[PFCSettingsKeyTableViewContent] mutableCopy]];
             } else {
-                [self setTableViewContent:[manifest[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
+                [self setTableViewContent:[manifestContentDict[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
             }
         }
     }
@@ -314,19 +314,19 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
 
-    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:NSColor.blackColor];
     } else {
@@ -336,10 +336,10 @@
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
 
     // -------------------------------------------------------------------------
-    //  Add columns from manifest
+    //  Add columns from manifestContentDict
     // -------------------------------------------------------------------------
 
     // Remove the current columns if there are any
@@ -347,9 +347,9 @@
         [[cellView settingTableView] removeTableColumn:tableColumn];
     }
 
-    // Add columns from manifest
+    // Add columns from manifestContentDict
     NSMutableDictionary *tableColumnsCellViews = [[NSMutableDictionary alloc] init];
-    NSArray *tableColumnsArray = manifest[PFCManifestKeyTableViewColumns] ?: @[];
+    NSArray *tableColumnsArray = manifestContentDict[PFCManifestKeyTableViewColumns] ?: @[];
     for (NSDictionary *tableColumnDict in tableColumnsArray) {
         if ([[PFCAvailability sharedInstance] showSelf:tableColumnDict displayKeys:displayKeys]) {
             NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: tableColumnDict[PFCManifestKeyPayloadKey];
@@ -385,7 +385,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled
@@ -422,9 +422,6 @@
     //  Get value for current PayloadKey
     // -------------------------------------------------------------------------
     NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    NSLog(@"TEBLEV: %@", contentDictSettings[PFCSettingsKeyTableViewContent]);
-    NSLog(@"manifestContentDict: %@", manifestContentDict);
-    NSLog(@"DEFFFF: %@", manifestContentDict[PFCManifestKeyDefaultValue]);
     NSArray *tableViewContentArray = contentDictSettings[PFCSettingsKeyTableViewContent] ?: manifestContentDict[PFCManifestKeyDefaultValue];
 
     // Do some more and better checking here, like if it's required etc.

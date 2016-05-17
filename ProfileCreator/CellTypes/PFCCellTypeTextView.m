@@ -60,18 +60,18 @@
     //  Get required and enabled state of this cell view
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
-    BOOL optional = [manifest[PFCManifestKeyOptional] boolValue];
+    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
         enabled = [settings[PFCSettingsKeyEnabled] boolValue];
     }
-    BOOL supervisedOnly = [manifest[PFCManifestKeySupervisedOnly] boolValue];
+    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifest[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
     if (enabled) {
         [[cellView settingTitle] setTextColor:NSColor.blackColor];
     } else {
@@ -81,7 +81,7 @@
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifest[PFCManifestKeyDescription] ?: @""];
+    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Value
@@ -89,8 +89,8 @@
     NSString *value = settings[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
     if (value.length == 0) {
-        if ([manifest[PFCManifestKeyDefaultValue] length] != 0) {
-            value = manifest[PFCManifestKeyDefaultValue] ?: @"";
+        if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
+            value = manifestContentDict[PFCManifestKeyDefaultValue] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
             valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
@@ -107,8 +107,8 @@
     // ---------------------------------------------------------------------
     //  Placeholder Value
     // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyPlaceholderValue] length] != 0) {
-        [[cellView settingTextField] setPlaceholderString:manifest[PFCManifestKeyPlaceholderValue] ?: @""];
+    if ([manifestContentDict[PFCManifestKeyPlaceholderValue] length] != 0) {
+        [[cellView settingTextField] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValue] ?: @""];
     } else if (required) {
         [[cellView settingTextField] setPlaceholderString:@"Required"];
     } else if (optional) {
@@ -120,7 +120,7 @@
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifest] ?: @""];
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
     // ---------------------------------------------------------------------
     //  Enabled
