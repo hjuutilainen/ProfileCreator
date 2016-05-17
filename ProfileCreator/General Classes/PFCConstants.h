@@ -129,6 +129,7 @@ extern NSString *const PFCManifestKeyDefaultValuePort;
 extern NSString *const PFCManifestKeyDefaultValueTextField;
 extern NSString *const PFCManifestKeyDescription;
 extern NSString *const PFCManifestKeyDomain;
+extern NSString *const PFCManifestKeyEnabled;
 extern NSString *const PFCManifestKeyFileInfoProcessor;
 extern NSString *const PFCManifestKeyFilePrompt;
 extern NSString *const PFCManifestKeyFontWeight;

@@ -97,6 +97,7 @@ NSString *const PFCManifestKeyDefaultValuePort = @"DefaultValuePort";
 NSString *const PFCManifestKeyDefaultValueTextField = @"DefaultValueTextField";
 NSString *const PFCManifestKeyDescription = @"Description";
 NSString *const PFCManifestKeyDomain = @"Domain";
+NSString *const PFCManifestKeyEnabled = @"Enabled";
 NSString *const PFCManifestKeyFileInfoProcessor = @"FileInfoProcessor";
 NSString *const PFCManifestKeyFilePrompt = @"FilePrompt";
 NSString *const PFCManifestKeyFontWeight = @"FontWeight";
