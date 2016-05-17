@@ -44,6 +44,9 @@
 		53351E351C16048A00A6FC08 /* PFCTableViewCellsSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 53351E341C16048A00A6FC08 /* PFCTableViewCellsSettings.m */; };
 		533C02CA1C817DE5009CE1CD /* PFCMainWindowPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 533C02C81C817DE5009CE1CD /* PFCMainWindowPreview.m */; };
 		533C02CB1C817DE5009CE1CD /* PFCMainWindowPreview.xib in Resources */ = {isa = PBXBuildFile; fileRef = 533C02C91C817DE5009CE1CD /* PFCMainWindowPreview.xib */; };
+		533DBD1A1CEB1F69004B2D22 /* MenuIconMobility.png in Resources */ = {isa = PBXBuildFile; fileRef = 533DBD191CEB1F69004B2D22 /* MenuIconMobility.png */; };
+		533DBD2B1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 533DBD2A1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist */; };
+		533DBD2C1CEB213C004B2D22 /* com.apple.mobility.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 533DBD2A1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist */; };
 		5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341818A1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m */; };
 		5341D3171C15EFB00014F5A7 /* PFCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3161C15EFB00014F5A7 /* PFCAppDelegate.m */; };
 		5341D3261C15F3500014F5A7 /* PFCProfileEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5341D3241C15F3500014F5A7 /* PFCProfileEditor.m */; };
@@ -305,6 +308,7 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
+				533DBD2C1CEB213C004B2D22 /* com.apple.mobility.manifest.plist in Copy Manifests Apple */,
 				5355A98C1CE7AC7800606C2A /* com.apple.loginitems.manifest.plist in Copy Manifests Apple */,
 				5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.manifest.plist in Copy Manifests Apple */,
 				5382AAB21CE5A6FA00C65B50 /* com.apple.messages.manifest.plist in Copy Manifests Apple */,
@@ -385,6 +389,8 @@
 		533C02C71C817DE5009CE1CD /* PFCMainWindowPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowPreview.h; path = "Windows-Views/Main Window/Views/PFCMainWindowPreview.h"; sourceTree = "<group>"; };
 		533C02C81C817DE5009CE1CD /* PFCMainWindowPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowPreview.m; path = "Windows-Views/Main Window/Views/PFCMainWindowPreview.m"; sourceTree = "<group>"; };
 		533C02C91C817DE5009CE1CD /* PFCMainWindowPreview.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowPreview.xib; path = "Windows-Views/Main Window/Views/PFCMainWindowPreview.xib"; sourceTree = "<group>"; };
+		533DBD191CEB1F69004B2D22 /* MenuIconMobility.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIconMobility.png; sourceTree = "<group>"; };
+		533DBD2A1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mobility.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.mobility.manifest.plist"; sourceTree = "<group>"; };
 		534181891C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsProfileInfo.h; path = "TableView CellViews/PFCTableViewCellsProfileInfo.h"; sourceTree = "<group>"; };
 		5341818A1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsProfileInfo.m; path = "TableView CellViews/PFCTableViewCellsProfileInfo.m"; sourceTree = "<group>"; };
 		5341D3151C15EFB00014F5A7 /* PFCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCAppDelegate.h; path = ProfileCreator/PFCAppDelegate.h; sourceTree = "<group>"; };
@@ -788,6 +794,7 @@
 				5355A9791CE7AA0C00606C2A /* MenuIconLoginItems.png */,
 				53FCF00B1C1F567700E440CB /* MenuIconMessages.png */,
 				53751FF41C1B849E00FF3CB0 /* MenuIconMail.png */,
+				533DBD191CEB1F69004B2D22 /* MenuIconMobility.png */,
 				537520001C1B869500FF3CB0 /* MenuIconNetwork.png */,
 				530893641CD4D33A003D10B0 /* MenuIconNotifications.png */,
 				53751FFA1C1B84C300FF3CB0 /* MenuIconPasscode.png */,
@@ -887,6 +894,7 @@
 				5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */,
 				53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */,
+				533DBD2A1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist */,
 				53F1DDE71C20B74B003D3464 /* com.apple.passcode.manifest.plist */,
 				53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist */,
@@ -1359,10 +1367,12 @@
 				53C3E32B1C8B0CA800C15B73 /* PFCStatusView.xib in Resources */,
 				5342D8B91C8C69A80023C1C1 /* PFCProfileEditorSettings.xib in Resources */,
 				53751FE91C1B831A00FF3CB0 /* MenuIconAirPlay.png in Resources */,
+				533DBD1A1CEB1F69004B2D22 /* MenuIconMobility.png in Resources */,
 				53D4642F1CAFEF34009783A1 /* com.apple.airplay.manifest.plist in Resources */,
 				5385ADC21C872EF2007C9BD0 /* SidebarSmartFolder.icns in Resources */,
 				532B6C511C17289700297025 /* com.apple.general.manifest.plist in Resources */,
 				530893651CD4D33A003D10B0 /* MenuIconNotifications.png in Resources */,
+				533DBD2B1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist in Resources */,
 				537290771C557666003160EA /* Profiles.icns in Resources */,
 				53751FED1C1B833900FF3CB0 /* MenuIconIdentification.png in Resources */,
 				5333C7271C92CC8C00FA5ED0 /* PFCProfileEditorManifestTab.xib in Resources */,
