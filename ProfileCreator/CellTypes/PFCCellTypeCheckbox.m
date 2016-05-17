@@ -132,10 +132,11 @@
                         settings:(NSDictionary *)settings
                         payloads:(NSMutableArray *__autoreleasing *)payloads
                           sender:(PFCProfileExport *)sender {
+
     // -------------------------------------------------------------------------
     //  Verify required keys for CellType: 'Checkbox'
     // -------------------------------------------------------------------------
-    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier, PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
+    if (![sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyIdentifier ] manifestContentDict:manifestContentDict]) {
         return;
     }
 
@@ -174,40 +175,43 @@
     // ---------------------------------------------------------------------
     // NSString *payloadParentKey = payloadDict[PFCManifestParentKey];
 
-    // -------------------------------------------------------------------------
-    //  Get index of current payload in payload array
-    // -------------------------------------------------------------------------
-    NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-      return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
-    }];
-
-    // ----------------------------------------------------------------------------------
-    //  Create mutable version of current payload, or create new payload if none existed
-    // ----------------------------------------------------------------------------------
-    NSMutableDictionary *payloadDictDict;
-    if (index != NSNotFound) {
-        payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
-        DDLogDebug(@"Current Payload Dict: %@", payloadDictDict);
-    } else {
-        payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
-        DDLogDebug(@"Creating NEW Dict for current Payload");
-    }
-
-    // -------------------------------------------------------------------------
-    //  Add current key and value to payload (if PayloadValueType is empty or Boolean)
-    // -------------------------------------------------------------------------
-    DDLogDebug(@"manifestContentDict[PFCManifestKeyPayloadValueType]=%@", manifestContentDict[PFCManifestKeyPayloadValueType]);
-    if (manifestContentDict[PFCManifestKeyPayloadValueType] == nil || [manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Boolean"]) {
-        DDLogDebug(@"Setting the boolean value of the checkbox as the key value!");
-        payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
+    if ([sender verifyRequiredManifestContentDictKeys:@[ PFCManifestKeyPayloadType, PFCManifestKeyPayloadKey ] manifestContentDict:manifestContentDict]) {
 
         // -------------------------------------------------------------------------
-        //  Save payload to payload array
+        //  Get index of current payload in payload array
         // -------------------------------------------------------------------------
+        NSUInteger index = [*payloads indexOfObjectPassingTest:^BOOL(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+          return [item[PFCManifestKeyPayloadUUID] isEqualToString:settings[manifestContentDict[PFCManifestKeyPayloadType]][PFCProfileTemplateKeyUUID] ?: @""];
+        }];
+
+        // ----------------------------------------------------------------------------------
+        //  Create mutable version of current payload, or create new payload if none existed
+        // ----------------------------------------------------------------------------------
+        NSMutableDictionary *payloadDictDict;
         if (index != NSNotFound) {
-            [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+            payloadDictDict = [[*payloads objectAtIndex:index] mutableCopy];
+            DDLogDebug(@"Current Payload Dict: %@", payloadDictDict);
         } else {
-            [*payloads addObject:[payloadDictDict copy]];
+            payloadDictDict = [sender payloadRootFromManifest:manifestContentDict settings:settings payloadType:nil payloadUUID:nil];
+            DDLogDebug(@"Creating NEW Dict for current Payload");
+        }
+
+        // -------------------------------------------------------------------------
+        //  Add current key and value to payload (if PayloadValueType is empty or Boolean)
+        // -------------------------------------------------------------------------
+        DDLogDebug(@"manifestContentDict[PFCManifestKeyPayloadValueType]=%@", manifestContentDict[PFCManifestKeyPayloadValueType]);
+        if (manifestContentDict[PFCManifestKeyPayloadValueType] == nil || [manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Boolean"]) {
+            DDLogDebug(@"Setting the boolean value of the checkbox as the key value!");
+            payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
+
+            // -------------------------------------------------------------------------
+            //  Save payload to payload array
+            // -------------------------------------------------------------------------
+            if (index != NSNotFound) {
+                [*payloads replaceObjectAtIndex:index withObject:[payloadDictDict copy]];
+            } else {
+                [*payloads addObject:[payloadDictDict copy]];
+            }
         }
     }
 
