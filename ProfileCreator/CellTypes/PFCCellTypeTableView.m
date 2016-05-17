@@ -169,6 +169,8 @@
         } else if ([cellType isEqualToString:PFCTableViewCellTypePopUpButton]) {
             tableColumnDict[PFCSettingsKeyValue] = tableColumnCellViewDict[PFCManifestKeyDefaultValue] ?: @"";
             tableColumnDict[PFCManifestKeyAvailableValues] = tableColumnCellViewDict[PFCManifestKeyAvailableValues] ?: @[];
+        } else if ([cellType isEqualToString:PFCTableViewCellTypeCheckbox]) {
+            tableColumnDict[PFCSettingsKeyValue] = @([tableColumnCellViewDict[PFCManifestKeyDefaultValue] boolValue] ?: NO);
         }
         newRowDict[tableColumnKey] = tableColumnDict;
     }
@@ -293,9 +295,17 @@
     // -------------------------------------------------------------------------
     if (!_tableViewContent) {
         if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
-            [self setTableViewContent:[settings[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init]];
+            if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
+                [self setTableViewContent:[settings[PFCSettingsKeyTableViewContent] mutableCopy]];
+            } else {
+                [self setTableViewContent:[manifest[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
+            }
         } else {
-            [self setTableViewContent:[settingsLocal[PFCSettingsKeyTableViewContent] mutableCopy] ?: [[NSMutableArray alloc] init]];
+            if ([settingsLocal[PFCSettingsKeyTableViewContent] count] != 0) {
+                [self setTableViewContent:[settingsLocal[PFCSettingsKeyTableViewContent] mutableCopy]];
+            } else {
+                [self setTableViewContent:[manifest[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
+            }
         }
     }
 
@@ -341,7 +351,7 @@
     NSArray *tableColumnsArray = manifest[PFCManifestKeyTableViewColumns] ?: @[];
     for (NSDictionary *tableColumnDict in tableColumnsArray) {
         if ([[PFCAvailability sharedInstance] showSelf:tableColumnDict displayKeys:displayKeys]) {
-            NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
+            NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: tableColumnDict[PFCManifestKeyPayloadKey];
             NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
             [tableColumn setTitle:tableColumnTitle];
             if ([tableColumnDict[PFCManifestKeyTableViewColumnWidth] isKindOfClass:[NSNumber class]]) {
@@ -411,7 +421,10 @@
     //  Get value for current PayloadKey
     // -------------------------------------------------------------------------
     NSDictionary *contentDictSettings = settings[manifestContentDict[PFCManifestKeyIdentifier]] ?: @{};
-    NSArray *tableViewContentArray = contentDictSettings[PFCSettingsKeyTableViewContent] ?: @[];
+    NSLog(@"TEBLEV: %@", contentDictSettings[PFCSettingsKeyTableViewContent]);
+    NSLog(@"manifestContentDict: %@", manifestContentDict);
+    NSLog(@"DEFFFF: %@", manifestContentDict[PFCManifestKeyDefaultValue]);
+    NSArray *tableViewContentArray = contentDictSettings[PFCSettingsKeyTableViewContent] ?: manifestContentDict[PFCManifestKeyDefaultValue];
 
     // Do some more and better checking here, like if it's required etc.
     if (tableViewContentArray.count == 0) {
