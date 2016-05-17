@@ -35,13 +35,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCSegmentedControlCellView *)populateCellView:(PFCSegmentedControlCellView *)cellView
-                                         manifest:(NSDictionary *)manifest
-                                         settings:(NSDictionary *)settings
-                                    settingsLocal:(NSDictionary *)settingsLocal
-                                      displayKeys:(NSDictionary *)displayKeys
-                                              row:(NSInteger)row
-                                           sender:(id)sender {
+- (instancetype)populateCellView:(PFCSegmentedControlCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------
     //  Reset Segmented Control

@@ -53,6 +53,7 @@
 } // drawRect
 
 - (instancetype)populateCellView:(id)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal
@@ -338,6 +339,7 @@
 } // drawRect
 
 - (instancetype)populateCellView:(id)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal
@@ -767,6 +769,7 @@
 } // drawRect
 
 - (instancetype)populateCellView:(id)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal

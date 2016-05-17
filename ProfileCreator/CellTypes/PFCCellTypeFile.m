@@ -102,13 +102,14 @@
     }
 }
 
-- (PFCFileCellView *)populateCellView:(PFCFileCellView *)cellView
-                             manifest:(NSDictionary *)manifest
-                             settings:(NSDictionary *)settings
-                        settingsLocal:(NSDictionary *)settingsLocal
-                          displayKeys:(NSDictionary *)displayKeys
-                                  row:(NSInteger)row
-                               sender:(id)sender {
+- (instancetype)populateCellView:(PFCFileCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view

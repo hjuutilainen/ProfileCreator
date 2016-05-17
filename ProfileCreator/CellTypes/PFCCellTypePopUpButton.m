@@ -44,13 +44,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonCellView *)populateCellView:(PFCPopUpButtonCellView *)cellView
-                                    manifest:(NSDictionary *)manifest
-                                    settings:(NSDictionary *)settings
-                               settingsLocal:(NSDictionary *)settingsLocal
-                                 displayKeys:(NSDictionary *)displayKeys
-                                         row:(NSInteger)row
-                                      sender:(id)sender {
+- (instancetype)populateCellView:(PFCPopUpButtonCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -286,13 +287,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonLeftCellView *)populateCellView:(PFCPopUpButtonLeftCellView *)cellView
-                                        manifest:(NSDictionary *)manifest
-                                        settings:(NSDictionary *)settings
-                                   settingsLocal:(NSDictionary *)settingsLocal
-                                     displayKeys:(NSDictionary *)displayKeys
-                                             row:(NSInteger)row
-                                          sender:(id)sender {
+- (instancetype)populateCellView:(PFCPopUpButtonLeftCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -424,13 +426,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCPopUpButtonNoTitleCellView *)populateCellView:(PFCPopUpButtonNoTitleCellView *)cellView
-                                           manifest:(NSDictionary *)manifest
-                                           settings:(NSDictionary *)settings
-                                      settingsLocal:(NSDictionary *)settingsLocal
-                                        displayKeys:(NSDictionary *)displayKeys
-                                                row:(NSInteger)row
-                                             sender:(id)sender {
+- (instancetype)populateCellView:(PFCPopUpButtonNoTitleCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view

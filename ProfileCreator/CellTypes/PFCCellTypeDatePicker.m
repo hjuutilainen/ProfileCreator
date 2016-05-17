@@ -44,7 +44,8 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (instancetype)populateCellView:(id)cellView
+- (instancetype)populateCellView:(PFCDatePickerCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal
@@ -327,13 +328,14 @@
     [super drawRect:dirtyRect];
 } // drawRect
 
-- (PFCDatePickerNoTitleCellView *)populateCellView:(PFCDatePickerNoTitleCellView *)cellView
-                                          manifest:(NSDictionary *)manifest
-                                          settings:(NSDictionary *)settings
-                                     settingsLocal:(NSDictionary *)settingsLocal
-                                       displayKeys:(NSDictionary *)displayKeys
-                                               row:(NSInteger)row
-                                            sender:(id)sender {
+- (instancetype)populateCellView:(PFCDatePickerNoTitleCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view

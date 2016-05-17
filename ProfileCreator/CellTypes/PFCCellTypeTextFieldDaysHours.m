@@ -62,13 +62,14 @@
     }
 } // observeValueForKeyPath
 
-- (PFCTextFieldDaysHoursNoTitleCellView *)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView
-                                                  manifest:(NSDictionary *)manifest
-                                                  settings:(NSDictionary *)settings
-                                             settingsLocal:(NSDictionary *)settingsLocal
-                                               displayKeys:(NSDictionary *)displayKeys
-                                                       row:(NSInteger)row
-                                                    sender:(id)sender {
+- (instancetype)populateCellView:(PFCTextFieldDaysHoursNoTitleCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // -------------------------------------------------------------------------
     //  Set sender and sender properties to be used later

@@ -34,6 +34,7 @@
 - (NSView *)cellViewForCellType:(NSString *)cellType
                       tableView:(NSTableView *)tableView
             manifestContentDict:(NSDictionary *)manifestContentDict
+                       manifest:(NSDictionary *)manifest
                userSettingsDict:(NSDictionary *)userSettingsDict
               localSettingsDict:(NSDictionary *)localSettingsDict
                     displayKeys:(NSDictionary *)displayKeys

@@ -43,6 +43,7 @@
 } // drawRect
 
 - (instancetype)populateCellView:(id)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal
@@ -55,6 +56,8 @@
     //  Every CellView is enabled by default, only if user has deselected it will be disabled
     // ---------------------------------------------------------------------------------------
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifest displayKeys:displayKeys];
+
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifest manifest:manifest settings:settings displayKeys:displayKeys];
 
     BOOL enabled = YES;
     if (!required && settings[PFCSettingsKeyEnabled] != nil) {
@@ -280,6 +283,7 @@
 } // drawRect
 
 - (instancetype)populateCellView:(id)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
                    settingsLocal:(NSDictionary *)settingsLocal
@@ -354,7 +358,8 @@
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
+    BOOL enabledTest = [[PFCAvailability sharedInstance] enabledForManifestContentDict:manifest displayKeys:displayKeys];
+    [[cellView settingCheckbox] setEnabled:enabledTest];
 
     return cellView;
 } // populateCellViewSettingsCheckboxNoDescription:manifest:settings:settingsLocal:row:sender

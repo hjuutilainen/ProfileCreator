@@ -51,13 +51,14 @@
     [super drawRect:dirtyRect];
 }
 
-- (PFCTextFieldNumberCellView *)populateCellView:(PFCTextFieldNumberCellView *)cellView
-                                        manifest:(NSDictionary *)manifest
-                                        settings:(NSDictionary *)settings
-                                   settingsLocal:(NSDictionary *)settingsLocal
-                                     displayKeys:(NSDictionary *)displayKeys
-                                             row:(NSInteger)row
-                                          sender:(id)sender {
+- (instancetype)populateCellView:(PFCTextFieldNumberCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
@@ -309,13 +310,14 @@
     [super drawRect:dirtyRect];
 }
 
-- (PFCTextFieldNumberLeftCellView *)populateCellView:(PFCTextFieldNumberLeftCellView *)cellView
-                                            manifest:(NSDictionary *)manifest
-                                            settings:(NSDictionary *)settings
-                                       settingsLocal:(NSDictionary *)settingsLocal
-                                         displayKeys:(NSDictionary *)displayKeys
-                                                 row:(NSInteger)row
-                                              sender:(id)sender {
+- (instancetype)populateCellView:(PFCTextFieldNumberLeftCellView *)cellView
+             manifestContentDict:(NSDictionary *)manifestContentDict
+                        manifest:(NSDictionary *)manifest
+                        settings:(NSDictionary *)settings
+                   settingsLocal:(NSDictionary *)settingsLocal
+                     displayKeys:(NSDictionary *)displayKeys
+                             row:(NSInteger)row
+                          sender:(id)sender {
 
     // ---------------------------------------------------------------------------------------
     //  Get required and enabled state of this cell view
