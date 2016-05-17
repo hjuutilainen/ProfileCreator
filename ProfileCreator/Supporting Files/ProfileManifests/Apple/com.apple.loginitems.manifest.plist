@@ -134,7 +134,7 @@
 			<key>Identifier</key>
 			<string>89DCBAC8-202F-473A-A18B-2C49BA91380C</string>
 			<key>Title</key>
-			<string>Authenticated Network Mounts</string>
+			<string>Network Mounts</string>
 			<key>PayloadType</key>
 			<string>com.apple.loginitems.managed</string>
 			<key>PayloadKey</key>
@@ -142,7 +142,7 @@
 			<key>PayloadValueType</key>
 			<string>Array</string>
 			<key>Description</key>
-			<string>The network mounts authenticated using user&apos;s login name and password</string>
+			<string>The network mounts that will be mounted at login. (Optionally authenticate as logged in user)</string>
 			<key>CellType</key>
 			<string>TableView</string>
 			<key>TableViewColumns</key>
@@ -162,12 +162,26 @@
 					<string>TableViewCheckbox</string>
 				</dict>
 				<dict>
+					<key>ColumnWidth</key>
+					<integer>75</integer>
+					<key>Identifier</key>
+					<string>EC37FB6C-2098-4809-8F96-1EB4E0681ADB</string>
+					<key>Title</key>
+					<string>Authenticate</string>
+					<key>PayloadKey</key>
+					<string>AuthenticateAsLoginUserShortName</string>
+					<key>PayloadType</key>
+					<string>com.apple.loginitems.managed</string>
+					<key>CellType</key>
+					<string>TableViewCheckbox</string>
+				</dict>
+				<dict>
 					<key>Identifier</key>
 					<string>799127EF-72AC-459C-A3EA-87AF7AEE5A82</string>
 					<key>Title</key>
 					<string>Mount URL</string>
 					<key>PayloadKey</key>
-					<string>Path</string>
+					<string>URL</string>
 					<key>PayloadType</key>
 					<string>com.apple.loginitems.managed</string>
 					<key>CellType</key>
@@ -175,23 +189,128 @@
 					<key>PlaceholderValue</key>
 					<string>afp://example.com/VolumeName</string>
 				</dict>
-				<dict>
-					<key>Hidden</key>
-					<true/>
-					<key>Identifier</key>
-					<string>EC37FB6C-2098-4809-8F96-1EB4E0681ADB</string>
-					<key>Title</key>
-					<string>Authenticate as login user</string>
-					<key>PayloadKey</key>
-					<string>AuthenticateAsLoginUserShortName</string>
-					<key>PayloadType</key>
-					<string>com.apple.loginitems.managed</string>
-					<key>CellType</key>
-					<string>TableViewCheckbox</string>
-					<key>DefaultValue</key>
-					<false/>
-				</dict>
 			</array>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>ED7153C8-5089-4B4F-8684-B577F335056E</string>
+			<key>Title</key>
+			<string>Add network home share point</string>
+			<key>CellType</key>
+			<string>CheckboxNoDescription</string>
+			<key>FontWeight</key>
+			<string>Bold</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+			<key>ValueKeys</key>
+			<dict>
+				<key>True</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>AD20E751-A3DA-4EFD-B620-939B005425B0</string>
+						<key>Hidden</key>
+						<true/>
+						<key>Title</key>
+						<string>User Home Share Point</string>
+						<key>DefaultValue</key>
+						<array>
+							<dict>
+								<key>EB902B01-C0A8-4654-87E6-B9D9C0728E8C</key>
+								<dict>
+									<key>Value</key>
+									<false/>
+								</dict>
+								<key>EC37FB6C-2098-4809-8F96-1EB4E0681ADB</key>
+								<dict>
+									<key>Value</key>
+									<true/>
+								</dict>
+								<key>799127EF-72AC-459C-A3EA-87AF7AEE5A82</key>
+								<dict>
+									<key>Value</key>
+									<true/>
+								</dict>
+							</dict>
+						</array>
+						<key>PayloadType</key>
+						<string>loginwindow</string>
+						<key>PayloadKey</key>
+						<string>AutoLaunchedApplicationDictionary-managed</string>
+						<key>PayloadValueType</key>
+						<string>Array</string>
+						<key>Description</key>
+						<string>The user home share point that will be mounted at login.</string>
+						<key>CellType</key>
+						<string>TableView</string>
+						<key>TableViewColumns</key>
+						<array>
+							<dict>
+								<key>ColumnWidth</key>
+								<integer>30</integer>
+								<key>Identifier</key>
+								<string>EB902B01-C0A8-4654-87E6-B9D9C0728E8C</string>
+								<key>Title</key>
+								<string>Hide</string>
+								<key>PayloadKey</key>
+								<string>Hide</string>
+								<key>PayloadType</key>
+								<string>com.apple.loginitems.managed</string>
+								<key>CellType</key>
+								<string>TableViewCheckbox</string>
+								<key>DefaultValue</key>
+								<false/>
+							</dict>
+							<dict>
+								<key>ColumnWidth</key>
+								<integer>75</integer>
+								<key>Identifier</key>
+								<string>EC37FB6C-2098-4809-8F96-1EB4E0681ADB</string>
+								<key>Title</key>
+								<string>Authenticate</string>
+								<key>PayloadKey</key>
+								<string>AuthenticateAsLoginUserShortName</string>
+								<key>PayloadType</key>
+								<string>com.apple.loginitems.managed</string>
+								<key>CellType</key>
+								<string>TableViewCheckbox</string>
+								<key>DefaultValue</key>
+								<true/>
+							</dict>
+							<dict>
+								<key>Identifier</key>
+								<string>799127EF-72AC-459C-A3EA-87AF7AEE5A82</string>
+								<key>PayloadKey</key>
+								<string>MCX-NetworkHomeDirectoryItem</string>
+								<key>PayloadType</key>
+								<string>com.apple.loginitems.managed</string>
+								<key>CellType</key>
+								<string>TableViewCheckbox</string>
+								<key>DefaultValue</key>
+								<true/>
+							</dict>
+						</array>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>1446A4BF-375F-469C-8548-E22A46ED9608</string>
+			<key>Title</key>
+			<string>User may press Shift to keep items from opening</string>
+			<key>PayloadType</key>
+			<string>loginwindow</string>
+			<key>PayloadKey</key>
+			<string>DisableLoginItemsSuppression</string>
+			<key>CellType</key>
+			<string>CheckboxNoDescription</string>
+			<key>FontWeight</key>
+			<string>Bold</string>
 			<key>ToolTipDescription</key>
 			<string>FIXME</string>
 		</dict>
