@@ -56,6 +56,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -68,8 +69,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
@@ -91,7 +92,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
+    NSString *value = settingsUser[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
     if (value.length == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
@@ -342,6 +343,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -354,8 +356,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
@@ -372,8 +374,8 @@
     // ---------------------------------------------------------------------
     //  ValueCheckbox
     // ---------------------------------------------------------------------
-    if (settings[PFCSettingsKeyValueCheckbox] != nil) {
-        [self setCheckboxState:[settings[PFCSettingsKeyValueCheckbox] boolValue]];
+    if (settingsUser[PFCSettingsKeyValueCheckbox] != nil) {
+        [self setCheckboxState:[settingsUser[PFCSettingsKeyValueCheckbox] boolValue]];
     } else if (manifestContentDict[PFCManifestKeyDefaultValueCheckbox]) {
         [self setCheckboxState:[manifestContentDict[PFCManifestKeyDefaultValueCheckbox] boolValue]];
     } else if (settingsLocal[PFCSettingsKeyValueCheckbox]) {
@@ -385,8 +387,8 @@
     // ---------------------------------------------------------------------
     NSString *valueTextField;
     NSAttributedString *valueTextFieldAttributed = nil;
-    if ([settings[PFCSettingsKeyValueTextField] length] != 0) {
-        valueTextField = settings[PFCSettingsKeyValueTextField];
+    if ([settingsUser[PFCSettingsKeyValueTextField] length] != 0) {
+        valueTextField = settingsUser[PFCSettingsKeyValueTextField];
     } else if ([manifestContentDict[PFCManifestKeyDefaultValueTextField] length] != 0) {
         valueTextField = manifestContentDict[PFCManifestKeyDefaultValueTextField];
     } else if ([settingsLocal[PFCSettingsKeyValueTextField] length] != 0) {
@@ -772,6 +774,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -784,8 +787,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
@@ -797,7 +800,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSString *value = settings[PFCSettingsKeyValue] ?: @"";
+    NSString *value = settingsUser[PFCSettingsKeyValue] ?: @"";
     NSAttributedString *valueAttributed = nil;
     if (value.length == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {

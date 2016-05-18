@@ -27,6 +27,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row

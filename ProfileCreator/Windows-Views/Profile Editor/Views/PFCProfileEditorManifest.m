@@ -462,15 +462,16 @@
                 return [cellView populateCellView:cellView
                     manifestContentDict:manifestContentDict
                     manifest:_selectedManifest
-                    settings:_settingsManifest[identifier] ?: @{}
+                    settings:_settingsManifest ?: @{}
+                    settingsUser:_settingsManifest[identifier] ?: @{}
                     settingsLocal:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
                     displayKeys:_profileEditor.settings.displayKeys
                     row:row
                     sender:self];
             } else {
                 DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
+                return nil;
             }
-            return nil;
         }
     } else if ([tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"]) {
 

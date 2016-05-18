@@ -54,6 +54,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -67,8 +68,8 @@
     BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if ((!requiredHost || !requiredPort) && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if ((!requiredHost || !requiredPort) && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
@@ -92,7 +93,7 @@
     // ---------------------------------------------------------------------
     //  Value Host
     // ---------------------------------------------------------------------
-    NSString *valueHost = settings[PFCSettingsKeyValueHost] ?: @"";
+    NSString *valueHost = settingsUser[PFCSettingsKeyValueHost] ?: @"";
     NSAttributedString *valueHostAttributed = nil;
     if (valueHost.length == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValueHost] length] != 0) {
@@ -126,7 +127,7 @@
     // ---------------------------------------------------------------------
     //  Value Port
     // ---------------------------------------------------------------------
-    NSString *valuePort = settings[PFCSettingsKeyValuePort] ?: @"";
+    NSString *valuePort = settingsUser[PFCSettingsKeyValuePort] ?: @"";
     NSAttributedString *valuePortAttributed = nil;
     if ([valuePort length] == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValuePort] length] != 0) {
@@ -426,6 +427,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -439,8 +441,8 @@
     BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if ((!requiredHost || !requiredPort) && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if ((!requiredHost || !requiredPort) && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
@@ -459,8 +461,8 @@
     // ---------------------------------------------------------------------
     //  Value Checkbox
     // ---------------------------------------------------------------------
-    if (settings[PFCSettingsKeyValueCheckbox] != nil) {
-        [self setCheckboxState:[settings[PFCSettingsKeyValueCheckbox] boolValue]];
+    if (settingsUser[PFCSettingsKeyValueCheckbox] != nil) {
+        [self setCheckboxState:[settingsUser[PFCSettingsKeyValueCheckbox] boolValue]];
     } else if (manifestContentDict[PFCManifestKeyDefaultValueCheckbox]) {
         [self setCheckboxState:[manifestContentDict[PFCManifestKeyDefaultValueCheckbox] boolValue]];
     } else if (settingsLocal[PFCSettingsKeyValueCheckbox]) {
@@ -477,7 +479,7 @@
     // ---------------------------------------------------------------------
     //  Value Host
     // ---------------------------------------------------------------------
-    NSString *valueHost = settings[PFCSettingsKeyValueHost] ?: @"";
+    NSString *valueHost = settingsUser[PFCSettingsKeyValueHost] ?: @"";
     NSAttributedString *valueHostAttributed = nil;
     if ([valueHost length] == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValueHost] length] != 0) {
@@ -512,7 +514,7 @@
     // ---------------------------------------------------------------------
     //  Value Port
     // ---------------------------------------------------------------------
-    NSString *valuePort = settings[PFCSettingsKeyValuePort] ?: @"";
+    NSString *valuePort = settingsUser[PFCSettingsKeyValuePort] ?: @"";
     NSAttributedString *valuePortAttributed = nil;
     if ([valuePort length] == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValuePort] length] != 0) {

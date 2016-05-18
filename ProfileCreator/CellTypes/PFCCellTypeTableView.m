@@ -274,6 +274,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -295,9 +296,9 @@
     //  Initialize the TableView content from settings
     // -------------------------------------------------------------------------
     if (!_tableViewContent) {
-        if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
-            if ([settings[PFCSettingsKeyTableViewContent] count] != 0) {
-                [self setTableViewContent:[settings[PFCSettingsKeyTableViewContent] mutableCopy]];
+        if ([settingsUser[PFCSettingsKeyTableViewContent] count] != 0) {
+            if ([settingsUser[PFCSettingsKeyTableViewContent] count] != 0) {
+                [self setTableViewContent:[settingsUser[PFCSettingsKeyTableViewContent] mutableCopy]];
             } else {
                 [self setTableViewContent:[manifestContentDict[PFCManifestKeyDefaultValue] mutableCopy] ?: [[NSMutableArray alloc] init]];
             }
@@ -317,8 +318,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];

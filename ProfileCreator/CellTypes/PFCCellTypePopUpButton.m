@@ -48,6 +48,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -60,8 +61,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -87,8 +88,8 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]];
     NSString *selectedItem;
-    if ([settings[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settings[PFCSettingsKeyValue];
+    if ([settingsUser[PFCSettingsKeyValue] length] != 0) {
+        selectedItem = settingsUser[PFCSettingsKeyValue];
     } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
         selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
     } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
@@ -291,6 +292,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -303,8 +305,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -330,8 +332,8 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]];
     NSString *selectedItem;
-    if ([settings[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settings[PFCSettingsKeyValue];
+    if ([settingsUser[PFCSettingsKeyValue] length] != 0) {
+        selectedItem = settingsUser[PFCSettingsKeyValue];
     } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
         selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
     } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
@@ -430,6 +432,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -442,8 +445,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     // ---------------------------------------------------------------------
@@ -457,8 +460,8 @@
     [[cellView settingPopUpButton] removeAllItems];
     [[cellView settingPopUpButton] addItemsWithTitles:manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]];
     NSString *selectedItem;
-    if ([settings[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settings[PFCSettingsKeyValue];
+    if ([settingsUser[PFCSettingsKeyValue] length] != 0) {
+        selectedItem = settingsUser[PFCSettingsKeyValue];
     } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
         selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
     } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {

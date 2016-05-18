@@ -55,6 +55,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -67,8 +68,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
@@ -95,7 +96,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settings[PFCSettingsKeyValue];
+    NSNumber *value = settingsUser[PFCSettingsKeyValue];
     if (value == nil) {
         if (manifestContentDict[PFCManifestKeyDefaultValue] != nil) {
             value = manifestContentDict[PFCManifestKeyDefaultValue];
@@ -314,6 +315,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -326,8 +328,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
@@ -349,7 +351,7 @@
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
-    NSNumber *value = settings[PFCSettingsKeyValue];
+    NSNumber *value = settingsUser[PFCSettingsKeyValue];
     if (value == nil) {
         if (manifestContentDict[PFCManifestKeyDefaultValue] != nil) {
             value = manifestContentDict[PFCManifestKeyDefaultValue];
@@ -388,7 +390,7 @@
     // ---------------------------------------------------------------------
     [cellView.settingStepper setValueWraps:NO];
     if (_stepperValue == nil) {
-        [self setStepperValue:settings[PFCSettingsKeyValue] ?: @0];
+        [self setStepperValue:settingsUser[PFCSettingsKeyValue] ?: @0];
     }
     [cellView.settingTextField bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
     [cellView.settingStepper bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(stepperValue)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];

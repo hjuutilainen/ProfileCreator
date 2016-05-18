@@ -48,6 +48,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -60,8 +61,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -85,8 +86,8 @@
     //  Value
     // ---------------------------------------------------------------------
     NSDate *date;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
+    if (settingsUser[PFCSettingsKeyValue] != nil) {
+        date = settingsUser[PFCSettingsKeyValue] ?: [NSDate date];
     } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
         date = manifestContentDict[PFCManifestKeyDefaultValue] ?: [NSDate date];
     } else if (settingsLocal[PFCSettingsKeyValue]) {
@@ -333,6 +334,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -345,16 +347,16 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     // ---------------------------------------------------------------------
     //  Value
     // ---------------------------------------------------------------------
     NSDate *date;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        date = settings[PFCSettingsKeyValue] ?: [NSDate date];
+    if (settingsUser[PFCSettingsKeyValue] != nil) {
+        date = settingsUser[PFCSettingsKeyValue] ?: [NSDate date];
     } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
         date = manifestContentDict[PFCManifestKeyDefaultValue] ?: [NSDate date];
     } else if (settingsLocal[PFCSettingsKeyValue]) {

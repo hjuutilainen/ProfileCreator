@@ -106,6 +106,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -118,8 +119,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -174,7 +175,7 @@
     // ---------------------------------------------------------------------
     //  Show prompt if no file is selected
     // ---------------------------------------------------------------------
-    if ([settings[PFCSettingsKeyFilePath] length] == 0) {
+    if ([settingsUser[PFCSettingsKeyFilePath] length] == 0) {
         [[cellView settingFileViewPrompt] setHidden:NO];
         [[cellView settingFileIcon] setHidden:YES];
         [[cellView settingFileTitle] setHidden:YES];
@@ -191,7 +192,7 @@
     //  Check that file exist
     // ---------------------------------------------------------------------
     NSError *error = nil;
-    NSURL *fileURL = [NSURL fileURLWithPath:settings[PFCSettingsKeyFilePath]];
+    NSURL *fileURL = [NSURL fileURLWithPath:settingsUser[PFCSettingsKeyFilePath]];
     if (![fileURL checkResourceIsReachableAndReturnError:&error]) {
         DDLogError(@"%@", error.localizedDescription);
     }

@@ -66,6 +66,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -84,8 +85,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     // -------------------------------------------------------------------------
@@ -93,8 +94,8 @@
     // -------------------------------------------------------------------------
     if (_stepperValueRemovalIntervalHours == nil || _stepperValueRemovalIntervalHours == nil) {
         NSNumber *seconds;
-        if (settings[PFCSettingsKeyValue] != nil) {
-            seconds = settings[PFCSettingsKeyValue] ?: @0;
+        if (settingsUser[PFCSettingsKeyValue] != nil) {
+            seconds = settingsUser[PFCSettingsKeyValue] ?: @0;
         } else {
             seconds = settingsLocal[PFCSettingsKeyValue] ?: @0;
         }
