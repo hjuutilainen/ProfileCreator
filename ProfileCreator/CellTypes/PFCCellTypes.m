@@ -72,31 +72,4 @@
     return 1;
 }
 
-- (NSView *)cellViewForCellType:(NSString *)cellType
-                      tableView:(NSTableView *)tableView
-            manifestContentDict:(NSDictionary *)manifestContentDict
-                       manifest:(NSDictionary *)manifest
-               userSettingsDict:(NSDictionary *)userSettingsDict
-              localSettingsDict:(NSDictionary *)localSettingsDict
-                    displayKeys:(NSDictionary *)displayKeys
-                            row:(NSInteger)row
-                         sender:(id)sender {
-
-    id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
-    if (cellView) {
-        [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-        return [cellView populateCellView:cellView
-                      manifestContentDict:manifestContentDict
-                                 manifest:manifest
-                                 settings:userSettingsDict
-                            settingsLocal:localSettingsDict
-                              displayKeys:(NSDictionary *)displayKeys
-                                      row:row
-                                   sender:sender];
-    } else {
-        DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
-    }
-    return nil;
-}
-
 @end

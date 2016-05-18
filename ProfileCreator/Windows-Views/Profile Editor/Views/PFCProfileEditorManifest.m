@@ -456,14 +456,21 @@
         if ([cellType isEqualToString:PFCCellTypePadding]) {
             return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
         } else {
-            return [[PFCCellTypes sharedInstance] cellViewForCellType:cellType
-                tableView:tableView
-                manifestContentDict:manifestContentDict
-                userSettingsDict:_settingsManifest[identifier] ?: @{}
-                localSettingsDict:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
-                displayKeys:_profileEditor.settings.displayKeys
-                row:row
-                sender:self];
+            id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
+            if (cellView) {
+                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+                return [cellView populateCellView:cellView
+                    manifestContentDict:manifestContentDict
+                    manifest:_selectedManifest
+                    settings:_settingsManifest[identifier] ?: @{}
+                    settingsLocal:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
+                    displayKeys:_profileEditor.settings.displayKeys
+                    row:row
+                    sender:self];
+            } else {
+                DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
+            }
+            return nil;
         }
     } else if ([tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"]) {
 
