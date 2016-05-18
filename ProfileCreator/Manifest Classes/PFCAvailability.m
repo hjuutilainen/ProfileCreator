@@ -191,6 +191,23 @@
                 DDLogDebug(@"selectionIdentifier=%@", selectionIdentifier);
 
                 if (selectionIdentifier.length != 0 && availabilityIf[PFCManifestKeyAvailabilitySelectionValue] != nil) {
+
+                    // -------------------------------------------------------------------------
+                    //  Get placeholder value from target manifest content dict
+                    // -------------------------------------------------------------------------
+                    NSDictionary *selectionManifestContentDict = [self manifestContentDictForIdentifier:selectionIdentifier manifestContent:manifest[PFCManifestKeyManifestContent]];
+
+                    // If AvailabilityKey is 'PFCManifestKeyEnabled', verfiy that the selection target isn't disabled itself
+                    if ([availabilityDict[PFCManifestKeyAvailabilityKey] isEqualToString:PFCManifestKeyEnabled]) {
+                        NSDictionary *parentOverrides = [self overridesForManifestContentDict:selectionManifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+                        DDLogDebug(@"parentOverrides=%@", parentOverrides);
+
+                        if (parentOverrides[PFCManifestKeyEnabled] != nil && [parentOverrides[PFCManifestKeyEnabled] boolValue] == NO) {
+                            overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = @NO;
+                            continue;
+                        }
+                    }
+
                     NSString *availabilityValueTypeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]];
                     DDLogDebug(@"%@ value type: %@", PFCManifestKeyAvailabilitySelectionValue, availabilityValueTypeString);
 
@@ -204,12 +221,6 @@
                         }
                         continue;
                     }
-
-                    // -------------------------------------------------------------------------
-                    //  Get placeholder value from target manifest content dict
-                    // -------------------------------------------------------------------------
-                    NSDictionary *selectionManifestContentDict = [self manifestContentDictForIdentifier:selectionIdentifier manifestContent:manifest[PFCManifestKeyManifestContent]];
-                    DDLogDebug(@"selectionManifestContentDict=%@", selectionManifestContentDict);
 
                     id defaultValue;
                     if (selectionManifestContentDict[PFCManifestKeyDefaultValue] != nil) {
