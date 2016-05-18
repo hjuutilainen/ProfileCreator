@@ -67,6 +67,24 @@
 						<string>FIXME</string>
 					</dict>
 					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
 						<key>Identifier</key>
 						<string>95AFC383-D95E-4F33-801D-6D22080632F8</string>
 						<key>Title</key>
