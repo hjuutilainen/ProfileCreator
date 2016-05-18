@@ -132,6 +132,7 @@
 		53A47E871C693FEF000F4035 /* PFCAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A47E861C693FEF000F4035 /* PFCAlert.m */; };
 		53A5E4781C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A5E4761C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.m */; };
 		53A5E4791C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53A5E4771C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.xib */; };
+		53ACBA731CEC85C000AE0245 /* PFCCellTypeRadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ACBA721CEC85C000AE0245 /* PFCCellTypeRadioButton.m */; };
 		53ADF6081C7F8C77005BA0FC /* PFCCellTypePopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6071C7F8C77005BA0FC /* PFCCellTypePopUpButton.m */; };
 		53ADF61A1C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6191C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.m */; };
 		53ADF61D1C7F907A005BA0FC /* PFCCellTypeTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF61C1C7F907A005BA0FC /* PFCCellTypeTableView.m */; };
@@ -506,6 +507,8 @@
 		53A5E4751C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileEditorLibraryMenu.h; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibraryMenu.h"; sourceTree = "<group>"; };
 		53A5E4761C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCProfileEditorLibraryMenu.m; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibraryMenu.m"; sourceTree = "<group>"; };
 		53A5E4771C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCProfileEditorLibraryMenu.xib; path = "Windows-Views/Profile Editor/Views/PFCProfileEditorLibraryMenu.xib"; sourceTree = "<group>"; };
+		53ACBA621CEC85B300AE0245 /* PFCCellTypeRadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeRadioButton.h; path = CellTypes/PFCCellTypeRadioButton.h; sourceTree = "<group>"; };
+		53ACBA721CEC85C000AE0245 /* PFCCellTypeRadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeRadioButton.m; path = CellTypes/PFCCellTypeRadioButton.m; sourceTree = "<group>"; };
 		53ADF6061C7F8C77005BA0FC /* PFCCellTypePopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypePopUpButton.h; path = CellTypes/PFCCellTypePopUpButton.h; sourceTree = "<group>"; };
 		53ADF6071C7F8C77005BA0FC /* PFCCellTypePopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypePopUpButton.m; path = CellTypes/PFCCellTypePopUpButton.m; sourceTree = "<group>"; };
 		53ADF6181C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeSegmentedControl.h; path = CellTypes/PFCCellTypeSegmentedControl.h; sourceTree = "<group>"; };
@@ -685,6 +688,8 @@
 				5306D9EA1C7F08750010191F /* PFCCellTypeFile.m */,
 				53ADF6061C7F8C77005BA0FC /* PFCCellTypePopUpButton.h */,
 				53ADF6071C7F8C77005BA0FC /* PFCCellTypePopUpButton.m */,
+				53ACBA621CEC85B300AE0245 /* PFCCellTypeRadioButton.h */,
+				53ACBA721CEC85C000AE0245 /* PFCCellTypeRadioButton.m */,
 				53ADF6181C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.h */,
 				53ADF6191C7F8F79005BA0FC /* PFCCellTypeSegmentedControl.m */,
 				53ADF61B1C7F907A005BA0FC /* PFCCellTypeTableView.h */,
@@ -1440,6 +1445,7 @@
 				5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */,
 				53F08F981CBC16D900B99A8E /* PFCTableViewCellTypeTextFieldNumber.m in Sources */,
 				53598C311C81E2C300C6BD2E /* PFCMainWindowGroup.m in Sources */,
+				53ACBA731CEC85C000AE0245 /* PFCCellTypeRadioButton.m in Sources */,
 				538BC07A1C6D06990099F779 /* PFCMainWindowPreviewPayload.m in Sources */,
 				53897E3A1C595DFF00B1D868 /* PFCLogFormatter.m in Sources */,
 				53F08F921CBC064B00B99A8E /* PFCTableViewCellTypeCheckbox.m in Sources */,

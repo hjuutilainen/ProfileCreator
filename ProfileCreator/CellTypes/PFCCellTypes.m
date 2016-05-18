@@ -66,6 +66,8 @@
         return 192.0f;
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
         return 212.0f;
+    } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
+        return 150.0f;
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }

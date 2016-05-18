@@ -22,6 +22,7 @@
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypeFile.h"
 #import "PFCCellTypePopUpButton.h"
+#import "PFCCellTypeRadioButton.h"
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCCellTypeTableView.h"
 #import "PFCCellTypeTextField.h"
@@ -210,6 +211,12 @@
         //  TextView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
+        return @[ manifestContentDict ];
+
+        // ---------------------------------------------------------------------
+        //  RadioButton
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
         return @[ manifestContentDict ];
 
     } else if ([cellType length] != 0) {
@@ -997,6 +1004,12 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
         return [PFCTextViewCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+
+        // ---------------------------------------------------------------------
+        //  RadioButton
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
+        return [PFCRadioButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 
     } else if ([cellType length] != 0) {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);

@@ -22,6 +22,7 @@
 #import "PFCCellTypeDatePicker.h"
 #import "PFCCellTypeFile.h"
 #import "PFCCellTypePopUpButton.h"
+#import "PFCCellTypeRadioButton.h"
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
@@ -238,6 +239,7 @@
     } else {
         [_profileEditor showManifestNoSettings];
     }
+    DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
 } // updateTableViewSettingsFromManifest
@@ -386,6 +388,7 @@
         [_profileEditor showManifestNoSettings];
     }
 
+    DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
 }
@@ -428,6 +431,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     return _arrayManifestContent.count;
 } // numberOfRowsInTableView
 
@@ -446,6 +450,7 @@
     NSString *tableColumnIdentifier = tableColumn.identifier;
     NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+    DDLogDebug(@"CellType: %@", cellType);
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     if ([tableColumnIdentifier isEqualToString:@"ColumnSettings"]) {
@@ -548,6 +553,7 @@
         [self updateManifestColumns];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showValuesSource))]) {
         [_tableViewManifestContent beginUpdates];
+        DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
         [_tableViewManifestContent reloadData];
         [_tableViewManifestContent endUpdates];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))] ||
@@ -627,6 +633,7 @@
     //  Update settings view with the new settings
     // -------------------------------------------------------------------------
     [_tableViewManifestContent beginUpdates];
+    DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
 } // tabIndexSelected:sender
@@ -1053,6 +1060,7 @@
 } // tabIndexClose:sender
 
 - (void)updateTableViewSettingsFromManifestContentDict:(NSDictionary *)manifestContentDict atRow:(NSInteger)row {
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     // -------------------------------------------------------------------------
     //  Sanity check so that:   Row isn't less than 0
@@ -1140,9 +1148,9 @@
     //  Insert the current dict and any sub keys depending selection
     // -------------------------------------------------------------------------
     [_arrayManifestContent insertObjects:manifestContentSubset atIndexes:[NSIndexSet indexSetWithIndexesInRange:insertRange]];
-
     // FIXME -  Here I realod the entire TableView, but could possibly just reload the changed indexes or from changed row to end.
     //          I saw problems when just doing a range update, should investigate to make more efficient.
+    DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
     [_tableViewManifestContent reloadData];
     [_tableViewManifestContent endUpdates];
 } // updateTableViewSettingsFromManifestContentDict:row
@@ -1267,6 +1275,7 @@
                                 _settingsManifest[identifier] = [settingsDict copy];
 
                                 [_tableViewManifestContent beginUpdates];
+                                DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
                                 [_tableViewManifestContent reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row]
                                                                      columnIndexes:[NSIndexSet indexSetWithIndex:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"]]];
                                 [_tableViewManifestContent endUpdates];
@@ -1485,6 +1494,42 @@
     [_profileEditor.library reloadManifest:_selectedManifest];
 } // controlTextDidChangex
 
+- (void)radioButton:(NSButton *)radioButton {
+    // -------------------------------------------------------------------------
+    //  Get checkbox's row in the table view
+    // -------------------------------------------------------------------------
+    NSNumber *buttonTag = @(radioButton.tag);
+    if (buttonTag == nil) {
+        DDLogError(@"RadioButton: %@ tag is nil", radioButton);
+        return;
+    }
+    NSInteger row = buttonTag.integerValue;
+
+    // -------------------------------------------------------------------------
+    //  Select clicked radio button (automatically deselectes all others)
+    // -------------------------------------------------------------------------
+    [radioButton setEnabled:YES];
+
+    // -------------------------------------------------------------------------
+    //  Get current cell's key in the settings dict
+    // -------------------------------------------------------------------------
+    NSMutableDictionary *manifestContentDict = [_arrayManifestContent[row] mutableCopy];
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    NSMutableDictionary *settingsDict;
+    if ([identifier length] != 0) {
+        settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+    } else {
+        DDLogError(@"No key returned from manifest dict!");
+        return;
+    }
+
+    if ([[[radioButton superview] class] isSubclassOfClass:[PFCRadioButtonCellView class]]) {
+        settingsDict[PFCSettingsKeyValueRadioButton] = radioButton.title;
+    }
+
+    _settingsManifest[identifier] = [settingsDict copy];
+} // checkbox
+
 - (void)checkbox:(NSButton *)checkbox {
     // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
@@ -1527,6 +1572,7 @@
                 // FIXME - Should be able to just reload the current row, but the background doesn't change. Haven't looked into it yet, just realoads all until then.
                 // NSRange allColumns = NSMakeRange(0, [[_tableViewSettings tableColumns] count]);
                 //[_tableViewSettings reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:allColumns]];
+                DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
                 [_tableViewManifestContent reloadData];
                 [_tableViewManifestContent endUpdates];
             }
