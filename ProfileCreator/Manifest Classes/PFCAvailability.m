@@ -21,6 +21,7 @@
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
 #import "PFCLog.h"
+#import "PFCManifestUtility.h"
 
 @implementation PFCAvailability
 
@@ -69,6 +70,10 @@
 }
 
 - (BOOL)availableForOS:(NSString *)os availabilityDict:(NSDictionary *)availabilityDict displayKeys:(NSDictionary *)displayKeys {
+    if ([os isEqualToString:@"Any"]) {
+        return YES;
+    }
+
     BOOL availableForOS = YES;
 
     if (availabilityDict[@"Available"] == nil) {
@@ -182,16 +187,76 @@
                 NSDictionary *availabilityIf = availabilityDict[PFCManifestKeyAvailableIf];
 
                 // Check Selection Comparator
-                NSString *selectionIdentifier = availabilityIf[PFCManifestKeyAvailabilitySelectionIdentifier];
-                if (selectionIdentifier.length != 0 && availabilityIf[PFCManifestKeyAvailabilitySelectionValue] != nil && settings[selectionIdentifier] != nil) {
-                    if ([settings[selectionIdentifier][@"Value"] isEqualTo:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]]) {
-                        overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                NSString *selectionIdentifier = availabilityIf[PFCManifestKeyAvailabilitySelectionIdentifier] ?: @"";
+                DDLogDebug(@"selectionIdentifier=%@", selectionIdentifier);
+
+                if (selectionIdentifier.length != 0 && availabilityIf[PFCManifestKeyAvailabilitySelectionValue] != nil) {
+                    NSString *availabilityValueTypeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]];
+                    DDLogDebug(@"%@ value type: %@", PFCManifestKeyAvailabilitySelectionValue, availabilityValueTypeString);
+
+                    if (settings[selectionIdentifier] != nil) {
+                        DDLogDebug(@"Settings for selection identifier: %@", settings[selectionIdentifier]);
+
+                        if ([availabilityValueTypeString isEqualToString:PFCValueTypeBoolean]) {
+                            if ([settings[selectionIdentifier][@"Value"] boolValue] == [availabilityIf[PFCManifestKeyAvailabilitySelectionValue] boolValue]) {
+                                overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                            }
+                        }
+                        continue;
+                    }
+
+                    // -------------------------------------------------------------------------
+                    //  Get placeholder value from target manifest content dict
+                    // -------------------------------------------------------------------------
+                    NSDictionary *selectionManifestContentDict = [self manifestContentDictForIdentifier:selectionIdentifier manifestContent:manifest[PFCManifestKeyManifestContent]];
+                    DDLogDebug(@"selectionManifestContentDict=%@", selectionManifestContentDict);
+
+                    id defaultValue;
+                    if (selectionManifestContentDict[PFCManifestKeyDefaultValue] != nil) {
+                        NSString *typeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:selectionManifestContentDict[PFCManifestKeyDefaultValue]];
+
+                        if ([typeString isEqualToString:PFCValueTypeString]) {
+                            defaultValue = selectionManifestContentDict[PFCManifestKeyDefaultValue];
+                        } else if ([typeString isEqualToString:PFCValueTypeBoolean]) {
+                            defaultValue = @([selectionManifestContentDict[PFCManifestKeyDefaultValue] boolValue]);
+                        }
+                    } else if ([selectionManifestContentDict[PFCManifestKeyCellType] isEqualToString:@"CheckboxNoDescription"]) {
+                        defaultValue = NO;
+                    }
+
+                    if ([availabilityValueTypeString isEqualToString:PFCValueTypeString]) {
+                        if ([defaultValue isEqualToString:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]]) {
+                            overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                        }
+                    } else if ([availabilityValueTypeString isEqualToString:PFCValueTypeBoolean]) {
+                        if ([availabilityIf[PFCManifestKeyAvailabilitySelectionValue] boolValue] == (BOOL)defaultValue) {
+                            overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                        }
                     }
                 }
             }
         }
     }
     return [overridesDict copy];
+}
+
+- (NSDictionary *)manifestContentDictForIdentifier:(NSString *)identifier manifestContent:(NSArray *)manifestContent {
+    __block NSDictionary *selectionManifestContentDict;
+    [manifestContent enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull dict, NSUInteger idx, BOOL *_Nonnull stop) {
+      if ([dict[PFCManifestKeyIdentifier] isEqualToString:identifier]) {
+          selectionManifestContentDict = dict;
+          *stop = YES;
+      } else if (dict[PFCManifestKeyValueKeys] != nil) {
+          for (NSString *valueKey in dict[PFCManifestKeyAvailableValues] ?: @[ @"True", @"False" ]) {
+              selectionManifestContentDict = [self manifestContentDictForIdentifier:identifier manifestContent:dict[PFCManifestKeyValueKeys][valueKey]];
+              if (selectionManifestContentDict.count != 0) {
+                  *stop = YES;
+                  break;
+              }
+          }
+      }
+    }];
+    return selectionManifestContentDict;
 }
 
 @end
