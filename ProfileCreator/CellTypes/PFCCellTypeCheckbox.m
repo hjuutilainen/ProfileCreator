@@ -46,6 +46,7 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
@@ -58,8 +59,8 @@
     BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -78,8 +79,8 @@
     //  Value
     // ---------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
+    if (settingsUser[PFCSettingsKeyValue] != nil) {
+        checkboxState = [settingsUser[PFCSettingsKeyValue] boolValue];
     } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
         checkboxState = [manifestContentDict[PFCManifestKeyDefaultValue] boolValue];
     } else if (settingsLocal[PFCSettingsKeyValue]) {
@@ -284,21 +285,38 @@
              manifestContentDict:(NSDictionary *)manifestContentDict
                         manifest:(NSDictionary *)manifest
                         settings:(NSDictionary *)settings
+                    settingsUser:(NSDictionary *)settingsUser
                    settingsLocal:(NSDictionary *)settingsLocal
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
                           sender:(id)sender {
 
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
     NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
+    // ---------------------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
     BOOL enabled = YES;
-    if (!required && settings[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settings[PFCSettingsKeyEnabled] boolValue];
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -321,8 +339,8 @@
     //  Value
     // ---------------------------------------------------------------------
     BOOL checkboxState = NO;
-    if (settings[PFCSettingsKeyValue] != nil) {
-        checkboxState = [settings[PFCSettingsKeyValue] boolValue];
+    if (settingsUser[PFCSettingsKeyValue] != nil) {
+        checkboxState = [settingsUser[PFCSettingsKeyValue] boolValue];
     } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
         checkboxState = [manifestContentDict[PFCManifestKeyDefaultValue] boolValue];
     } else if (settingsLocal[PFCSettingsKeyValue]) {
@@ -357,8 +375,7 @@
     // ---------------------------------------------------------------------
     //  Enabled
     // ---------------------------------------------------------------------
-    BOOL enabledTest = [[PFCAvailability sharedInstance] enabledForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    [[cellView settingCheckbox] setEnabled:enabledTest];
+    [[cellView settingCheckbox] setEnabled:enabled];
 
     return cellView;
 } // populateCellViewSettingsCheckboxNoDescription:manifest:settings:settingsLocal:row:sender
