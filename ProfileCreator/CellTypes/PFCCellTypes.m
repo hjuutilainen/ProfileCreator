@@ -40,17 +40,20 @@
     return sharedInstance;
 } // sharedUtility
 
-- (CGFloat)rowHeightForCellType:(NSString *)cellType {
+- (CGFloat)rowHeightForManifestContentDict:(NSDictionary *)manifestContentDict {
+    NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     if ([cellType isEqualToString:PFCCellTypePadding]) {
         return 20.0f;
-    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        return 33.0f;
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
         return 38.0f;
     } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
         return 39.0f;
     } else if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
-        return 52.0f;
+        CGFloat baseHeight = 52.0f;
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = 25.0f;
+        }
+        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
         return 53.0f;
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle] || [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
@@ -67,7 +70,12 @@
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
         return 212.0f;
     } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
-        return 150.0f;
+        CGFloat baseHeight = 93.0f;
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = 74.0f;
+        }
+        NSInteger buttonCount = [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] count];
+        return (baseHeight + (buttonCount - 2) * 22);
     } else {
         DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
     }

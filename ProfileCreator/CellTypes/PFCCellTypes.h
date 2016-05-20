@@ -29,6 +29,6 @@
 // -----------------------------------------------------------------------------
 //  Instance Methods
 // -----------------------------------------------------------------------------
-- (CGFloat)rowHeightForCellType:(NSString *)cellType;
+- (CGFloat)rowHeightForManifestContentDict:(NSDictionary *)manifestContentDict;
 
 @end
