@@ -548,19 +548,12 @@
     DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
 
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
-    DDLogDebug(@"CellType: %@", cellType);
 
     // -------------------------------------------------------------------------
     //  Checkbox
     // -------------------------------------------------------------------------
     if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         [PFCCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
-
-        // ---------------------------------------------------------------------
-        //  CheckboxNoDescription
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        [PFCCheckboxNoDescriptionCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  DatePicker
@@ -704,7 +697,6 @@
 
 - (id)valueForTableViewColumnDict:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings {
     NSString *cellType = tableViewColumnDict[PFCManifestKeyCellType];
-    DDLogDebug(@"CellType: %@", cellType);
 
     // -------------------------------------------------------------------------
     //  TableView Checkbox
@@ -745,7 +737,6 @@
 
 - (void)createPayloadFromTableViewColumnDict:(NSDictionary *)tableViewColumnDict settings:(NSDictionary *)settings payloadDict:(NSMutableDictionary **)payloadDict {
     NSString *cellType = tableViewColumnDict[PFCManifestKeyCellType];
-    DDLogDebug(@"CellType: %@", cellType);
 
     // -------------------------------------------------------------------------
     //  TableView Checkbox

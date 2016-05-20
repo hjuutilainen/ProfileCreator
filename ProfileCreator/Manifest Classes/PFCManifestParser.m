@@ -100,12 +100,6 @@
         return [self arrayFromCellTypeCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
 
         // ---------------------------------------------------------------------
-        //  CheckboxNoDescription
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        return [self arrayFromCellTypeCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
-
-        // ---------------------------------------------------------------------
         //  DatePicker
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
@@ -890,13 +884,7 @@
     // ---------------------------------------------------------------------
     if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         return [PFCCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-
-        // ---------------------------------------------------------------------
-        //  CheckboxNoDescription
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        return [PFCCheckboxNoDescriptionCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-
+        
         // ---------------------------------------------------------------------
         //  DatePicker
         // ---------------------------------------------------------------------

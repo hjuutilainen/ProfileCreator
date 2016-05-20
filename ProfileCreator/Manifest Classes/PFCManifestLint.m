@@ -1190,12 +1190,6 @@
         [reportCellType addObjectsFromArray:[PFCCheckboxCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
 
         // ---------------------------------------------------------------------
-        //  CheckboxNoDescription
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeCheckboxNoDescription]) {
-        [reportCellType addObjectsFromArray:[PFCCheckboxNoDescriptionCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
-
-        // ---------------------------------------------------------------------
         //  DatePicker
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
