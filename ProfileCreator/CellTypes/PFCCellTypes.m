@@ -49,18 +49,36 @@
     } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
         return 39.0f;
     } else if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
-        CGFloat baseHeight = 52.0f;
         if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
-            baseHeight = 25.0f;
+            return 25.0f;
+        } else {
+            return 52.0f;
         }
-        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
         return 53.0f;
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle] || [cellType isEqualToString:PFCCellTypePopUpButtonNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
+    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
         return 54.0f;
-    } else if ([cellType isEqualToString:PFCCellTypeTextField] || [cellType isEqualToString:PFCCellTypeTextFieldHostPort] || [cellType isEqualToString:PFCCellTypePopUpButton] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldNumber] || [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] || [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
-        return 80.0f;
+    } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort] || [cellType isEqualToString:PFCCellTypeTextFieldNumber] || [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ||
+               [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
+        return 81.0f;
+    } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
+        CGFloat baseHeight = 80.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 23.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 26.0f);
+        }
+        return baseHeight;
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
+        CGFloat baseHeight = 80.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 16.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 26.0f);
+        }
+        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
         return 83.0f;
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
@@ -71,9 +89,13 @@
         return 212.0f;
     } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
         CGFloat baseHeight = 93.0f;
-        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
-            baseHeight = 74.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 23.0f);
         }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 19.0f);
+        }
+
         NSInteger buttonCount = [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] count];
         return (baseHeight + (buttonCount - 2) * 22);
     } else {
