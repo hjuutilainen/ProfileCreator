@@ -198,6 +198,7 @@
                     NSDictionary *selectionManifestContentDict = [self manifestContentDictForIdentifier:selectionIdentifier manifestContent:manifest[PFCManifestKeyManifestContent]];
 
                     // If AvailabilityKey is 'PFCManifestKeyEnabled', verfiy that the selection target isn't disabled itself
+                    /* DISABLE RECURSIVE ENABLED CHECKS FOR NOW
                     if ([availabilityDict[PFCManifestKeyAvailabilityKey] isEqualToString:PFCManifestKeyEnabled]) {
                         NSDictionary *parentOverrides = [self overridesForManifestContentDict:selectionManifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
                         DDLogDebug(@"parentOverrides=%@", parentOverrides);
@@ -207,6 +208,7 @@
                             continue;
                         }
                     }
+*/
 
                     NSString *availabilityValueTypeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]];
                     DDLogDebug(@"%@ value type: %@", PFCManifestKeyAvailabilitySelectionValue, availabilityValueTypeString);
@@ -231,7 +233,7 @@
                         } else if ([typeString isEqualToString:PFCValueTypeBoolean]) {
                             defaultValue = @([selectionManifestContentDict[PFCManifestKeyDefaultValue] boolValue]);
                         }
-                    } else if ([selectionManifestContentDict[PFCManifestKeyCellType] isEqualToString:@"CheckboxNoDescription"]) {
+                    } else if ([selectionManifestContentDict[PFCManifestKeyCellType] isEqualToString:PFCCellTypeCheckbox]) {
                         defaultValue = NO;
                     }
 
