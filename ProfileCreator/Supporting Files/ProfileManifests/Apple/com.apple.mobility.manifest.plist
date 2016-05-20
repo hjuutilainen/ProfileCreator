@@ -60,9 +60,7 @@
 						<key>PayloadKey</key>
 						<string>com.apple.cachedaccounts.CreateAtLogin</string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
-						<key>FontWeight</key>
-						<string>Bold</string>
+						<string>Checkbox</string>
 						<key>ToolTipDescription</key>
 						<string>FIXME</string>
 					</dict>
@@ -96,15 +94,28 @@
 						<key>PayloadKey</key>
 						<string>com.apple.cachedaccounts.WarnOnCreate</string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
-						<key>FontWeight</key>
-						<string>Bold</string>
+						<string>Checkbox</string>
 						<key>ToolTipDescription</key>
 						<string>FIXME</string>
 					</dict>
 					<dict>
 						<key>Availability</key>
 						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
 							<dict>
 								<key>AvailabilityKey</key>
 								<string>Enabled</string>
@@ -124,7 +135,7 @@
 						<key>Identifier</key>
 						<string>B7A60EF3-CBEB-4025-9CD4-B053575027E5</string>
 						<key>Title</key>
-						<string>Show &quot;Don&apos;t as me again&quot; checkbox</string>
+						<string>Show &quot;Don&apos;t ask me again&quot; checkbox</string>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -132,9 +143,69 @@
 						<key>PayloadKey</key>
 						<string>cachedaccounts.WarnOnCreate.allowNever</string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
-						<key>FontWeight</key>
-						<string>Bold</string>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>F580C8F7-EADB-4490-914D-E35C563CE552</string>
+						<key>Title</key>
+						<string>Create home using:</string>
+						<key>IndentLevel</key>
+						<integer>2</integer>
+						<key>IndentLevelButtons</key>
+						<integer>1</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>com.apple.cachedaccounts.CreatePHDAtLogin</string>
+						<key>PayloadValueType</key>
+						<string>Boolean</string>
+						<key>DefaultValue</key>
+						<string>local home template</string>
+						<key>CellType</key>
+						<string>RadioButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>network home and default sync settings</string>
+							<string>local home template</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>network home and default sync settings</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<false/>
+								</dict>
+							</array>
+							<key>local home template</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<true/>
+								</dict>
+							</array>
+						</dict>
 						<key>ToolTipDescription</key>
 						<string>FIXME</string>
 					</dict>

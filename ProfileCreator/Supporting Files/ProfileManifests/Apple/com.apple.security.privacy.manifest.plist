@@ -52,7 +52,7 @@
 						<key>Indent</key>
 						<true/>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 					</dict>
 					<dict>
 						<key>Enabled</key>
@@ -66,7 +66,7 @@
 						<key>Indent</key>
 						<true/>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 						<key>ValueKeys</key>
 						<dict>
 							<key>True</key>
@@ -113,7 +113,7 @@
 						<key>Indent</key>
 						<true/>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 					</dict>
 				</array>
 				<key>Privacy</key>
@@ -128,7 +128,7 @@
 						<key>Type</key>
 						<string>Boolean</string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 					</dict>
 				</array>
 			</dict>

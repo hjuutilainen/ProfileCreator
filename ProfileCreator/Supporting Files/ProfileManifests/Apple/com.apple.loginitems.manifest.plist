@@ -199,9 +199,7 @@
 			<key>Title</key>
 			<string>Add network home share point</string>
 			<key>CellType</key>
-			<string>CheckboxNoDescription</string>
-			<key>FontWeight</key>
-			<string>Bold</string>
+			<string>Checkbox</string>
 			<key>ToolTipDescription</key>
 			<string>FIXME</string>
 			<key>ValueKeys</key>
@@ -308,9 +306,7 @@
 			<key>PayloadKey</key>
 			<string>DisableLoginItemsSuppression</string>
 			<key>CellType</key>
-			<string>CheckboxNoDescription</string>
-			<key>FontWeight</key>
-			<string>Bold</string>
+			<string>Checkbox</string>
 			<key>ToolTipDescription</key>
 			<string>FIXME</string>
 		</dict>

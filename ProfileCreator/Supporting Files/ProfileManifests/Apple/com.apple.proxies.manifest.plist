@@ -230,9 +230,7 @@
 			<key>PayloadType</key>
 			<string>com.apple.proxies</string>
 			<key>CellType</key>
-			<string>CheckboxNoDescription</string>
-			<key>FontWeight</key>
-			<string>Bold</string>
+			<string>Checkbox</string>
 			<key>ToolTipDescription</key>
 			<string>FIXME</string>
 		</dict>

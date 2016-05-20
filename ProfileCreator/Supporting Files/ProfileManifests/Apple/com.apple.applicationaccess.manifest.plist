@@ -49,7 +49,7 @@
 						<key>Description</key>
 						<string></string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 						<key>ToolTipDescription</key>
 						<string></string>
 					</dict>
@@ -86,7 +86,7 @@
 						<key>Description</key>
 						<string></string>
 						<key>CellType</key>
-						<string>CheckboxNoDescription</string>
+						<string>Checkbox</string>
 						<key>ToolTipDescription</key>
 						<string></string>
 					</dict>
