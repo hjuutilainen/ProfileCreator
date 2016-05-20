@@ -34,6 +34,7 @@
 
 @property NSMutableArray *radioButtons;
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
+@property (strong) IBOutlet NSLayoutConstraint *buttonsConstraintLeading;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
 
@@ -57,15 +58,32 @@
 
     [_radioButtons removeAllObjects];
 
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+    DDLogDebug(@"overrides: %@", overrides);
     // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    //  Get required state for this cell view
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
 
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
     BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -83,10 +101,18 @@
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingRadioButton1]"
+                                                                     options:NSLayoutFormatAlignAllLeading
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(_settingTitle, _settingRadioButton1)]];
+    }
 
     NSString *selectedItem;
-    DDLogDebug(@"settingsUser=%@", settingsUser);
     if ([settingsUser[PFCSettingsKeyValueRadioButton] length] != 0) {
         selectedItem = settingsUser[PFCSettingsKeyValueRadioButton];
     } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
@@ -118,17 +144,14 @@
       }
 
       [currentButton setTitle:title];
-      DDLogDebug(@"TITLE=%@", title);
-      DDLogDebug(@"selectedItem=%@", selectedItem);
       if ([title isEqualToString:selectedItem]) {
-          DDLogDebug(@"EQUAL!");
-          DDLogDebug(@"Enabling Button: %@", currentButton);
           [currentButton setState:NSOnState];
       }
 
       [currentButton setAction:@selector(radioButton:)];
       [currentButton setTarget:sender];
       [currentButton setTag:row];
+      [currentButton setEnabled:enabled];
 
       [_radioButtons addObject:currentButton];
       lastButton = currentButton;
@@ -141,26 +164,31 @@
     //}
 
     // ---------------------------------------------------------------------
-    //  Indentation
+    //  Text Indentation
     // ---------------------------------------------------------------------
+    CGFloat constraintConstant = 8;
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
-        [[cellView constraintLeading] setConstant:102];
+        constraintConstant = 102;
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
-        [[cellView constraintLeading] setConstant:constraintConstant];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
+        constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
     }
+    [[cellView constraintLeading] setConstant:constraintConstant];
+    DDLogDebug(@"constraintConstant=%f", constraintConstant);
+
+    // ---------------------------------------------------------------------
+    //  Buttons Indentation
+    // ---------------------------------------------------------------------
+    CGFloat buttonsConstraintConstant = 0;
+    if (manifestContentDict[@"IndentLevelButtons"] != nil) {
+        buttonsConstraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[@"IndentLevelButtons"] baseConstant:@(PFCIndentLevelBaseConstant)];
+    }
+    [[cellView buttonsConstraintLeading] setConstant:(constraintConstant + buttonsConstraintConstant)];
+    DDLogDebug(@"buttonsConstraintConstant=%f", buttonsConstraintConstant);
 
     // ---------------------------------------------------------------------
     //  Tool Tip
     // ---------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    // [[cellView settingRadioButton] setEnabled:enabled];
 
     return cellView;
 } // populateCellViewRadioButton:settings:row
@@ -305,289 +333,3 @@
 }
 
 @end
-
-/*
-@interface PFCRadioButtonLeftCellView ()
-
-@property (weak) IBOutlet NSTextField *settingTitle;
-@property (weak) IBOutlet NSTextField *settingDescription;
-
-@end
-
-@implementation PFCRadioButtonLeftCellView
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (instancetype)populateCellView:(PFCRadioButtonLeftCellView *)cellView
-             manifestContentDict:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                    settingsUser:(NSDictionary *)settingsUser
-                   settingsLocal:(NSDictionary *)settingsLocal
-                     displayKeys:(NSDictionary *)displayKeys
-                             row:(NSInteger)row
-                          sender:(id)sender {
-
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-
-    BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
-    }
-
-    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
-
-    // ---------------------------------------------------------------------
-    //  Title
-    // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
-    } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] removeAllItems];
-    [[cellView settingRadioButton] addItemsWithTitles:manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]];
-    NSString *selectedItem;
-    if ([settingsUser[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settingsUser[PFCSettingsKeyValue];
-    } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
-        selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
-    } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settingsLocal[PFCSettingsKeyValue];
-    }
-
-    if (selectedItem.length != 0) {
-        [[cellView settingRadioButton] selectItemWithTitle:selectedItem];
-    } else if (cellView.settingRadioButton.itemArray.count != 0) {
-        [[cellView settingRadioButton] selectItemAtIndex:0];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Tool Tip
-    // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] setAction:@selector(RadioButtonSelection:)];
-    [[cellView settingRadioButton] setTarget:sender];
-    [[cellView settingRadioButton] setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] setEnabled:enabled];
-
-    return cellView;
-} // populateCellViewRadioButtonLeft:settings:row
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    return [PFCRadioButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-}
-
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                        payloads:(NSMutableArray *__autoreleasing *)payloads
-                          sender:(PFCProfileExport *)sender {
-    return [PFCRadioButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
-}
-
-+ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
-    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
-
-    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString, PFCValueTypeInteger ];
-
-    // -------------------------------------------------------------------------
-    //  AvailableValues/ValueKeys
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
-                                                      manifest:manifest
-                                                 parentKeyPath:parentKeyPath
-                                                      required:YES
-                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
-    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Title/Description
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  DefaultValue
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  Payload
-    // -------------------------------------------------------------------------
-    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    return [lintReport copy];
-}
-
-@end
-
-@interface PFCRadioButtonNoTitleCellView ()
-
-@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
-@property (weak) IBOutlet NSTextField *settingDescription;
-
-@end
-
-@implementation PFCRadioButtonNoTitleCellView
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (instancetype)populateCellView:(PFCRadioButtonNoTitleCellView *)cellView
-             manifestContentDict:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                    settingsUser:(NSDictionary *)settingsUser
-                   settingsLocal:(NSDictionary *)settingsLocal
-                     displayKeys:(NSDictionary *)displayKeys
-                             row:(NSInteger)row
-                          sender:(id)sender {
-
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-
-    BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Description
-    // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] removeAllItems];
-    [[cellView settingRadioButton] addItemsWithTitles:manifestContentDict[PFCManifestKeyAvailableValues] ?: @[]];
-    NSString *selectedItem;
-    if ([settingsUser[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settingsUser[PFCSettingsKeyValue];
-    } else if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
-        selectedItem = manifestContentDict[PFCManifestKeyDefaultValue];
-    } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-        selectedItem = settingsLocal[PFCSettingsKeyValue];
-    }
-
-    if (selectedItem.length != 0) {
-        [[cellView settingRadioButton] selectItemWithTitle:selectedItem];
-    } else if (cellView.settingRadioButton.itemArray.count != 0) {
-        [[cellView settingRadioButton] selectItemAtIndex:0];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Indentation
-    // ---------------------------------------------------------------------
-    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
-        [[cellView constraintLeading] setConstant:102];
-    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
-        [[cellView constraintLeading] setConstant:constraintConstant];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Tool Tip
-    // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] setAction:@selector(RadioButtonSelection:)];
-    [[cellView settingRadioButton] setTarget:sender];
-    [[cellView settingRadioButton] setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingRadioButton] setEnabled:enabled];
-
-    return cellView;
-} // populateCellViewSettingsRadioButtonNoTitle:settings:row
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    return [PFCRadioButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-}
-
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                        payloads:(NSMutableArray *__autoreleasing *)payloads
-                          sender:(PFCProfileExport *)sender {
-    return [PFCRadioButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
-}
-
-+ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
-    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
-
-    NSArray *allowedTypes = @[ PFCValueTypeBoolean, PFCValueTypeString ];
-
-    // -------------------------------------------------------------------------
-    //  AvailableValues/ValueKeys
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForAvailableValues:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict
-                                                      manifest:manifest
-                                                 parentKeyPath:parentKeyPath
-                                                      required:YES
-                                               availableValues:manifestContentDict[PFCManifestKeyAvailableValues]]];
-    [lintReport addObjectsFromArray:[sender reportForValueKeysShared:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Description
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Indentation
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  DefaultValue
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  Payload
-    // -------------------------------------------------------------------------
-    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    return [lintReport copy];
-}
-
-@end
-*/

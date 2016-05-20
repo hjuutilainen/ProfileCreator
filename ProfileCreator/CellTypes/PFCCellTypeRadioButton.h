@@ -24,14 +24,3 @@
 @property (weak) IBOutlet NSButton *settingRadioButton1;
 @property (weak) IBOutlet NSButton *settingRadioButton2;
 @end
-/*
-@interface PFCRadioButtonLeftCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSButton *settingRadioButton1;
-@property (weak) IBOutlet NSButton *settingRadioButton2;
-@end
-
-@interface PFCRadioButtonNoTitleCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSButton *settingRadioButton1;
-@property (weak) IBOutlet NSButton *settingRadioButton2;
-@end
-*/
