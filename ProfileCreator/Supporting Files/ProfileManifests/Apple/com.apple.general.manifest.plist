@@ -162,7 +162,7 @@
 						<key>Description</key>
 						<string>Authorization Password</string>
 						<key>CellType</key>
-						<string>TextFieldNoTitle</string>
+						<string>TextField</string>
 						<key>ToolTipDescription</key>
 						<string>Specifies the removal password for the profile</string>
 					</dict>

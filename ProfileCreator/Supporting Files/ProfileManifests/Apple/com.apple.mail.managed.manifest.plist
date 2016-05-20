@@ -91,7 +91,7 @@
 						<key>Description</key>
 						<string>Path Prefix</string>
 						<key>CellType</key>
-						<string>TextFieldNoTitle</string>
+						<string>TextField</string>
 						<key>ToolTipDescription</key>
 						<string>CHANGEME</string>
 					</dict>

@@ -585,12 +585,6 @@
         [PFCPopUpButtonLeftCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
-        //  PopUpButtonNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        [PFCPopUpButtonNoTitleCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
-
-        // ---------------------------------------------------------------------
         //  SegmentedControl
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
@@ -630,12 +624,6 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         [PFCTextFieldHostPortCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
-
-        // ---------------------------------------------------------------------
-        //  TextFieldNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        [PFCTextFieldNoTitleCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber

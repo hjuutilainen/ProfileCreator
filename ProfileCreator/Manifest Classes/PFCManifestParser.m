@@ -136,12 +136,6 @@
         return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
 
         // ---------------------------------------------------------------------
-        //  PopUpButtonNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
-
-        // ---------------------------------------------------------------------
         //  SegmentedControl
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
@@ -182,12 +176,6 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         return [self arrayFromCellTypeTextFieldCheckbox:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
-
-        // ---------------------------------------------------------------------
-        //  TextFieldNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        return @[ manifestContentDict ];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber
@@ -922,12 +910,6 @@
         return [PFCPopUpButtonLeftCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 
         // ---------------------------------------------------------------------
-        //  PopUpButtonNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        return [PFCPopUpButtonNoTitleCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-
-        // ---------------------------------------------------------------------
         //  SegmentedControl
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
@@ -968,12 +950,6 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         return [PFCTextFieldHostPortCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-
-        // ---------------------------------------------------------------------
-        //  TextFieldNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        return [PFCTextFieldNoTitleCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 
         // ---------------------------------------------------------------------
         //  TextFieldNumber

@@ -1224,13 +1224,7 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
         [reportCellType addObjectsFromArray:[PFCPopUpButtonLeftCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
-
-        // ---------------------------------------------------------------------
-        //  PopUpButtonNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonNoTitle]) {
-        [reportCellType addObjectsFromArray:[PFCPopUpButtonNoTitleCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
-
+        
         // ---------------------------------------------------------------------
         //  SegmentedControl
         // ---------------------------------------------------------------------
@@ -1273,13 +1267,7 @@
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         [reportCellType
             addObjectsFromArray:[PFCTextFieldHostPortCheckboxCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
-
-        // ---------------------------------------------------------------------
-        //  TextFieldNoTitle
-        // ---------------------------------------------------------------------
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNoTitle]) {
-        [reportCellType addObjectsFromArray:[PFCTextFieldNoTitleCellView lintReportForManifestContentDict:manifestContentDict manifest:manifest parentKeyPath:[parentKeyPath copy] sender:self]];
-
+        
         // ---------------------------------------------------------------------
         //  TextFieldNumber
         // ---------------------------------------------------------------------

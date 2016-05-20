@@ -81,7 +81,7 @@
 									<key>Description</key>
 									<string>Time before screen saver begins</string>
 									<key>CellType</key>
-									<string>PopUpButtonNoTitle</string>
+									<string>PopUpButton</string>
 									<key>Indent</key>
 									<true/>
 									<key>DefaultValue</key>
