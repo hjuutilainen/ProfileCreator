@@ -250,8 +250,7 @@
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
     if (row < _arrayManifestContent.count) {
-        NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row] ?: @{};
-        return [[PFCCellTypes sharedInstance] rowHeightForCellType:manifestContentDict[PFCManifestKeyCellType]];
+        return [[PFCCellTypes sharedInstance] rowHeightForManifestContentDict:_arrayManifestContent[(NSUInteger)row] ?: @{}];
     }
     return 1;
 } // tableView:heightOfRow
@@ -450,7 +449,6 @@
     NSString *tableColumnIdentifier = tableColumn.identifier;
     NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
-    DDLogDebug(@"CellType: %@", cellType);
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     if ([tableColumnIdentifier isEqualToString:@"ColumnSettings"]) {
@@ -1504,11 +1502,6 @@
         return;
     }
     NSInteger row = buttonTag.integerValue;
-
-    // -------------------------------------------------------------------------
-    //  Select clicked radio button (automatically deselectes all others)
-    // -------------------------------------------------------------------------
-    [radioButton setEnabled:YES];
 
     // -------------------------------------------------------------------------
     //  Get current cell's key in the settings dict
