@@ -62,32 +62,83 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+
     // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    //  Get required state for this cell view
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
-    BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     }
+
+    // ---------------------------------------------------------------------------------------
+    //  Get optional state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL optional = NO;
+    if (overrides[PFCManifestKeyOptional] != nil) {
+        required = [overrides[PFCManifestKeyOptional] boolValue];
+    } else {
+        required = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
+    BOOL enabled = YES;
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
+    }
+
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     //  Title
-    // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    // ---------------------------------------------------------------------
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    if (title.length != 0) {
+        title = [NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""];
+        [[cellView settingTitle] setStringValue:title];
+        if (enabled) {
+            [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        } else {
+            [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        }
     } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        [[cellView settingTitle] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]"
+                                                                     options:0
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(_settingDescription, _settingTextField)]];
     }
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     //  Description
-    // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    // ---------------------------------------------------------------------
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        if (title.length != 0) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingTextField]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(_settingTitle, _settingTextField)]];
+        } else {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingTextField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingTextField)]];
+        }
+    }
 
     // ---------------------------------------------------------------------
     //  Value
@@ -742,177 +793,6 @@
         [_imageViewRequired setHidden:NO];
     } else {
         [_constraintTextFieldPortTrailing setConstant:8.0];
-        [_imageViewRequired setHidden:YES];
-    }
-} // showRequired
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark PFCTextFieldNoTitleCellView
-#pragma mark -
-////////////////////////////////////////////////////////////////////////////////
-
-@interface PFCTextFieldNoTitleCellView ()
-
-@property (weak) IBOutlet NSImageView *imageViewRequired;
-@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldTrailing;
-@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
-@property (weak) IBOutlet NSTextField *settingDescription;
-@property (weak) IBOutlet NSTextField *settingTextField;
-
-@end
-
-@implementation PFCTextFieldNoTitleCellView
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (instancetype)populateCellView:(id)cellView
-             manifestContentDict:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                    settingsUser:(NSDictionary *)settingsUser
-                   settingsLocal:(NSDictionary *)settingsLocal
-                     displayKeys:(NSDictionary *)displayKeys
-                             row:(NSInteger)row
-                          sender:(id)sender {
-
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
-    BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
-    }
-    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
-
-    // -------------------------------------------------------------------------
-    //  Description
-    // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    NSString *value = settingsUser[PFCSettingsKeyValue] ?: @"";
-    NSAttributedString *valueAttributed = nil;
-    if (value.length == 0) {
-        if ([manifestContentDict[PFCManifestKeyDefaultValue] length] != 0) {
-            value = manifestContentDict[PFCManifestKeyDefaultValue] ?: @"";
-        } else if ([settingsLocal[PFCSettingsKeyValue] length] != 0) {
-            valueAttributed = [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValue] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
-        }
-    }
-
-    if (valueAttributed.length != 0) {
-        [[cellView settingTextField] setAttributedStringValue:valueAttributed];
-    } else {
-        [[cellView settingTextField] setStringValue:value];
-    }
-    [[cellView settingTextField] setDelegate:sender];
-    [[cellView settingTextField] setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Placeholder Value
-    // ---------------------------------------------------------------------
-    if ([manifestContentDict[PFCManifestKeyPlaceholderValue] length] != 0) {
-        [[cellView settingTextField] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValue] ?: @""];
-    } else if (required) {
-        [[cellView settingTextField] setPlaceholderString:@"Required"];
-    } else if (optional) {
-        [[cellView settingTextField] setPlaceholderString:@"Optional"];
-    } else {
-        [[cellView settingTextField] setPlaceholderString:@""];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Indentation
-    // ---------------------------------------------------------------------
-    if ([manifest[PFCManifestKeyIndentLeft] boolValue]) {
-        [[cellView constraintLeading] setConstant:102];
-    } else if (manifest[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
-        [[cellView constraintLeading] setConstant:constraintConstant];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Tool Tip
-    // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingTextField] setEnabled:enabled];
-
-    // ---------------------------------------------------------------------
-    //  Required
-    // ---------------------------------------------------------------------
-    if (required && value.length == 0) {
-        [self showRequired:YES];
-    } else {
-        [self showRequired:NO];
-    }
-
-    return cellView;
-} // populateCellViewTextField:settings:row
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    return [PFCTextFieldCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-}
-
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                        payloads:(NSMutableArray **)payloads
-                          sender:(PFCProfileExport *)sender {
-    [PFCTextFieldCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
-}
-
-+ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
-    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
-
-    NSArray *allowedTypes = @[ PFCValueTypeString ];
-
-    // -------------------------------------------------------------------------
-    //  Title/Description
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDescription:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Default/Placeholder Value
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-    [lintReport
-        addObject:[sender reportForPlaceholderValueKey:PFCManifestKeyPlaceholderValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  Indentation
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Payload Keys
-    // -------------------------------------------------------------------------
-    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    return [lintReport copy];
-}
-
-- (void)showRequired:(BOOL)show {
-    if (show) {
-        [_constraintTextFieldTrailing setConstant:34.0];
-        [_imageViewRequired setHidden:NO];
-    } else {
-        [_constraintTextFieldTrailing setConstant:8.0];
         [_imageViewRequired setHidden:YES];
     }
 } // showRequired

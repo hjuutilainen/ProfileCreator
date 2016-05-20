@@ -27,7 +27,3 @@
 @interface PFCTextFieldCheckboxCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @end
-
-@interface PFCTextFieldNoTitleCellView : NSTableCellView <PFCCellType>
-- (void)showRequired:(BOOL)show;
-@end
