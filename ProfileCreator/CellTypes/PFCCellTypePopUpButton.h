@@ -27,7 +27,3 @@
 @interface PFCPopUpButtonLeftCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
 @end
-
-@interface PFCPopUpButtonNoTitleCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
-@end
