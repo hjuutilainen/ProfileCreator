@@ -30,6 +30,7 @@
 
 @interface PFCCheckboxCellView ()
 
+@property (strong) IBOutlet NSLayoutConstraint *constraintTop;
 @property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
@@ -52,15 +53,32 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
+    // ---------------------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
     BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
@@ -71,9 +89,22 @@
     [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
 
     // ---------------------------------------------------------------------
+    //  FontWeight of the Title
+    // ---------------------------------------------------------------------
+    if ([manifestContentDict[PFCManifestKeyFontWeight] isEqualToString:PFCFontWeightRegular]) {
+        [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
+    }
+
+    // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        [_constraintTop setConstant:8.0f];
+    }
 
     // ---------------------------------------------------------------------
     //  Value
@@ -94,7 +125,7 @@
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:102];
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
+        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -257,171 +288,6 @@
     //  Payload
     // -------------------------------------------------------------------------
     [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  ValueKeys
-    // -------------------------------------------------------------------------
-    [lintReport addObjectsFromArray:[sender reportForValueKeys:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath required:NO availableValues:@[ @"True", @"False" ]]];
-
-    return [lintReport copy];
-}
-
-@end
-
-@interface PFCCheckboxNoDescriptionCellView ()
-
-@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
-@property (weak) IBOutlet NSButton *settingCheckbox;
-
-@end
-
-@implementation PFCCheckboxNoDescriptionCellView
-
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-} // drawRect
-
-- (instancetype)populateCellView:(id)cellView
-             manifestContentDict:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                    settingsUser:(NSDictionary *)settingsUser
-                   settingsLocal:(NSDictionary *)settingsLocal
-                     displayKeys:(NSDictionary *)displayKeys
-                             row:(NSInteger)row
-                          sender:(id)sender {
-
-    // -------------------------------------------------------------------------
-    //  Get availability overrides
-    // -------------------------------------------------------------------------
-    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
-
-    // ---------------------------------------------------------------------------------------
-    //  Get required state for this cell view
-    // ---------------------------------------------------------------------------------------
-    BOOL required = NO;
-    if (overrides[PFCManifestKeyRequired] != nil) {
-        required = [overrides[PFCManifestKeyRequired] boolValue];
-    } else {
-        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    }
-
-    // -------------------------------------------------------------------------
-    //  Determine if UI should be enabled or disabled
-    //  If 'required', it cannot be disabled
-    // -------------------------------------------------------------------------
-    BOOL enabled = YES;
-    if (!required) {
-        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
-            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
-        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
-            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
-        }
-    }
-
-    BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
-
-    // ---------------------------------------------------------------------
-    //  Title (of the Checkbox)
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  FontWeight of the Title
-    // ---------------------------------------------------------------------
-    if ([manifestContentDict[PFCManifestKeyFontWeight] isEqualToString:PFCFontWeightBold]) {
-        [[cellView settingCheckbox] setFont:[NSFont boldSystemFontOfSize:13]];
-    } else {
-        [[cellView settingCheckbox] setFont:[NSFont systemFontOfSize:13]];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Value
-    // ---------------------------------------------------------------------
-    BOOL checkboxState = NO;
-    if (settingsUser[PFCSettingsKeyValue] != nil) {
-        checkboxState = [settingsUser[PFCSettingsKeyValue] boolValue];
-    } else if (manifestContentDict[PFCManifestKeyDefaultValue]) {
-        checkboxState = [manifestContentDict[PFCManifestKeyDefaultValue] boolValue];
-    } else if (settingsLocal[PFCSettingsKeyValue]) {
-        checkboxState = [settingsLocal[PFCSettingsKeyValue] boolValue];
-    }
-    [[cellView settingCheckbox] setState:checkboxState];
-
-    // ---------------------------------------------------------------------
-    //  Indentation
-    // ---------------------------------------------------------------------
-    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
-        [[cellView constraintLeading] setConstant:102];
-    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
-        [[cellView constraintLeading] setConstant:constraintConstant];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
-
-    // ---------------------------------------------------------------------
-    //  Tool Tip
-    // ---------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
-
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setAction:@selector(checkbox:)];
-    [[cellView settingCheckbox] setTarget:sender];
-    [[cellView settingCheckbox] setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setEnabled:enabled];
-
-    return cellView;
-} // populateCellViewSettingsCheckboxNoDescription:manifest:settings:settingsLocal:row:sender
-
-+ (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
-    return [PFCCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-}
-
-+ (void)createPayloadForCellType:(NSDictionary *)manifestContentDict
-                        manifest:(NSDictionary *)manifest
-                        settings:(NSDictionary *)settings
-                        payloads:(NSMutableArray *__autoreleasing *)payloads
-                          sender:(PFCProfileExport *)sender {
-    return [PFCCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:sender];
-}
-
-+ (NSArray *)lintReportForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest parentKeyPath:(NSString *)parentKeyPath sender:(PFCManifestLint *)sender {
-    NSMutableArray *lintReport = [[NSMutableArray alloc] init];
-
-    NSArray *allowedTypes = @[ PFCValueTypeBoolean ];
-
-    // -------------------------------------------------------------------------
-    //  DefaultValue
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForDefaultValueKey:PFCManifestKeyDefaultValue manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  FontWeight
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForFontWeight:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Indentation
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForIndentLeft:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-    [lintReport addObject:[sender reportForIndentLevel:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
-
-    // -------------------------------------------------------------------------
-    //  Payload
-    // -------------------------------------------------------------------------
-    [lintReport addObjectsFromArray:[sender reportForPayloadKeys:nil manifestContentDict:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath allowedTypes:allowedTypes]];
-
-    // -------------------------------------------------------------------------
-    //  Title
-    // -------------------------------------------------------------------------
-    [lintReport addObject:[sender reportForTitle:manifestContentDict manifest:manifest parentKeyPath:parentKeyPath]];
 
     // -------------------------------------------------------------------------
     //  ValueKeys

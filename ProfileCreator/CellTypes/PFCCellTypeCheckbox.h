@@ -23,7 +23,3 @@
 @interface PFCCheckboxCellView : NSTableCellView <PFCCellType>
 
 @end
-
-@interface PFCCheckboxNoDescriptionCellView : NSTableCellView <PFCCellType>
-
-@end
