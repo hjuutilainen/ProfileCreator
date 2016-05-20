@@ -62,7 +62,7 @@
     //  Get availability overrides
     // -------------------------------------------------------------------------
     NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
-    DDLogDebug(@"overrides: %@", overrides);
+
     // ---------------------------------------------------------------------------------------
     //  Get required state for this cell view
     // ---------------------------------------------------------------------------------------
@@ -91,11 +91,18 @@
     // ---------------------------------------------------------------------
     //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    if (title.length != 0) {
+        title = [NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""];
+        [[cellView settingTitle] setStringValue:title];
+        if (enabled) {
+            [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        } else {
+            [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        }
     } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        [[cellView settingTitle] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(10)-[_settingDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingDescription)]];
     }
 
     // ---------------------------------------------------------------------
@@ -106,10 +113,14 @@
         [[cellView settingDescription] setStringValue:description];
     } else {
         [[cellView settingDescription] removeFromSuperview];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingRadioButton1]"
-                                                                     options:NSLayoutFormatAlignAllLeading
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(_settingTitle, _settingRadioButton1)]];
+        if (title.length != 0) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingRadioButton1]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(_settingTitle, _settingRadioButton1)]];
+        } else {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(10)-[_settingRadioButton1]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingRadioButton1)]];
+        }
     }
 
     NSString *selectedItem;
@@ -126,7 +137,7 @@
     // ---------------------------------------------------------------------
     __block NSButton *lastButton;
     __block NSButton *currentButton;
-    [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] enumerateObjectsUsingBlock:^(NSString *_Nonnull title, NSUInteger idx, BOOL *_Nonnull stop) {
+    [manifestContentDict[PFCManifestKeyAvailableValues] ?: @[] enumerateObjectsUsingBlock:^(NSString *_Nonnull titleString, NSUInteger idx, BOOL *_Nonnull stop) {
       if (idx == 0) {
           currentButton = [cellView settingRadioButton1];
       } else if (idx == 1) {
@@ -143,8 +154,8 @@
           currentButton = newButton;
       }
 
-      [currentButton setTitle:title];
-      if ([title isEqualToString:selectedItem]) {
+      [currentButton setTitle:titleString];
+      if ([titleString isEqualToString:selectedItem]) {
           [currentButton setState:NSOnState];
       }
 
@@ -178,11 +189,11 @@
     // ---------------------------------------------------------------------
     //  Buttons Indentation
     // ---------------------------------------------------------------------
-    CGFloat buttonsConstraintConstant = 0;
+    CGFloat buttonsConstraintConstant = 8;
     if (manifestContentDict[@"IndentLevelButtons"] != nil) {
         buttonsConstraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[@"IndentLevelButtons"] baseConstant:@(PFCIndentLevelBaseConstant)];
     }
-    [[cellView buttonsConstraintLeading] setConstant:(constraintConstant + buttonsConstraintConstant)];
+    [[cellView buttonsConstraintLeading] setConstant:buttonsConstraintConstant];
     DDLogDebug(@"buttonsConstraintConstant=%f", buttonsConstraintConstant);
 
     // ---------------------------------------------------------------------
