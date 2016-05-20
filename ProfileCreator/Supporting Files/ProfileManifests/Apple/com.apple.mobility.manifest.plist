@@ -173,7 +173,7 @@
 						<key>IndentLevel</key>
 						<integer>2</integer>
 						<key>IndentLevelButtons</key>
-						<integer>1</integer>
+						<integer>4</integer>
 						<key>PayloadType</key>
 						<string>com.apple.MCX</string>
 						<key>PayloadKey</key>
@@ -205,6 +205,342 @@
 									<true/>
 								</dict>
 							</array>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>4A339F7F-4B2E-4832-81EF-87D4DAC02F7F</string>
+						<key>Title</key>
+						<string>Encrypt contents with FileVault</string>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>cachedaccounts.create.encrypt</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>4A339F7F-4B2E-4832-81EF-87D4DAC02F7F</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>75194DF0-62D5-430D-A98C-728A6150A158</string>
+						<key>IndentLevelButtons</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>cachedaccounts.create.encrypt.requireMasterPassword</string>
+						<key>PayloadValueType</key>
+						<string>Boolean</string>
+						<key>DefaultValue</key>
+						<string>Use computer master password, if available</string>
+						<key>CellType</key>
+						<string>RadioButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Use computer master password, if available</string>
+							<string>Require computer master password</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Use computer master password, if available</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<false/>
+								</dict>
+							</array>
+							<key>Require computer master password</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<true/>
+								</dict>
+							</array>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>4A339F7F-4B2E-4832-81EF-87D4DAC02F7F</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>D04276A3-0600-4C0F-9864-AB1B15836EE5</string>
+						<key>Title</key>
+						<string>Restrict size:</string>
+						<key>IndentLevel</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>cachedaccounts.create.maxSize</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ValueKeys</key>
+						<dict>
+							<key>True</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string></string>
+								</dict>
+							</array>
+							<key>False</key>
+							<array>
+								<dict>
+									<key>PayloadValue</key>
+									<string></string>
+								</dict>
+							</array>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>4A339F7F-4B2E-4832-81EF-87D4DAC02F7F</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>D04276A3-0600-4C0F-9864-AB1B15836EE5</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>8BDFE699-FEF1-48A1-9E83-9D73D8F6DDE1</string>
+						<key>IndentLevelButtons</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>DefaultValue</key>
+						<string>to fixed size:%TextFieldNumber%MB</string>
+						<key>CellType</key>
+						<string>RadioButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>to fixed size:%TextFieldNumber%MB</string>
+							<string>to percentage of network home quota:%TextFieldNumber%%</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>to fixed size:%TextFieldNumber%MB</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>cachedaccounts.create.maxSize.fixedSize</string>
+									<key>PayloadValueType</key>
+									<string>String</string>
+									<key>DefaultValue</key>
+									<string>250</string>
+								</dict>
+							</array>
+							<key>to percentage of network home quota:%TextFieldNumber%%</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>cachedaccounts.create.maxSize.percentOfNetworkHome</string>
+									<key>PayloadValueType</key>
+									<string>Integer</string>
+									<key>DefaultValue</key>
+									<string>100</string>
+								</dict>
+							</array>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7F631A24-0FDF-4F93-BAE6-0761D3F59ADD</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>301270B4-1FB2-4FAF-89EA-5A71BEA812FF</string>
+						<key>Title</key>
+						<string>Home folder location:</string>
+						<key>IndentLevelButtons</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>DefaultValue</key>
+						<string>on startup volume</string>
+						<key>CellType</key>
+						<string>RadioButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>on startup volume</string>
+							<string>at path:%TextField%</string>
+							<string>user chooses any volume</string>
+							<string>user chooses any internal volume</string>
+							<string>user chooses any external volume</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>on startup volume</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>cachedaccounts.create.maxSize.fixedSize</string>
+									<key>PayloadValueType</key>
+									<string>String</string>
+									<key>DefaultValue</key>
+									<string>250</string>
+								</dict>
+							</array>
+							<key>at path:%TextField%</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>cachedaccounts.create.maxSize.percentOfNetworkHome</string>
+									<key>PayloadValueType</key>
+									<string>Integer</string>
+									<key>DefaultValue</key>
+									<string>100</string>
+								</dict>
+							</array>
+							<key>user chooses any volume</key>
+							<array/>
+							<key>user chooses any internal volume</key>
+							<array/>
+							<key>user chooses any external volume</key>
+							<array/>
 						</dict>
 						<key>ToolTipDescription</key>
 						<string>FIXME</string>
