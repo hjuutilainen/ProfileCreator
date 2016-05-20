@@ -108,7 +108,7 @@
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:102];
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
+        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:8];
@@ -480,7 +480,7 @@
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:102];
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@8];
+        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:8];

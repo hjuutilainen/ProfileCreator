@@ -20,6 +20,7 @@
 #import "PFCConstants.h"
 
 NSInteger const PFCMaximumPayloadCount = 8;
+NSInteger const PFCIndentLevelBaseConstant = 8;
 int const PFCTableViewGroupRowHeight = 24;
 NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 
@@ -27,7 +28,6 @@ NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 #pragma mark CellType
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCCellTypeCheckbox = @"Checkbox";
-NSString *const PFCCellTypeCheckboxNoDescription = @"CheckboxNoDescription";
 NSString *const PFCCellTypeDatePicker = @"DatePicker";
 NSString *const PFCCellTypeDatePickerNoTitle = @"DatePickerNoTitle";
 NSString *const PFCCellTypeFile = @"File";
@@ -224,6 +224,7 @@ NSString *const PFCFileInfoDescriptionBottom = @"DescriptionBottom";
 #pragma mark FontWeights
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCFontWeightBold = @"Bold";
+NSString *const PFCFontWeightRegular = @"Regular";
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark RuntimeKeys

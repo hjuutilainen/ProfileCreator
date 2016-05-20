@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 };
 
 extern NSInteger const PFCMaximumPayloadCount;
+extern NSInteger const PFCIndentLevelBaseConstant;
 extern int const PFCTableViewGroupRowHeight;
 extern NSString *const PFCProfileDraggingType;
 
@@ -59,7 +60,6 @@ extern NSString *const PFCProfileDraggingType;
 #pragma mark CellType
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCCellTypeCheckbox;
-extern NSString *const PFCCellTypeCheckboxNoDescription;
 extern NSString *const PFCCellTypeDatePicker;
 extern NSString *const PFCCellTypeDatePickerNoTitle;
 extern NSString *const PFCCellTypeFile;
@@ -256,6 +256,7 @@ extern NSString *const PFCFileInfoDescriptionBottom;
 #pragma mark FontWeights
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCFontWeightBold;
+extern NSString *const PFCFontWeightRegular;
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark RuntimeKeys

@@ -47,7 +47,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant {
-    CGFloat indentationBaseValue = baseConstant.floatValue ?: 8.0f;
+    CGFloat indentationBaseValue = baseConstant.floatValue ?: @(PFCIndentLevelBaseConstant).floatValue;
     CGFloat indentationMultiplier;
     if (indentationLevel.floatValue < 1.0f) {
         return indentationBaseValue;
