@@ -25,8 +25,6 @@
 	<string>com.apple.airplay.manifest</string>
 	<key>Description</key>
 	<string>FIXME</string>
-	<key>CellType</key>
-	<string>Menu</string>
 	<key>Title</key>
 	<string>AirPlay</string>
 	<key>IconName</key>

@@ -170,7 +170,7 @@
         NSString *tableColumnIdentifier = tableColumn.identifier;
         NSDictionary *manifestDict = _arrayProfile[(NSUInteger)row];
 
-        if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"] && [manifestDict[PFCManifestKeyCellType] ?: @"" isEqualToString:PFCCellTypeMenu]) {
+        if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"]) {
             CellViewMenu *cellView = [tableView makeViewWithIdentifier:@"CellViewMenu" owner:self];
             [cellView setIdentifier:nil];
             // Using variable here until rewritten
@@ -192,7 +192,7 @@
 
         NSString *tableColumnIdentifier = [tableColumn identifier];
         NSDictionary *manifestDict = _arrayLibrary[(NSUInteger)row];
-        if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"] && [manifestDict[PFCManifestKeyCellType] ?: @"" isEqualToString:PFCCellTypeMenu]) {
+        if ([tableColumnIdentifier isEqualToString:@"ColumnMenu"]) {
             CellViewMenuLibrary *cellView = [_tableViewLibrary makeViewWithIdentifier:@"CellViewMenuLibrary" owner:self];
             [cellView setIdentifier:nil];
             return [cellView populateCellViewMenuLibrary:cellView manifestDict:manifestDict errorCount:nil row:row];

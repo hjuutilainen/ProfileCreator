@@ -21,8 +21,6 @@
 			<string>7.0</string>
 		</dict>
 	</array>
-	<key>CellType</key>
-	<string>Menu</string>
 	<key>Domain</key>
 	<string>com.apple.cellular.manifest</string>
 	<key>Description</key>

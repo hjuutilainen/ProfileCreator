@@ -13,8 +13,6 @@
 			<false/>
 		</dict>
 	</array>
-	<key>CellType</key>
-	<string>Menu</string>
 	<key>Domain</key>
 	<string>com.apple.configurationprofile.identification.manifest</string>
 	<key>Description</key>

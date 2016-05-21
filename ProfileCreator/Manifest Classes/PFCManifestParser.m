@@ -561,11 +561,6 @@
     NSMutableDictionary *manifest = [[NSMutableDictionary alloc] init];
 
     // ---------------------------------------------------------------------
-    //  Set the required CellType for the Menu
-    // ---------------------------------------------------------------------
-    manifest[PFCManifestKeyCellType] = PFCCellTypeMenu;
-
-    // ---------------------------------------------------------------------
     //  Set allow multiple payloads to NO
     //  FIXME - This might be a setting, need to discuss.
     // ---------------------------------------------------------------------
@@ -621,11 +616,6 @@
 - (NSDictionary *)manifestRootFromMCXManifest:(NSDictionary *)mcxManifest {
 
     NSMutableDictionary *manifest = [[NSMutableDictionary alloc] init];
-
-    // ---------------------------------------------------------------------
-    //  Set "CellType"
-    // ---------------------------------------------------------------------
-    manifest[PFCManifestKeyCellType] = PFCCellTypeMenu;
 
     // ---------------------------------------------------------------------
     //  Set allow multiple payloads to NO
@@ -872,7 +862,7 @@
     // ---------------------------------------------------------------------
     if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         return [PFCCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
-        
+
         // ---------------------------------------------------------------------
         //  DatePicker
         // ---------------------------------------------------------------------

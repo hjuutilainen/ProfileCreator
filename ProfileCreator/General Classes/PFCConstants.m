@@ -31,7 +31,6 @@ NSString *const PFCCellTypeCheckbox = @"Checkbox";
 NSString *const PFCCellTypeDatePicker = @"DatePicker";
 NSString *const PFCCellTypeDatePickerNoTitle = @"DatePickerNoTitle";
 NSString *const PFCCellTypeFile = @"File";
-NSString *const PFCCellTypeMenu = @"Menu";
 NSString *const PFCCellTypePadding = @"Padding";
 NSString *const PFCCellTypePopUpButton = @"PopUpButton";
 NSString *const PFCCellTypePopUpButtonLeft = @"PopUpButtonLeft";

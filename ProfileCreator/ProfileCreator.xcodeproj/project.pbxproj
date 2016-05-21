@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5304B24E1C1E02C50085559C /* com.apple.vpn.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.manifest.plist */; };
-		530562931CD6855C00234C3E /* com.apple.proxies.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */; };
 		5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9D21C7EF5300010191F /* PFCCellTypes.m */; };
 		5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E41C7EFED60010191F /* PFCCellTypeCheckbox.m */; };
 		5306D9E81C7F05CD0010191F /* PFCCellTypeDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E71C7F05CD0010191F /* PFCCellTypeDatePicker.m */; };
@@ -140,6 +139,8 @@
 		53ADF6231C7F951B005BA0FC /* PFCCellTypeTextFieldHostPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6221C7F951B005BA0FC /* PFCCellTypeTextFieldHostPort.m */; };
 		53ADF6261C7F9792005BA0FC /* PFCCellTypeTextFieldNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6251C7F9792005BA0FC /* PFCCellTypeTextFieldNumber.m */; };
 		53ADF6291C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m in Sources */ = {isa = PBXBuildFile; fileRef = 53ADF6281C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m */; };
+		53B005061CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53B005051CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist */; };
+		53B005161CF0673A003CF5AF /* com.apple.mcxprinting.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53B005051CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist */; };
 		53C3E32A1C8B0CA800C15B73 /* PFCStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C3E3281C8B0CA800C15B73 /* PFCStatusView.m */; };
 		53C3E32B1C8B0CA800C15B73 /* PFCStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53C3E3291C8B0CA800C15B73 /* PFCStatusView.xib */; };
 		53C7339C1C1F37E300119C71 /* com.apple.scep.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53C7339B1C1F37E300119C71 /* com.apple.scep.manifest.plist */; };
@@ -309,11 +310,11 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
+				53B005161CF0673A003CF5AF /* com.apple.mcxprinting.manifest.plist in Copy Manifests Apple */,
 				533DBD2C1CEB213C004B2D22 /* com.apple.mobility.manifest.plist in Copy Manifests Apple */,
 				5355A98C1CE7AC7800606C2A /* com.apple.loginitems.manifest.plist in Copy Manifests Apple */,
 				5382AAC21CE5B51F00C65B50 /* com.apple.mail.managed.manifest.plist in Copy Manifests Apple */,
 				5382AAB21CE5A6FA00C65B50 /* com.apple.messages.manifest.plist in Copy Manifests Apple */,
-				530562931CD6855C00234C3E /* com.apple.proxies.manifest.plist in Copy Manifests Apple */,
 				5308935B1CD4C54F003D10B0 /* com.apple.ADCertificate.managed.manifest.plist in Copy Manifests Apple */,
 				532B6C6E1C17326300297025 /* com.apple.configurationprofile.identification.manifest.plist in Copy Manifests Apple */,
 				532B6C531C172A3600297025 /* com.apple.general.manifest.plist in Copy Manifests Apple */,
@@ -523,6 +524,7 @@
 		53ADF6251C7F9792005BA0FC /* PFCCellTypeTextFieldNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeTextFieldNumber.m; path = CellTypes/PFCCellTypeTextFieldNumber.m; sourceTree = "<group>"; };
 		53ADF6271C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeTextFieldDaysHours.h; path = CellTypes/PFCCellTypeTextFieldDaysHours.h; sourceTree = "<group>"; };
 		53ADF6281C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeTextFieldDaysHours.m; path = CellTypes/PFCCellTypeTextFieldDaysHours.m; sourceTree = "<group>"; };
+		53B005051CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.mcxprinting.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.mcxprinting.manifest.plist"; sourceTree = "<group>"; };
 		53C3E3271C8B0CA800C15B73 /* PFCStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCStatusView.h; path = "Windows-Views/General ViewControllers/PFCStatusView.h"; sourceTree = "<group>"; };
 		53C3E3281C8B0CA800C15B73 /* PFCStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCStatusView.m; path = "Windows-Views/General ViewControllers/PFCStatusView.m"; sourceTree = "<group>"; };
 		53C3E3291C8B0CA800C15B73 /* PFCStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCStatusView.xib; path = "Windows-Views/General ViewControllers/PFCStatusView.xib"; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 				53FCF0061C1F539300E440CB /* com.apple.ldap.manifest.plist */,
 				5355A98A1CE7AA5C00606C2A /* com.apple.loginitems.manifest.plist */,
 				532B6C5D1C172F5800297025 /* com.apple.mail.managed.manifest.plist */,
+				53B005051CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist */,
 				53FCF0091C1F561900E440CB /* com.apple.messages.manifest.plist */,
 				533DBD2A1CEB1F7F004B2D22 /* com.apple.mobility.manifest.plist */,
 				53F1DDE71C20B74B003D3464 /* com.apple.passcode.manifest.plist */,
@@ -1317,6 +1320,7 @@
 				537612F91C662D8E00CFCE1D /* PFCMainWindowGroupTitle.xib in Resources */,
 				53FCF0131C1F5D7F00E440CB /* MenuIconPrinting.png in Resources */,
 				53FCF00E1C1F568B00E440CB /* MenuIconFinder.png in Resources */,
+				53B005061CF066A3003CF5AF /* com.apple.mcxprinting.manifest.plist in Resources */,
 				537B02271C61449F0072093C /* PFCMainWindow.xib in Resources */,
 				534324CA1C80E5EA00893351 /* Home-15.png in Resources */,
 				53751FF91C1B84B600FF3CB0 /* MenuIconGeneral.png in Resources */,
