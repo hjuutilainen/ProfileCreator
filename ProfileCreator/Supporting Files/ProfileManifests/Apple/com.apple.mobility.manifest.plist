@@ -13,8 +13,6 @@
 			<false/>
 		</dict>
 	</array>
-	<key>CellType</key>
-	<string>Menu</string>
 	<key>Domain</key>
 	<string>com.apple.mobility.manifest</string>
 	<key>Description</key>
@@ -449,23 +447,41 @@
 							<key>to fixed size:%TextFieldNumber%MB</key>
 							<array>
 								<dict>
-									<key>PayloadKey</key>
-									<string>cachedaccounts.create.maxSize.fixedSize</string>
-									<key>PayloadValueType</key>
-									<string>String</string>
-									<key>DefaultValue</key>
-									<string>250</string>
+									<key>%TextFieldNumber%</key>
+									<dict>
+										<key>Identifier</key>
+										<string>375385A7-0D8F-45BE-A77F-3E4675D8046C</string>
+										<key>PayloadKey</key>
+										<string>cachedaccounts.create.maxSize.fixedSize</string>
+										<key>PayloadType</key>
+										<string>String</string>
+										<key>DefaultValue</key>
+										<string>250</string>
+										<key>Width</key>
+										<integer>40</integer>
+									</dict>
 								</dict>
 							</array>
 							<key>to percentage of network home quota:%TextFieldNumber%%</key>
 							<array>
 								<dict>
-									<key>PayloadKey</key>
-									<string>cachedaccounts.create.maxSize.percentOfNetworkHome</string>
-									<key>PayloadValueType</key>
-									<string>Integer</string>
-									<key>DefaultValue</key>
-									<string>100</string>
+									<key>%TextFieldNumber%</key>
+									<dict>
+										<key>Identifier</key>
+										<string>02AC64BA-844D-44A6-A54F-134A6C96325A</string>
+										<key>PayloadKey</key>
+										<string>cachedaccounts.create.maxSize.percentOfNetworkHome</string>
+										<key>PayloadType</key>
+										<string>Integer</string>
+										<key>DefaultValue</key>
+										<string>100</string>
+										<key>MinValue</key>
+										<string>1</string>
+										<key>MaxValue</key>
+										<string>100</string>
+										<key>Width</key>
+										<integer>40</integer>
+									</dict>
 								</dict>
 							</array>
 						</dict>
@@ -497,8 +513,12 @@
 						<string>Home folder location:</string>
 						<key>IndentLevelButtons</key>
 						<integer>2</integer>
+						<key>PayloadKey</key>
+						<string>cachedaccounts.create.location</string>
 						<key>PayloadType</key>
 						<string>com.apple.MCX</string>
+						<key>PayloadValueType</key>
+						<string>String</string>
 						<key>DefaultValue</key>
 						<string>on startup volume</string>
 						<key>CellType</key>
@@ -516,23 +536,28 @@
 							<key>on startup volume</key>
 							<array>
 								<dict>
-									<key>PayloadKey</key>
-									<string>cachedaccounts.create.maxSize.fixedSize</string>
-									<key>PayloadValueType</key>
-									<string>String</string>
-									<key>DefaultValue</key>
-									<string>250</string>
+									<key>PayloadValue</key>
+									<string>startup</string>
 								</dict>
 							</array>
 							<key>at path:%TextField%</key>
 							<array>
 								<dict>
-									<key>PayloadKey</key>
-									<string>cachedaccounts.create.maxSize.percentOfNetworkHome</string>
-									<key>PayloadValueType</key>
-									<string>Integer</string>
-									<key>DefaultValue</key>
-									<string>100</string>
+									<key>PayloadValue</key>
+									<string>path</string>
+								</dict>
+								<dict>
+									<key>%TextField%</key>
+									<dict>
+										<key>Identifier</key>
+										<string>812B0488-1F85-43BD-BC4C-7FFD86801A72</string>
+										<key>PayloadKey</key>
+										<string>cachedaccounts.create.location.path</string>
+										<key>PayloadType</key>
+										<string>String</string>
+										<key>Width</key>
+										<integer>250</integer>
+									</dict>
 								</dict>
 							</array>
 							<key>user chooses any volume</key>
@@ -547,9 +572,84 @@
 					</dict>
 				</array>
 				<key>Account Expiry</key>
-				<array/>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>7E745E11-4DC9-4E5D-BCBE-D2614056EF62</string>
+						<key>Title</key>
+						<string>Delete mobile accounts:</string>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>cachedaccounts.create.encrypt</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>7E745E11-4DC9-4E5D-BCBE-D2614056EF62</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>3BE5F84E-AFE3-4BBD-84E1-874F8D7FB6A2</string>
+						<key>Title</key>
+						<string>Delete only after successful sync</string>
+						<key>IndentLevel</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.MCX</string>
+						<key>PayloadKey</key>
+						<string>com.apple.cachedaccounts.WarnOnCreate</string>
+						<key>DefaultValue</key>
+						<true/>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+				</array>
 				<key>Rules</key>
-				<array/>
+				<array>
+					<dict>
+						<key>Required</key>
+						<true/>
+						<key>Identifier</key>
+						<string>E8333747-7D15-4144-A8D7-419C04745847</string>
+						<key>CellType</key>
+						<string>SegmentedControl</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Preference Sync</string>
+							<string>Home Sync</string>
+							<string>Options</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Preference Sync</key>
+							<array/>
+							<key>Home Sync</key>
+							<array/>
+							<key>Options</key>
+							<array/>
+						</dict>
+					</dict>
+				</array>
 			</dict>
 		</dict>
 	</array>
