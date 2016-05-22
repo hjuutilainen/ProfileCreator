@@ -154,25 +154,62 @@
           currentButton = newButton;
       }
 
-      [currentButton setTitle:titleString];
-      if ([titleString isEqualToString:selectedItem]) {
+      NSString *additionalFieldType;
+      NSString *buttonTitle;
+      if (manifestContentDict[PFCManifestKeyValueKeys][titleString] != nil) {
+          if ([titleString containsString:@"%TextField%"]) {
+              additionalFieldType = @"%TextField%";
+          } else if ([titleString containsString:@"%TextFieldNumber%"]) {
+              additionalFieldType = @"%TextFieldNumber%";
+          }
+      }
+
+      if (additionalFieldType.length != 0) {
+          buttonTitle = [[titleString componentsSeparatedByString:additionalFieldType] firstObject];
+      } else {
+          buttonTitle = titleString;
+      }
+
+      BOOL subElementsEnabled = NO;
+      [currentButton setTitle:buttonTitle];
+
+      // NOTE - Checkong for both titleString and buttonTitle might encouter two buttonts that's equal. Should fix.
+      if ([titleString isEqualToString:selectedItem] || [buttonTitle isEqualToString:selectedItem]) {
           [currentButton setState:NSOnState];
+
+          if (enabled) {
+              subElementsEnabled = YES;
+          }
+      }
+
+      // Add extra fields
+      if (additionalFieldType.length != 0) {
+          [self addAdditionalInputFieldWithType:additionalFieldType
+                                       toButton:currentButton
+                                      withTitle:titleString
+                                buttonValueKeys:manifestContentDict[PFCManifestKeyValueKeys][titleString]
+                                       settings:settings
+                                        enabled:subElementsEnabled
+                                            row:row
+                                         sender:sender];
       }
 
       [currentButton setAction:@selector(radioButton:)];
       [currentButton setTarget:sender];
       [currentButton setTag:row];
       [currentButton setEnabled:enabled];
+      [currentButton setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
 
       [_radioButtons addObject:currentButton];
       lastButton = currentButton;
     }];
 
-    //    if (selectedItem.length != 0) {
-    //      [[cellView settingRadioButton] selectItemWithTitle:selectedItem];
-    //} else if (cellView.settingRadioButton.itemArray.count != 0) {
-    //  [[cellView settingRadioButton] selectItemAtIndex:0];
-    //}
+    // ---------------------------------------------------------------------
+    //  If no button was selected, select first
+    // ---------------------------------------------------------------------
+    if (selectedItem.length == 0) {
+        [[cellView settingRadioButton1] setState:NSOnState];
+    }
 
     // ---------------------------------------------------------------------
     //  Text Indentation
@@ -203,6 +240,100 @@
 
     return cellView;
 } // populateCellViewRadioButton:settings:row
+
+- (void)addAdditionalInputFieldWithType:(NSString *)type
+                               toButton:(NSButton *)radioButton
+                              withTitle:(NSString *)title
+                        buttonValueKeys:(NSArray *)buttonValueKeys
+                               settings:(NSDictionary *)settings
+                                enabled:(BOOL)enabled
+                                    row:(NSInteger)row
+                                 sender:(id)sender {
+    if ([type isEqualToString:@"%TextField%"] || [type isEqualToString:@"%TextFieldNumber%"]) {
+        [self addTextFieldType:type toButton:radioButton withTitle:title buttonValueKeys:buttonValueKeys settings:settings enabled:enabled row:row sender:sender];
+    }
+}
+
+- (void)addTextFieldType:(NSString *)textFieldType
+                toButton:(NSButton *)radioButton
+               withTitle:(NSString *)title
+         buttonValueKeys:(NSArray *)buttonValueKeys
+                settings:(NSDictionary *)settings
+                 enabled:(BOOL)enabled
+                     row:(NSInteger)row
+                  sender:(id)sender {
+
+    __block NSDictionary *buttonConfigDict = @{};
+    [buttonValueKeys enumerateObjectsUsingBlock:^(NSDictionary *_Nonnull valueKeysDict, NSUInteger idx, BOOL *_Nonnull stop) {
+      if (valueKeysDict[textFieldType] != nil) {
+          buttonConfigDict = valueKeysDict[textFieldType];
+          *stop = YES;
+      }
+    }];
+
+    NSTextField *textField = [[NSTextField alloc] init];
+    [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+    // Add TextField to cell view
+    [self addSubview:textField];
+
+    // Set static width
+    // FIXME - PLACEHOLDER CHECK
+    if (buttonConfigDict[@"Width"] != nil) {
+        [textField addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[textField(==%@)]", [buttonConfigDict[@"Width"] stringValue]]
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:NSDictionaryOfVariableBindings(textField)]];
+    } else {
+        [textField addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textField(==200)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
+    }
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[radioButton]-[textField]"
+                                                                 options:NSLayoutFormatAlignAllBaseline
+                                                                 metrics:nil
+                                                                   views:NSDictionaryOfVariableBindings(radioButton, textField)]];
+    [textField setEnabled:enabled];
+    [textField setDelegate:sender];
+    [textField setTag:row];
+
+    NSString *identifier = buttonConfigDict[PFCManifestKeyIdentifier];
+    if (identifier.length == 0) {
+        DDLogError(@"");
+        return;
+    }
+
+    [textField setIdentifier:identifier];
+
+    // ---------------------------------------------------------------------
+    //  Value
+    // ---------------------------------------------------------------------
+    NSString *value = settings[identifier][PFCSettingsKeyValue] ?: @"";
+    if (value.length == 0) {
+        if ([buttonConfigDict[PFCManifestKeyDefaultValue] length] != 0) {
+            value = buttonConfigDict[PFCManifestKeyDefaultValue] ?: @"";
+        }
+    }
+    [textField setStringValue:value];
+
+    NSArray *titleStrings = [title componentsSeparatedByString:textFieldType];
+    if (1 < titleStrings.count) {
+        NSTextField *textLabel = [[NSTextField alloc] init];
+        [textLabel setStringValue:titleStrings[1]];
+        [textLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [textLabel setBezeled:NO];
+        [textLabel setDrawsBackground:NO];
+        [textLabel setEditable:NO];
+        [textLabel setSelectable:NO];
+        [textLabel setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[textField cell] controlSize]]]];
+        [textLabel setEnabled:enabled];
+
+        // Add TextField to cell view
+        [self addSubview:textLabel];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textField]-[textLabel]"
+                                                                     options:NSLayoutFormatAlignAllBaseline
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(textField, textLabel)]];
+    }
+}
 
 + (NSDictionary *)verifyCellType:(NSDictionary *)manifestContentDict settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys {
 
