@@ -1462,11 +1462,19 @@
                 [(PFCTextFieldHostPortCellView *)textField.superview showRequired:showRequired];
             }
         }
+        _settingsManifest[identifier] = [settingsDict copy];
     } else if ([textField.superview.class isSubclassOfClass:[PFCTextFieldCheckboxCellView class]]) {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
             settingsDict[PFCSettingsKeyValueTextField] = [inputText copy];
+            _settingsManifest[identifier] = [settingsDict copy];
         } else {
             return;
+        }
+    } else if ([textField.superview.class isSubclassOfClass:[PFCRadioButtonCellView class]]) {
+        if (textField.identifier.length != 0) {
+            settingsDict = [_settingsManifest[textField.identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+            settingsDict[PFCSettingsKeyValue] = [inputText copy];
+            _settingsManifest[textField.identifier] = [settingsDict copy];
         }
     } else {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
@@ -1478,12 +1486,12 @@
                     [(PFCTextFieldCellView *)[textField superview] showRequired:NO];
                 }
             }
+            _settingsManifest[identifier] = [settingsDict copy];
         } else {
             return;
         }
     }
 
-    _settingsManifest[identifier] = [settingsDict copy];
     if ([_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && [_selectedManifest[PFCManifestKeyPayloadTabTitle] hasPrefix:identifier]) {
         [self updatePayloadTabTitle:[inputText copy] tabIndex:_selectedTab];
     }
@@ -1493,6 +1501,7 @@
 } // controlTextDidChangex
 
 - (void)radioButton:(NSButton *)radioButton {
+
     // -------------------------------------------------------------------------
     //  Get checkbox's row in the table view
     // -------------------------------------------------------------------------
@@ -1521,6 +1530,12 @@
     }
 
     _settingsManifest[identifier] = [settingsDict copy];
+
+    [_tableViewManifestContent beginUpdates];
+    DDLogVerbose(@"RealodingTableViewFrom: %s", __PRETTY_FUNCTION__);
+    [_tableViewManifestContent reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row]
+                                         columnIndexes:[NSIndexSet indexSetWithIndex:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"]]];
+    [_tableViewManifestContent endUpdates];
 } // checkbox
 
 - (void)checkbox:(NSButton *)checkbox {
