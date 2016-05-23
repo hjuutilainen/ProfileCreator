@@ -646,7 +646,81 @@
 							<key>Home Sync</key>
 							<array/>
 							<key>Options</key>
-							<array/>
+							<array>
+								<dict>
+									<key>Identifier</key>
+									<string>89F3253C-D5AE-4A4B-9CF8-E72688C67A72</string>
+									<key>Title</key>
+									<string>Sync in the background:</string>
+									<key>IndentLevelButtons</key>
+									<integer>2</integer>
+									<key>PayloadType</key>
+									<string>com.apple.MCX</string>
+									<key>PayloadKey</key>
+									<string></string>
+									<key>PayloadValueType</key>
+									<string></string>
+									<key>DefaultValue</key>
+									<string>Manually</string>
+									<key>CellType</key>
+									<string>RadioButton</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>Manually</string>
+										<string>Every%TextField%minutes</string>
+									</array>
+									<key>ValueKeys</key>
+									<dict>
+										<key>Manually</key>
+										<array>
+											<dict>
+												<key>PayloadValue</key>
+												<false/>
+											</dict>
+										</array>
+										<key>Every%TextField%minutes</key>
+										<array>
+											<dict>
+												<key>PayloadValue</key>
+												<true/>
+											</dict>
+											<dict>
+												<key>%TextField%</key>
+												<dict>
+													<key>Identifier</key>
+													<string>025CED53-B3E4-4EBB-8B50-1BBA7D9B419D</string>
+													<key>PayloadKey</key>
+													<string></string>
+													<key>PayloadType</key>
+													<string>String</string>
+													<key>Width</key>
+													<integer>30</integer>
+													<key>DefaultValue</key>
+													<string>5</string>
+												</dict>
+											</dict>
+										</array>
+									</dict>
+									<key>ToolTipDescription</key>
+									<string>FIXME</string>
+								</dict>
+								<dict>
+									<key>Identifier</key>
+									<string>B92C1C8A-88FE-49BB-A30C-4E2A2721DEC9</string>
+									<key>Title</key>
+									<string>Show status in menu bar</string>
+									<key>PayloadType</key>
+									<string>com.apple.MCX</string>
+									<key>PayloadKey</key>
+									<string></string>
+									<key>DefaultValue</key>
+									<false/>
+									<key>CellType</key>
+									<string>Checkbox</string>
+									<key>ToolTipDescription</key>
+									<string>FIXME</string>
+								</dict>
+							</array>
 						</dict>
 					</dict>
 				</array>
