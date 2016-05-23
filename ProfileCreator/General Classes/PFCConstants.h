@@ -76,6 +76,7 @@ extern NSString *const PFCCellTypeTextFieldHostPort;
 extern NSString *const PFCCellTypeTextFieldHostPortCheckbox;
 extern NSString *const PFCCellTypeTextFieldNumber;
 extern NSString *const PFCCellTypeTextFieldNumberLeft;
+extern NSString *const PFCCellTypeTextLabel;
 extern NSString *const PFCCellTypeTextView;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +139,7 @@ extern NSString *const PFCManifestKeyIconPathBundle;
 extern NSString *const PFCManifestKeyIdentifier;
 extern NSString *const PFCManifestKeyIndentLevel;
 extern NSString *const PFCManifestKeyIndentLeft;
+extern NSString *const PFCManifestKeyInvertBoolean;
 extern NSString *const PFCManifestKeyManifestContent;
 extern NSString *const PFCManifestKeyMaxValue;
 extern NSString *const PFCManifestKeyMinValue;

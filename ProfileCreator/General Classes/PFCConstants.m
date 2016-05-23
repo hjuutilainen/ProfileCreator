@@ -44,6 +44,7 @@ NSString *const PFCCellTypeTextFieldHostPort = @"TextFieldHostPort";
 NSString *const PFCCellTypeTextFieldHostPortCheckbox = @"TextFieldHostPortCheckbox";
 NSString *const PFCCellTypeTextFieldNumber = @"TextFieldNumber";
 NSString *const PFCCellTypeTextFieldNumberLeft = @"TextFieldNumberLeft";
+NSString *const PFCCellTypeTextLabel = @"TextLabel";
 NSString *const PFCCellTypeTextView = @"TextView";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +107,7 @@ NSString *const PFCManifestKeyIconPathBundle = @"IconPathBundle";
 NSString *const PFCManifestKeyIdentifier = @"Identifier";
 NSString *const PFCManifestKeyIndentLevel = @"IndentLevel";
 NSString *const PFCManifestKeyIndentLeft = @"IndentLeft";
+NSString *const PFCManifestKeyInvertBoolean = @"InvertBoolean";
 NSString *const PFCManifestKeyManifestContent = @"ManifestContent";
 NSString *const PFCManifestKeyMaxValue = @"MaxValue";
 NSString *const PFCManifestKeyMinValue = @"MinValue";
