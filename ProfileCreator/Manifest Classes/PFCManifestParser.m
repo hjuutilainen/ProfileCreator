@@ -190,6 +190,12 @@
         return @[ manifestContentDict ];
 
         // ---------------------------------------------------------------------
+        //  TextLabel
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
+        return @[ manifestContentDict ];
+
+        // ---------------------------------------------------------------------
         //  TextView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
@@ -952,6 +958,12 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
         return [PFCTextFieldNumberLeftCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+
+        // ---------------------------------------------------------------------
+        //  TextLabel
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
+        return @{};
 
         // ---------------------------------------------------------------------
         //  TextView

@@ -638,6 +638,12 @@
         [PFCTextFieldNumberLeftCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
+        //  TextLabel
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
+        return;
+
+        // ---------------------------------------------------------------------
         //  TextView
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {

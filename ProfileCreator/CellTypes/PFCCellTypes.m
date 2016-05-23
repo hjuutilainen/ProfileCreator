@@ -81,6 +81,15 @@
         return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
         return 83.0f;
+    } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
+        CGFloat baseHeight = 46.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 19.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 19.0f);
+        }
+        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeTextView]) {
         return 114.0f;
     } else if ([cellType isEqualToString:PFCCellTypeFile]) {
