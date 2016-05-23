@@ -167,6 +167,9 @@
 		53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0601C85CF7A00DE3B1F /* PFCODManager.m */; };
 		53F4E0741C85E4B200DE3B1F /* PFCPreferencesLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F4E0721C85E4B200DE3B1F /* PFCPreferencesLogging.m */; };
 		53F4E0751C85E4B200DE3B1F /* PFCPreferencesLogging.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53F4E0731C85E4B200DE3B1F /* PFCPreferencesLogging.xib */; };
+		53F6F2FE1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53F6F2FD1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist */; };
+		53F6F30E1CF1CB2400F0D469 /* com.apple.finder.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 53F6F2FD1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist */; };
+		53F6F3111CF1DEA500F0D469 /* PFCCellTypeTextLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F6F3101CF1DEA500F0D469 /* PFCCellTypeTextLabel.m */; };
 		53FB4BEF1C39ADE800799418 /* PFCTableViewCellsProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */; };
 		53FC42DB1C79D40B00F3A7AD /* PFCProfileExport.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FC42DA1C79D40B00F3A7AD /* PFCProfileExport.m */; };
 		53FCF0051C1F538000E440CB /* MenuIconLDAP.png in Resources */ = {isa = PBXBuildFile; fileRef = 53FCF0041C1F538000E440CB /* MenuIconLDAP.png */; };
@@ -310,6 +313,7 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
+				53F6F30E1CF1CB2400F0D469 /* com.apple.finder.manifest.plist in Copy Manifests Apple */,
 				53B005161CF0673A003CF5AF /* com.apple.mcxprinting.manifest.plist in Copy Manifests Apple */,
 				533DBD2C1CEB213C004B2D22 /* com.apple.mobility.manifest.plist in Copy Manifests Apple */,
 				5355A98C1CE7AC7800606C2A /* com.apple.loginitems.manifest.plist in Copy Manifests Apple */,
@@ -566,6 +570,9 @@
 		53F4E0711C85E4B200DE3B1F /* PFCPreferencesLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCPreferencesLogging.h; path = "Windows-Views/Preferences/Views/PFCPreferencesLogging.h"; sourceTree = "<group>"; };
 		53F4E0721C85E4B200DE3B1F /* PFCPreferencesLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCPreferencesLogging.m; path = "Windows-Views/Preferences/Views/PFCPreferencesLogging.m"; sourceTree = "<group>"; };
 		53F4E0731C85E4B200DE3B1F /* PFCPreferencesLogging.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCPreferencesLogging.xib; path = "Windows-Views/Preferences/Views/PFCPreferencesLogging.xib"; sourceTree = "<group>"; };
+		53F6F2FD1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.finder.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.finder.manifest.plist"; sourceTree = "<group>"; };
+		53F6F30F1CF1DE9300F0D469 /* PFCCellTypeTextLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeTextLabel.h; path = CellTypes/PFCCellTypeTextLabel.h; sourceTree = "<group>"; };
+		53F6F3101CF1DEA500F0D469 /* PFCCellTypeTextLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeTextLabel.m; path = CellTypes/PFCCellTypeTextLabel.m; sourceTree = "<group>"; };
 		53FB4BED1C39ADE800799418 /* PFCTableViewCellsProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCTableViewCellsProfiles.h; path = "TableView CellViews/PFCTableViewCellsProfiles.h"; sourceTree = "<group>"; };
 		53FB4BEE1C39ADE800799418 /* PFCTableViewCellsProfiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsProfiles.m; path = "TableView CellViews/PFCTableViewCellsProfiles.m"; sourceTree = "<group>"; };
 		53FC42D91C79D40B00F3A7AD /* PFCProfileExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCProfileExport.h; path = "Profile Classes/PFCProfileExport.h"; sourceTree = "<group>"; };
@@ -698,6 +705,8 @@
 				53ADF61C1C7F907A005BA0FC /* PFCCellTypeTableView.m */,
 				53ADF61E1C7F91E4005BA0FC /* PFCCellTypeTextField.h */,
 				53ADF61F1C7F91E4005BA0FC /* PFCCellTypeTextField.m */,
+				53F6F30F1CF1DE9300F0D469 /* PFCCellTypeTextLabel.h */,
+				53F6F3101CF1DEA500F0D469 /* PFCCellTypeTextLabel.m */,
 				53ADF6271C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.h */,
 				53ADF6281C7F9954005BA0FC /* PFCCellTypeTextFieldDaysHours.m */,
 				53ADF6211C7F951B005BA0FC /* PFCCellTypeTextFieldHostPort.h */,
@@ -895,6 +904,7 @@
 				530893671CD4F8E4003D10B0 /* com.apple.cellular.manifest.plist */,
 				532B6C6C1C17323800297025 /* com.apple.configurationprofile.identification.manifest.plist */,
 				532B6C601C172FD000297025 /* com.apple.ews.account.manifest.plist */,
+				53F6F2FD1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist */,
 				532B6C661C17311200297025 /* com.apple.font.manifest.plist */,
 				532B6C501C17289700297025 /* com.apple.general.manifest.plist */,
 				53FCF0061C1F539300E440CB /* com.apple.ldap.manifest.plist */,
@@ -1344,6 +1354,7 @@
 				53FCF0151C1F5DA200E440CB /* MenuIconProxies.png in Resources */,
 				534324DC1C80E75D00893351 /* Menu-17.png in Resources */,
 				532B6C5E1C172F5800297025 /* com.apple.mail.managed.manifest.plist in Resources */,
+				53F6F2FE1CF1CA9D00F0D469 /* com.apple.finder.manifest.plist in Resources */,
 				53897E361C5958F700B1D868 /* Defaults.plist in Resources */,
 				53751FF31C1B849400FF3CB0 /* MenuIconVPN.png in Resources */,
 				537520011C1B869500FF3CB0 /* MenuIconNetwork.png in Resources */,
@@ -1404,6 +1415,7 @@
 				53C782441C85C18900E731B1 /* PFCPreferences.m in Sources */,
 				539272171C95A0CC00C15343 /* PFCManifestLintError.m in Sources */,
 				5341818B1C760EA800DA8D70 /* PFCTableViewCellsProfileInfo.m in Sources */,
+				53F6F3111CF1DEA500F0D469 /* PFCCellTypeTextLabel.m in Sources */,
 				53F4E0611C85CF7A00DE3B1F /* PFCODManager.m in Sources */,
 				5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */,
 				53F08F9B1CBC18A700B99A8E /* PFCTableViewCellTypePopUpButton.m in Sources */,
