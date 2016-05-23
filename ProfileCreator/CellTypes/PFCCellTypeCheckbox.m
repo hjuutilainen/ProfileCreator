@@ -30,8 +30,8 @@
 
 @interface PFCCheckboxCellView ()
 
-@property (strong) IBOutlet NSLayoutConstraint *constraintTop;
-@property (strong) IBOutlet NSLayoutConstraint *constraintLeading;
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeadingCheckbox;
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeadingDescription;
 @property (weak) IBOutlet NSButton *settingCheckbox;
 @property (weak) IBOutlet NSTextField *settingDescription;
 
@@ -96,14 +96,25 @@
     }
 
     // ---------------------------------------------------------------------
+    //  Indentation
+    // ---------------------------------------------------------------------
+    CGFloat constraintConstant = 8;
+    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
+        constraintConstant = 102;
+    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
+        constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
+    }
+    [[cellView constraintLeadingCheckbox] setConstant:constraintConstant];
+
+    // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
     NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
     if (description.length != 0) {
         [[cellView settingDescription] setStringValue:description];
+        [[cellView constraintLeadingDescription] setConstant:constraintConstant];
     } else {
         [[cellView settingDescription] removeFromSuperview];
-        [_constraintTop setConstant:8.0f];
     }
 
     // ---------------------------------------------------------------------
@@ -118,18 +129,6 @@
         checkboxState = [settingsLocal[PFCSettingsKeyValue] boolValue];
     }
     [[cellView settingCheckbox] setState:checkboxState];
-
-    // ---------------------------------------------------------------------
-    //  Indentation
-    // ---------------------------------------------------------------------
-    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
-        [[cellView constraintLeading] setConstant:102];
-    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
-        [[cellView constraintLeading] setConstant:constraintConstant];
-    } else {
-        [[cellView constraintLeading] setConstant:8];
-    }
 
     // ---------------------------------------------------------------------
     //  Tool Tip
@@ -234,8 +233,13 @@
         // -------------------------------------------------------------------------
         DDLogDebug(@"manifestContentDict[PFCManifestKeyPayloadValueType]=%@", manifestContentDict[PFCManifestKeyPayloadValueType]);
         if (manifestContentDict[PFCManifestKeyPayloadValueType] == nil || [manifestContentDict[PFCManifestKeyPayloadValueType] isEqualToString:@"Boolean"]) {
+
             DDLogDebug(@"Setting the boolean value of the checkbox as the key value!");
-            payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
+            if ([manifestContentDict[@"InvertBoolean"] boolValue]) {
+                payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @((BOOL)!checkboxState);
+            } else {
+                payloadDictDict[manifestContentDict[PFCManifestKeyPayloadKey]] = @(checkboxState);
+            }
 
             // -------------------------------------------------------------------------
             //  Save payload to payload array
