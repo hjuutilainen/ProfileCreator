@@ -579,6 +579,12 @@
         [PFCPopUpButtonCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
 
         // ---------------------------------------------------------------------
+        //  PopUpButtonCheckbox
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonCheckbox]) {
+        [PFCPopUpButtonCheckboxCellView createPayloadForCellType:manifestContentDict manifest:manifest settings:settings payloads:payloads sender:self];
+
+        // ---------------------------------------------------------------------
         //  PopUpButtonLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {

@@ -130,6 +130,13 @@
         return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
 
         // ---------------------------------------------------------------------
+        //  PopUpButtonCheckbox
+        // ---------------------------------------------------------------------
+        // FIXME - Check if this handles all checkbox cases
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonCheckbox]) {
+        return [self arrayFromCellTypePopUpButton:manifestContentDict settings:settings settingsLocal:settingsLocal parentKeys:parentKeys];
+
+        // ---------------------------------------------------------------------
         //  PopUpButtonLeft
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
@@ -898,6 +905,12 @@
         // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
         return [PFCPopUpButtonCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
+
+        // ---------------------------------------------------------------------
+        //  PopUpButtonCheckbox
+        // ---------------------------------------------------------------------
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonCheckbox]) {
+        return [PFCPopUpButtonCheckboxCellView verifyCellType:manifestContentDict settings:settings displayKeys:displayKeys];
 
         // ---------------------------------------------------------------------
         //  PopUpButtonLeft
