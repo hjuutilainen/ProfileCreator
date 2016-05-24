@@ -82,9 +82,9 @@
     // ---------------------------------------------------------------------------------------
     BOOL optional = NO;
     if (overrides[PFCManifestKeyOptional] != nil) {
-        required = [overrides[PFCManifestKeyOptional] boolValue];
+        optional = [overrides[PFCManifestKeyOptional] boolValue];
     } else {
-        required = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+        optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     }
 
     // -------------------------------------------------------------------------
@@ -116,10 +116,7 @@
         }
     } else {
         [[cellView settingTitle] removeFromSuperview];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]"
-                                                                     options:0
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(_settingDescription, _settingTextField)]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingDescription)]];
     }
 
     // ---------------------------------------------------------------------
