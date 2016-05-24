@@ -311,33 +311,70 @@
         }
     }
 
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
+    // -------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // -------------------------------------------------------------------------
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
     BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
     }
 
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     //  Title
-    // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [[cellView settingTitle] setTextColor:NSColor.blackColor];
+    // ---------------------------------------------------------------------
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    if (title.length != 0) {
+        title = [NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""];
+        [[cellView settingTitle] setStringValue:title];
+        if (enabled) {
+            [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        } else {
+            [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        }
     } else {
-        [[cellView settingTitle] setTextColor:NSColor.grayColor];
+        [[cellView settingTitle] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingDescription)]];
     }
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     //  Description
-    // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    // ---------------------------------------------------------------------
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        if (title.length != 0) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[settingTableView]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(_settingTitle, _settingTableView)]];
+        } else {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingTableView]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingTableView)]];
+        }
+    }
 
     // -------------------------------------------------------------------------
     //  Add columns from manifestContentDict
@@ -353,7 +390,14 @@
     NSArray *tableColumnsArray = manifestContentDict[PFCManifestKeyTableViewColumns] ?: @[];
     for (NSDictionary *tableColumnDict in tableColumnsArray) {
         if ([[PFCAvailability sharedInstance] showSelf:tableColumnDict displayKeys:displayKeys]) {
-            NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: tableColumnDict[PFCManifestKeyPayloadKey];
+            NSString *tableColumnTitle = tableColumnDict[PFCManifestKeyTableViewColumnTitle] ?: @"";
+            if (tableColumnTitle.length == 0) {
+                if (tableColumnDict[PFCManifestKeyPayloadKey] != nil) {
+                    tableColumnTitle = tableColumnDict[PFCManifestKeyPayloadKey] ?: @"";
+                } else if (manifestContentDict[PFCManifestKeyPayloadKey]) {
+                    tableColumnTitle = manifestContentDict[PFCManifestKeyPayloadKey] ?: @"";
+                }
+            }
             NSTableColumn *tableColumn = [[NSTableColumn alloc] initWithIdentifier:tableColumnDict[PFCManifestKeyIdentifier]];
             [tableColumn setTitle:tableColumnTitle];
             if ([tableColumnDict[PFCManifestKeyTableViewColumnWidth] isKindOfClass:[NSNumber class]]) {
