@@ -24,6 +24,10 @@
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
 @end
 
+@interface PFCPopUpButtonCheckboxCellView : NSTableCellView <PFCCellType>
+@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
+@end
+
 @interface PFCPopUpButtonLeftCellView : NSTableCellView <PFCCellType>
 @property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
 @end
