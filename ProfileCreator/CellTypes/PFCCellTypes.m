@@ -43,6 +43,9 @@
 - (CGFloat)rowHeightForManifestContentDict:(NSDictionary *)manifestContentDict {
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     if ([cellType isEqualToString:PFCCellTypePadding]) {
+        if (manifestContentDict[@"PaddingHeight"] != nil) {
+            return [manifestContentDict[@"PaddingHeight"] floatValue] ?: 20.0f;
+        }
         return 20.0f;
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
         return 38.0f;
@@ -50,7 +53,7 @@
         return 39.0f;
     } else if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
-            return 25.0f;
+            return 26.0f;
         } else {
             return 52.0f;
         }
@@ -58,9 +61,17 @@
         return 53.0f;
     } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumberLeft]) {
         return 54.0f;
-    } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort] || [cellType isEqualToString:PFCCellTypeTextFieldNumber] || [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] ||
-               [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
+    } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort] || [cellType isEqualToString:PFCCellTypeTextFieldCheckbox] || [cellType isEqualToString:PFCCellTypeTextFieldHostPortCheckbox]) {
         return 81.0f;
+    } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumber]) {
+        CGFloat baseHeight = 80.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 23.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 24.0f);
+        }
+        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
         CGFloat baseHeight = 80.0f;
         if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
@@ -76,7 +87,16 @@
             baseHeight = (baseHeight - 16.0f);
         }
         if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
-            baseHeight = (baseHeight - 26.0f);
+            baseHeight = (baseHeight - 22.0f);
+        }
+        return baseHeight;
+    } else if ([cellType isEqualToString:PFCCellTypePopUpButtonCheckbox]) {
+        CGFloat baseHeight = 80.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 16.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 22.0f);
         }
         return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeDatePicker]) {
