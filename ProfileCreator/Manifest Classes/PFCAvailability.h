@@ -28,6 +28,7 @@
 
 - (BOOL)showSelf:(NSDictionary *)manifest displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
+- (BOOL)requiredCheckboxForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredHostForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
 - (BOOL)requiredPortForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys;
 - (NSDictionary *)overridesForManifestContentDict:(NSDictionary *)manifestContentDict manifest:(NSDictionary *)manifest settings:(NSDictionary *)settings displayKeys:(NSDictionary *)displayKeys;

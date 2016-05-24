@@ -104,6 +104,20 @@
     return [manifestContentDict[PFCManifestKeyRequired] boolValue];
 }
 
+- (BOOL)requiredCheckboxForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
+    for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
+        if ([self returnAvailabilityValueForKey:PFCManifestKeyRequiredCheckbox availabilityDict:availabilityDict displayKeys:displayKeys]) {
+            return [availabilityDict[@"AvailabilityValue"] boolValue];
+        }
+    }
+
+    if (manifestContentDict[PFCManifestKeyRequiredCheckbox] != nil) {
+        return [manifestContentDict[PFCManifestKeyRequiredCheckbox] boolValue];
+    } else {
+        return [self requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+}
+
 - (BOOL)requiredHostForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
     for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
         if ([self returnAvailabilityValueForKey:PFCManifestKeyRequiredHost availabilityDict:availabilityDict displayKeys:displayKeys]) {
