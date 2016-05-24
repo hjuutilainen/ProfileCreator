@@ -35,6 +35,10 @@
 
 @interface PFCTextFieldNumberCellView ()
 
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeadingTitle;
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeadingDescription;
+@property (strong) IBOutlet NSLayoutConstraint *constraintLeadingTextField;
+
 @property NSNumber *stepperValue;
 @property (weak) IBOutlet NSTextField *settingTitle;
 @property (weak) IBOutlet NSTextField *settingDescription;
@@ -61,32 +65,96 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+
     // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
+    //  Get required state for this cell view
     // ---------------------------------------------------------------------------------------
-    BOOL required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
-    BOOL enabled = YES;
-    if (!required && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     }
+
+    // ---------------------------------------------------------------------------------------
+    //  Get optional state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL optional = NO;
+    if (overrides[PFCManifestKeyOptional] != nil) {
+        optional = [overrides[PFCManifestKeyOptional] boolValue];
+    } else {
+        optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
+    BOOL enabled = YES;
+    if (!required) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
+    }
+
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    //  Indentation
+    // ---------------------------------------------------------------------
+    CGFloat constraintConstant = 8;
+    if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
+        constraintConstant = 102;
+    } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
+        constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
+    }
+    [[cellView constraintLeadingTextField] setConstant:constraintConstant];
+
+    // ---------------------------------------------------------------------
     //  Title
-    // -------------------------------------------------------------------------
-    [cellView.settingTitle setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [cellView.settingTitle setTextColor:NSColor.blackColor];
+    // ---------------------------------------------------------------------
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    if (title.length != 0) {
+        title = [NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""];
+        [[cellView settingTitle] setStringValue:title];
+        [[cellView constraintLeadingTitle] setConstant:constraintConstant];
+        if (enabled) {
+            [[cellView settingTitle] setTextColor:[NSColor blackColor]];
+        } else {
+            [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+        }
     } else {
-        [cellView.settingTitle setTextColor:NSColor.grayColor];
+        [[cellView settingTitle] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]"
+                                                                     options:0
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(_settingDescription, _settingTextField)]];
     }
 
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
     //  Description
-    // -------------------------------------------------------------------------
-    [cellView.settingDescription setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    // ---------------------------------------------------------------------
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+        [[cellView constraintLeadingDescription] setConstant:constraintConstant];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        if (title.length != 0) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingTextField]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(_settingTitle, _settingTextField)]];
+        } else {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingTextField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingTextField)]];
+        }
+    }
 
     // ---------------------------------------------------------------------
     //  Unit
