@@ -65,6 +65,7 @@ extern NSString *const PFCCellTypeDatePickerNoTitle;
 extern NSString *const PFCCellTypeFile;
 extern NSString *const PFCCellTypePadding;
 extern NSString *const PFCCellTypePopUpButton;
+extern NSString *const PFCCellTypePopUpButtonCheckbox;
 extern NSString *const PFCCellTypePopUpButtonLeft;
 extern NSString *const PFCCellTypeSegmentedControl;
 extern NSString *const PFCCellTypeRadioButton;

@@ -33,6 +33,7 @@ NSString *const PFCCellTypeDatePickerNoTitle = @"DatePickerNoTitle";
 NSString *const PFCCellTypeFile = @"File";
 NSString *const PFCCellTypePadding = @"Padding";
 NSString *const PFCCellTypePopUpButton = @"PopUpButton";
+NSString *const PFCCellTypePopUpButtonCheckbox = @"PopUpButtonCheckbox";
 NSString *const PFCCellTypePopUpButtonLeft = @"PopUpButtonLeft";
 NSString *const PFCCellTypeRadioButton = @"RadioButton";
 NSString *const PFCCellTypeSegmentedControl = @"SegmentedControl";
