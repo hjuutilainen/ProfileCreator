@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "PFCAvailability.h"
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCConstants.h"
 #import "PFCLog.h"
@@ -45,6 +46,22 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
+    BOOL enabled = YES;
+    if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+        enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+    }
+
     // ---------------------------------------------------------------------
     //  Reset Segmented Control
     // ---------------------------------------------------------------------
@@ -70,6 +87,11 @@
     [cellView.settingSegmentedControl setAction:@selector(segmentedControl:)];
     [cellView.settingSegmentedControl setTarget:sender];
     [cellView.settingSegmentedControl setTag:row];
+
+    // ---------------------------------------------------------------------
+    //  Enabled
+    // ---------------------------------------------------------------------
+    [cellView.settingSegmentedControl setEnabled:enabled];
 
     return cellView;
 } // populateCellViewSettingsSegmentedControl:manifest:row:sender
