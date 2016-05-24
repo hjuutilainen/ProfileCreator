@@ -336,8 +336,11 @@
     //  If the manifest content dict array is empty, show "Error Reading Settings"
     // ------------------------------------------------------------------------------------
     NSArray *manifestContent = [self manifestContentForManifest:manifest];
+    DDLogDebug(@"Manifest content: %@", manifestContent);
+
     NSArray *manifestContentArray =
         [[PFCManifestParser sharedParser] arrayFromManifestContent:manifestContent settings:_settingsManifest settingsLocal:_settingsLocalManifest displayKeys:_profileEditor.settings.displayKeys];
+    DDLogDebug(@"Manifest content array: %@", manifestContentArray);
 
     // ------------------------------------------------------------------------------------------
     //  FIXME - Check count is 3 or greater ( because manifestContentForManifest adds 2 paddings
@@ -441,14 +444,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     if (_arrayManifestContent.count < row || _arrayManifestContent.count == 0) {
         return nil;
     }
 
     NSString *tableColumnIdentifier = tableColumn.identifier;
+    DDLogVerbose(@"Table Column: %@", tableColumnIdentifier);
     NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+    DDLogVerbose(@"CellType: %@", cellType);
     NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
     if ([tableColumnIdentifier isEqualToString:@"ColumnSettings"]) {

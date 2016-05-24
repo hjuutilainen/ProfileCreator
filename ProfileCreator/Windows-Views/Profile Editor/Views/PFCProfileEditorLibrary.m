@@ -204,8 +204,10 @@
     return nil;
 }
 
+/*
+ // FIXME - Don't remember why I added this, but there was a reason...
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
-    // FIXME - Don't remember why I added this, but there was a reason.
+    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     if (tableView == _tableViewProfile) {
         if (row < _arrayProfile.count) {
             [self selectManifest:_arrayProfile[row]];
@@ -217,7 +219,7 @@
     }
     return YES;
 }
-
+*/
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Selection Methods
@@ -368,6 +370,7 @@
         return;
     }
 
+    DDLogDebug(@"Selected manifest: %@", _selectedManifest);
     [_profileEditor.manifest selectManifest:_selectedManifest inTableView:[sender identifier]];
 }
 
