@@ -433,41 +433,108 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
-    BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
-    BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    // -------------------------------------------------------------------------
+    //  Get availability overrides
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
-    BOOL enabled = YES;
-    if ((!requiredHost || !requiredPort) && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    // ---------------------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL requiredCheckbox = NO;
+    if (overrides[PFCManifestKeyRequiredCheckbox] != nil) {
+        requiredCheckbox = [overrides[PFCManifestKeyRequiredCheckbox] boolValue];
+    } else {
+        requiredCheckbox = [[PFCAvailability sharedInstance] requiredCheckboxForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     }
 
-    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+    // ---------------------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL requiredHost = NO;
+    if (overrides[PFCManifestKeyRequiredHost] != nil) {
+        requiredHost = [overrides[PFCManifestKeyRequiredHost] boolValue];
+    } else {
+        requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
+    // ---------------------------------------------------------------------------------------
+    //  Get required state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL requiredPort = NO;
+    if (overrides[PFCManifestKeyRequiredPort] != nil) {
+        requiredPort = [overrides[PFCManifestKeyRequiredPort] boolValue];
+    } else {
+        requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
+    // ---------------------------------------------------------------------------------------
+    //  Get optional state for this cell view
+    // ---------------------------------------------------------------------------------------
+    BOOL optional = NO;
+    if (overrides[PFCManifestKeyOptional] != nil) {
+        optional = [overrides[PFCManifestKeyOptional] boolValue];
+    } else {
+        optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+    }
+
+    // -------------------------------------------------------------------------
+    //  Determine if UI should be enabled or disabled
+    //  If 'required', it cannot be disabled
+    // -------------------------------------------------------------------------
+    BOOL enabled = YES;
+    if (!requiredCheckbox) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
+    }
+
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
 
     // ---------------------------------------------------------------------
-    //  Title (Checkbox)
+    //  Title
     // ---------------------------------------------------------------------
-    [[cellView settingCheckbox] setTitle:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    if (title.length != 0) {
+        title = [NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""];
+        [[cellView settingCheckbox] setTitle:title];
+    } else {
+        [[cellView settingCheckbox] removeFromSuperview];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingDescription)]];
+    }
 
     // ---------------------------------------------------------------------
     //  Description
     // ---------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    if (description.length != 0) {
+        [[cellView settingDescription] setStringValue:description];
+    } else {
+        [[cellView settingDescription] removeFromSuperview];
+        if (title.length != 0) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingCheckbox]-[_settingTextFieldHost]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(_settingCheckbox, _settingTextFieldHost)]];
+        } else {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(3)-[_settingTextFieldHost]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_settingTextFieldHost)]];
+        }
+    }
 
     // ---------------------------------------------------------------------
     //  Value Checkbox
     // ---------------------------------------------------------------------
+    BOOL valueCheckbox = NO;
     if (settingsUser[PFCSettingsKeyValueCheckbox] != nil) {
-        [self setCheckboxState:[settingsUser[PFCSettingsKeyValueCheckbox] boolValue]];
+        valueCheckbox = [settingsUser[PFCSettingsKeyValueCheckbox] boolValue];
     } else if (manifestContentDict[PFCManifestKeyDefaultValueCheckbox]) {
-        [self setCheckboxState:[manifestContentDict[PFCManifestKeyDefaultValueCheckbox] boolValue]];
+        valueCheckbox = [manifestContentDict[PFCManifestKeyDefaultValueCheckbox] boolValue];
     } else if (settingsLocal[PFCSettingsKeyValueCheckbox]) {
-        [self setCheckboxState:[settingsLocal[PFCSettingsKeyValueCheckbox] boolValue]];
+        valueCheckbox = [settingsLocal[PFCSettingsKeyValueCheckbox] boolValue];
     }
+    [self setCheckboxState:valueCheckbox];
 
     // ---------------------------------------------------------------------
     //  Target Action Checkbox
@@ -503,9 +570,9 @@
     // ---------------------------------------------------------------------
     if ([manifestContentDict[PFCManifestKeyPlaceholderValueHost] length] != 0) {
         [[cellView settingTextFieldHost] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValueHost] ?: @""];
-    } else if (requiredHost) {
+    } else if (valueCheckbox && requiredHost) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
-    } else if (optional) {
+    } else if (valueCheckbox && optional) {
         [[cellView settingTextFieldHost] setPlaceholderString:@"Optional"];
     } else {
         [[cellView settingTextFieldHost] setPlaceholderString:@""];
@@ -538,9 +605,9 @@
     // ---------------------------------------------------------------------
     if ([manifestContentDict[PFCManifestKeyPlaceholderValuePort] length] != 0) {
         [[cellView settingTextFieldPort] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValuePort] ?: @""];
-    } else if (requiredPort) {
+    } else if (valueCheckbox && requiredPort) {
         [[cellView settingTextFieldPort] setPlaceholderString:@"Req"];
-    } else if (optional) {
+    } else if (valueCheckbox && optional) {
         [[cellView settingTextFieldPort] setPlaceholderString:@"Opt"];
     } else {
         [[cellView settingTextFieldPort] setPlaceholderString:@""];
@@ -562,13 +629,11 @@
     //  Enabled
     // ---------------------------------------------------------------------
     [[cellView settingCheckbox] setEnabled:enabled];
-    [[cellView settingTextFieldHost] setEnabled:enabled];
-    [[cellView settingTextFieldPort] setEnabled:enabled];
 
     // ---------------------------------------------------------------------
     //  Required
     // ---------------------------------------------------------------------
-    if ((requiredHost || requiredPort) && [valueHost length] == 0) {
+    if (valueCheckbox && (requiredHost || requiredPort) && [valueHost length] == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
