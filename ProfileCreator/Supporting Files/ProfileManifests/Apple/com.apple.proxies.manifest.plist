@@ -200,6 +200,8 @@
 			<string>Exceptions</string>
 			<key>PayloadType</key>
 			<string>com.apple.proxies</string>
+			<key>PayloadValueType</key>
+			<string>String</string>
 			<key>Description</key>
 			<string>Bypass proxy settings for thses Hosts &amp; Domains</string>
 			<key>CellType</key>

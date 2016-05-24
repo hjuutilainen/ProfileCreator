@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.familycontrols.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Parental Controls</string>
+	<key>IconName</key>
+	<string>MenuIconParentalControls.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.Dictionary</string>
+		<string>com.apple.ironwood.support</string>
+		<string>com.apple.familycontrols.contentfilter</string>
+		<string>com.apple.familycontrols.timelimits</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Required</key>
+			<true/>
+			<key>Identifier</key>
+			<string>19C328A8-1DBD-4AF5-B7C2-2DD92551B2F0</string>
+			<key>CellType</key>
+			<string>SegmentedControl</string>
+			<key>AvailableValues</key>
+			<array>
+				<string>Content Filtering</string>
+				<string>Time Limits</string>
+			</array>
+			<key>ValueKeys</key>
+			<dict>
+				<key>Content Filtering</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>306367D6-1D91-480F-B4FB-55F871DEDE28</string>
+						<key>Title</key>
+						<string>Disable use of Dictation</string>
+						<key>PayloadType</key>
+						<string>com.apple.ironwood.support</string>
+						<key>PayloadKey</key>
+						<string>Ironwood Allowed</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>F14433EA-CFD3-4645-9AEA-EA3FD95FA7CE</string>
+						<key>Title</key>
+						<string>Hide profanity in Dictionary and Dictation</string>
+						<key>PayloadType</key>
+						<string>com.apple.ironwood.support</string>
+						<key>PayloadKey</key>
+						<string>Profanity Allowed</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>95A79682-24BB-43A0-98E9-C65A452974F7</string>
+						<key>Title</key>
+						<string>Limit Access to websites by</string>
+						<key>PayloadType</key>
+						<string>com.apple.familycontrols.contentfilter</string>
+						<key>PayloadKey</key>
+						<string>useContentFilter</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>95A79682-24BB-43A0-98E9-C65A452974F7</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>17F8EF3B-C1A4-4EE5-8D3A-F5944B173DA2</string>
+						<key>IndentLevelButtons</key>
+						<integer>2</integer>
+						<key>PayloadType</key>
+						<string>com.apple.familycontrols.contentfilter</string>
+						<key>DefaultValue</key>
+						<string>trying to limit access to adult websites</string>
+						<key>CellType</key>
+						<string>RadioButton</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>trying to limit access to adult websites</string>
+							<string>allowing access to the following websites only</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>trying to limit access to adult websites</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>restrictWeb</string>
+								</dict>
+							</array>
+							<key>allowing access to the following websites only</key>
+							<array>
+								<dict>
+									<key>PayloadKey</key>
+									<string>whitelistEnabled</string>
+								</dict>
+							</array>
+						</dict>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>95A79682-24BB-43A0-98E9-C65A452974F7</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>3A4C84E3-E5FE-4A82-9FEC-108A9FB2297E</string>
+						<key>Title</key>
+						<string>Allow URLs:</string>
+						<key>PayloadKey</key>
+						<string>filterWhitelist</string>
+						<key>PayloadType</key>
+						<string>com.apple.familycontrols.contentfilter</string>
+						<key>PayloadValueType</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The user can always access sites at these URLs</string>
+						<key>CellType</key>
+						<string>TableView</string>
+						<key>TableViewColumns</key>
+						<array>
+							<dict>
+								<key>Identifier</key>
+								<string>374CE48A-435C-4151-87C5-5A46DC1C7ACA</string>
+								<key>CellType</key>
+								<string>TextField</string>
+								<key>DefaultValue</key>
+								<string>www.example.com</string>
+							</dict>
+						</array>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>95A79682-24BB-43A0-98E9-C65A452974F7</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Identifier</key>
+						<string>DB034532-DE37-4D4C-8DD9-2B2CF03BB406</string>
+						<key>Title</key>
+						<string>Deny URLs:</string>
+						<key>PayloadKey</key>
+						<string>filterBlacklist</string>
+						<key>PayloadType</key>
+						<string>com.apple.familycontrols.contentfilter</string>
+						<key>PayloadValueType</key>
+						<string>String</string>
+						<key>Description</key>
+						<string>The user can never access sites at these URLs</string>
+						<key>CellType</key>
+						<string>TableView</string>
+						<key>TableViewColumns</key>
+						<array>
+							<dict>
+								<key>Identifier</key>
+								<string>374CE48A-435C-4151-87C5-5A46DC1C7ACA</string>
+								<key>CellType</key>
+								<string>TextField</string>
+								<key>DefaultValue</key>
+								<string>www.example.com</string>
+							</dict>
+						</array>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+				</array>
+				<key>Time Limits</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>253771AF-7CDC-47AC-B149-BFAF2AE89F13</string>
+						<key>Title</key>
+						<string>Enforce Limits</string>
+						<key>PayloadType</key>
+						<string>com.apple.familycontrols.timelimits</string>
+						<key>PayloadKey</key>
+						<string>familyControlsEnabled</string>
+						<key>CellType</key>
+						<string>Checkbox</string>
+						<key>ToolTipDescription</key>
+						<string>FIXME</string>
+					</dict>
+					<dict>
+						<key>Availability</key>
+						<array>
+							<dict>
+								<key>AvailabilityKey</key>
+								<string>Enabled</string>
+								<key>AvailabilityOS</key>
+								<string>Any</string>
+								<key>AvailabilityValue</key>
+								<false/>
+								<key>AvailableIf</key>
+								<dict>
+									<key>SelectionIdentifier</key>
+									<string>253771AF-7CDC-47AC-B149-BFAF2AE89F13</string>
+									<key>SelectionValue</key>
+									<false/>
+								</dict>
+							</dict>
+						</array>
+						<key>Required</key>
+						<true/>
+						<key>Identifier</key>
+						<string>921A4895-75DA-4C6F-B3A7-82AFB1F3CEE3</string>
+						<key>CellType</key>
+						<string>SegmentedControl</string>
+						<key>AvailableValues</key>
+						<array>
+							<string>Allowances</string>
+							<string>Curfews</string>
+						</array>
+						<key>ValueKeys</key>
+						<dict>
+							<key>Allowances</key>
+							<array>
+								<dict>
+									<key>Availability</key>
+									<array>
+										<dict>
+											<key>AvailabilityKey</key>
+											<string>Enabled</string>
+											<key>AvailabilityOS</key>
+											<string>Any</string>
+											<key>AvailabilityValue</key>
+											<false/>
+											<key>AvailableIf</key>
+											<dict>
+												<key>SelectionIdentifier</key>
+												<string>253771AF-7CDC-47AC-B149-BFAF2AE89F13</string>
+												<key>SelectionValue</key>
+												<false/>
+											</dict>
+										</dict>
+									</array>
+									<key>Identifier</key>
+									<string>0359CCA1-6B45-4207-9067-CAA68B0626AE</string>
+									<key>Title</key>
+									<string>Weekdays</string>
+									<key>PayloadKey</key>
+									<string>FIXME</string>
+									<key>PayloadType</key>
+									<string>com.apple.familycontrols.timelimits</string>
+									<key>Description</key>
+									<string>Allow computer access Monday through Friday for the specified number of hours only.</string>
+									<key>CellType</key>
+									<string>PopUpButton</string>
+									<key>DefaultValue</key>
+									<string>5 hours</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>No Limit</string>
+										<string>30 minutes</string>
+										<string>1 hour</string>
+										<string>1.5 hours</string>
+										<string>2 hours</string>
+										<string>2.5 hours</string>
+										<string>3 hours</string>
+										<string>3.5 hours</string>
+										<string>4 hours</string>
+										<string>4.5 hours</string>
+										<string>5 hours</string>
+										<string>5.5 hours</string>
+										<string>6 hours</string>
+										<string>6.5 hours</string>
+										<string>7 hours</string>
+										<string>7.5 hours</string>
+										<string>8 hours</string>
+									</array>
+									<key>ValueKeys</key>
+									<dict>
+										<key>No Limit</key>
+										<string></string>
+									</dict>
+									<key>ToolTipDescription</key>
+									<string>FIXME</string>
+								</dict>
+								<dict>
+									<key>Availability</key>
+									<array>
+										<dict>
+											<key>AvailabilityKey</key>
+											<string>Enabled</string>
+											<key>AvailabilityOS</key>
+											<string>Any</string>
+											<key>AvailabilityValue</key>
+											<false/>
+											<key>AvailableIf</key>
+											<dict>
+												<key>SelectionIdentifier</key>
+												<string>253771AF-7CDC-47AC-B149-BFAF2AE89F13</string>
+												<key>SelectionValue</key>
+												<false/>
+											</dict>
+										</dict>
+									</array>
+									<key>Identifier</key>
+									<string>32A6279E-B8FA-4548-8561-439CA8F21E51</string>
+									<key>Title</key>
+									<string>Weekends</string>
+									<key>PayloadKey</key>
+									<string>FIXME</string>
+									<key>PayloadType</key>
+									<string>com.apple.familycontrols.timelimits</string>
+									<key>Description</key>
+									<string>Allow computer access Saturday and Sunday for the specified number of hours only.</string>
+									<key>CellType</key>
+									<string>PopUpButton</string>
+									<key>DefaultValue</key>
+									<string>5 hours</string>
+									<key>AvailableValues</key>
+									<array>
+										<string>No Limit</string>
+										<string>30 minutes</string>
+										<string>1 hour</string>
+										<string>1.5 hours</string>
+										<string>2 hours</string>
+										<string>2.5 hours</string>
+										<string>3 hours</string>
+										<string>3.5 hours</string>
+										<string>4 hours</string>
+										<string>4.5 hours</string>
+										<string>5 hours</string>
+										<string>5.5 hours</string>
+										<string>6 hours</string>
+										<string>6.5 hours</string>
+										<string>7 hours</string>
+										<string>7.5 hours</string>
+										<string>8 hours</string>
+									</array>
+									<key>ValueKeys</key>
+									<dict>
+										<key>No Limit</key>
+										<string></string>
+									</dict>
+									<key>ToolTipDescription</key>
+									<string>FIXME</string>
+								</dict>
+							</array>
+							<key>Curfews</key>
+							<array>
+								<dict>
+									<key>Availability</key>
+									<array>
+										<dict>
+											<key>AvailabilityKey</key>
+											<string>Enabled</string>
+											<key>AvailabilityOS</key>
+											<string>Any</string>
+											<key>AvailabilityValue</key>
+											<false/>
+											<key>AvailableIf</key>
+											<dict>
+												<key>SelectionIdentifier</key>
+												<string>253771AF-7CDC-47AC-B149-BFAF2AE89F13</string>
+												<key>SelectionValue</key>
+												<false/>
+											</dict>
+										</dict>
+									</array>
+									<key>Identifier</key>
+									<string>ED71CA57-4AA4-4758-BA1E-FC0142AE9D05</string>
+									<key>Title</key>
+									<string>Deny Access</string>
+									<key>Description</key>
+									<string>Prevent computer access during the specified days and hours.</string>
+									<key>CellType</key>
+									<string>TextLabel</string>
+								</dict>
+							</array>
+						</dict>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

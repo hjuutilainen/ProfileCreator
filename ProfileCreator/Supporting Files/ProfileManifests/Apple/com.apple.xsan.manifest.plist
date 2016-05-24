@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.xsan.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Xsan</string>
+	<key>IconName</key>
+	<string>MenuIconXsan.png</string>
+	<key>PayloadType</key>
+	<string>com.apple.xsan</string>
+	<key>PayloadScope</key>
+	<array>
+		<string>System</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>E3A17CB8-5AA4-4E16-95C6-B0DE008E3E35</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Xsan Name</string>
+			<key>PayloadKey</key>
+			<string>sanName</string>
+			<key>PayloadType</key>
+			<string>com.apple.xsan</string>
+			<key>Description</key>
+			<string>Name of the Xsan network</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>9BC472FE-5910-494E-95AF-4CDB046519A3</string>
+			<key>Title</key>
+			<string>File System Name Servers</string>
+			<key>Required</key>
+			<true/>
+			<key>PayloadType</key>
+			<string>com.apple.xsan</string>
+			<key>PayloadKey</key>
+			<string>fsnameservers</string>
+			<key>PayloadValueType</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>Hostname or IP address of the file system name servers</string>
+			<key>CellType</key>
+			<string>TableView</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+			<key>TableViewColumns</key>
+			<array>
+				<dict>
+					<key>Identifier</key>
+					<string>B66EF15A-FF4D-4A7A-9DDD-31065F147CB0</string>
+					<key>PlaceholderValue</key>
+					<string>example.com</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>DD1B4E91-6C83-4D5F-AD68-1A38B32DB689</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>Authentication Secret</string>
+			<key>PayloadKey</key>
+			<string>sharedSecret</string>
+			<key>PayloadType</key>
+			<string>com.apple.xsan</string>
+			<key>Description</key>
+			<string>Secret credential to join the Xsan network</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+	</array>
+</dict>
+</plist>
