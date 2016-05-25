@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.loginwindow.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Login Window</string>
+	<key>IconName</key>
+	<string>MenuIconLoginWindow.png</string>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.loginwindow</string>
+		<string>com.apple.screensaver</string>
+		<string>com.apple.MCX</string>
+		<string>.GlobalPreferences</string>
+		<string>com.apple.mcxloginscripts</string>
+		<string>com.apple.SetupAssistant.managed</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array/>
+</dict>
+</plist>

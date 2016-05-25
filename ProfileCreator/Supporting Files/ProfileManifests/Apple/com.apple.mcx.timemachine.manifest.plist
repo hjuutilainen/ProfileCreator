@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.MCX.TimeMachine.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Time Machine</string>
+	<key>IconName</key>
+	<string>MenuIconTimeMachine.png</string>
+	<key>PayloadType</key>
+	<string>com.apple.MCX.TimeMachine</string>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>460CC9C5-2975-4E8F-8D91-420A44DF2FEE</string>
+			<key>Required</key>
+			<true/>
+			<key>Title</key>
+			<string>Backup Server</string>
+			<key>PayloadKey</key>
+			<string>BackupDestURL</string>
+			<key>Description</key>
+			<string>URL of the backup destination (e.g., afp://server.example.com/backups/)</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>95EBEB19-30FE-4161-A15A-B2C1D77AE4DB</string>
+			<key>Title</key>
+			<string>Backup all volumes</string>
+			<key>PayloadKey</key>
+			<string>BackupAllVolumes</string>
+			<key>Description</key>
+			<string>Only startup volume is backed up by default</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>5A9D3FEB-B4F6-4989-B450-5386726A8EE4</string>
+			<key>Title</key>
+			<string>Backup system files and folders</string>
+			<key>PayloadKey</key>
+			<string>BackupSkipSys</string>
+			<key>Description</key>
+			<string>System files and folders are skipped by default</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>InvertBoolean</key>
+			<true/>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>D892B96F-8139-4500-AAFF-0A88FCE60E1B</string>
+			<key>Title</key>
+			<string>Enable automatic backups</string>
+			<key>PayloadKey</key>
+			<string>AutoBackup</string>
+			<key>Description</key>
+			<string>Automatically backup at regular intervals</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Availability</key>
+			<array>
+				<dict>
+					<key>AvailabilityKey</key>
+					<string>Self</string>
+					<key>AvailabilityOS</key>
+					<string>OSX</string>
+					<key>AvailableFrom</key>
+					<string>10.8</string>
+				</dict>
+			</array>
+			<key>Identifier</key>
+			<string>53909CBB-1126-493F-86B9-61CF49FA89C5</string>
+			<key>Title</key>
+			<string>Enable local snapshots (10.8 and above only)</string>
+			<key>PayloadKey</key>
+			<string>MobileBackups</string>
+			<key>Description</key>
+			<string>Creates local backup snapshots when not connected to network</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>408A442A-D85F-42DD-BA9B-3A7D55A891E3</string>
+			<key>Title</key>
+			<string>Paths to skip:</string>
+			<key>PayloadKey</key>
+			<string>SkipPaths</string>
+			<key>PayloadValueType</key>
+			<string>String</string>
+			<key>Description</key>
+			<string>The paths to skip from startup volume</string>
+			<key>CellType</key>
+			<string>TableView</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+			<key>TableViewColumns</key>
+			<array>
+				<dict>
+					<key>Identifier</key>
+					<string>4DFA49E8-281D-47BE-A35C-6CA12D7C5FA8</string>
+					<key>CellType</key>
+					<string>TableViewTextField</string>
+					<key>DefaultValue</key>
+					<string>/tmp</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>0B428DF7-1C0F-4C2D-9DA6-91451671B77F</string>
+			<key>Optional</key>
+			<true/>
+			<key>Title</key>
+			<string>Backup Size Limit</string>
+			<key>PayloadKey</key>
+			<string>BackupSizeMB</string>
+			<key>Description</key>
+			<string>Backup size limit in MB. Set to 0 for unlimited</string>
+			<key>CellType</key>
+			<string>TextFieldNumber</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Availability</key>
+	<array>
+		<dict>
+			<key>AvailabilityKey</key>
+			<string>Self</string>
+			<key>AvailabilityOS</key>
+			<string>iOS</string>
+			<key>Available</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Domain</key>
+	<string>com.apple.SoftwareUpdate.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Software Update</string>
+	<key>IconName</key>
+	<string>MenuIconSoftwareUpdate.png</string>
+	<key>PayloadType</key>
+	<string>com.apple.SoftwareUpdate</string>
+	<key>PayloadScope</key>
+	<array>
+		<string>System</string>
+	</array>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>ManifestContent</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>6051DD9A-239C-46BB-8338-CF693AB4E1CE</string>
+			<key>Title</key>
+			<string>Software Update Server</string>
+			<key>Optional</key>
+			<true/>
+			<key>PayloadKey</key>
+			<string>CatalogURL</string>
+			<key>Description</key>
+			<string>Specify a URL of the form http://server.example.com:8088/index.sucatalog</string>
+			<key>CellType</key>
+			<string>TextField</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>925416AB-E455-491C-A115-DF33D68DAA86</string>
+			<key>Title</key>
+			<string>Allow installation of OS X beta releases</string>
+			<key>PayloadKey</key>
+			<string>AllowPreReleaseInstallation</string>
+			<key>CellType</key>
+			<string>Checkbox</string>
+			<key>ToolTipDescription</key>
+			<string>FIXME</string>
+		</dict>
+	</array>
+</dict>
+</plist>

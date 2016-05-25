@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Domain</key>
+	<string>com.apple.applicationaccess.osx.manifest</string>
+	<key>Description</key>
+	<string>FIXME</string>
+	<key>Title</key>
+	<string>Restrictions (OS X)</string>
+	<key>IconName</key>
+	<string>MenuIconRestrictions.png</string>
+	<key>AllowMultiplePayloads</key>
+	<false/>
+	<key>PayloadTypes</key>
+	<array>
+		<string>com.apple.preferences.users</string>
+		<string>com.apple.applicationaccess</string>
+		<string>com.apple.coremediaio.support</string>
+		<string>com.apple.MCX</string>
+		<string>com.apple.desktop</string>
+		<string>com.apple.gamed</string>
+		<string>com.apple.ShareKitHelper</string>
+		<string>com.apple.appstore</string>
+		<string>com.apple.NetworkBrowser</string>
+		<string>com.apple.systempreferences</string>
+		<string>com.apple.finder</string>
+		<string>com.apple.DiscRecording</string>
+		<string>com.apple.systemuiserver</string>
+		<string>com.apple.dashboard</string>
+		<string>com.apple.applicationaccess.new</string>
+	</array>
+	<key>ManifestContent</key>
+	<array/>
+</dict>
+</plist>
