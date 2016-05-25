@@ -367,7 +367,7 @@
     } else {
         [[cellView settingDescription] removeFromSuperview];
         if (title.length != 0) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[settingTableView]"
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_settingTitle]-[_settingTableView]"
                                                                          options:0
                                                                          metrics:nil
                                                                            views:NSDictionaryOfVariableBindings(_settingTitle, _settingTableView)]];
