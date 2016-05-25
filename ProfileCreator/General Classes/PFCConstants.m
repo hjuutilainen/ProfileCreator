@@ -275,9 +275,10 @@ NSString *const PFCProfileTemplateExtension = @"pfcconf";
 #pragma mark PFCProfileDisplaySettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings = @"AdvancedSettings";
-NSString *const PFCProfileDisplaySettingsKeyInstallMethod = @"InstallMethod";
-NSString *const PFCProfileDisplaySettingsKeyInstallMethodManual = @"Manual";
-NSString *const PFCProfileDisplaySettingsKeyInstallMethodOTA = @"MDM";
+NSString *const PFCProfileDisplaySettingsKeyDistributionType = @"DistributionType";
+NSString *const PFCProfileDisplaySettingsKeyDistributionTypeAny = @"Any";
+NSString *const PFCProfileDisplaySettingsKeyDistributionTypeManual = @"Manual";
+NSString *const PFCProfileDisplaySettingsKeyDistributionTypeOTA = @"MDM";
 NSString *const PFCProfileDisplaySettingsKeyPlatform = @"Platform";
 NSString *const PFCProfileDisplaySettingsKeyPlatformOSX = @"OSX";
 NSString *const PFCProfileDisplaySettingsKeyPlatformOSXMaxVersion = @"OSXMaxVersion";
@@ -286,6 +287,7 @@ NSString *const PFCProfileDisplaySettingsKeyPlatformiOS = @"iOS";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMaxVersion = @"iOSMaxVersion";
 NSString *const PFCProfileDisplaySettingsKeyPlatformiOSMinVersion = @"iOSMinVersion";
 NSString *const PFCProfileDisplaySettingsKeyPayloadScope = @"PayloadScope";
+NSString *const PFCProfileDisplaySettingsKeyPayloadScopeAny = @"Any";
 NSString *const PFCProfileDisplaySettingsKeyPayloadScopeSystem = @"System";
 NSString *const PFCProfileDisplaySettingsKeyPayloadScopeUser = @"User";
 NSString *const PFCProfileDisplaySettingsKeySupervised = @"Supervised";

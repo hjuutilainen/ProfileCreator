@@ -63,7 +63,7 @@
 @property (weak) IBOutlet NSPopUpButton *popUpButtoniOSMaxVersion;
 
 @property (weak) IBOutlet NSPopUpButton *popUpButtonProfileScope;
-@property (weak) IBOutlet NSPopUpButton *popUpButtonInstallMethod;
+@property (weak) IBOutlet NSPopUpButton *popUpButtonDistributionType;
 
 @property BOOL tabBarHidden;
 
@@ -146,8 +146,8 @@
         // Profile Scope
         [_popUpButtonProfileScope bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(payloadScope)) options:nil];
 
-        // Profile Install Method
-        [_popUpButtonInstallMethod bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(installMethod)) options:nil];
+        // Profile Distribution Type
+        [_popUpButtonDistributionType bind:NSSelectedValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(distributionType)) options:nil];
 
         // OS X
         [_checkboxOSX bind:NSValueBinding toObject:[_profileEditor settings] withKeyPath:NSStringFromSelector(@selector(includePlatformOSX)) options:nil];
@@ -562,7 +562,7 @@
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(showKeysDisabled))] || [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysHidden))] ||
                [keyPath isEqualToString:NSStringFromSelector(@selector(showKeysSupervised))] || [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformOSX))] ||
                [keyPath isEqualToString:NSStringFromSelector(@selector(includePlatformiOS))] || [keyPath isEqualToString:NSStringFromSelector(@selector(payloadScope))] ||
-               [keyPath isEqualToString:NSStringFromSelector(@selector(installMethod))]) {
+               [keyPath isEqualToString:NSStringFromSelector(@selector(distributionType))]) {
         [self updateTableViewSettingsFromManifest:_selectedManifest];
         [[_profileEditor library] updateManifests];
     } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(deallocKVO))]) {

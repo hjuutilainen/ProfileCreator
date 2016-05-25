@@ -307,10 +307,12 @@ extern NSString *const PFCProfileTemplateExtension;
 #pragma mark PFCProfileDisplaySettingsKeys
 ////////////////////////////////////////////////////////////////////////////////
 extern NSString *const PFCProfileDisplaySettingsKeyAdvancedSettings;
-extern NSString *const PFCProfileDisplaySettingsKeyInstallMethod;
-extern NSString *const PFCProfileDisplaySettingsKeyInstallMethodManual;
-extern NSString *const PFCProfileDisplaySettingsKeyInstallMethodOTA;
+extern NSString *const PFCProfileDisplaySettingsKeyDistributionType;
+extern NSString *const PFCProfileDisplaySettingsKeyDistributionTypeAny;
+extern NSString *const PFCProfileDisplaySettingsKeyDistributionTypeManual;
+extern NSString *const PFCProfileDisplaySettingsKeyDistributionTypeOTA;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScope;
+extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeAny;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeSystem;
 extern NSString *const PFCProfileDisplaySettingsKeyPayloadScopeUser;
 extern NSString *const PFCProfileDisplaySettingsKeyPlatform;
