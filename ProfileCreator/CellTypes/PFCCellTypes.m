@@ -115,7 +115,14 @@
     } else if ([cellType isEqualToString:PFCCellTypeFile]) {
         return 192.0f;
     } else if ([cellType isEqualToString:PFCCellTypeTableView]) {
-        return 212.0f;
+        CGFloat baseHeight = 212.0f;
+        if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
+            baseHeight = (baseHeight - 23.0f);
+        }
+        if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            baseHeight = (baseHeight - 20.0f);
+        }
+        return baseHeight;
     } else if ([cellType isEqualToString:PFCCellTypeRadioButton]) {
         CGFloat baseHeight = 93.0f;
         if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
