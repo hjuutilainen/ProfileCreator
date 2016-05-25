@@ -53,9 +53,11 @@
             // As this key only is applicable to OS X, and the principle is to show everything even if it's one version of one system that can use it
             // Then only check further if iOS is not available for this payload
             if ([availabilityDict[@"AvailabilityOS"] isEqualToString:@"iOS"]) {
-                if (![manifest[PFCProfileDisplaySettingsKeyPayloadScope] ?: @[ PFCProfileDisplaySettingsKeyPayloadScopeUser ]
-                        containsObject:displayKeys[PFCProfileDisplaySettingsKeyPayloadScope] ?: PFCProfileDisplaySettingsKeyPayloadScopeUser]) {
-                    return NO;
+                if (![displayKeys[PFCProfileDisplaySettingsKeyPayloadScope] isEqualToString:PFCProfileDisplaySettingsKeyPayloadScopeAny]) {
+                    if (![manifest[PFCProfileDisplaySettingsKeyPayloadScope] ?: @[ PFCProfileDisplaySettingsKeyPayloadScopeUser ]
+                            containsObject:displayKeys[PFCProfileDisplaySettingsKeyPayloadScope] ?: PFCProfileDisplaySettingsKeyPayloadScopeUser]) {
+                        return NO;
+                    }
                 }
             }
 
