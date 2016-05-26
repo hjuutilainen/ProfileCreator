@@ -23,6 +23,11 @@
 	<string>MenuIconDock.png</string>
 	<key>PayloadType</key>
 	<string>com.apple.dock</string>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

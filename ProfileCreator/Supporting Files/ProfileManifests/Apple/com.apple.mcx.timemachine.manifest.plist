@@ -23,6 +23,10 @@
 	<string>MenuIconTimeMachine.png</string>
 	<key>PayloadType</key>
 	<string>com.apple.MCX.TimeMachine</string>
+	<key>PayloadScope</key>
+	<array>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

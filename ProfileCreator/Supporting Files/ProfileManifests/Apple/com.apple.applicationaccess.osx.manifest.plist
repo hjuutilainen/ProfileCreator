@@ -30,6 +30,11 @@
 		<string>com.apple.dashboard</string>
 		<string>com.apple.applicationaccess.new</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>ManifestContent</key>
 	<array/>
 </dict>

@@ -25,6 +25,10 @@
 	<array>
 		<string>com.apple.MCX</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

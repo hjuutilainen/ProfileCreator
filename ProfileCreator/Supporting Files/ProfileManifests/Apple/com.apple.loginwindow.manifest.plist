@@ -30,6 +30,10 @@
 		<string>com.apple.mcxloginscripts</string>
 		<string>com.apple.SetupAssistant.managed</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

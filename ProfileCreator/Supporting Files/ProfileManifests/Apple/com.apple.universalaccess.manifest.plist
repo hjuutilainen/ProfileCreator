@@ -23,6 +23,11 @@
 	<string>MenuIconAccessibility.png</string>
 	<key>PayloadType</key>
 	<string>com.apple.universalaccess</string>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>
@@ -57,6 +62,10 @@
 						<string>E97CD669-919F-4260-878D-369DE3EDD78C</string>
 						<key>Title</key>
 						<string>Enable Zoom via ScrollWheel</string>
+						<key>AlignRight</key>
+						<true/>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -73,6 +82,10 @@
 						<string>565D3127-A7A2-4C12-BBB6-8EFFD6B7DC1D</string>
 						<key>Title</key>
 						<string>Enable Zoom via Keyboard</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -155,6 +168,10 @@
 						<string>1515A74D-8D13-492E-8996-35F6185E0FD5</string>
 						<key>Title</key>
 						<string>Show preview rectangle when zoomed out</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -171,6 +188,10 @@
 						<string>00B89BAB-521E-40E1-874A-523AC5CA6585</string>
 						<key>Title</key>
 						<string>Smooth images</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -195,6 +216,10 @@
 						<string>4F6FA7E9-8906-42C7-AA95-32248904DF79</string>
 						<key>Title</key>
 						<string>Invert colors</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -211,6 +236,10 @@
 						<string>C62F4D53-DD74-47EA-B540-0BB7D83BE2E9</string>
 						<key>Title</key>
 						<string>Use grayscale</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>
@@ -296,6 +325,10 @@
 						<string>CFE57294-6E44-442C-BBB0-251065DD9920</string>
 						<key>Title</key>
 						<string>Enable VoiceOver</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
 						<integer>4</integer>
 						<key>PayloadType</key>

@@ -26,6 +26,11 @@
 		<string>com.apple.finder</string>
 		<string>com.apple.loginwindow</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

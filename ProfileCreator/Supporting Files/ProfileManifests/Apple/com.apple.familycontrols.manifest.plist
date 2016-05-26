@@ -28,6 +28,11 @@
 		<string>com.apple.familycontrols.contentfilter</string>
 		<string>com.apple.familycontrols.timelimits</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

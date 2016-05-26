@@ -27,6 +27,11 @@
 		<string>com.apple.MCX</string>
 		<string>com.apple.homeSync</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>

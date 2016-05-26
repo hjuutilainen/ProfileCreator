@@ -26,6 +26,11 @@
 		<string>loginwindow</string>
 		<string>com.apple.loginitems.managed</string>
 	</array>
+	<key>PayloadScope</key>
+	<array>
+		<string>User</string>
+		<string>System</string>
+	</array>
 	<key>AllowMultiplePayloads</key>
 	<false/>
 	<key>ManifestContent</key>
