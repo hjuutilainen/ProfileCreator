@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView identifier="TableViewIdentifierPayloadSettings" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="80" rowSizeStyle="automatic" viewBased="YES" id="jL4-4V-5fE" userLabel="TableViewSettings" customClass="PFCTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="699" height="1717"/>
+                                <rect key="frame" x="0.0" y="0.0" width="699" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -775,45 +775,8 @@
                                                     <outlet property="settingTitle" destination="2SI-h9-kGh" id="S6k-6a-Xe1"/>
                                                 </connections>
                                             </tableCellView>
-                                            <tableCellView identifier="Checkbox" id="4QV-Us-Fu3" customClass="PFCCheckboxCellView">
-                                                <rect key="frame" x="99" y="827" width="500" height="52"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="blB-Je-iBf">
-                                                        <rect key="frame" x="6" y="8" width="488" height="17"/>
-                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="ZFI-DE-37i">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="ICd-U5-A5R">
-                                                        <rect key="frame" x="6" y="25" width="488" height="18"/>
-                                                        <buttonCell key="cell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="CPy-6f-YZd">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="systemBold"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="blB-Je-iBf" firstAttribute="leading" secondItem="4QV-Us-Fu3" secondAttribute="leading" constant="8" id="19f-zL-FkT"/>
-                                                    <constraint firstAttribute="bottom" secondItem="blB-Je-iBf" secondAttribute="bottom" constant="8" id="66Z-5a-xQN"/>
-                                                    <constraint firstItem="ICd-U5-A5R" firstAttribute="top" secondItem="4QV-Us-Fu3" secondAttribute="top" constant="11" id="GbC-d8-1Gf"/>
-                                                    <constraint firstItem="ICd-U5-A5R" firstAttribute="leading" secondItem="4QV-Us-Fu3" secondAttribute="leading" constant="8" id="OXi-tl-0WC"/>
-                                                    <constraint firstItem="blB-Je-iBf" firstAttribute="top" secondItem="ICd-U5-A5R" secondAttribute="bottom" constant="2" id="PGT-NO-rWg"/>
-                                                    <constraint firstAttribute="trailing" secondItem="ICd-U5-A5R" secondAttribute="trailing" constant="8" id="PLL-s9-IFa"/>
-                                                    <constraint firstAttribute="trailing" secondItem="blB-Je-iBf" secondAttribute="trailing" constant="8" id="TUP-zg-6Gn"/>
-                                                </constraints>
-                                                <connections>
-                                                    <outlet property="constraintLeading" destination="OXi-tl-0WC" id="ihb-0J-6Y2"/>
-                                                    <outlet property="constraintLeadingCheckbox" destination="OXi-tl-0WC" id="xb3-X4-2fi"/>
-                                                    <outlet property="constraintLeadingDescription" destination="19f-zL-FkT" id="dsy-Pr-vge"/>
-                                                    <outlet property="settingCheckbox" destination="ICd-U5-A5R" id="bCY-Bg-tiy"/>
-                                                    <outlet property="settingDescription" destination="blB-Je-iBf" id="5mm-HX-kFc"/>
-                                                </connections>
-                                            </tableCellView>
                                             <tableCellView identifier="TextFieldCheckbox" id="bk8-P0-JDN" customClass="PFCTextFieldCheckboxCellView">
-                                                <rect key="frame" x="99" y="879" width="500" height="81"/>
+                                                <rect key="frame" x="99" y="827" width="500" height="81"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="XUM-PR-Pio">
@@ -870,7 +833,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="TextFieldHostPortCheckbox" id="04B-Hj-nzC" customClass="PFCTextFieldHostPortCheckboxCellView">
-                                                <rect key="frame" x="99" y="960" width="500" height="81"/>
+                                                <rect key="frame" x="99" y="908" width="500" height="81"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="xTk-vf-PYT">
@@ -955,7 +918,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="DatePicker" id="v08-KL-YU9" customClass="PFCDatePickerCellView">
-                                                <rect key="frame" x="99" y="1041" width="500" height="82"/>
+                                                <rect key="frame" x="99" y="989" width="500" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <datePicker verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WmH-Zs-YYk">
@@ -1019,7 +982,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="DatePickerNoTitle" id="RIh-2C-u0q" customClass="PFCDatePickerNoTitleCellView">
-                                                <rect key="frame" x="99" y="1123" width="500" height="39"/>
+                                                <rect key="frame" x="99" y="1071" width="500" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <datePicker verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ydv-my-EJD">
@@ -1059,7 +1022,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="TextFieldDaysHoursNoTitle" id="Gsc-FY-Cdn" customClass="PFCTextFieldDaysHoursNoTitleCellView">
-                                                <rect key="frame" x="99" y="1162" width="500" height="38"/>
+                                                <rect key="frame" x="99" y="1110" width="500" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="P6Y-9C-KTq">
@@ -1142,7 +1105,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="TableView" id="DWR-fx-y0Z" customClass="PFCTableViewCellView">
-                                                <rect key="frame" x="99" y="1200" width="500" height="212"/>
+                                                <rect key="frame" x="99" y="1148" width="500" height="212"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="v42-dc-VOo">
@@ -1334,7 +1297,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="File" wantsLayer="YES" id="ZFb-cn-w3o" customClass="PFCFileCellView">
-                                                <rect key="frame" x="99" y="1412" width="500" height="192"/>
+                                                <rect key="frame" x="99" y="1360" width="500" height="192"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="N4M-gZ-hXh">
@@ -1494,7 +1457,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="SegmentedControl" wantsLayer="YES" id="gfY-K1-QI9" customClass="PFCSegmentedControlCellView">
-                                                <rect key="frame" x="99" y="1604" width="500" height="38"/>
+                                                <rect key="frame" x="99" y="1552" width="500" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bUw-Ls-27N">

@@ -21,5 +21,4 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCCheckboxCellView : NSTableCellView <PFCCellType>
-
 @end
