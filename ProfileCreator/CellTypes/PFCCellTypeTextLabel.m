@@ -59,8 +59,6 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
-    DDLogDebug(@"THSIISISISIS: %s", __PRETTY_FUNCTION__);
-
     // -------------------------------------------------------------------------
     //  Get availability overrides
     // -------------------------------------------------------------------------
