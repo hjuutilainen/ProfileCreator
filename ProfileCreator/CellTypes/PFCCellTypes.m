@@ -43,18 +43,17 @@
 - (CGFloat)rowHeightForManifestContentDict:(NSDictionary *)manifestContentDict {
     NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
     if ([cellType isEqualToString:PFCCellTypePadding]) {
-        if (manifestContentDict[@"PaddingHeight"] != nil) {
-            return [manifestContentDict[@"PaddingHeight"] floatValue] ?: 20.0f;
-        }
-        return 20.0f;
+        return [manifestContentDict[@"PaddingHeight"] floatValue] ?: 20.0f;
     } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
         return 38.0f;
     } else if ([cellType isEqualToString:PFCCellTypeDatePickerNoTitle] || [cellType isEqualToString:PFCCellTypeTextFieldDaysHoursNoTitle]) {
         return 39.0f;
     } else if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
         if ([manifestContentDict[PFCManifestKeyDescription] length] == 0) {
+            DDLogDebug(@"Returning Height: 26.0f");
             return 26.0f;
         } else {
+            DDLogDebug(@"Returning Height: 52.0f");
             return 52.0f;
         }
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonLeft]) {
@@ -72,6 +71,10 @@
             baseHeight = (baseHeight - 24.0f);
         }
         return baseHeight;
+
+        // ---------------------------------------------------------------------
+        //  TextField
+        // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
         CGFloat baseHeight = 80.0f;
         if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
@@ -81,6 +84,10 @@
             baseHeight = (baseHeight - 26.0f);
         }
         return baseHeight;
+
+        // ---------------------------------------------------------------------
+        //  PopUpButton
+        // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
         CGFloat baseHeight = 80.0f;
         if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
@@ -90,6 +97,10 @@
             baseHeight = (baseHeight - 22.0f);
         }
         return baseHeight;
+
+        // ---------------------------------------------------------------------
+        //  PopUpButtonCheckbox
+        // ---------------------------------------------------------------------
     } else if ([cellType isEqualToString:PFCCellTypePopUpButtonCheckbox]) {
         CGFloat baseHeight = 80.0f;
         if ([manifestContentDict[PFCManifestKeyTitle] length] == 0) {
