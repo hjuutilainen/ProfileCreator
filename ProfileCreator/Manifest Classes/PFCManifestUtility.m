@@ -46,19 +46,25 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////
 
-- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant {
-    CGFloat indentationBaseValue = baseConstant.floatValue ?: @(PFCIndentLevelBaseConstant).floatValue;
-    CGFloat indentationMultiplier;
-    if (indentationLevel.floatValue < 1.0f) {
+- (NSInteger)constantForIndentationLevel:(NSInteger)indentationLevel baseConstant:(NSInteger)baseConstant offset:(NSInteger)offset {
+    NSInteger indentationBaseValue = baseConstant ?: PFCIndentLevelBaseConstant;
+    NSInteger indentationMultiplier;
+    if (indentationLevel < 1) {
         return indentationBaseValue;
-    } else if (5.0f < indentationLevel.floatValue) {
-        indentationMultiplier = 5.0f;
+    } else if (5 < indentationLevel) {
+        indentationMultiplier = 5;
     } else {
-        indentationMultiplier = indentationLevel.floatValue;
+        indentationMultiplier = indentationLevel;
     }
 
-    return (indentationBaseValue + (indentationBaseValue * indentationMultiplier));
+    return (indentationBaseValue + offset + (indentationBaseValue * indentationMultiplier));
 } // constantForIndentationLevel
+
+- (NSInteger)constantForIndentationLevelRight:(NSInteger)indentationLevel baseConstant:(NSInteger)baseConstant offset:(NSInteger)offset {
+    NSInteger indentationBaseValue = baseConstant ?: PFCIndentLevelBaseConstant;
+    DDLogDebug(@"Returning Indentation: %ld", (PFCIndentCenterConstant + (indentationBaseValue * indentationLevel)));
+    return (PFCIndentCenterConstant + offset + (indentationBaseValue * indentationLevel));
+} // constantForIndentationLevelRight
 
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
 

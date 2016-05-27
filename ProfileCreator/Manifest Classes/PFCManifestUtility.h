@@ -29,7 +29,8 @@
 // -----------------------------------------------------------------------------
 //  Utility Methods
 // -----------------------------------------------------------------------------
-- (CGFloat)constantForIndentationLevel:(NSNumber *)indentationLevel baseConstant:(NSNumber *)baseConstant;
+- (NSInteger)constantForIndentationLevel:(NSInteger)indentationLevel baseConstant:(NSInteger)baseConstant offset:(NSInteger)offset;
+- (NSInteger)constantForIndentationLevelRight:(NSInteger)indentationLevel baseConstant:(NSInteger)baseConstant offset:(NSInteger)offset;
 - (NSImage *)iconForManifest:(NSDictionary *)manifest;
 - (BOOL)hideKey:(NSString *)key;
 - (NSString *)typeStringFromValue:(id)value;

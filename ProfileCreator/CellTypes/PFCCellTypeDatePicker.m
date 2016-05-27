@@ -101,7 +101,7 @@
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:120];
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@112];
+        NSInteger constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] baseConstant:112 offset:0];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:112];
@@ -370,7 +370,7 @@
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         [[cellView constraintLeading] setConstant:120];
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        CGFloat constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@112];
+        NSInteger constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] baseConstant:112 offset:0];
         [[cellView constraintLeading] setConstant:constraintConstant];
     } else {
         [[cellView constraintLeading] setConstant:112];

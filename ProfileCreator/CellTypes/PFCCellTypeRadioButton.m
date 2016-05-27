@@ -214,24 +214,26 @@
     // ---------------------------------------------------------------------
     //  Text Indentation
     // ---------------------------------------------------------------------
-    CGFloat constraintConstant = 8;
+    NSInteger constraintConstant = 8;
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         constraintConstant = 102;
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
+        constraintConstant =
+            [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] baseConstant:PFCIndentLevelBaseConstant offset:0];
     }
     [[cellView constraintLeading] setConstant:constraintConstant];
-    DDLogDebug(@"constraintConstant=%f", constraintConstant);
+    DDLogDebug(@"constraintConstant=%ld", (long)constraintConstant);
 
     // ---------------------------------------------------------------------
     //  Buttons Indentation
     // ---------------------------------------------------------------------
-    CGFloat buttonsConstraintConstant = 8;
+    NSInteger buttonsConstraintConstant = 8;
     if (manifestContentDict[@"IndentLevelButtons"] != nil) {
-        buttonsConstraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[@"IndentLevelButtons"] baseConstant:@(PFCIndentLevelBaseConstant)];
+        buttonsConstraintConstant =
+            [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[@"IndentLevelButtons"] integerValue] baseConstant:PFCIndentLevelBaseConstant offset:0];
     }
     [[cellView buttonsConstraintLeading] setConstant:buttonsConstraintConstant];
-    DDLogDebug(@"buttonsConstraintConstant=%f", buttonsConstraintConstant);
+    DDLogDebug(@"buttonsConstraintConstant=%ld", (long)buttonsConstraintConstant);
 
     // ---------------------------------------------------------------------
     //  Tool Tip

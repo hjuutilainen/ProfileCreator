@@ -108,11 +108,12 @@
     // ---------------------------------------------------------------------
     //  Indentation
     // ---------------------------------------------------------------------
-    CGFloat constraintConstant = 8;
+    NSInteger constraintConstant = 8;
     if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
         constraintConstant = 102;
     } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
-        constraintConstant = [[PFCManifestUtility sharedUtility] constantForIndentationLevel:manifestContentDict[PFCManifestKeyIndentLevel] baseConstant:@(PFCIndentLevelBaseConstant)];
+        constraintConstant =
+            [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] baseConstant:PFCIndentLevelBaseConstant offset:0];
     }
     [[cellView constraintLeadingTextField] setConstant:constraintConstant];
 
