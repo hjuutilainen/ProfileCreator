@@ -47,8 +47,9 @@
 
 @property (nonatomic, weak) PFCProfileEditor *profileEditor;
 
-@property NSMutableArray *arrayManifestContent;
 @property NSMutableArray *arrayManifestTabs;
+@property NSMutableArray *arrayManifestContent;
+@property NSMutableArray *arrayManifestContentViews;
 
 @property (readwrite) BOOL showValuesSource;
 @property (readwrite) BOOL showColumnDisabled;
@@ -90,6 +91,7 @@
         _profileEditor = profileEditor;
 
         _arrayManifestContent = [[NSMutableArray alloc] init];
+        _arrayManifestContentViews = [[NSMutableArray alloc] init];
         _arrayManifestTabs = [[NSMutableArray alloc] init];
 
         // Setup some defaults
@@ -249,10 +251,67 @@
 } // buttonAddPayload
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
-    if (row < _arrayManifestContent.count) {
-        return [[PFCCellTypes sharedInstance] rowHeightForManifestContentDict:_arrayManifestContent[(NSUInteger)row] ?: @{}];
+
+    // -----------------------------------------------------------------------------------------------------------------------
+    //  To allow for custom cell heights the cell view creation is done in this call instead of 'viewForTableColumn'.
+    //  This is because the TableView needs to know it's height before asking for the views.
+    //  I create and store the views in the _rowViews array for access later, and return the calculated size done at creation
+    // -----------------------------------------------------------------------------------------------------------------------
+
+    if (row == 0) {
+        [_arrayManifestContentViews removeAllObjects];
     }
-    return 1;
+
+    if (_arrayManifestContent.count < row || _arrayManifestContent.count == 0) {
+        return 1.0f;
+    }
+
+    NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
+    NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
+
+    // -----------------------------------------------------------------
+    //  Padding
+    // -----------------------------------------------------------------
+    if ([cellType isEqualToString:PFCCellTypePadding]) {
+        _arrayManifestContentViews[row] = [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
+        return [manifestContentDict[@"PaddingHeight"] floatValue] ?: 20.0f;
+    } else {
+
+        id cellView;
+
+        if ([cellType isEqualToString:PFCCellTypeCheckbox]) {
+            cellView = [[PFCCheckboxCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
+            cellView = [[PFCPopUpButtonCellView alloc] init];
+        } else {
+            // FIXME - Until all cell views supports programmatic creation, create from xib
+            cellView = [tableView makeViewWithIdentifier:cellType owner:self];
+        }
+
+        if (cellView) {
+            NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier] ?: @"";
+            [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
+            _arrayManifestContentViews[row] = [cellView populateCellView:cellView
+                manifestContentDict:manifestContentDict
+                manifest:_selectedManifest
+                settings:_settingsManifest ?: @{}
+                settingsUser:_settingsManifest[identifier] ?: @{}
+                settingsLocal:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
+                displayKeys:_profileEditor.settings.displayKeys
+                row:row
+                sender:self];
+
+            // FIXME - Until all cell views caclulate their own 'heigh', check before accessing
+            if ([_arrayManifestContentViews[row] respondsToSelector:@selector(height)]) {
+                return [@([_arrayManifestContentViews[row] height]) floatValue] ?: 1.0f;
+            } else {
+                return 1.0f;
+            }
+        } else {
+            DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
+        }
+    }
+    return 1.0f;
 } // tableView:heightOfRow
 
 - (NSArray *)manifestContentForManifest:(NSDictionary *)manifest {
@@ -433,7 +492,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
     return _arrayManifestContent.count;
 } // numberOfRowsInTableView
 
@@ -444,49 +502,26 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    DDLogVerbose(@"%s", __PRETTY_FUNCTION__);
+
     if (_arrayManifestContent.count < row || _arrayManifestContent.count == 0) {
         return nil;
     }
 
-    NSString *tableColumnIdentifier = tableColumn.identifier;
-    DDLogVerbose(@"Table Column: %@", tableColumnIdentifier);
-    NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
-    NSString *cellType = manifestContentDict[PFCManifestKeyCellType];
-    DDLogVerbose(@"CellType: %@", cellType);
-    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
+    if ([tableColumn.identifier isEqualToString:@"ColumnSettings"]) {
 
-    if ([tableColumnIdentifier isEqualToString:@"ColumnSettings"]) {
+        // ---------------------------------------------------------------------
+        //  Returns the pre-created views created in tableView:heightOfRow
+        // ---------------------------------------------------------------------
+        return _arrayManifestContentViews[row];
+    } else if ([tableColumn.identifier isEqualToString:@"ColumnSettingsEnabled"]) {
 
-        // -----------------------------------------------------------------
-        //  Padding
-        // -----------------------------------------------------------------
-        if ([cellType isEqualToString:PFCCellTypePadding]) {
-            return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
-        } else {
-            id cellView = [tableView makeViewWithIdentifier:cellType owner:self];
-            if (cellView) {
-                [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
-                return [cellView populateCellView:cellView
-                    manifestContentDict:manifestContentDict
-                    manifest:_selectedManifest
-                    settings:_settingsManifest ?: @{}
-                    settingsUser:_settingsManifest[identifier] ?: @{}
-                    settingsLocal:(_showValuesSource) ? _settingsLocalManifest[identifier] : @{}
-                    displayKeys:_profileEditor.settings.displayKeys
-                    row:row
-                    sender:self];
-            } else {
-                DDLogError(@"Unknown CellType: %@ in %s", cellType, __PRETTY_FUNCTION__);
-                return nil;
-            }
-        }
-    } else if ([tableColumnIdentifier isEqualToString:@"ColumnSettingsEnabled"]) {
+        NSDictionary *manifestContentDict = _arrayManifestContent[(NSUInteger)row];
 
-        if ([cellType isEqualToString:PFCCellTypePadding]) {
+        if ([manifestContentDict[PFCManifestKeyCellType] ?: @"" isEqualToString:PFCCellTypePadding]) {
             return [tableView makeViewWithIdentifier:@"CellViewSettingsPadding" owner:self];
         } else {
 
+            NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
             NSDictionary *userSettingsDict = _settingsManifest[identifier];
             NSDictionary *localSettingsDict;
             if (_showValuesSource) {
@@ -497,6 +532,8 @@
             [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
             return [cellView populateCellViewEnabled:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
         }
+    } else {
+        DDLogError(@"Unknown TableView Column Identifier: %@", tableColumn.identifier);
     }
     return nil;
 } // tableView:viewForTableColumn:row
@@ -1318,26 +1355,17 @@
         return;
     }
 
-    // -------------------------------------------------------------------------
-    //  Another verification this is a CellViewSettingsPopUp popup button
-    // -------------------------------------------------------------------------
-    if (popUpButton ==
-            [(PFCPopUpButtonCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton] ||
-        popUpButton ==
-            [(PFCPopUpButtonLeftCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingPopUpButton]) {
+    // ---------------------------------------------------------------------
+    //  Save selection
+    // ---------------------------------------------------------------------
+    NSString *selectedTitle = [popUpButton titleOfSelectedItem];
+    settingsDict[PFCSettingsKeyValue] = selectedTitle;
+    _settingsManifest[identifier] = [settingsDict copy];
 
-        // ---------------------------------------------------------------------
-        //  Save selection
-        // ---------------------------------------------------------------------
-        NSString *selectedTitle = [popUpButton titleOfSelectedItem];
-        settingsDict[PFCSettingsKeyValue] = selectedTitle;
-        _settingsManifest[identifier] = [settingsDict copy];
-
-        // ---------------------------------------------------------------------
-        //  Add subkeys for selected title
-        // ---------------------------------------------------------------------
-        [self updateTableViewSettingsFromManifestContentDict:manifestContentDict atRow:row];
-    }
+    // ---------------------------------------------------------------------
+    //  Add subkeys for selected title
+    // ---------------------------------------------------------------------
+    [self updateTableViewSettingsFromManifestContentDict:manifestContentDict atRow:row];
 } // popUpButtonSelection
 
 - (void)datePickerSelection:(NSDatePicker *)datePicker {
@@ -1572,7 +1600,10 @@
         return;
     }
 
-    if ([[[checkbox superview] class] isSubclassOfClass:[CellViewSettingsEnabled class]]) {
+    Class superviewClass = [[checkbox superview] class];
+    DDLogDebug(@"Checkbox superview class: %@", NSStringFromClass(superviewClass));
+
+    if ([superviewClass isSubclassOfClass:[CellViewSettingsEnabled class]]) {
         if (checkbox ==
             [(CellViewSettingsEnabled *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettingsEnabled"] row:row makeIfNecessary:NO] settingEnabled]) {
             settingsDict[PFCSettingsKeyEnabled] = @(state);
@@ -1592,18 +1623,16 @@
             return;
         }
 
-    } else if ([[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldCheckboxCellView class]] || [[[checkbox superview] class] isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]) {
+    } else if ([superviewClass isSubclassOfClass:[PFCTextFieldCheckboxCellView class]] || [superviewClass isSubclassOfClass:[PFCTextFieldHostPortCheckboxCellView class]]) {
+        settingsDict[PFCSettingsKeyValueCheckbox] = @(state);
         if (checkbox == [(PFCTextFieldCheckboxCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
                             settingCheckbox] ||
             checkbox == [(PFCTextFieldHostPortCheckboxCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
                             settingCheckbox]) {
             settingsDict[PFCSettingsKeyValueCheckbox] = @(state);
         }
-
     } else {
-        if (checkbox == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingCheckbox]) {
-            settingsDict[PFCSettingsKeyValue] = @(state);
-        }
+        settingsDict[PFCSettingsKeyValue] = @(state);
     }
     NSLog(@"settingsDict=%@", settingsDict);
     _settingsManifest[identifier] = [settingsDict copy];
