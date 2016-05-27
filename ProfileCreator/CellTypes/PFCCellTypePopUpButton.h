@@ -21,7 +21,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCPopUpButtonCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSPopUpButton *settingPopUpButton;
+@property NSInteger height;
 @end
 
 @interface PFCPopUpButtonCheckboxCellView : NSTableCellView <PFCCellType>
