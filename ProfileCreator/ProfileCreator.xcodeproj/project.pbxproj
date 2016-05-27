@@ -19,6 +19,7 @@
 		5300CC2E1CF5E52300EB7A61 /* com.apple.energysaver.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5300CC2D1CF5E52300EB7A61 /* com.apple.energysaver.manifest.plist */; };
 		5300CC301CF5E58900EB7A61 /* MenuIconEnergySaver.png in Resources */ = {isa = PBXBuildFile; fileRef = 5300CC2F1CF5E58900EB7A61 /* MenuIconEnergySaver.png */; };
 		5300CC311CF5E5A100EB7A61 /* com.apple.energysaver.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5300CC2D1CF5E52300EB7A61 /* com.apple.energysaver.manifest.plist */; };
+		5300CC421CF5EDC400EB7A61 /* com.apple.finder.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5300CC261CF5DED000EB7A61 /* com.apple.finder.manifest.plist */; };
 		5304B24E1C1E02C50085559C /* com.apple.vpn.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5304B24D1C1E02C50085559C /* com.apple.vpn.manifest.plist */; };
 		5306D9D31C7EF5300010191F /* PFCCellTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9D21C7EF5300010191F /* PFCCellTypes.m */; };
 		5306D9E51C7EFED60010191F /* PFCCellTypeCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 5306D9E41C7EFED60010191F /* PFCCellTypeCheckbox.m */; };
@@ -87,8 +88,8 @@
 		5364EEDA1C710F8200F34BC9 /* NSColor+PFCColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EED91C710F8200F34BC9 /* NSColor+PFCColors.m */; };
 		5364EEEC1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 5364EEEB1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m */; };
 		536888FE1C7E47CF00759E68 /* PFCCellTypeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 536888FD1C7E47CF00759E68 /* PFCCellTypeTextView.m */; };
-		5368FEF81CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5368FEF71CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist */; };
-		5368FF081CF4754C003B23AD /* com.apple.securityprivacy.osx.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5368FEF71CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist */; };
+		5368FEF81CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5368FEF71CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist */; };
+		5368FF081CF4754C003B23AD /* com.apple.security.privacy.osx.manifest.plist in Copy Manifests Apple */ = {isa = PBXBuildFile; fileRef = 5368FEF71CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist */; };
 		536E905D1C84EC2300E1D781 /* PFCMainWindowSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */; };
 		536E905E1C84EC2300E1D781 /* PFCMainWindowSort.xib in Resources */ = {isa = PBXBuildFile; fileRef = 536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */; };
 		536FC5211C15EEDE00B1D7CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 536FC5201C15EEDE00B1D7CF /* main.m */; };
@@ -339,13 +340,14 @@
 			dstPath = Manifests/Apple;
 			dstSubfolderSpec = 7;
 			files = (
+				5300CC421CF5EDC400EB7A61 /* com.apple.finder.manifest.plist in Copy Manifests Apple */,
 				5300CC311CF5E5A100EB7A61 /* com.apple.energysaver.manifest.plist in Copy Manifests Apple */,
 				5300CC2C1CF5E49600EB7A61 /* com.apple.applicationaccess.osx.manifest.plist in Copy Manifests Apple */,
 				5300CC251CF5B9E800EB7A61 /* com.apple.directoryservice.managed.manifest.plist in Copy Manifests Apple */,
 				5300CC201CF5B35800EB7A61 /* com.apple.softwareupdate.manifest.plist in Copy Manifests Apple */,
 				53D686971CF4E9E500D72DA5 /* com.apple.mcx.timemachine.manifest.plist in Copy Manifests Apple */,
 				53D686941CF4D99F00D72DA5 /* com.apple.xsan.manifest.plist in Copy Manifests Apple */,
-				5368FF081CF4754C003B23AD /* com.apple.securityprivacy.osx.manifest.plist in Copy Manifests Apple */,
+				5368FF081CF4754C003B23AD /* com.apple.security.privacy.osx.manifest.plist in Copy Manifests Apple */,
 				53A73CB41CF3909C0036248F /* com.apple.dock.manifest.plist in Copy Manifests Apple */,
 				53A73CA11CF380CB0036248F /* com.apple.familycontrols.manifest.plist in Copy Manifests Apple */,
 				53A73C8D1CF37A000036248F /* com.apple.proxies.manifest.plist in Copy Manifests Apple */,
@@ -481,7 +483,7 @@
 		5364EEEB1C71186100F34BC9 /* PFCTableViewCellsPayloadPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCTableViewCellsPayloadPreview.m; path = "TableView CellViews/PFCTableViewCellsPayloadPreview.m"; sourceTree = "<group>"; };
 		536888FC1C7E47CF00759E68 /* PFCCellTypeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCCellTypeTextView.h; path = CellTypes/PFCCellTypeTextView.h; sourceTree = "<group>"; };
 		536888FD1C7E47CF00759E68 /* PFCCellTypeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCCellTypeTextView.m; path = CellTypes/PFCCellTypeTextView.m; sourceTree = "<group>"; };
-		5368FEF71CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.securityprivacy.osx.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.securityprivacy.osx.manifest.plist"; sourceTree = "<group>"; };
+		5368FEF71CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = com.apple.security.privacy.osx.manifest.plist; path = "Supporting Files/ProfileManifests/Apple/com.apple.security.privacy.osx.manifest.plist"; sourceTree = "<group>"; };
 		536E905A1C84EC2300E1D781 /* PFCMainWindowSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCMainWindowSort.h; path = "Windows-Views/Main Window/Views/PFCMainWindowSort.h"; sourceTree = "<group>"; };
 		536E905B1C84EC2300E1D781 /* PFCMainWindowSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCMainWindowSort.m; path = "Windows-Views/Main Window/Views/PFCMainWindowSort.m"; sourceTree = "<group>"; };
 		536E905C1C84EC2300E1D781 /* PFCMainWindowSort.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PFCMainWindowSort.xib; path = "Windows-Views/Main Window/Views/PFCMainWindowSort.xib"; sourceTree = "<group>"; };
@@ -981,7 +983,7 @@
 				53FCF0161C1F5DB500E440CB /* com.apple.proxies.manifest.plist */,
 				53751FE41C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist */,
 				5359E2D11C1CC57E00646980 /* com.apple.security.privacy.manifest.plist */,
-				5368FEF71CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist */,
+				5368FEF71CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist */,
 				53C7339B1C1F37E300119C71 /* com.apple.scep.manifest.plist */,
 				5300CC0F1CF5B2B900EB7A61 /* com.apple.softwareupdate.manifest.plist */,
 				53822E781CF2F03800FCC466 /* com.apple.universalaccess.manifest.plist */,
@@ -1410,7 +1412,7 @@
 				53C782501C85C32200E731B1 /* PFCPreferencesMCX.xib in Resources */,
 				534324B61C80E2FB00893351 /* Horizontal Settings Mixer-50.png in Resources */,
 				534324C91C80E5EA00893351 /* Home Filled-15.png in Resources */,
-				5368FEF81CF47373003B23AD /* com.apple.securityprivacy.osx.manifest.plist in Resources */,
+				5368FEF81CF47373003B23AD /* com.apple.security.privacy.osx.manifest.plist in Resources */,
 				53751FE51C1B5C2D00FF3CB0 /* com.apple.security.certificate.manifest.plist in Resources */,
 				53A5E4791C7F9DE800A79E44 /* PFCProfileEditorLibraryMenu.xib in Resources */,
 				53598C321C81E2C300C6BD2E /* PFCMainWindowGroup.xib in Resources */,
