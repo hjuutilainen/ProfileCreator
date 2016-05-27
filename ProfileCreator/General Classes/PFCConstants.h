@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 
 extern NSInteger const PFCMaximumPayloadCount;
 extern NSInteger const PFCIndentLevelBaseConstant;
+extern NSInteger const PFCIndentCenterConstant;
 extern int const PFCTableViewGroupRowHeight;
 extern NSString *const PFCProfileDraggingType;
 
@@ -104,6 +105,7 @@ extern NSString *const PFCValueTypeUnknown;
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
+extern NSString *const PFCManifestKeyAlignRight;
 extern NSString *const PFCManifestKeyAllowedFileTypes;
 extern NSString *const PFCManifestKeyAllowedFileExtensions;
 extern NSString *const PFCManifestKeyAllowMultiplePayloads;

@@ -21,6 +21,7 @@
 
 NSInteger const PFCMaximumPayloadCount = 8;
 NSInteger const PFCIndentLevelBaseConstant = 8;
+NSInteger const PFCIndentCenterConstant = 250;
 int const PFCTableViewGroupRowHeight = 24;
 NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 
@@ -72,6 +73,7 @@ NSString *const PFCValueTypeUnknown = @"Unknown";
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark ManifestKeys
 ////////////////////////////////////////////////////////////////////////////////
+NSString *const PFCManifestKeyAlignRight = @"AlignRight";
 NSString *const PFCManifestKeyAllowedFileTypes = @"AllowedFileTypes";
 NSString *const PFCManifestKeyAllowedFileExtensions = @"AllowedFileExtensions";
 NSString *const PFCManifestKeyAllowMultiplePayloads = @"AllowMultiplePayloads";
