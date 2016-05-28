@@ -62,9 +62,9 @@
     // -------------------------------------------------------------------------
     NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
-    // ---------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Required
-    // ---------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     BOOL required = NO;
     if (overrides[PFCManifestKeyRequired] != nil) {
         required = [overrides[PFCManifestKeyRequired] boolValue];
@@ -72,9 +72,9 @@
         required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     }
 
-    // ---------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Optional
-    // ---------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     BOOL optional = NO;
     if (overrides[PFCManifestKeyOptional] != nil) {
         optional = [overrides[PFCManifestKeyOptional] boolValue];
@@ -212,13 +212,17 @@
     [self addSubview:textField];
 
     // -------------------------------------------------------------------------
-    //  TextFieldLocation Right/Left
+    //  TextFieldLocation Right
     // -------------------------------------------------------------------------
     if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Right"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textField]-(8)-|"
                                                                                        options:NSLayoutFormatAlignAllBaseline
                                                                                        metrics:nil
                                                                                          views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
+
+        // -------------------------------------------------------------------------
+        //  TextFieldLocation Left
+        // -------------------------------------------------------------------------
     } else if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Left"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[textField]-(4)-[textFieldTitle]"
                                                                                        options:NSLayoutFormatAlignAllBaseline
@@ -248,14 +252,14 @@
         }
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Tool Tip
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Required
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if (required && value.length == 0) {
         [self showRequired:YES];
     } else {
