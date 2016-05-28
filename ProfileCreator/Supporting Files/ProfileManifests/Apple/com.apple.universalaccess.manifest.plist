@@ -437,6 +437,8 @@
 						<string>ADA629EF-B45E-48C5-B3ED-529D4EC0FF1A</string>
 						<key>Title</key>
 						<string>Beep when a modifier key is set</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>IndentLevel</key>
 						<integer>2</integer>
 						<key>PayloadType</key>
@@ -473,6 +475,8 @@
 						<string>C43ED3AB-6D92-4C6D-A9B5-22F425DF3BED</string>
 						<key>Title</key>
 						<string>Display pressed keys on screen</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>IndentLevel</key>
 						<integer>2</integer>
 						<key>PayloadType</key>
@@ -522,13 +526,17 @@
 						<key>Identifier</key>
 						<string>450C9994-228D-4A9E-8BCA-BEA90FA30C36</string>
 						<key>Title</key>
-						<string>Use click key sounds</string>
+						<string>Use click key sounds:</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
 						<string>slowKeyBeepOn</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
-						<integer>2</integer>
+						<integer>8</integer>
 						<key>CellType</key>
 						<string>Checkbox</string>
 						<key>DefaultValue</key>
@@ -558,15 +566,19 @@
 						<key>Identifier</key>
 						<string>DE45B240-809D-4472-8F2A-0D88F471BD75</string>
 						<key>Title</key>
-						<string>Acceptance delay</string>
+						<string>Acceptance delay:</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
 						<string>slowKeyDelay</string>
 						<key>PayloadValueType</key>
 						<string>Integer</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
-						<integer>2</integer>
+						<integer>8</integer>
 						<key>Unit</key>
 						<string>milliseconds</string>
 						<key>CellType</key>
@@ -612,15 +624,21 @@
 						<key>Identifier</key>
 						<string>B448F41B-F32F-46D5-ACE1-EB96CC0566C9</string>
 						<key>Title</key>
-						<string>Initial delay</string>
+						<string>Initial delay:</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
 						<string>mouseDriverInitialDelay</string>
 						<key>PayloadValueType</key>
 						<string>Integer</string>
+						<key>PopUpButtonLocation</key>
+						<string>Right</string>
 						<key>IndentLevel</key>
-						<integer>2</integer>
+						<integer>8</integer>
+						<key>AlignRight</key>
+						<true/>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -720,15 +738,21 @@
 						<key>Identifier</key>
 						<string>CA4A3DB2-3284-4770-9F7E-28F6B13791B9</string>
 						<key>Title</key>
-						<string>Maximum speed</string>
+						<string>Maximum speed:</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
 						<string>mouseDriverMaxSpeed</string>
 						<key>PayloadValueType</key>
 						<string>Integer</string>
+						<key>PopUpButtonLocation</key>
+						<string>Right</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
-						<integer>2</integer>
+						<integer>8</integer>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -788,13 +812,17 @@
 						<key>Identifier</key>
 						<string>A292D310-D98B-43E3-BCF5-0CA6F2342E0F</string>
 						<key>Title</key>
-						<string>Ignore built-in trackpad</string>
+						<string>Ignore built-in trackpad:</string>
+						<key>FontWeight</key>
+						<string>Regular</string>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
 						<string>mouseDriverIgnoreTrackpad</string>
+						<key>AlignRight</key>
+						<true/>
 						<key>IndentLevel</key>
-						<integer>2</integer>
+						<integer>8</integer>
 						<key>CellType</key>
 						<string>Checkbox</string>
 						<key>ToolTipDescription</key>
