@@ -21,8 +21,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCTextFieldHostPortCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSTextField *settingTextFieldHost;
-@property (weak) IBOutlet NSTextField *settingTextFieldPort;
+@property NSInteger height;
 - (void)showRequired:(BOOL)show;
 @end
 

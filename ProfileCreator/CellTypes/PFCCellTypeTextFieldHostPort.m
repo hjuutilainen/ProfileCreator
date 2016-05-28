@@ -36,12 +36,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface PFCTextFieldHostPortCellView ()
-
-@property (weak) IBOutlet NSImageView *imageViewRequired;
-@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldPortTrailing;
-@property (weak) IBOutlet NSTextField *settingTitle;
-@property (weak) IBOutlet NSTextField *settingDescription;
-
 @end
 
 @implementation PFCTextFieldHostPortCellView
@@ -60,124 +54,249 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
-    // ---------------------------------------------------------------------------------------
-    //  Get required and enabled state of this cell view
-    //  Every CellView is enabled by default, only if user has deselected it will be disabled
-    // ---------------------------------------------------------------------------------------
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
+
+    // -------------------------------------------------------------------------
+    //  Overrides (Availability)
+    // -------------------------------------------------------------------------
+    NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+
+    // -------------------------------------------------------------------------
+    //  Required
+    // -------------------------------------------------------------------------
     BOOL requiredHost = [[PFCAvailability sharedInstance] requiredHostForManifestContentDict:manifestContentDict displayKeys:displayKeys];
     BOOL requiredPort = [[PFCAvailability sharedInstance] requiredPortForManifestContentDict:manifestContentDict displayKeys:displayKeys];
 
-    BOOL enabled = YES;
-    if ((!requiredHost || !requiredPort) && settingsUser[PFCSettingsKeyEnabled] != nil) {
-        enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+    // -------------------------------------------------------------------------
+    //  Optional
+    // -------------------------------------------------------------------------
+    BOOL optional = NO;
+    if (overrides[PFCManifestKeyOptional] != nil) {
+        optional = [overrides[PFCManifestKeyOptional] boolValue];
+    } else {
+        optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
     }
 
-    BOOL optional = [manifestContentDict[PFCManifestKeyOptional] boolValue];
+    // -------------------------------------------------------------------------
+    //  Enabled (if 'required' == YES, it can't be disabled)
+    // -------------------------------------------------------------------------
+    BOOL enabled = YES;
+    if ((!requiredHost || !requiredPort) && settingsUser[PFCSettingsKeyEnabled] != nil) {
+        if (settingsUser[PFCSettingsKeyEnabled] != nil) {
+            enabled = [settingsUser[PFCSettingsKeyEnabled] boolValue];
+        } else if (overrides[PFCSettingsKeyEnabled] != nil) {
+            enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    //  Supervised
+    // -------------------------------------------------------------------------
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
+
+    // -------------------------------------------------------------------------
+    //  Alignment
+    // -------------------------------------------------------------------------
+    BOOL alignRight = [manifestContentDict[PFCManifestKeyAlignRight] boolValue];
+    NSInteger indentConstant = 0;
+    NSString *constraintFormatTitle;
+    NSString *constraintFormatDesription;
+    NSString *constraintFormatTextField;
+    if (alignRight) {
+        indentConstant =
+            [[PFCManifestUtility sharedUtility] constantForIndentationLevelRight:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] ?: 0 baseConstant:PFCIndentLevelBaseConstant offset:0];
+        constraintFormatTitle = [NSString stringWithFormat:@"H:|-(8)-[textFieldTitle]-(%ld)-|", (long)indentConstant];
+        constraintFormatDesription = [NSString stringWithFormat:@"H:|-(8)-[textFieldDescription]-(%ld)-|", (long)indentConstant];
+        constraintFormatTextField = [NSString stringWithFormat:@"H:|-(8)-[textFieldPort(==49)]-(2)-[textFieldSemicolon(==4)]-(2)-[textFieldHost]-(%ld)-|", (long)indentConstant];
+    } else {
+        indentConstant = 8;
+        if ([manifestContentDict[PFCManifestKeyIndentLeft] boolValue]) {
+            indentConstant = 102;
+        } else if (manifestContentDict[PFCManifestKeyIndentLevel] != nil) {
+            indentConstant =
+                [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] ?: 0 baseConstant:PFCIndentLevelBaseConstant offset:0];
+        }
+
+        constraintFormatTitle = [NSString stringWithFormat:@"H:|-(%ld)-[textFieldTitle]-(8)-|", (long)indentConstant];
+        constraintFormatDesription = [NSString stringWithFormat:@"H:|-(%ld)-[textFieldDescription]-(8)-|", (long)indentConstant];
+        constraintFormatTextField = [NSString stringWithFormat:@"H:|-(8)-[textFieldHost]-(2)-[textFieldSemicolon(==4)]-(2)-[textFieldPort(==49)]-(%ld)-|", (long)indentConstant];
+    }
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [[cellView settingTitle] setStringValue:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    if (enabled) {
-        [[cellView settingTitle] setTextColor:[NSColor blackColor]];
-    } else {
-        [[cellView settingTitle] setTextColor:[NSColor grayColor]];
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    NSTextField *textFieldTitle;
+    if (title.length != 0) {
+
+        textFieldTitle = [PFCCellTypes textFieldTitleWithString:[NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""]
+                                                          width:(PFCSettingsColumnWidth - (8 + indentConstant))
+                                                            tag:row
+                                                     fontWeight:manifestContentDict[PFCManifestKeyFontWeight]
+                                                 textAlignRight:alignRight
+                                                        enabled:enabled
+                                                         target:sender];
+
+        [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
+        [self addSubview:textFieldTitle];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
     }
 
     // -------------------------------------------------------------------------
     //  Description
     // -------------------------------------------------------------------------
-    [[cellView settingDescription] setStringValue:manifestContentDict[PFCManifestKeyDescription] ?: @""];
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    NSTextField *textFieldDescription;
+    if (description.length != 0) {
 
-    // ---------------------------------------------------------------------
+        textFieldDescription =
+            [PFCCellTypes textFieldDescriptionWithString:description width:(PFCSettingsColumnWidth - (8 + indentConstant)) tag:row textAlignRight:alignRight enabled:enabled target:sender];
+
+        [self addSubview:textFieldDescription];
+        [layoutConstraints
+            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+
+        if (textFieldTitle) {
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
+            [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
+        } else {
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+            [self setHeight:(self.height + 8 + textFieldDescription.intrinsicContentSize.height)];
+        }
+    }
+
+    // -------------------------------------------------------------------------
     //  Value Host
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSString *valueHost = settingsUser[PFCSettingsKeyValueHost] ?: @"";
-    NSAttributedString *valueHostAttributed = nil;
+    NSAttributedString *valueAttributedHost = nil;
     if (valueHost.length == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValueHost] length] != 0) {
             valueHost = manifestContentDict[PFCManifestKeyDefaultValueHost] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValueHost] length] != 0) {
-            valueHostAttributed =
+            valueAttributedHost =
                 [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValueHost] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
-    if (valueHostAttributed.length != 0) {
-        [[cellView settingTextFieldHost] setAttributedStringValue:valueHostAttributed];
-    } else {
-        [[cellView settingTextFieldHost] setStringValue:valueHost];
-    }
-    [[cellView settingTextFieldHost] setDelegate:sender];
-    [[cellView settingTextFieldHost] setTag:row];
 
-    // ---------------------------------------------------------------------
-    //  Placeholder Value
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    //  Placeholder Value Host
+    // -------------------------------------------------------------------------
+    NSString *placeholderStringHost = @"";
     if ([manifestContentDict[PFCManifestKeyPlaceholderValueHost] length] != 0) {
-        [[cellView settingTextFieldHost] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValueHost] ?: @""];
+        placeholderStringHost = manifestContentDict[PFCManifestKeyPlaceholderValueHost] ?: @"";
     } else if (requiredHost) {
-        [[cellView settingTextFieldHost] setPlaceholderString:@"Required"];
+        placeholderStringHost = @"Required";
     } else if (optional) {
-        [[cellView settingTextFieldHost] setPlaceholderString:@"Optional"];
-    } else {
-        [[cellView settingTextFieldHost] setPlaceholderString:@""];
+        placeholderStringHost = @"Optional";
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    //  TextField Host
+    // -------------------------------------------------------------------------
+    NSTextField *textFieldHost = [PFCCellTypes textFieldWithString:valueHost placeholderString:placeholderStringHost tag:row textAlignRight:alignRight enabled:enabled target:sender];
+    [textFieldHost setIdentifier:PFCSettingsKeyValueHost];
+    if (valueAttributedHost.length != 0) {
+        [textFieldHost setAttributedStringValue:valueAttributedHost];
+    }
+    [self addSubview:textFieldHost];
+
+    // -------------------------------------------------------------------------
     //  Value Port
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     NSString *valuePort = settingsUser[PFCSettingsKeyValuePort] ?: @"";
-    NSAttributedString *valuePortAttributed = nil;
-    if ([valuePort length] == 0) {
+    NSAttributedString *valueAttributedPort = nil;
+    if (valuePort.length == 0) {
         if ([manifestContentDict[PFCManifestKeyDefaultValuePort] length] != 0) {
             valuePort = manifestContentDict[PFCManifestKeyDefaultValuePort] ?: @"";
         } else if ([settingsLocal[PFCSettingsKeyValuePort] length] != 0) {
-            valuePortAttributed =
+            valueAttributedPort =
                 [[NSAttributedString alloc] initWithString:settingsLocal[PFCSettingsKeyValuePort] ?: @"" attributes:@{NSForegroundColorAttributeName : NSColor.pfc_localSettingsColor}];
         }
     }
 
-    if ([valuePortAttributed length] != 0) {
-        [[cellView settingTextFieldPort] setAttributedStringValue:valuePortAttributed];
-    } else {
-        [[cellView settingTextFieldPort] setStringValue:valuePort];
-    }
-    [[cellView settingTextFieldPort] setDelegate:sender];
-    [[cellView settingTextFieldPort] setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Placeholder Value
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    //  Placeholder Value Port
+    // -------------------------------------------------------------------------
+    NSString *placeholderStringPort = @"";
     if ([manifestContentDict[PFCManifestKeyPlaceholderValuePort] length] != 0) {
-        [[cellView settingTextFieldPort] setPlaceholderString:manifestContentDict[PFCManifestKeyPlaceholderValuePort] ?: @""];
+        placeholderStringPort = manifestContentDict[PFCManifestKeyPlaceholderValuePort] ?: @"";
     } else if (requiredPort) {
-        [[cellView settingTextFieldPort] setPlaceholderString:@"Req"];
+        placeholderStringPort = @"Req";
     } else if (optional) {
-        [[cellView settingTextFieldPort] setPlaceholderString:@"Opt"];
-    } else {
-        [[cellView settingTextFieldPort] setPlaceholderString:@""];
+        placeholderStringPort = @"Opt";
     }
 
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    //  TextField Port
+    // -------------------------------------------------------------------------
+    NSTextField *textFieldPort = [PFCCellTypes textFieldWithString:valuePort placeholderString:placeholderStringPort tag:row textAlignRight:alignRight enabled:enabled target:sender];
+    [textFieldPort setIdentifier:PFCSettingsKeyValuePort];
+    if (valueAttributedPort.length != 0) {
+        [textFieldPort setAttributedStringValue:valueAttributedPort];
+    }
+    [self addSubview:textFieldPort];
+
+    // -------------------------------------------------------------------------
+    //  TextField Semicolon
+    // -------------------------------------------------------------------------
+    NSTextField *textFieldSemicolon = [PFCCellTypes textFieldTitleWithString:@":" width:4.0f tag:row fontWeight:@"Regular" textAlignRight:alignRight enabled:enabled target:sender];
+    [self addSubview:textFieldSemicolon];
+
+    // -------------------------------------------------------------------------
+    //  TextField Constraints
+    // -------------------------------------------------------------------------
+    [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTextField
+                                                                                   options:NSLayoutFormatAlignAllBaseline
+                                                                                   metrics:nil
+                                                                                     views:NSDictionaryOfVariableBindings(textFieldHost, textFieldPort, textFieldSemicolon)]];
+    if (textFieldDescription) {
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[textFieldHost]"
+                                                                                       options:0
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldDescription, textFieldHost)]];
+        [self setHeight:(self.height + 7 + textFieldHost.intrinsicContentSize.height)];
+    } else if (textFieldTitle) {
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(7)-[textFieldHost]"
+                                                                                       options:0
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldHost)]];
+        [self setHeight:(self.height + 7 + textFieldHost.intrinsicContentSize.height)];
+    } else {
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldHost]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldHost)]];
+        [self setHeight:(self.height + 8 + textFieldHost.intrinsicContentSize.height)];
+    }
+
+    // -------------------------------------------------------------------------
     //  Tool Tip
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
 
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [[cellView settingTextFieldHost] setEnabled:enabled];
-    [[cellView settingTextFieldPort] setEnabled:enabled];
-
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     //  Required
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     if (requiredHost && [valueHost length] == 0) {
         [self showRequired:YES];
     } else {
         [self showRequired:NO];
     }
+
+    // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
+
+    // -------------------------------------------------------------------------
+    //  Height
+    // -------------------------------------------------------------------------
+    [self setHeight:(self.height + 3)];
 
     return cellView;
 } // populateCellViewSettingsTextFieldHostPort:settings:row
@@ -392,11 +511,11 @@
 
 - (void)showRequired:(BOOL)show {
     if (show) {
-        [_constraintTextFieldPortTrailing setConstant:34.0];
-        [_imageViewRequired setHidden:NO];
+        //[_constraintTextFieldPortTrailing setConstant:34.0];
+        //[_imageViewRequired setHidden:NO];
     } else {
-        [_constraintTextFieldPortTrailing setConstant:8.0];
-        [_imageViewRequired setHidden:YES];
+        //[_constraintTextFieldPortTrailing setConstant:8.0];
+        //[_imageViewRequired setHidden:YES];
     }
 } // showRequired
 
