@@ -46,14 +46,42 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    // ---------------------------------------------------------------------
+    //  Segmented Control
+    // ---------------------------------------------------------------------
+    NSSegmentedControl *segmentedControl = [[NSSegmentedControl alloc] init];
+    [segmentedControl setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [segmentedControl setSegmentStyle:NSSegmentStyleTexturedSquare];
+    [segmentedControl setTrackingMode:NSSegmentSwitchTrackingSelectOne];
+    [segmentedControl setAction:@selector(segmentedControl:)];
+    [segmentedControl setTarget:sender];
+    [segmentedControl setTag:row];
+
+    [self setHeight:(8 + segmentedControl.intrinsicContentSize.height)];
+
+    [self addSubview:segmentedControl];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[segmentedControl]"
+                                                                 options:NSLayoutFormatAlignAllCenterX
+                                                                 metrics:nil
+                                                                   views:NSDictionaryOfVariableBindings(segmentedControl)]];
+
     // -------------------------------------------------------------------------
-    //  Get availability overrides
+    //  Overrides (Availability)
     // -------------------------------------------------------------------------
     NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
+    // ---------------------------------------------------------------------------------------
+    //  Required
+    // ---------------------------------------------------------------------------------------
+    BOOL required = NO;
+    if (overrides[PFCManifestKeyRequired] != nil) {
+        required = [overrides[PFCManifestKeyRequired] boolValue];
+    } else {
+        required = [[PFCAvailability sharedInstance] requiredForManifestContentDict:manifestContentDict displayKeys:displayKeys];
+    }
+
     // -------------------------------------------------------------------------
-    //  Determine if UI should be enabled or disabled
-    //  If 'required', it cannot be disabled
+    //  Enabled (if 'required' == YES, it can't be disabled)
     // -------------------------------------------------------------------------
     BOOL enabled = YES;
     if (settingsUser[PFCSettingsKeyEnabled] != nil) {
@@ -61,37 +89,26 @@
     } else if (overrides[PFCSettingsKeyEnabled] != nil) {
         enabled = [overrides[PFCSettingsKeyEnabled] boolValue];
     }
-
-    // ---------------------------------------------------------------------
-    //  Reset Segmented Control
-    // ---------------------------------------------------------------------
-    [cellView.settingSegmentedControl setSegmentCount:0];
+    [segmentedControl setEnabled:enabled];
 
     // ---------------------------------------------------------------------
     //  Segmented Control Titles
     // ---------------------------------------------------------------------
     NSArray *availableSelections = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
-    [cellView.settingSegmentedControl setSegmentCount:(NSInteger)availableSelections.count];
+    [segmentedControl setSegmentCount:(NSInteger)availableSelections.count];
     [availableSelections enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-      [cellView.settingSegmentedControl setLabel:obj forSegment:(NSInteger)idx];
+      [segmentedControl setLabel:obj forSegment:(NSInteger)idx];
     }];
 
     // ---------------------------------------------------------------------
     //  Select saved selection or 0 if never saved
     // ---------------------------------------------------------------------
-    [cellView.settingSegmentedControl setSelected:YES forSegment:[manifestContentDict[PFCSettingsKeyValue] integerValue] ?: 0];
+    [segmentedControl setSelected:YES forSegment:[settingsUser[PFCSettingsKeyValue] integerValue] ?: 0];
 
-    // ---------------------------------------------------------------------
-    //  Target Action
-    // ---------------------------------------------------------------------
-    [cellView.settingSegmentedControl setAction:@selector(segmentedControl:)];
-    [cellView.settingSegmentedControl setTarget:sender];
-    [cellView.settingSegmentedControl setTag:row];
-
-    // ---------------------------------------------------------------------
-    //  Enabled
-    // ---------------------------------------------------------------------
-    [cellView.settingSegmentedControl setEnabled:enabled];
+    // -------------------------------------------------------------------------
+    //  Height
+    // -------------------------------------------------------------------------
+    [self setHeight:(self.height + 3)];
 
     return cellView;
 } // populateCellViewSettingsSegmentedControl:manifest:row:sender

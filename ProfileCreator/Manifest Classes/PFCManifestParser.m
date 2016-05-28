@@ -335,8 +335,8 @@
     //  Get current selection of the SegmentedControl
     // -------------------------------------------------------------------------
     NSNumber *selectedSegment;
-    if (manifestContentDict[PFCSettingsKeyValue] != nil) {
-        selectedSegment = manifestContentDict[PFCSettingsKeyValue];
+    if (settings[identifier][PFCSettingsKeyValue] != nil) {
+        selectedSegment = settings[identifier][PFCSettingsKeyValue];
     }
 
     // -------------------------------------------------------------------------

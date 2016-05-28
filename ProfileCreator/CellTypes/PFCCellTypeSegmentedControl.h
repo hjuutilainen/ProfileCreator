@@ -21,5 +21,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCSegmentedControlCellView : NSTableCellView <PFCCellType>
-@property (weak) IBOutlet NSSegmentedControl *settingSegmentedControl;
+@property NSInteger height;
 @end

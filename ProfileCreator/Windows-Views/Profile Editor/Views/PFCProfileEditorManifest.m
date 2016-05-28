@@ -288,6 +288,8 @@
             cellView = [[PFCTextFieldCellView alloc] init];
         } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
             cellView = [[PFCTextLabelCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
+            cellView = [[PFCSegmentedControlCellView alloc] init];
         } else {
             // FIXME - Until all cell views supports programmatic creation, create from xib
             cellView = [tableView makeViewWithIdentifier:cellType owner:self];
@@ -1224,27 +1226,37 @@
     }
     NSInteger row = segmentedControlTag.integerValue;
 
-    // -----------------------------------------------------------------------------------
-    //  Another verification this is a CellViewSettingsSegmentedControl segmented control
-    // -----------------------------------------------------------------------------------
-    if (segmentedControl == [(PFCSegmentedControlCellView *)[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO]
-                                settingSegmentedControl]) {
+    NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
+    NSString *identifier = manifestContentDict[PFCManifestKeyIdentifier];
 
-        NSString *selectedSegment = [segmentedControl labelForSegment:segmentedControl.selectedSegment];
-        if (selectedSegment.length == 0) {
-            DDLogError(@"SegmentedControl: %@ selected segment is nil", segmentedControl);
-            return;
-        }
-
-        NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
-        manifestContentDict[PFCSettingsKeyValue] = @(segmentedControl.selectedSegment);
-        _arrayManifestContent[(NSUInteger)row] = [manifestContentDict copy];
-
-        // ---------------------------------------------------------------------
-        //  Add subkeys for selected segmented control
-        // ---------------------------------------------------------------------
-        [self updateTableViewSettingsFromManifestContentDict:manifestContentDict atRow:row];
+    if (identifier.length == 0) {
+        DDLogError(@"Manifest content dict doesn't have an identifier");
+        return;
     }
+
+    NSMutableDictionary *settingsDict = [_settingsManifest[identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
+
+    NSString *selectedSegment = [segmentedControl labelForSegment:segmentedControl.selectedSegment];
+    if (selectedSegment.length == 0) {
+        DDLogError(@"SegmentedControl: %@ selected segment is nil", segmentedControl);
+        return;
+    }
+
+    settingsDict[PFCSettingsKeyValue] = @(segmentedControl.selectedSegment);
+    _settingsManifest[identifier] = [settingsDict copy];
+
+    // ---------------------------------------------------------------------
+    //  Save selection
+    // ---------------------------------------------------------------------
+    /*
+    NSMutableDictionary *manifestContentDict = [_arrayManifestContent[(NSUInteger)row] mutableCopy];
+    manifestContentDict[PFCSettingsKeyValue] = @(segmentedControl.selectedSegment);
+    _arrayManifestContent[(NSUInteger)row] = [manifestContentDict copy];
+*/
+    // ---------------------------------------------------------------------
+    //  Add subkeys for selected segmented control
+    // ---------------------------------------------------------------------
+    [self updateTableViewSettingsFromManifestContentDict:manifestContentDict atRow:row];
 } // segmentedControl
 
 - (void)selectFile:(NSButton *)button {
