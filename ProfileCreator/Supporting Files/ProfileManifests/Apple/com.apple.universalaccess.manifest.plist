@@ -67,7 +67,7 @@
 						<key>FontWeight</key>
 						<string>Regular</string>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -87,7 +87,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -115,7 +115,7 @@
 						<key>PopUpButtonLocation</key>
 						<string>Right</string>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -154,7 +154,7 @@
 						<key>PopUpButtonLocation</key>
 						<string>Right</string>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -185,7 +185,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -205,7 +205,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -233,7 +233,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -253,7 +253,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
@@ -281,7 +281,7 @@
 						<key>PopUpButtonLocation</key>
 						<string>Right</string>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -321,7 +321,7 @@
 						<key>PopUpButtonLocation</key>
 						<string>Right</string>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>CellType</key>
 						<string>PopUpButton</string>
 						<key>DefaultValue</key>
@@ -354,7 +354,7 @@
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
-						<integer>-4</integer>
+						<integer>-2</integer>
 						<key>PayloadType</key>
 						<string>com.apple.universalaccess</string>
 						<key>PayloadKey</key>
