@@ -21,4 +21,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCTextLabelCellView : NSTableCellView <PFCCellType>
+@property NSInteger height;
 @end
