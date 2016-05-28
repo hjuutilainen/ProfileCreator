@@ -151,4 +151,90 @@
     return 1;
 }
 
++ (NSTextField *)textFieldWithString:(NSString *)string placeholderString:(NSString *)placeholderString tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target {
+
+    NSTextField *textField = [[NSTextField alloc] init];
+    [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [textField setLineBreakMode:NSLineBreakByClipping];
+    [textField setBordered:YES];
+    [textField setBezeled:YES];
+    [textField setBezelStyle:NSTextFieldSquareBezel];
+    [textField setDrawsBackground:NO];
+    [textField setEditable:YES];
+    [textField setSelectable:YES];
+    [textField setTextColor:[NSColor controlTextColor]];
+    [textField setBackgroundColor:[NSColor controlBackgroundColor]];
+    [textField setTarget:target];
+    [textField setDelegate:target];
+    [textField setTag:tag];
+    [textField setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    [textField setEnabled:enabled];
+    [textField setStringValue:string];
+    [textField setPlaceholderString:placeholderString];
+
+    if (alignRight) {
+        [textField setAlignment:NSRightTextAlignment];
+    }
+    return textField;
+}
+
++ (NSTextField *)textFieldTitleWithString:(NSString *)string
+                                    width:(CGFloat)width
+                                      tag:(NSInteger)tag
+                               fontWeight:(NSString *)fontWeight
+                           textAlignRight:(BOOL)alignRight
+                                  enabled:(BOOL)enabled
+                                   target:(id)target {
+    NSTextField *textFieldTitle = [[NSTextField alloc] init];
+    [textFieldTitle setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [textFieldTitle setLineBreakMode:NSLineBreakByWordWrapping];
+    [textFieldTitle setBordered:NO];
+    [textFieldTitle setBezeled:NO];
+    [textFieldTitle setDrawsBackground:NO];
+    [textFieldTitle setEditable:NO];
+    [textFieldTitle setSelectable:NO];
+    [textFieldTitle setTarget:target];
+    [textFieldTitle setTag:tag];
+    [textFieldTitle setPreferredMaxLayoutWidth:width];
+    [textFieldTitle setStringValue:string];
+
+    if (enabled) {
+        [textFieldTitle setTextColor:[NSColor blackColor]];
+    } else {
+        [textFieldTitle setTextColor:[NSColor grayColor]];
+    }
+
+    if ([fontWeight ?: @"" isEqualToString:PFCFontWeightRegular]) {
+        [textFieldTitle setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    } else {
+        [textFieldTitle setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    }
+
+    if (alignRight) {
+        [textFieldTitle setAlignment:NSRightTextAlignment];
+    }
+    return textFieldTitle;
+}
+
++ (NSTextField *)textFieldDescriptionWithString:(NSString *)string width:(CGFloat)width tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target {
+    NSTextField *textFieldDescription = [[NSTextField alloc] init];
+    [textFieldDescription setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [textFieldDescription setBordered:NO];
+    [textFieldDescription setBezeled:NO];
+    [textFieldDescription setDrawsBackground:NO];
+    [textFieldDescription setEditable:NO];
+    [textFieldDescription setSelectable:NO];
+    [textFieldDescription setTextColor:[NSColor controlShadowColor]];
+    [textFieldDescription setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    [textFieldDescription setTarget:target];
+    [textFieldDescription setTag:tag];
+    [textFieldDescription setPreferredMaxLayoutWidth:width];
+    [textFieldDescription setStringValue:string];
+
+    if (alignRight) {
+        [textFieldDescription setAlignment:NSRightTextAlignment];
+    }
+    return textFieldDescription;
+}
+
 @end

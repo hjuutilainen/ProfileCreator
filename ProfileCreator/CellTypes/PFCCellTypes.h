@@ -31,4 +31,25 @@
 // -----------------------------------------------------------------------------
 - (CGFloat)rowHeightForManifestContentDict:(NSDictionary *)manifestContentDict;
 
+// -----------------------------------------------------------------------------
+//  TextField
+// -----------------------------------------------------------------------------
++ (NSTextField *)textFieldWithString:(NSString *)string placeholderString:(NSString *)placeholderString tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target;
+
+// -----------------------------------------------------------------------------
+//  TextFieldTitle
+// -----------------------------------------------------------------------------
++ (NSTextField *)textFieldTitleWithString:(NSString *)string
+                                    width:(CGFloat)width
+                                      tag:(NSInteger)tag
+                               fontWeight:(NSString *)fontWeight
+                           textAlignRight:(BOOL)alignRight
+                                  enabled:(BOOL)enabled
+                                   target:(id)target;
+
+// -----------------------------------------------------------------------------
+//  TextFieldDescription
+// -----------------------------------------------------------------------------
++ (NSTextField *)textFieldDescriptionWithString:(NSString *)string width:(CGFloat)width tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target;
+
 @end
