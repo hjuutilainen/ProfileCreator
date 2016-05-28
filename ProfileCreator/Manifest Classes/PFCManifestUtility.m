@@ -62,8 +62,7 @@
 
 - (NSInteger)constantForIndentationLevelRight:(NSInteger)indentationLevel baseConstant:(NSInteger)baseConstant offset:(NSInteger)offset {
     NSInteger indentationBaseValue = baseConstant ?: PFCIndentLevelBaseConstant;
-    DDLogDebug(@"Returning Indentation: %ld", (PFCIndentCenterConstant + (indentationBaseValue * indentationLevel)));
-    return (PFCIndentCenterConstant + offset + (indentationBaseValue * indentationLevel));
+    return ((PFCSettingsColumnWidth / 2) + offset + (indentationBaseValue * indentationLevel));
 } // constantForIndentationLevelRight
 
 - (NSImage *)iconForManifest:(NSDictionary *)manifest {
