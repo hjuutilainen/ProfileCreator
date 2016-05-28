@@ -21,6 +21,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCTextFieldCellView : NSTableCellView <PFCCellType>
+@property NSInteger height;
 - (void)showRequired:(BOOL)show;
 @end
 
