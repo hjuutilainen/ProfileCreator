@@ -21,7 +21,7 @@
 
 NSInteger const PFCMaximumPayloadCount = 8;
 NSInteger const PFCIndentLevelBaseConstant = 8;
-NSInteger const PFCIndentCenterConstant = 250;
+NSInteger const PFCSettingsColumnWidth = 500;
 int const PFCTableViewGroupRowHeight = 24;
 NSString *const PFCProfileDraggingType = @"PFCProfileDraggingType";
 
@@ -158,6 +158,7 @@ NSString *const PFCManifestKeyPlaceholderValue = @"PlaceholderValue";
 NSString *const PFCManifestKeyPlaceholderValueHost = @"PlaceholderValueHost";
 NSString *const PFCManifestKeyPlaceholderValuePort = @"PlaceholderValuePort";
 NSString *const PFCManifestKeyPlaceholderValueTextField = @"PlaceholderValueTextField";
+NSString *const PFCManifestKeyPopUpButtonWidth = @"PopUpButtonWidth";
 NSString *const PFCManifestKeyRequired = @"Required";
 NSString *const PFCManifestKeyRequiredCheckbox = @"RequiredCheckbox";
 NSString *const PFCManifestKeyRequiredHost = @"RequiredHost";

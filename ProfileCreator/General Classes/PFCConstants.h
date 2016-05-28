@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, PFCPayloadLibrary) {
 
 extern NSInteger const PFCMaximumPayloadCount;
 extern NSInteger const PFCIndentLevelBaseConstant;
-extern NSInteger const PFCIndentCenterConstant;
+extern NSInteger const PFCSettingsColumnWidth;
 extern int const PFCTableViewGroupRowHeight;
 extern NSString *const PFCProfileDraggingType;
 
@@ -190,6 +190,7 @@ extern NSString *const PFCManifestKeyPlaceholderValue;
 extern NSString *const PFCManifestKeyPlaceholderValueHost;
 extern NSString *const PFCManifestKeyPlaceholderValuePort;
 extern NSString *const PFCManifestKeyPlaceholderValueTextField;
+extern NSString *const PFCManifestKeyPopUpButtonWidth;
 extern NSString *const PFCManifestKeyRequired;
 extern NSString *const PFCManifestKeyRequiredCheckbox;
 extern NSString *const PFCManifestKeyRequiredHost;
