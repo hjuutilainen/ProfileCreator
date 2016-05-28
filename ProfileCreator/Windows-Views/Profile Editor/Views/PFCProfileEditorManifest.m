@@ -290,6 +290,8 @@
             cellView = [[PFCTextLabelCellView alloc] init];
         } else if ([cellType isEqualToString:PFCCellTypeSegmentedControl]) {
             cellView = [[PFCSegmentedControlCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort]) {
+            cellView = [[PFCTextFieldHostPortCellView alloc] init];
         } else {
             // FIXME - Until all cell views supports programmatic creation, create from xib
             cellView = [tableView makeViewWithIdentifier:cellType owner:self];
@@ -1476,14 +1478,16 @@
     }
 
     // -------------------------------------------------------------------------
-    //  Another verification of text field type
+    //  TextFieldHostPort, TextFieldHostPortCheckbox
     // -------------------------------------------------------------------------
     if ([textField.superview.class isSubclassOfClass:PFCTextFieldHostPortCellView.class] || [textField.superview.class isSubclassOfClass:PFCTextFieldHostPortCheckboxCellView.class]) {
-        if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldHost]) {
-            settingsDict[@"ValueHost"] = [inputText copy];
-        } else if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextFieldPort]) {
-            settingsDict[@"ValuePort"] = [inputText copy];
+        if ([textField.identifier isEqualToString:PFCSettingsKeyValueHost]) {
+            settingsDict[PFCSettingsKeyValueHost] = [inputText copy];
+        } else if ([textField.identifier isEqualToString:PFCSettingsKeyValuePort]) {
+            settingsDict[PFCSettingsKeyValuePort] = [inputText copy];
         } else {
+            DDLogError(@"Unknown TextField Identifier: %@", textField.identifier);
+            DDLogError(@"Expected: 'Host' or 'Port'");
             return;
         }
 
@@ -1511,6 +1515,10 @@
             }
         }
         _settingsManifest[identifier] = [settingsDict copy];
+
+        // -------------------------------------------------------------------------
+        //  TextField Checkbox
+        // -------------------------------------------------------------------------
     } else if ([textField.superview.class isSubclassOfClass:[PFCTextFieldCheckboxCellView class]]) {
         if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
             settingsDict[PFCSettingsKeyValueTextField] = [inputText copy];
@@ -1518,12 +1526,20 @@
         } else {
             return;
         }
+
+        // -------------------------------------------------------------------------
+        //  RadioButton TextField
+        // -------------------------------------------------------------------------
     } else if ([textField.superview.class isSubclassOfClass:[PFCRadioButtonCellView class]]) {
         if (textField.identifier.length != 0) {
             settingsDict = [_settingsManifest[textField.identifier] mutableCopy] ?: [[NSMutableDictionary alloc] init];
             settingsDict[PFCSettingsKeyValue] = [inputText copy];
             _settingsManifest[textField.identifier] = [settingsDict copy];
         }
+
+        // -------------------------------------------------------------------------
+        //  Other
+        // -------------------------------------------------------------------------
     } else {
         settingsDict[PFCSettingsKeyValue] = [inputText copy];
         if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
