@@ -46,6 +46,8 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
+
     // ---------------------------------------------------------------------
     //  Segmented Control
     // ---------------------------------------------------------------------
@@ -57,13 +59,16 @@
     [segmentedControl setTarget:sender];
     [segmentedControl setTag:row];
 
-    [self setHeight:(8 + segmentedControl.intrinsicContentSize.height)];
-
     [self addSubview:segmentedControl];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[segmentedControl]"
-                                                                 options:NSLayoutFormatAlignAllCenterX
-                                                                 metrics:nil
-                                                                   views:NSDictionaryOfVariableBindings(segmentedControl)]];
+    [self setHeight:(8 + segmentedControl.intrinsicContentSize.height)];
+    [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[segmentedControl]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(segmentedControl)]];
+    [layoutConstraints addObject:[NSLayoutConstraint constraintWithItem:segmentedControl
+                                                              attribute:NSLayoutAttributeCenterX
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:segmentedControl.superview
+                                                              attribute:NSLayoutAttributeCenterX
+                                                             multiplier:1.f
+                                                               constant:0.f]]; // Center in view
 
     // -------------------------------------------------------------------------
     //  Overrides (Availability)
@@ -96,8 +101,8 @@
     // ---------------------------------------------------------------------
     NSArray *availableSelections = manifestContentDict[PFCManifestKeyAvailableValues] ?: @[];
     [segmentedControl setSegmentCount:(NSInteger)availableSelections.count];
-    [availableSelections enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-      [segmentedControl setLabel:obj forSegment:(NSInteger)idx];
+    [availableSelections enumerateObjectsUsingBlock:^(NSString *_Nonnull string, NSUInteger idx, BOOL *_Nonnull stop) {
+      [segmentedControl setLabel:string forSegment:(NSInteger)idx];
     }];
 
     // ---------------------------------------------------------------------
@@ -106,9 +111,14 @@
     [segmentedControl setSelected:YES forSegment:[settingsUser[PFCSettingsKeyValue] integerValue] ?: 0];
 
     // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
+
+    // -------------------------------------------------------------------------
     //  Height
     // -------------------------------------------------------------------------
-    [self setHeight:(self.height + 3)];
+    [self setHeight:(self.height + 5)];
 
     return cellView;
 } // populateCellViewSettingsSegmentedControl:manifest:row:sender
