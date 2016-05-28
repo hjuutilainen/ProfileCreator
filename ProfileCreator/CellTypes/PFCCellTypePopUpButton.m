@@ -173,13 +173,17 @@
     }
 
     // -------------------------------------------------------------------------
-    //  CheckboxLocation Right/Left
+    //  CheckboxLocation Right
     // -------------------------------------------------------------------------
     if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Right"]) {
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[popUpButton]-(>=8)-|"
                                                                      options:NSLayoutFormatAlignAllBaseline
                                                                      metrics:nil
                                                                        views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
+
+        // ---------------------------------------------------------------------
+        //  CheckboxLocation Left
+        // ---------------------------------------------------------------------
     } else if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Left"]) {
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=8)-[popUpButton]-(4)-[textFieldTitle]"
                                                                      options:NSLayoutFormatAlignAllBaseline
@@ -187,7 +191,7 @@
                                                                        views:NSDictionaryOfVariableBindings(popUpButton, textFieldTitle)]];
 
         // ---------------------------------------------------------------------
-        //  CheckboxLocation "Below"
+        //  CheckboxLocation Below
         // ---------------------------------------------------------------------
     } else {
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatPopUpButton options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];

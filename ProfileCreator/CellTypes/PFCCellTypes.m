@@ -152,7 +152,6 @@
 }
 
 + (NSTextField *)textFieldWithString:(NSString *)string placeholderString:(NSString *)placeholderString tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target {
-
     NSTextField *textField = [[NSTextField alloc] init];
     [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
     [textField setLineBreakMode:NSLineBreakByClipping];
