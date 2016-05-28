@@ -37,13 +37,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface PFCTextFieldCellView ()
-
-@property (weak) IBOutlet NSImageView *imageViewRequired;
-@property (strong) IBOutlet NSLayoutConstraint *constraintTextFieldTrailing;
-@property (weak) IBOutlet NSTextField *settingTitle;
-@property (weak) IBOutlet NSTextField *settingDescription;
-@property (weak) IBOutlet NSTextField *settingTextField;
-
 @end
 
 @implementation PFCTextFieldCellView
@@ -61,6 +54,8 @@
                      displayKeys:(NSDictionary *)displayKeys
                              row:(NSInteger)row
                           sender:(id)sender {
+
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
 
     // -------------------------------------------------------------------------
     //  Overrides (Availability)
@@ -149,8 +144,8 @@
 
         [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
         [self addSubview:textFieldTitle];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
     }
 
     // -------------------------------------------------------------------------
@@ -164,16 +159,20 @@
             [PFCCellTypes textFieldDescriptionWithString:description width:(PFCSettingsColumnWidth - (8 + indentConstant)) tag:row textAlignRight:alignRight enabled:enabled target:sender];
 
         [self addSubview:textFieldDescription];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+        [layoutConstraints
+            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
 
         if (textFieldTitle) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
             [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
         } else {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription)]];
             [self setHeight:(self.height + 8 + textFieldDescription.intrinsicContentSize.height)];
         }
     }
@@ -216,35 +215,35 @@
     //  TextFieldLocation Right/Left
     // -------------------------------------------------------------------------
     if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Right"]) {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textField]-(8)-|"
-                                                                     options:NSLayoutFormatAlignAllBaseline
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textField]-(8)-|"
+                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
     } else if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Left"]) {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[textField]-(4)-[textFieldTitle]"
-                                                                     options:NSLayoutFormatAlignAllBaseline
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(textField, textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[textField]-(4)-[textFieldTitle]"
+                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textField, textFieldTitle)]];
 
         // ---------------------------------------------------------------------
         //  TextFieldLocation "Below"
         // ---------------------------------------------------------------------
     } else {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTextField options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTextField options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
         if (textFieldDescription) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[textField]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldDescription, textField)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[textField]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription, textField)]];
             [self setHeight:(self.height + 7 + textField.intrinsicContentSize.height)];
         } else if (textFieldTitle) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(7)-[textField]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(7)-[textField]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
             [self setHeight:(self.height + 7 + textField.intrinsicContentSize.height)];
         } else {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
             [self setHeight:(self.height + 8 + textField.intrinsicContentSize.height)];
         }
     }
@@ -262,6 +261,11 @@
     } else {
         [self showRequired:NO];
     }
+
+    // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
 
     // -------------------------------------------------------------------------
     //  Height
@@ -433,11 +437,11 @@
 
 - (void)showRequired:(BOOL)show {
     if (show) {
-        [_constraintTextFieldTrailing setConstant:34.0];
-        [_imageViewRequired setHidden:NO];
+        //[_constraintTextFieldTrailing setConstant:34.0];
+        //[_imageViewRequired setHidden:NO];
     } else {
-        [_constraintTextFieldTrailing setConstant:8.0];
-        [_imageViewRequired setHidden:YES];
+        //[_constraintTextFieldTrailing setConstant:8.0];
+        //[_imageViewRequired setHidden:YES];
     }
 } // showRequired
 

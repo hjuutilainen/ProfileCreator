@@ -47,6 +47,8 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
+
     // -------------------------------------------------------------------------
     //  Create Checkbox
     // -------------------------------------------------------------------------
@@ -59,11 +61,11 @@
     [buttonCheckbox setTag:row];
 
     [self addSubview:buttonCheckbox];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[buttonCheckbox]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
-    [buttonCheckbox addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[buttonCheckbox(==%f)]", buttonCheckbox.intrinsicContentSize.width]
-                                                                           options:0
-                                                                           metrics:nil
-                                                                             views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
+    [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[buttonCheckbox]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
+    [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[buttonCheckbox(==%f)]", buttonCheckbox.intrinsicContentSize.width]
+                                                                                   options:0
+                                                                                   metrics:nil
+                                                                                     views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
 
     // -------------------------------------------------------------------------
     //  Overrides (Availability)
@@ -140,10 +142,10 @@
 
     [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
     [self addSubview:textFieldTitle];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatCheckbox
-                                                                 options:NSLayoutFormatAlignAllFirstBaseline
-                                                                 metrics:nil
-                                                                   views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldTitle)]];
+    [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatCheckbox
+                                                                                   options:NSLayoutFormatAlignAllFirstBaseline
+                                                                                   metrics:nil
+                                                                                     views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldTitle)]];
 
     // -------------------------------------------------------------------------
     //  Description
@@ -168,11 +170,12 @@
 
         [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
         [self addSubview:textFieldDescription];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[buttonCheckbox]-(2)-[textFieldDescription]"
-                                                                     options:0
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldDescription)]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[buttonCheckbox]-(2)-[textFieldDescription]"
+                                                                                       options:0
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldDescription)]];
+        [layoutConstraints
+            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
     }
 
     // -------------------------------------------------------------------------
@@ -192,6 +195,11 @@
     //  Tool Tip
     // -------------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
+
+    // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
 
     // -------------------------------------------------------------------------
     //  Height

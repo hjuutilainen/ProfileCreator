@@ -55,6 +55,8 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
+
     // -------------------------------------------------------------------------
     //  Overrides (Availability)
     // -------------------------------------------------------------------------
@@ -124,8 +126,8 @@
 
         [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
         [self addSubview:textFieldTitle];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
     }
 
     // -------------------------------------------------------------------------
@@ -139,16 +141,20 @@
             [PFCCellTypes textFieldDescriptionWithString:description width:(PFCSettingsColumnWidth - (8 + indentConstant)) tag:row textAlignRight:alignRight enabled:enabled target:sender];
 
         [self addSubview:textFieldDescription];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+        [layoutConstraints
+            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
 
         if (textFieldTitle) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
             [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
         } else {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription)]];
             [self setHeight:(self.height + 8 + textFieldDescription.intrinsicContentSize.height)];
         }
     }
@@ -157,6 +163,11 @@
     //  Tool Tip
     // ---------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
+
+    // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
 
     // -------------------------------------------------------------------------
     //  Height

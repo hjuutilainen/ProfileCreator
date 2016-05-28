@@ -49,6 +49,8 @@
                              row:(NSInteger)row
                           sender:(id)sender {
 
+    NSMutableArray *layoutConstraints = [[NSMutableArray alloc] init];
+
     // -------------------------------------------------------------------------
     //  Create PopUpButton
     // -------------------------------------------------------------------------
@@ -60,7 +62,7 @@
 
     if (manifestContentDict[PFCManifestKeyPopUpButtonWidth] != nil) {
         NSString *constraintFormat = [NSString stringWithFormat:@"H:[popUpButton(==%@)]", [manifestContentDict[PFCManifestKeyPopUpButtonWidth] stringValue]];
-        [popUpButton addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormat options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormat options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
     }
 
     [self addSubview:popUpButton];
@@ -143,8 +145,8 @@
 
         [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
         [self addSubview:textFieldTitle];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldTitle]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTitle options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldTitle)]];
     }
 
     // -------------------------------------------------------------------------
@@ -158,16 +160,20 @@
             [PFCCellTypes textFieldDescriptionWithString:description width:(PFCSettingsColumnWidth - (8 + indentConstant)) tag:row textAlignRight:alignRight enabled:enabled target:sender];
 
         [self addSubview:textFieldDescription];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+        [layoutConstraints
+            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
 
         if (textFieldTitle) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(2)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldDescription)]];
             [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
         } else {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldDescription]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription)]];
             [self setHeight:(self.height + 8 + textFieldDescription.intrinsicContentSize.height)];
         }
     }
@@ -176,39 +182,39 @@
     //  CheckboxLocation Right
     // -------------------------------------------------------------------------
     if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Right"]) {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[popUpButton]-(>=8)-|"
-                                                                     options:NSLayoutFormatAlignAllBaseline
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[popUpButton]-(>=8)-|"
+                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
 
         // ---------------------------------------------------------------------
         //  CheckboxLocation Left
         // ---------------------------------------------------------------------
     } else if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Left"]) {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=8)-[popUpButton]-(4)-[textFieldTitle]"
-                                                                     options:NSLayoutFormatAlignAllBaseline
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(popUpButton, textFieldTitle)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=8)-[popUpButton]-(4)-[textFieldTitle]"
+                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(popUpButton, textFieldTitle)]];
 
         // ---------------------------------------------------------------------
         //  CheckboxLocation Below
         // ---------------------------------------------------------------------
     } else {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatPopUpButton options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatPopUpButton options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
         if (textFieldDescription) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[popUpButton]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldDescription, popUpButton)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[popUpButton]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldDescription, popUpButton)]];
             [self setHeight:(self.height + 7 + popUpButton.intrinsicContentSize.height)];
         } else if (textFieldTitle) {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(7)-[popUpButton]"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldTitle]-(7)-[popUpButton]"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
             [self setHeight:(self.height + 7 + popUpButton.intrinsicContentSize.height)];
         } else {
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[popUpButton]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[popUpButton]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(popUpButton)]];
             [self setHeight:(self.height + 8 + popUpButton.intrinsicContentSize.height)];
         }
     }
@@ -237,6 +243,11 @@
     //  Tool Tip
     // -------------------------------------------------------------------------
     [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
+
+    // -------------------------------------------------------------------------
+    //  Activate Layout Constraints
+    // -------------------------------------------------------------------------
+    [NSLayoutConstraint activateConstraints:layoutConstraints];
 
     // -------------------------------------------------------------------------
     //  Height
