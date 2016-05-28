@@ -55,16 +55,15 @@
     [buttonCheckbox setButtonType:NSSwitchButton];
     [buttonCheckbox setAction:@selector(checkbox:)];
     [buttonCheckbox setTarget:sender];
+    [buttonCheckbox setTitle:@""];
     [buttonCheckbox setTag:row];
-
-    if ([manifestContentDict[PFCManifestKeyFontWeight] isEqualToString:PFCFontWeightRegular]) {
-        [buttonCheckbox setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-    } else {
-        [buttonCheckbox setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-    }
 
     [self addSubview:buttonCheckbox];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[buttonCheckbox]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
+    [buttonCheckbox addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[buttonCheckbox(==%f)]", buttonCheckbox.intrinsicContentSize.width]
+                                                                           options:0
+                                                                           metrics:nil
+                                                                             views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
 
     // -------------------------------------------------------------------------
     //  Overrides (Availability)
@@ -102,16 +101,17 @@
     // -------------------------------------------------------------------------
     //  Alignment
     // -------------------------------------------------------------------------
+    BOOL alignRight = [manifestContentDict[PFCManifestKeyAlignRight] boolValue];
     NSInteger indentConstant;
     NSString *constraintFormatCheckbox;
     NSString *constraintFormatDesription;
-    if ([manifestContentDict[PFCManifestKeyAlignRight] boolValue]) {
+    if (alignRight) {
         [buttonCheckbox setImagePosition:NSImageRight];
         [buttonCheckbox setAlignment:NSRightTextAlignment];
 
         indentConstant =
             [[PFCManifestUtility sharedUtility] constantForIndentationLevelRight:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] ?: 0 baseConstant:PFCIndentLevelBaseConstant offset:-18];
-        constraintFormatCheckbox = [NSString stringWithFormat:@"H:|-(8)-[buttonCheckbox]-(%ld)-|", (long)indentConstant];
+        constraintFormatCheckbox = [NSString stringWithFormat:@"H:|-(8)-[textFieldTitle][buttonCheckbox]-(%ld)-|", (long)indentConstant];
         constraintFormatDesription = [NSString stringWithFormat:@"H:|-(8)-[textFieldDescription]-(%ld)-|", (long)indentConstant];
     } else {
         indentConstant = 8;
@@ -122,16 +122,28 @@
                 [[PFCManifestUtility sharedUtility] constantForIndentationLevel:[manifestContentDict[PFCManifestKeyIndentLevel] integerValue] ?: 0 baseConstant:PFCIndentLevelBaseConstant offset:0];
         }
 
-        constraintFormatCheckbox = [NSString stringWithFormat:@"H:|-(%ld)-[buttonCheckbox]-(8)-|", (long)indentConstant];
+        constraintFormatCheckbox = [NSString stringWithFormat:@"H:|-(%ld)-[buttonCheckbox][textFieldTitle]-(8)-|", (long)indentConstant];
         constraintFormatDesription = [NSString stringWithFormat:@"H:|-(%ld)-[textFieldDescription]-(8)-|", (long)indentConstant];
     }
 
     // -------------------------------------------------------------------------
     //  Title
     // -------------------------------------------------------------------------
-    [buttonCheckbox setTitle:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
-    [self setHeight:(8 + buttonCheckbox.intrinsicContentSize.height)];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatCheckbox options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
+    NSString *title = manifestContentDict[PFCManifestKeyTitle] ?: @"";
+    NSTextField *textFieldTitle = [PFCCellTypes textFieldTitleWithString:[NSString stringWithFormat:@"%@%@", title, (supervisedOnly) ? @" (supervised only)" : @""]
+                                                                   width:(PFCSettingsColumnWidth - ((8 + indentConstant) + buttonCheckbox.intrinsicContentSize.width))
+                                                                     tag:row
+                                                              fontWeight:manifestContentDict[PFCManifestKeyFontWeight]
+                                                          textAlignRight:alignRight
+                                                                 enabled:enabled
+                                                                  target:sender];
+
+    [self setHeight:(self.height + 8 + textFieldTitle.intrinsicContentSize.height)];
+    [self addSubview:textFieldTitle];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatCheckbox
+                                                                 options:NSLayoutFormatAlignAllFirstBaseline
+                                                                 metrics:nil
+                                                                   views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldTitle)]];
 
     // -------------------------------------------------------------------------
     //  Description
