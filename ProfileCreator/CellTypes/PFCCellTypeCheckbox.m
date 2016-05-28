@@ -67,12 +67,12 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[buttonCheckbox]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
 
     // -------------------------------------------------------------------------
-    //  Get availability overrides
+    //  Overrides (Availability)
     // -------------------------------------------------------------------------
     NSDictionary *overrides = [[PFCAvailability sharedInstance] overridesForManifestContentDict:manifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
 
     // -------------------------------------------------------------------------
-    //  Get required state for this cell view
+    //  Required
     // -------------------------------------------------------------------------
     BOOL required = NO;
     if (overrides[PFCManifestKeyRequired] != nil) {
@@ -82,8 +82,7 @@
     }
 
     // -------------------------------------------------------------------------
-    //  Determine if UI should be enabled or disabled
-    //  If 'required', it cannot be disabled
+    //  Enabled (if 'required' == YES, it can't be disabled)
     // -------------------------------------------------------------------------
     BOOL enabled = YES;
     if (!required) {
@@ -96,45 +95,9 @@
     [buttonCheckbox setEnabled:enabled];
 
     // -------------------------------------------------------------------------
-    //  Get supervised state for this cell view
+    //  Supervised
     // -------------------------------------------------------------------------
     BOOL supervisedOnly = [manifestContentDict[PFCManifestKeySupervisedOnly] boolValue];
-
-    // -------------------------------------------------------------------------
-    //  Title (of the checkbox)
-    // -------------------------------------------------------------------------
-    NSString *title = [NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @"";
-    [buttonCheckbox setTitle:title];
-    [self setHeight:(8 + buttonCheckbox.intrinsicContentSize.height)];
-
-    // -------------------------------------------------------------------------
-    //  Description
-    // -------------------------------------------------------------------------
-    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
-    NSTextField *textFieldDescription;
-    if (description.length != 0) {
-
-        textFieldDescription = [[NSTextField alloc] init];
-        [textFieldDescription setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [textFieldDescription setBordered:NO];
-        [textFieldDescription setBezeled:NO];
-        [textFieldDescription setDrawsBackground:NO];
-        [textFieldDescription setEditable:NO];
-        [textFieldDescription setSelectable:NO];
-        [textFieldDescription setTextColor:[NSColor controlShadowColor]];
-        [textFieldDescription setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-        [textFieldDescription setTarget:sender];
-        [textFieldDescription setTag:row];
-
-        [self addSubview:textFieldDescription];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[buttonCheckbox]-(2)-[textFieldDescription]"
-                                                                     options:0
-                                                                     metrics:nil
-                                                                       views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldDescription)]];
-
-        [textFieldDescription setStringValue:description];
-        [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
-    }
 
     // -------------------------------------------------------------------------
     //  Alignment
@@ -163,15 +126,42 @@
         constraintFormatDesription = [NSString stringWithFormat:@"H:|-(%ld)-[textFieldDescription]-(8)-|", (long)indentConstant];
     }
 
+    // -------------------------------------------------------------------------
+    //  Title
+    // -------------------------------------------------------------------------
+    [buttonCheckbox setTitle:[NSString stringWithFormat:@"%@%@", manifestContentDict[PFCManifestKeyTitle], (supervisedOnly) ? @" (supervised only)" : @""] ?: @""];
+    [self setHeight:(8 + buttonCheckbox.intrinsicContentSize.height)];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatCheckbox options:0 metrics:nil views:NSDictionaryOfVariableBindings(buttonCheckbox)]];
-    if (description.length != 0) {
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
-    }
 
     // -------------------------------------------------------------------------
-    //  Tool Tip
+    //  Description
     // -------------------------------------------------------------------------
-    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
+    NSString *description = manifestContentDict[PFCManifestKeyDescription] ?: @"";
+    NSTextField *textFieldDescription;
+    if (description.length != 0) {
+
+        textFieldDescription = [[NSTextField alloc] init];
+        [textFieldDescription setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [textFieldDescription setBordered:NO];
+        [textFieldDescription setBezeled:NO];
+        [textFieldDescription setDrawsBackground:NO];
+        [textFieldDescription setEditable:NO];
+        [textFieldDescription setSelectable:NO];
+        [textFieldDescription setTextColor:[NSColor controlShadowColor]];
+        [textFieldDescription setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+        [textFieldDescription setTarget:sender];
+        [textFieldDescription setTag:row];
+        [textFieldDescription setPreferredMaxLayoutWidth:(PFCSettingsColumnWidth - (8 + indentConstant))];
+        [textFieldDescription setStringValue:description];
+
+        [self setHeight:(self.height + 2 + textFieldDescription.intrinsicContentSize.height)];
+        [self addSubview:textFieldDescription];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[buttonCheckbox]-(2)-[textFieldDescription]"
+                                                                     options:0
+                                                                     metrics:nil
+                                                                       views:NSDictionaryOfVariableBindings(buttonCheckbox, textFieldDescription)]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatDesription options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldDescription)]];
+    }
 
     // -------------------------------------------------------------------------
     //  Value
@@ -186,6 +176,14 @@
     }
     [buttonCheckbox setState:checkboxState];
 
+    // -------------------------------------------------------------------------
+    //  Tool Tip
+    // -------------------------------------------------------------------------
+    [cellView setToolTip:[[PFCManifestUtility sharedUtility] toolTipForManifestContentDict:manifestContentDict] ?: @""];
+
+    // -------------------------------------------------------------------------
+    //  Height
+    // -------------------------------------------------------------------------
     [self setHeight:(self.height + 3)];
 
     return cellView;
