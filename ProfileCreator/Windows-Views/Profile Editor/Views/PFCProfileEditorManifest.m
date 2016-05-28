@@ -26,6 +26,7 @@
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
+#import "PFCCellTypeTextLabel.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
 #import "PFCGeneralUtility.h"
@@ -283,6 +284,10 @@
             cellView = [[PFCCheckboxCellView alloc] init];
         } else if ([cellType isEqualToString:PFCCellTypePopUpButton]) {
             cellView = [[PFCPopUpButtonCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypeTextField]) {
+            cellView = [[PFCTextFieldCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypeTextLabel]) {
+            cellView = [[PFCTextLabelCellView alloc] init];
         } else {
             // FIXME - Until all cell views supports programmatic creation, create from xib
             cellView = [tableView makeViewWithIdentifier:cellType owner:self];
@@ -532,8 +537,6 @@
             [cellView setIdentifier:nil]; // <-- Disables automatic retaining of the view ( and it's stored values ).
             return [cellView populateCellViewEnabled:cellView manifest:manifestContentDict settings:userSettingsDict settingsLocal:localSettingsDict row:row sender:self];
         }
-    } else {
-        DDLogError(@"Unknown TableView Column Identifier: %@", tableColumn.identifier);
     }
     return nil;
 } // tableView:viewForTableColumn:row
@@ -1510,19 +1513,15 @@
             _settingsManifest[textField.identifier] = [settingsDict copy];
         }
     } else {
-        if (textField == [[_tableViewManifestContent viewAtColumn:[_tableViewManifestContent columnWithIdentifier:@"ColumnSettings"] row:row makeIfNecessary:NO] settingTextField]) {
-            settingsDict[PFCSettingsKeyValue] = [inputText copy];
-            if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
-                if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && [inputText length] == 0) {
-                    [(PFCTextFieldCellView *)[textField superview] showRequired:YES];
-                } else if ([manifestContentDict[PFCManifestKeyRequired] boolValue]) {
-                    [(PFCTextFieldCellView *)[textField superview] showRequired:NO];
-                }
+        settingsDict[PFCSettingsKeyValue] = [inputText copy];
+        if ([textField.superview respondsToSelector:@selector(showRequired:)]) {
+            if ([manifestContentDict[PFCManifestKeyRequired] boolValue] && [inputText length] == 0) {
+                [(PFCTextFieldCellView *)[textField superview] showRequired:YES];
+            } else if ([manifestContentDict[PFCManifestKeyRequired] boolValue]) {
+                [(PFCTextFieldCellView *)[textField superview] showRequired:NO];
             }
-            _settingsManifest[identifier] = [settingsDict copy];
-        } else {
-            return;
         }
+        _settingsManifest[identifier] = [settingsDict copy];
     }
 
     if ([_selectedManifest[PFCManifestKeyAllowMultiplePayloads] boolValue] && [_selectedManifest[PFCManifestKeyPayloadTabTitle] hasPrefix:identifier]) {
