@@ -121,6 +121,8 @@
 			<string>CertificateRenewalTimeInterval</string>
 			<key>PayloadValueType</key>
 			<string>Integer</string>
+			<key>Unit</key>
+			<string>days</string>
 			<key>ShowStepper</key>
 			<true/>
 			<key>Description</key>
