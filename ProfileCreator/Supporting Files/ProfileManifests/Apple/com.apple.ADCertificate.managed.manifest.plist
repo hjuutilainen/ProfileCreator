@@ -121,8 +121,10 @@
 			<string>CertificateRenewalTimeInterval</string>
 			<key>PayloadValueType</key>
 			<string>Integer</string>
+			<key>ShowStepper</key>
+			<true/>
 			<key>Description</key>
-			<string>The number of days before the certificate xpires at which to start showing the expiration notification</string>
+			<string>The number of days before the certificate expires at which to start showing the expiration notification</string>
 			<key>CellType</key>
 			<string>TextFieldNumber</string>
 			<key>DefaultValue</key>

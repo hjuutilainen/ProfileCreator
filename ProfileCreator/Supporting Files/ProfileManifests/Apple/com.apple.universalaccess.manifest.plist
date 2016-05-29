@@ -575,6 +575,10 @@
 						<string>slowKeyDelay</string>
 						<key>PayloadValueType</key>
 						<string>Integer</string>
+						<key>ShowStepper</key>
+						<true/>
+						<key>TextFieldLocation</key>
+						<string>Right</string>
 						<key>AlignRight</key>
 						<true/>
 						<key>IndentLevel</key>
