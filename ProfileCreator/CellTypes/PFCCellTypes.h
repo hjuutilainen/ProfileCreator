@@ -37,6 +37,18 @@
 + (NSTextField *)textFieldWithString:(NSString *)string placeholderString:(NSString *)placeholderString tag:(NSInteger)tag textAlignRight:(BOOL)alignRight enabled:(BOOL)enabled target:(id)target;
 
 // -----------------------------------------------------------------------------
+//  TextFieldNumber
+// -----------------------------------------------------------------------------
++ (NSTextField *)textFieldNumberWithString:(NSString *)string
+                         placeholderString:(NSString *)placeholderString
+                                       tag:(NSInteger)tag
+                                  minValue:(NSNumber *)minValue
+                                  maxValue:(NSNumber *)maxValue
+                            textAlignRight:(BOOL)alignRight
+                                   enabled:(BOOL)enabled
+                                    target:(id)target;
+
+// -----------------------------------------------------------------------------
 //  TextFieldTitle
 // -----------------------------------------------------------------------------
 + (NSTextField *)textFieldTitleWithString:(NSString *)string

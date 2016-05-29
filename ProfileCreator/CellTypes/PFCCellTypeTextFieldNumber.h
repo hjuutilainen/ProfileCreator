@@ -21,6 +21,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PFCTextFieldNumberCellView : NSTableCellView <PFCCellType>
+@property NSInteger height;
 @end
 
 @interface PFCTextFieldNumberLeftCellView : NSTableCellView <PFCCellType>

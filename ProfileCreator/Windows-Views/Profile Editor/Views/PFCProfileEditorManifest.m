@@ -26,6 +26,7 @@
 #import "PFCCellTypeSegmentedControl.h"
 #import "PFCCellTypeTextField.h"
 #import "PFCCellTypeTextFieldHostPort.h"
+#import "PFCCellTypeTextFieldNumber.h"
 #import "PFCCellTypeTextLabel.h"
 #import "PFCCellTypes.h"
 #import "PFCConstants.h"
@@ -292,6 +293,8 @@
             cellView = [[PFCSegmentedControlCellView alloc] init];
         } else if ([cellType isEqualToString:PFCCellTypeTextFieldHostPort]) {
             cellView = [[PFCTextFieldHostPortCellView alloc] init];
+        } else if ([cellType isEqualToString:PFCCellTypeTextFieldNumber]) {
+            cellView = [[PFCTextFieldNumberCellView alloc] init];
         } else {
             // FIXME - Until all cell views supports programmatic creation, create from xib
             cellView = [tableView makeViewWithIdentifier:cellType owner:self];

@@ -177,6 +177,52 @@
     return textField;
 }
 
++ (NSTextField *)textFieldNumberWithString:(NSString *)string
+                         placeholderString:(NSString *)placeholderString
+                                       tag:(NSInteger)tag
+                                  minValue:(NSNumber *)minValue
+                                  maxValue:(NSNumber *)maxValue
+                            textAlignRight:(BOOL)alignRight
+                                   enabled:(BOOL)enabled
+                                    target:(id)target {
+    NSTextField *textFieldNumber = [[NSTextField alloc] init];
+    [textFieldNumber setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [textFieldNumber setLineBreakMode:NSLineBreakByClipping];
+    [textFieldNumber setBordered:YES];
+    [textFieldNumber setBezeled:YES];
+    [textFieldNumber setBezelStyle:NSTextFieldSquareBezel];
+    [textFieldNumber setDrawsBackground:NO];
+    [textFieldNumber setEditable:YES];
+    [textFieldNumber setSelectable:YES];
+    [textFieldNumber setTextColor:[NSColor controlTextColor]];
+    [textFieldNumber setBackgroundColor:[NSColor controlBackgroundColor]];
+    [textFieldNumber setTarget:target];
+    [textFieldNumber setDelegate:target];
+    [textFieldNumber setTag:tag];
+    [textFieldNumber setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    [textFieldNumber setEnabled:enabled];
+    [textFieldNumber setPlaceholderString:placeholderString];
+
+    /* NOT NEEDED FOR NUMBERS
+    if (alignRight) {
+        [textFieldNumber setAlignment:NSRightTextAlignment];
+    }
+*/
+
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+    [numberFormatter setMinimum:minValue ?: @0];
+    [numberFormatter setMaximum:maxValue ?: @99999];
+    [textFieldNumber setFormatter:numberFormatter];
+
+    // Set to maximum to get a correct intrinsic size for calculating width
+    // This is updated automatically to the correct value when binding to '_stepperValue'
+    [textFieldNumber setStringValue:[maxValue ?: @99999 stringValue]];
+    [textFieldNumber sizeToFit];
+
+    return textFieldNumber;
+}
+
 + (NSTextField *)textFieldTitleWithString:(NSString *)string
                                     width:(CGFloat)width
                                       tag:(NSInteger)tag
