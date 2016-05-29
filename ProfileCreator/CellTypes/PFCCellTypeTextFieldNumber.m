@@ -237,7 +237,7 @@
         [stepper setValueWraps:NO];
         [stepper setMinValue:[[(NSNumberFormatter *)[textFieldNumber formatter] minimum] doubleValue]];
         [stepper setMaxValue:[[(NSNumberFormatter *)[textFieldNumber formatter] maximum] doubleValue]];
-        [stepper setEnabled:enabled];
+        [stepper setEnabled:enabled]; // FIXME - This doesn't disable the stepper
 
         [self addSubview:stepper];
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[stepper(==%f)]", (stepper.intrinsicContentSize.width)]
@@ -247,32 +247,17 @@
 
         [stepper bind:NSValueBinding toObject:self withKeyPath:NSStringFromSelector(@selector(value)) options:@{ NSContinuouslyUpdatesValueBindingOption : @YES }];
 
-        if (alignRight) {
-            [layoutConstraints addObject:[NSLayoutConstraint constraintWithItem:textFieldNumber
-                                                                      attribute:NSLayoutAttributeCenterY
-                                                                      relatedBy:NSLayoutRelationEqual
-                                                                         toItem:stepper
-                                                                      attribute:NSLayoutAttributeCenterY
-                                                                     multiplier:1.0f
-                                                                       constant:-1.0f]];
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(4)-[textFieldNumber]"
-                                                                                           options:0
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(stepper, textFieldNumber)]];
-
-        } else {
-            [layoutConstraints addObject:[NSLayoutConstraint constraintWithItem:stepper
-                                                                      attribute:NSLayoutAttributeCenterY
-                                                                      relatedBy:NSLayoutRelationEqual
-                                                                         toItem:textFieldNumber
-                                                                      attribute:NSLayoutAttributeCenterY
-                                                                     multiplier:1.0f
-                                                                       constant:-1.0f]];
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(2)-[stepper]"
-                                                                                           options:0
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(stepper, textFieldNumber)]];
-        }
+        [layoutConstraints addObject:[NSLayoutConstraint constraintWithItem:stepper
+                                                                  attribute:NSLayoutAttributeCenterY
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:textFieldNumber
+                                                                  attribute:NSLayoutAttributeCenterY
+                                                                 multiplier:1.0f
+                                                                   constant:-1.0f]];
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(4)-[stepper]"
+                                                                                       options:0
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(stepper, textFieldNumber)]];
     }
 
     // -------------------------------------------------------------------------
@@ -286,36 +271,21 @@
     //  TextFieldLocation Right
     // -------------------------------------------------------------------------
     if ([manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Right"]) {
-        if (stepper) {
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[stepper]"
-                                                                                           options:NSLayoutFormatAlignAllCenterY
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, stepper)]];
-        } else {
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textFieldNumber]"
-                                                                                           options:NSLayoutFormatAlignAllCenterY
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldNumber)]];
-        }
-        /*
-        [layoutConstraints
-            addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(>=8)-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldNumber)]];
-*/
+
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textFieldNumber]"
+                                                                                       options:NSLayoutFormatAlignAllCenterY
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldTitle, textFieldNumber)]];
+
         // -------------------------------------------------------------------------
         //  TextFieldLocation Left
         // -------------------------------------------------------------------------
     } else if ([manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Left"]) {
-        if (stepper) {
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(4)-[textFieldTitle]"
-                                                                                           options:NSLayoutFormatAlignAllCenterY
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(stepper, textFieldTitle)]];
-        } else {
-            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(4)-[textFieldTitle]"
-                                                                                           options:NSLayoutFormatAlignAllCenterY
-                                                                                           metrics:nil
-                                                                                             views:NSDictionaryOfVariableBindings(textFieldNumber, textFieldTitle)]];
-        }
+
+        [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(4)-[textFieldTitle]"
+                                                                                       options:NSLayoutFormatAlignAllCenterY
+                                                                                       metrics:nil
+                                                                                         views:NSDictionaryOfVariableBindings(textFieldNumber, textFieldTitle)]];
 
         // ---------------------------------------------------------------------
         //  TextFieldLocation "Below"
@@ -324,46 +294,6 @@
 
         [layoutConstraints
             addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:constraintFormatTextFieldNumber options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldNumber)]];
-
-        // ---------------------------------------------------------------------
-        //  TextFieldUnit
-        // ---------------------------------------------------------------------
-        NSString *unit = manifestContentDict[PFCManifestKeyUnit] ?: @"";
-        NSTextField *textFieldUnit;
-        if (unit.length != 0) {
-            textFieldUnit = [PFCCellTypes textFieldTitleWithString:unit
-                                                             width:(PFCSettingsColumnWidth - (8 + indentConstant)) // FIXME
-                                                               tag:row
-                                                        fontWeight:manifestContentDict[PFCManifestKeyFontWeight]
-                                                    textAlignRight:alignRight
-                                                           enabled:enabled
-                                                            target:sender];
-
-            [self addSubview:textFieldUnit];
-            if (stepper) {
-                [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(4)-[textFieldUnit]-(8)-|"
-                                                                                               options:NSLayoutFormatAlignAllCenterY
-                                                                                               metrics:nil
-                                                                                                 views:NSDictionaryOfVariableBindings(textFieldUnit, stepper)]];
-            } else {
-                [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(4)-[textFieldUnit]-(8)-|"
-                                                                                               options:NSLayoutFormatAlignAllCenterY
-                                                                                               metrics:nil
-                                                                                                 views:NSDictionaryOfVariableBindings(textFieldNumber, textFieldUnit)]];
-            }
-        } else {
-            if (stepper) {
-                [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(>=8)-|"
-                                                                                               options:NSLayoutFormatAlignAllCenterY
-                                                                                               metrics:nil
-                                                                                                 views:NSDictionaryOfVariableBindings(stepper)]];
-            } else {
-                [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(>=8)-|"
-                                                                                               options:NSLayoutFormatAlignAllCenterY
-                                                                                               metrics:nil
-                                                                                                 views:NSDictionaryOfVariableBindings(textFieldNumber)]];
-            }
-        }
 
         if (textFieldDescription) {
             [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldDescription]-(7)-[textFieldNumber]"
@@ -381,6 +311,48 @@
             [layoutConstraints
                 addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[textFieldNumber]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldNumber)]];
             [self setHeight:(self.height + 8 + textFieldNumber.intrinsicContentSize.height)];
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    //  TextFieldUnit
+    // ---------------------------------------------------------------------
+    NSString *unit = manifestContentDict[PFCManifestKeyUnit] ?: @"";
+    NSTextField *textFieldUnit;
+    if (unit.length != 0) {
+        textFieldUnit = [PFCCellTypes textFieldTitleWithString:unit
+                                                         width:(PFCSettingsColumnWidth - (8 + indentConstant)) // FIXME
+                                                           tag:row
+                                                    fontWeight:PFCFontWeightRegular
+                                                textAlignRight:NO
+                                                       enabled:enabled
+                                                        target:sender];
+
+        [self addSubview:textFieldUnit];
+        [layoutConstraints addObject:[NSLayoutConstraint constraintWithItem:textFieldNumber
+                                                                  attribute:NSLayoutAttributeCenterY
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:textFieldUnit
+                                                                  attribute:NSLayoutAttributeCenterY
+                                                                 multiplier:1.f
+                                                                   constant:0.f]];
+        if (stepper) {
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(4)-[textFieldUnit]-(8)-|"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldUnit, stepper)]];
+        } else {
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(4)-[textFieldUnit]-(8)-|"
+                                                                                           options:0
+                                                                                           metrics:nil
+                                                                                             views:NSDictionaryOfVariableBindings(textFieldNumber, textFieldUnit)]];
+        }
+    } else {
+        if (stepper) {
+            [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[stepper]-(>=8)-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(stepper)]];
+        } else {
+            [layoutConstraints
+                addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldNumber]-(>=8)-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textFieldNumber)]];
         }
     }
 
