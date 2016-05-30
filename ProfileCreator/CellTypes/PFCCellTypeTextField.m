@@ -216,7 +216,7 @@
     // -------------------------------------------------------------------------
     if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Right"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[textField]-(8)-|"
-                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       options:NSLayoutFormatAlignAllFirstBaseline
                                                                                        metrics:nil
                                                                                          views:NSDictionaryOfVariableBindings(textFieldTitle, textField)]];
 
@@ -225,7 +225,7 @@
         // -------------------------------------------------------------------------
     } else if (textField && [manifestContentDict[@"TextFieldLocation"] isEqualToString:@"Left"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[textField]-(4)-[textFieldTitle]"
-                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       options:NSLayoutFormatAlignAllFirstBaseline
                                                                                        metrics:nil
                                                                                          views:NSDictionaryOfVariableBindings(textField, textFieldTitle)]];
 

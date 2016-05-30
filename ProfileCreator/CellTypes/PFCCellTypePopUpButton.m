@@ -183,7 +183,7 @@
     // -------------------------------------------------------------------------
     if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Right"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[textFieldTitle]-(4)-[popUpButton]-(>=8)-|"
-                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       options:NSLayoutFormatAlignAllFirstBaseline
                                                                                        metrics:nil
                                                                                          views:NSDictionaryOfVariableBindings(textFieldTitle, popUpButton)]];
 
@@ -192,7 +192,7 @@
         // ---------------------------------------------------------------------
     } else if (textFieldTitle && [manifestContentDict[@"PopUpButtonLocation"] isEqualToString:@"Left"]) {
         [layoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=8)-[popUpButton]-(4)-[textFieldTitle]"
-                                                                                       options:NSLayoutFormatAlignAllBaseline
+                                                                                       options:NSLayoutFormatAlignAllFirstBaseline
                                                                                        metrics:nil
                                                                                          views:NSDictionaryOfVariableBindings(popUpButton, textFieldTitle)]];
 
