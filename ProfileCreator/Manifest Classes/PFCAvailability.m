@@ -99,8 +99,10 @@
 
 - (BOOL)requiredForManifestContentDict:(NSDictionary *)manifestContentDict displayKeys:(NSDictionary *)displayKeys {
     for (NSDictionary *availabilityDict in manifestContentDict[PFCManifestKeyAvailability] ?: @[]) {
-        if ([self returnAvailabilityValueForKey:PFCManifestKeyRequired availabilityDict:availabilityDict displayKeys:displayKeys]) {
-            return [availabilityDict[@"AvailabilityValue"] boolValue];
+        if (availabilityDict[PFCManifestKeyAvailableIf] == nil) {
+            if ([self returnAvailabilityValueForKey:PFCManifestKeyRequired availabilityDict:availabilityDict displayKeys:displayKeys]) {
+                return [availabilityDict[@"AvailabilityValue"] boolValue];
+            }
         }
     }
     return [manifestContentDict[PFCManifestKeyRequired] boolValue];
@@ -213,18 +215,21 @@
                     // -------------------------------------------------------------------------
                     NSDictionary *selectionManifestContentDict = [self manifestContentDictForIdentifier:selectionIdentifier manifestContent:manifest[PFCManifestKeyManifestContent]];
 
-                    // If AvailabilityKey is 'PFCManifestKeyEnabled', verfiy that the selection target isn't disabled itself
                     /* DISABLE RECURSIVE ENABLED CHECKS FOR NOW
-                    if ([availabilityDict[PFCManifestKeyAvailabilityKey] isEqualToString:PFCManifestKeyEnabled]) {
-                        NSDictionary *parentOverrides = [self overridesForManifestContentDict:selectionManifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
-                        DDLogDebug(@"parentOverrides=%@", parentOverrides);
+                     // If AvailabilityKey is 'PFCManifestKeyEnabled', verfiy that the selection target isn't disabled itself
+                     if ([availabilityDict[PFCManifestKeyAvailabilityKey] isEqualToString:PFCManifestKeyEnabled]) {
+                     NSDictionary *parentOverrides = [self overridesForManifestContentDict:selectionManifestContentDict manifest:manifest settings:settings displayKeys:displayKeys];
+                     DDLogDebug(@"parentOverrides=%@", parentOverrides);
+                     if (parentOverrides[PFCManifestKeyEnabled] != nil && [parentOverrides[PFCManifestKeyEnabled] boolValue] == NO) {
+                     overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = @NO;
+                     continue;
+                     }
+                     }
+                     */
 
-                        if (parentOverrides[PFCManifestKeyEnabled] != nil && [parentOverrides[PFCManifestKeyEnabled] boolValue] == NO) {
-                            overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = @NO;
-                            continue;
-                        }
-                    }
-*/
+                    /*
+                     FIXME - This check is not complete or optimized.
+                     */
 
                     NSString *availabilityValueTypeString = [[PFCManifestUtility sharedUtility] typeStringFromValue:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]];
                     DDLogDebug(@"%@ value type: %@", PFCManifestKeyAvailabilitySelectionValue, availabilityValueTypeString);
@@ -234,6 +239,10 @@
 
                         if ([availabilityValueTypeString isEqualToString:PFCValueTypeBoolean]) {
                             if ([settings[selectionIdentifier][@"Value"] boolValue] == [availabilityIf[PFCManifestKeyAvailabilitySelectionValue] boolValue]) {
+                                overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
+                            }
+                        } else if ([availabilityValueTypeString isEqualToString:PFCValueTypeString]) {
+                            if ([settings[selectionIdentifier][@"Value"] isEqualToString:availabilityIf[PFCManifestKeyAvailabilitySelectionValue]]) {
                                 overridesDict[availabilityDict[PFCManifestKeyAvailabilityKey]] = availabilityDict[PFCManifestKeyAvailabilityValue];
                             }
                         }
