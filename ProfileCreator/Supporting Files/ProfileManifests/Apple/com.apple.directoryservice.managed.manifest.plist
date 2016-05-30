@@ -177,6 +177,8 @@
 									<string>com.apple.DirectoryService.managed</string>
 									<key>PayloadKey</key>
 									<string>ADWarnUserBeforeCreatingMA</string>
+									<key>DefaultValue</key>
+									<true/>
 									<key>CellType</key>
 									<string>Checkbox</string>
 									<key>ToolTipDescription</key>
@@ -191,6 +193,8 @@
 									<string>com.apple.DirectoryService.managed</string>
 									<key>PayloadKey</key>
 									<string>ADUseWindowsUNCPath</string>
+									<key>DefaultValue</key>
+									<true/>
 									<key>CellType</key>
 									<string>Checkbox</string>
 									<key>ToolTipDescription</key>
@@ -365,6 +369,8 @@
 									<string>ADAllowMultiDomainAuth</string>
 									<key>CellType</key>
 									<string>Checkbox</string>
+									<key>DefaultValue</key>
+									<true/>
 									<key>ToolTipDescription</key>
 									<string>FIXME</string>
 								</dict>
@@ -375,6 +381,8 @@
 									<string>Namespace</string>
 									<key>DefaultValue</key>
 									<string>forest</string>
+									<key>PopUpButtonWidth</key>
+									<integer>80</integer>
 									<key>PayloadType</key>
 									<string>com.apple.DirectoryService.managed</string>
 									<key>PayloadKey</key>
@@ -398,6 +406,8 @@
 									<string>Packet signing</string>
 									<key>DefaultValue</key>
 									<string>allow</string>
+									<key>PopUpButtonWidth</key>
+									<integer>80</integer>
 									<key>PayloadType</key>
 									<string>com.apple.DirectoryService.managed</string>
 									<key>PayloadKey</key>
@@ -422,6 +432,8 @@
 									<string>Packet encryption</string>
 									<key>DefaultValue</key>
 									<string>allow</string>
+									<key>PopUpButtonWidth</key>
+									<integer>80</integer>
 									<key>PayloadType</key>
 									<string>com.apple.DirectoryService.managed</string>
 									<key>PayloadKey</key>
@@ -530,6 +542,24 @@
 				</dict>
 				<key>UserName</key>
 				<dict>
+					<key>Availability</key>
+					<array>
+						<dict>
+							<key>AvailabilityKey</key>
+							<string>Required</string>
+							<key>AvailabilityOS</key>
+							<string>Any</string>
+							<key>AvailabilityValue</key>
+							<true/>
+							<key>AvailableIf</key>
+							<dict>
+								<key>SelectionIdentifier</key>
+								<string>091E35E5-7D7E-496D-8DE9-2AAF1BDF0D28</string>
+								<key>SelectionValue</key>
+								<string>Active Directory</string>
+							</dict>
+						</dict>
+					</array>
 					<key>Identifier</key>
 					<string>F0331C95-DEF8-4945-B74E-20AC5123A2E3</string>
 					<key>Optional</key>
@@ -549,6 +579,24 @@
 				</dict>
 				<key>Password</key>
 				<dict>
+					<key>Availability</key>
+					<array>
+						<dict>
+							<key>AvailabilityKey</key>
+							<string>Required</string>
+							<key>AvailabilityOS</key>
+							<string>Any</string>
+							<key>AvailabilityValue</key>
+							<true/>
+							<key>AvailableIf</key>
+							<dict>
+								<key>SelectionIdentifier</key>
+								<string>091E35E5-7D7E-496D-8DE9-2AAF1BDF0D28</string>
+								<key>SelectionValue</key>
+								<string>Active Directory</string>
+							</dict>
+						</dict>
+					</array>
 					<key>Identifier</key>
 					<string>7E2A3AE3-8BC1-4786-857E-B0C14F29225A</string>
 					<key>Optional</key>
